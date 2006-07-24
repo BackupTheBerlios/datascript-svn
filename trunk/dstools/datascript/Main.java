@@ -49,7 +49,7 @@ import java.io.IOException;
 
 public class Main
 {
-    static String VERSION = "0.4 (17 Jul 2006)";
+    static String VERSION = "0.5 (24 Jul 2006)";
 
     static void assertThat(boolean b)
     {
