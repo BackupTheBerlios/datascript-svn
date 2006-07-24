@@ -1,0 +1,33 @@
+Level
+{
+     LevelHeader	lheader;
+     Cluster(lheader.clusterInfo[cluster$index]) 		
+                        cluster[lengthof lheader.clusterInfo];
+};
+
+LevelHeader
+{
+    int32		tileWidth;
+    int32		tileHeight;
+    uint16		numInfo;
+    ClusterInfo	        clusterInfo[numInfo];
+};
+
+ClusterInfo
+{
+    int32		clusterOffset;
+    int16		clusterSize;
+    int16		numTiles;	
+};
+
+Cluster(ClusterInfo info)
+{
+    int32		c;
+    ClusterData		data;
+};
+
+ClusterData
+{
+    int32		x = Cluster.info.clusterOffset;
+};
+

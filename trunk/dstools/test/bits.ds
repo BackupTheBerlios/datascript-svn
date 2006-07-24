@@ -1,0 +1,173 @@
+Unsigned
+{
+    uint8	u8;
+    uint16	u16;
+    uint32      u32;
+    uint64      u64;
+};
+
+BitStruct
+{
+    bit:4	a;
+    uint8	b;
+    bit:4	c;
+};
+
+LongBitField
+{
+    uint8	a;
+    bit:80	b;
+    int16	c;
+};
+
+Outer
+{
+    int16 	a;
+    Header	header;
+    Inner 	inner;
+};
+
+Header
+{
+    int16	len;
+    int16	c;
+};
+
+Inner
+{
+    int8	d;
+    int16	list[Outer.header.len];
+    int32	e;
+};
+
+NestedOuter
+{
+    int16	a;
+    Inner 
+    {
+    	uint8	x;
+    	uint8	y;	
+    }		inner;
+    int32	c;
+};
+
+VarArray
+{
+    int16	numItems;
+    ItemA	a[];
+    ItemB   	b[] : numItems == lengthof a + lengthof b;
+};
+
+MixedArray
+{
+    int16	numItems;
+    AnyItem	item[numItems];
+};
+
+
+union BaseTypeUnion
+{
+    int8	i8;
+    int16       i16;
+};
+
+union AnyItem
+{
+    ItemA a;	    
+    ItemB b;	    
+};
+
+ItemA
+{
+    uint8       tag = 1;
+    uint16      value;
+};
+
+ItemB
+{
+    uint8       tag = 2;
+    uint32      value;
+};
+
+Optional
+{
+    uint8       tag;
+    uint16      a;
+    uint32      b if tag == 99;
+    ItemA	ia if tag == 98;
+    uint16	c;
+};
+
+
+const uint8 BIT3 = 0x08;
+const uint8 BIT2 = 0x04;
+const uint8 BIT1 = 0x02;
+const uint8 BIT0 = 0x01;
+
+bitmask uint8 MyBitMask
+{
+    BIT3,
+    BIT1,
+    BIT0
+};
+
+BitMasks
+{
+    MyBitMask   mask1;
+    MyBitMask   mask2;
+    Colour 	colour;
+};
+
+enum uint16 Colour
+{
+    RED = 1,
+    GREEN,
+    YELLOW,
+    BLUE = 7
+};
+
+enum uint16 Dimension
+{
+    LENGTH = 1,
+    WIDTH = 2,
+    HEIGHT = 3
+};
+
+VarBitField
+{
+    uint8		numBits;
+    bit<numBits>	x;
+    bit<numBits>	y;
+    uint16	        magic = 0xFFFF;
+};
+
+OuterVarBitField
+{
+    uint16		a;
+    VarBitField		v;
+    uint32		b;
+};
+
+enum bit:2 Direction
+{
+    NONE,
+    POSITIVE,
+    NEGATIVE,
+    BOTH
+};
+
+Link
+{
+    uint32		id;
+    uint8		hasDirection;
+    Direction		dir  if hasDirection == 1;
+};
+
+VarBitFieldArray
+{
+     uint8		numBits;
+     uint8		numElems;
+     bit<numBits>	list1[numElems];
+     bit:4		list2[numElems];
+};
+

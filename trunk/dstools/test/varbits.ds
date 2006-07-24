@@ -1,0 +1,14 @@
+VarBitField
+{
+    uint8		numBits;
+    bit<numBits>	x;
+    bit<numBits>	y;
+    uint16	        magic = 0xFFFF;
+};
+
+OuterVarBitField
+{
+    uint16		a;
+    VarBitField		v;
+    uint32		b;
+};
