@@ -1,0 +1,12 @@
+<%@ jet package="datascript.jet.java" 
+        imports="datascript.ast.* datascript.emit.java.*" 
+        class="StructEnd" %>
+<% 
+    StructEmitter e = (StructEmitter) argument;
+    JavaEmitter global = e.getGlobal();
+    StructType s = e.getSequenceType();
+    String name = s.getName(); 
+%>
+}
+
+// END OF FILE

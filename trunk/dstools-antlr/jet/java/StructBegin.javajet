@@ -1,0 +1,12 @@
+<%@ jet package="datascript.jet.java" 
+        imports="datascript.ast.* datascript.emit.java.*" 
+        class="StructBegin" %>
+<% 
+    StructEmitter e = (StructEmitter) argument;
+    JavaEmitter global = e.getGlobal();
+    StructType s = e.getSequenceType();
+    String name = s.getName(); 
+%>
+<%@include file="FileHeader.inc"%>
+public class <%=name%>
+{

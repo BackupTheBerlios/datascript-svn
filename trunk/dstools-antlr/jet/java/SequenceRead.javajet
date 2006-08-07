@@ -1,0 +1,53 @@
+<%@ jet package="datascript.jet.java" 
+        imports="datascript.ast.* datascript.emit.java.*" 
+        class="SequenceRead" %>
+<% 
+    StructEmitter e = (StructEmitter) argument;
+    JavaEmitter global = e.getGlobal();
+    StructType s = e.getSequenceType();
+    String name = s.getName(); 
+%>
+    public <%=name%>(short u8,int u16,long u32,BigInteger u64) 
+    {
+    	// TODO: initialize
+    }
+    
+    public <%=name%>(String __filename) throws IOException 
+    {
+        this(new BitStreamReader(__filename), new CallChain());
+    }
+
+    public <%=name%>(BitStreamReader __in) throws IOException 
+    {
+    	this(__in, new CallChain());
+    }
+
+    public <%=name%>(BitStreamReader __in, CallChain __cc) throws IOException 
+    {
+        try 
+        {
+            __cc.push("<%=name%>", this);
+            __fpos = __in.getBitPosition();
+            try 
+            {
+<%
+	for (Field field : s.getFields())
+	{
+%>	
+                <%=e.readField(field)%>
+<%
+	}
+%>                
+            } 
+            catch (IOException __e1) 
+            {
+        	__in.setBitPosition(__fpos);
+                throw __e1;
+       	    }
+        }
+        finally 
+        { 
+            __cc.pop(); 
+        }
+    }
+

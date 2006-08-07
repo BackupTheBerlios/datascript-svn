@@ -1,0 +1,17 @@
+<%@ jet package="datascript.jet.java" 
+        imports="datascript.ast.* datascript.emit.java.*" 
+        class="ArrayRead" %>
+<% 
+    ArrayEmitter e = (ArrayEmitter) argument;
+    String elType = e.getElementTypeName();
+    String field  = e.getFieldName();
+    String length = e.getLengthExpr();
+%>
+{
+                    Vector<<%=elType%>> v = new Vector<<%=elType%>>((int)(<%=length%>)); // XXX TODO sure cast doesn't narrow
+                    for (int i = 0; i < (<%=length%>); i++) 
+                    {
+                        v.addElement(new <%=elType%>(__in, __cc));
+                    }
+                    <%=field%> = new ObjectArray<<%=elType%>>(v);
+                }

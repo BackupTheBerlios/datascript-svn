@@ -1,0 +1,24 @@
+<%@ jet package="datascript.jet.java" 
+        imports="datascript.ast.* datascript.emit.java.*" 
+        class="SequenceFieldAccessor" %>
+<% 
+    SequenceFieldEmitter e = (SequenceFieldEmitter) argument;
+    JavaEmitter global = e.getGlobal();
+    String type =  e.getTypeName();
+    String field = e.getFieldName();
+    String getter = e.getGetterName();
+    String setter = e.getSetterName();
+%>
+    private <%=type%> <%=field%>;
+    
+    public <%=type%> <%=getter%>() 
+    { 
+        return header; 
+    }
+    
+    public void <%=setter%>(<%=type%> <%=field%>) 
+    { 
+        this.<%=field%> = <%=field%>; 
+    }
+
+
