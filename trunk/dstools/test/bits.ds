@@ -171,3 +171,10 @@ VarBitFieldArray
      bit:4		list2[numElems];
 };
 
+IntArray
+{
+     uint16		numElems;
+     int16		intList[numElems];
+     uint16		uintList[numElems];
+};
+

@@ -43,7 +43,7 @@ BasicMapDisplay
      * List of level data. levels[i] is the data for level i. The level
      * depends on the level header at the corresponding index position.
      */
-    LevelContent(levelHeaders[levels$index]) 	levels[numLevels];
+    LevelContent(levelHeaders[0 /* levels$index */]) 	levels[numLevels];
 };
 
 /**
@@ -527,15 +527,15 @@ AreaCoordXYDiff(uint8 numBits, int32 numVertices)
 /**
  * Remaining vertices of an area feature in difference encoding.
  *
- * @todo When DataScript support signed and unsigned bitfields,
- * we can replace each pair of sign and absolute value by a single
- * signed value.
- *
  * The vertex coordinates relative to the anchor are defined recursively
  * by
  *
  * v[i].x = v[i-1].x + (1-2*signX) * dx 
  * v[i].y = v[i-1].y + (1-2*signY) * dy
+ *
+ * @todo When DataScript support signed and unsigned bitfields,
+ * we can replace each pair of sign and absolute value by a single
+ * signed value.
  */
 AreaCoordXYDiffTail(bit:5 nx, bit:5 ny)
 {
@@ -709,7 +709,7 @@ LineFeature(TileHeader header)
  * are read from a given index in this table. This assumes that the
  * attributes all fit within 32 bits.
  */
-AttributeTable(int32 size)
+AttributeTable(uint32 size)
 {
     /** Attribute values. */
     int32   attr[size/4];
@@ -901,10 +901,6 @@ LineCoordXYDiff(uint8 numBits, int32 numPoints)
 /**
  * Remaining vertices of a line feature in difference encoding.
  *
- * @todo When DataScript support signed and unsigned bitfields,
- * we can replace each pair of sign and absolute value by a single
- * signed value.
- *
  * The vertex coordinates relative to the anchor are defined recursively
  * by
  *
@@ -913,6 +909,11 @@ LineCoordXYDiff(uint8 numBits, int32 numPoints)
  *
  * @param nx	number of bits for x coordinates
  * @param ny	number of bits for y coordinates
+ *
+ * @todo When DataScript support signed and unsigned bitfields,
+ * we can replace each pair of sign and absolute value by a single
+ * signed value.
+ *
  */
 LineCoordXYDiffTail(bit:5 nx, bit:5 ny)
 {
@@ -1063,7 +1064,7 @@ enum bit:4 Population
  * from an anchor point.
  * @param width     number of bits per coordinate
  */
-union CoordXY(uint8 width)
+union CoordXY(CoordinateWidth width)
 {
     CoordXY8	c8 	: width == COORD_WIDTH_8;      
     CoordXY12	c12 	: width == COORD_WIDTH_12;      
