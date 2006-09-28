@@ -41,15 +41,15 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.FileImageOutputStream;
 
 /**
  * @author HWellmann
  *
  */
-public class BitStreamReader extends FileImageInputStream
+public class BitStreamWriter extends FileImageOutputStream
 {
-    public BitStreamReader(String fileName) throws IOException
+    public BitStreamWriter(String fileName) throws IOException
     {
         super(new File(fileName));
     }
@@ -71,106 +71,72 @@ public class BitStreamReader extends FileImageInputStream
         }       
     }
     
-    public byte readByte() throws IOException
+    public void writeByte(int value) throws IOException
     {
-        byte result;
         if (bitOffset == 0)
         {
-            result = super.readByte();
+            super.writeByte(value);
         }
         else
         {
-            result = (byte) readBits(8);            
+            writeBits((long) value, 8);            
         }
-        return result;
     }
 
-    public int readUnsignedByte() throws IOException
+
+    public void writeShort(int value) throws IOException
     {
-        int result;
         if (bitOffset == 0)
         {
-            result = super.readUnsignedByte();
+            super.writeShort(value);
         }
         else
         {
-            result = (int) (readBits(8) & 0xFF);            
+            writeBits((long)value, 16);            
         }
-        return result;
     }
 
-    public short readShort() throws IOException
+    
+    public void writeInt(int value) throws IOException
     {
-        short result;
         if (bitOffset == 0)
         {
-            result = super.readShort();
+            super.writeInt(value);
         }
         else
         {
-            result = (short) readBits(16);            
+            writeBits((long)value, 32);            
         }
-        return result;
     }
 
-    public int readUnsignedShort() throws IOException
+    public void writeUnsignedInt(long value) throws IOException
     {
-        int result;
+        writeBits(value, 32);            
+    }
+
+    public void writeLong(long value) throws IOException
+    {
         if (bitOffset == 0)
         {
-            result = super.readUnsignedShort();
+            super.writeLong(value);
         }
         else
         {
-            result = (int) (readBits(16) & 0xFFFF);            
+            writeBits(value, 64);            
         }
-        return result;
     }
     
-    public int readInt() throws IOException
+    public void byteAlign() throws IOException
     {
-        int result;
-        if (bitOffset == 0)
+        if (bitOffset != 0)
         {
-            result = super.readInt();
+            writeBits(0, 8-bitOffset);
         }
-        else
-        {
-            result = (int) readBits(32);            
-        }
-        return result;
-    }
-
-    public long readUnsignedInt() throws IOException
-    {
-        long result;
-        if (bitOffset == 0)
-        {
-            result = super.readUnsignedInt();
-        }
-        else
-        {
-            result = readBits(32);            
-        }
-        return result;
-    }
-
-    public long readLong() throws IOException
-    {
-        long result;
-        if (bitOffset == 0)
-        {
-            result = super.readLong();
-        }
-        else
-        {
-            result = readBits(64);            
-        }
-        return result;
     }
     
-    public BigInteger readBigInteger(int numBits) throws IOException
+    public void writeBigInteger(int numBits, BigInteger value) throws IOException
     {
+/*
         BigInteger result = BigInteger.ZERO;
         int toBeRead = numBits;
         if (toBeRead > 8)
@@ -178,14 +144,14 @@ public class BitStreamReader extends FileImageInputStream
             if (bitOffset != 0)
             {
                 int prefixLength = 8-bitOffset;
-                long mostSignificantBits = readBits(prefixLength);
+                long mostSignificantBits = writeBits(prefixLength);
                 result = BigInteger.valueOf(mostSignificantBits);
                 toBeRead -= prefixLength;
             }
 
             int numBytes = toBeRead / 8;
             byte[] b = new byte[numBytes];
-            readFully(b);
+            writeFully(b);
             BigInteger i = new BigInteger(1, b);
             result = result.shiftLeft(8*numBytes);
             result = result.or(i);
@@ -193,10 +159,11 @@ public class BitStreamReader extends FileImageInputStream
         }
         if (toBeRead > 0)
         {
-            long value = readBits(toBeRead);
+            long value = writeBits(toBeRead);
             result = result.shiftLeft(toBeRead);
             result = result.or(BigInteger.valueOf(value));
         }        
-        return result;        
+        return result;
+*/
     }
 }
