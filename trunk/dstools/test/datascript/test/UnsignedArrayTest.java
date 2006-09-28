@@ -79,7 +79,7 @@ public class UnsignedArrayTest extends TestCase
         }
         os.close();
 
-        bits.IntArray array = new bits.IntArray(fileName);
+        bits.IntegerArray array = new bits.IntegerArray(fileName);
         assertEquals(numElems, array.getNumElems());
         ShortArray signed = array.getIntList();
         for (int i = 0; i < numElems; i++)

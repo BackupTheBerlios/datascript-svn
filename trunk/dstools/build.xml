@@ -1,6 +1,7 @@
-<project name="datascript" default="all" basedir=".">
+<project name="dstools" default="all" basedir=".">
 
   <property name="build" value="${basedir}/build"/>
+  <property name="jar" value="${build}/jar"/>
   <property name="src" value="${basedir}/src"/>
   <property name="test" value="${basedir}/test"/>
   <property name="reports.test" value="${basedir}/reports"/>
@@ -77,8 +78,6 @@
     <mkdir dir="${classes}" />
     <mkdir dir="${build}/test/bits/classes" />
     <mkdir dir="${build}/test/bits/gen" />
-    <mkdir dir="${build}/test/gdb/classes" />
-    <mkdir dir="${build}/test/gdb/gen" />
   </target>
 
     <target name="jet" depends="prepare" unless="jet.uptodate">
@@ -147,7 +146,7 @@
     <mkdir dir="${build}/examples/classfile"/>
     <mkdir dir="${build}/examples/classes"/>
 
-    <java jar="${build}/datascript.jar" dir="${examples}/classfile" failonerror="true" fork="yes">
+    <java jar="${jar}/datascript.jar" dir="${examples}/classfile" failonerror="true" fork="yes">
       <arg line="-ov classfile.ds"/>
     </java>
 
@@ -168,12 +167,12 @@
       property="bits.uptodate" 
       targetfile="${build}/test/gen/bits/BitStruct.java">
       <srcfiles file="${basedir}/test/bits.ds"/>
-      <srcfiles file="${build}/datascript.jar"/>    
+      <srcfiles file="${jar}/datascript.jar"/>    
     </uptodate>
   </target>      
         
   <target name="test.gen" depends="jar" description="Generates parser for test cases"  unless="bits.uptodate">
-    <java jar="${build}/datascript.jar" dir="${test}" failonerror="true" fork="yes">
+    <java jar="${jar}/datascript.jar" dir="${test}" failonerror="true" fork="yes">
         <classpath>
           <pathelement path="${gen}"/>
         </classpath>
@@ -181,10 +180,10 @@
     </java>
   </target>
           
-  <target name="test.compile" depends="test.uptodate, test.gen, gdb.gen, jar, check.junit" description="Builds the test cases">
+  <target name="test.compile" depends="test.uptodate, test.gen, jar, check.junit" description="Builds the test cases">
     <javac destdir="${build}/test/classes" debug="on">
       <classpath>
-        <pathelement path="${build}/datascript.jar"/>
+        <pathelement path="${jar}/datascript.jar"/>
       </classpath>
         <src path="${build}/test/gen" />
         <src path="${test}" />
@@ -192,10 +191,10 @@
   </target>
 
   <target name="test.run" depends="test.compile" description="Runs the unit tests">
-    <junit printsummary="yes">
+    <junit printsummary="no">
         <classpath>
                 <pathelement path="${build}/test/classes"/>
-                <pathelement path="${build}/datascript.jar"/>
+                <pathelement path="${jar}/datascript.jar"/>
         </classpath>
        <batchtest>
          <fileset dir="${test}">
@@ -206,50 +205,5 @@
     </junit>     
   </target>
 
-  <target name="gdb.uptodate" depends="jar">
-    <uptodate 
-      property="gdb.uptodate" 
-      targetfile="${build}/test/gen/gdb/Gdb.java">
-      <srcfiles file="${basedir}/test/gdb.ds"/>
-      <srcfiles file="${build}/datascript.jar"/>    
-    </uptodate>
-  </target>      
-        
-  <target name="gdb.gen" depends="gdb.uptodate, jar" description="Generates parser for test cases"  unless="gdb.uptodate">
-    <java jar="${build}/datascript.jar" dir="${test}" failonerror="true" fork="yes">
-        <classpath>
-          <pathelement path="${gen}"/>
-        </classpath>
-      <arg line="-ov -d ${build}/test/gen -xv gdb.ds"/>
-    </java>
-  </target>
-          
-  <target name="gdb.compile" depends="gdb.uptodate, gdb.gen, jar, check.junit" description="Builds the test cases">
-    <javac destdir="${build}/test/classes" debug="on">
-      <classpath>
-        <pathelement path="${build}/datascript.jar"/>
-      </classpath>
-        <src path="${build}/test/gen" />
-        <src path="${test}" />
-    </javac>
-  </target>
-
-  <target name="gdb.run" depends="gdb.compile" description="Runs the unit tests">
-    <junit printsummary="yes">
-        <classpath>
-                <pathelement path="${build}/test/classes"/>
-                <pathelement path="${build}/datascript.jar"/>
-        </classpath>
-       <batchtest>
-         <fileset dir="${test}/gdb">
-           <include name="**/*Test.java"/>      
-         </fileset>       
-         <formatter type="plain" usefile="false"/>
-       </batchtest> 
-    </junit>     
-  </target>
-                
- 
- 
         
 </project>
