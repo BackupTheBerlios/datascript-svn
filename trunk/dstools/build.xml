@@ -70,6 +70,7 @@
 
   <target name="prepare" depends="init">
     <mkdir dir="${build}" />
+    <mkdir dir="${build}/jar" />
     <mkdir dir="${build}/test/classes" />
     <mkdir dir="${build}/test/gen" />
     <mkdir dir="${gen}" />
@@ -135,7 +136,7 @@
   </target>
 
   <target name="jar" depends="compile" description="Builds the distribution jar file (default)">
-    <jar destfile="${build}/datascript.jar"
+    <jar destfile="${build}/jar/datascript.jar"
       basedir="${classes}"
       manifest="${src}/Manifest.txt"
       includes="**" />
