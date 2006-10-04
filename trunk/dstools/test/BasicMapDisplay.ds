@@ -2,8 +2,11 @@
 // PSF Standardization Initiative
 // WP1.4 Physical Data Model
 // Basic Map Display Building Block
+// 
+// 0.1  20060713        HWellmann       Initial draft
 //
-// 0.1	20060713	HWellmann	Initial draft
+// 0.2  20060929        HWellmann       Enhanced coordinate compression
+//                                      Explicit feature type values
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -31,19 +34,19 @@ BasicMapDisplay
      * Number of levels in this building block according to the global
      * tiling scheme. The default value is 14, for levels 0..13.
      */
-    uint8				numLevels;
+    uint8                               numLevels;
     
     /**
      * List of level headers. levelHeader[i] is the header for level i.
      * An empty level i has a header with each value set to 0.
      */
-    LevelHeader				levelHeaders[numLevels];
+    LevelHeader                         levelHeaders[numLevels];
 
     /**
      * List of level data. levels[i] is the data for level i. The level
      * depends on the level header at the corresponding index position.
      */
-    LevelContent(levelHeaders[0 /* levels$index */]) 	levels[numLevels];
+    LevelContent(levelHeaders[levels$index])    levels[numLevels];
 };
 
 /**
@@ -54,8 +57,8 @@ LevelContent(LevelHeader header)
     /**
      * List of tiles for a given level. The length of the list is
      * indicated by the level header.
-     */	
-    Tile		tile[header.numTiles];
+     */ 
+    Tile                tile[header.numTiles];
 };
 
 /**
@@ -67,17 +70,17 @@ LevelHeader
     /** 
      * Minimum recommended map scale (1 : scaleMin) for the current level. 
      */
-    int32		scaleMin;
+    int32               scaleMin;
 
     /** 
      * Minimum recommended map scale (1 : scaleMax) for the current level. 
      */
-    int32		scaleMax;
+    int32               scaleMax;
 
     /**
      * Number of subscales for this level.
-     */ 	
-    uint8		numSubscales : 0 <= numSubscales && numSubscales <= 7;
+     */         
+    uint8               numSubscales : 0 <= numSubscales && numSubscales <= 7;
 
     /**
      * Subscale values for this level. The values are between scaleMin
@@ -88,18 +91,18 @@ LevelHeader
      * is less than subscale[i-1]. Thus, a feature with subscale index 0
      * will never be suppressed.
      */
-    uint32		subscale[numSubscales];
+    uint32              subscale[numSubscales];
     
     /**
      * All coordinate values in this level are to be shifted by coordShift
      * bits, i.e. to be multiplied by 2^coordShift.
      */
-    uint8		coordShift;
+    uint8               coordShift;
     
     /**
      * Number of tiles in this level.
      */
-    uint32		numTiles;
+    uint32              numTiles;
 };
 
 
@@ -108,11 +111,11 @@ LevelHeader
  */
 Tile
 {
-    /** Header information, valid for all features. */	
-    TileHeader		header;
+    /** Header information, valid for all features. */  
+    TileHeader          header;
     
     /** Map features and attributes. */
-    TileContent(header)	content;
+    TileContent(header) content;
 };
 
 
@@ -122,19 +125,19 @@ Tile
 TileHeader
 {
     /** Tile id according to the global tiling scheme. */
-    int32		tileId;
+    int32               tileId;
     
     /** Default coordinate width for this tile. */
-    CoordinateWidth	coordWidth;
+    uint8               coordWidth;
     
     /** Compression method to be used in this tile. */
-    CoordCompression	compression;
+    CoordCompression    compression;
     
     /** Offset of attribute table from start of tile. */
-    uint32		attrOffset;
+    uint32              attrOffset;
     
     /** Size of attribute table. */
-    uint32		attrSize;
+    uint32              attrSize;
 };
 
 
@@ -151,33 +154,33 @@ TileHeader
 
 /**
  * Tile content for a given tile, identified by the header.
- * @param header	header data for the current tile
+ * @param header        header data for the current tile
  */
 TileContent(TileHeader header)
 {
-    /** Number of area features. */	
-    uint16     		 		numAreas;	
+    /** Number of area features. */     
+    uint16                              numAreas;       
     
     /** List of area features. */
-    AreaFeature(header) 		areas[numAreas];
+    AreaFeature(header)                 areas[numAreas];
 
-    /** Number of area features. */	
-    uint16     		 		numLines;	
+    /** Number of area features. */     
+    uint16                              numLines;       
 
     /** List of line features. */
-    LineFeature(header) 		lines[numLines];
+    LineFeature(header)                 lines[numLines];
 
-    /** Number of point features. */	
-    uint16     		 		numPoints;	
+    /** Number of point features. */    
+    uint16                              numPoints;      
 
     /** List of point features. */
-    PointFeature(header) 		points[numPoints];
+    PointFeature(header)                points[numPoints];
 
     /**
      * Attribute table for the current tile.
-     */	
+     */ 
 header.attrOffset:
-    AttributeTable(header.attrSize)	attrTable;	        
+    AttributeTable(header.attrSize)     attrTable;              
 };
 
 /**
@@ -186,90 +189,68 @@ header.attrOffset:
  */
 enum uint8 CoordCompression
 {
-    /** No compression. */	
-    COMPRESSION_NONE 	  = 0,
+    /** No compression. */      
+    COMPRESSION_NONE      = 0,
     
     /** The compression method is indicated per feature. */
     COMPRESSION_VARIABLE  = 1
 };
 
 /**
- * Default number of bits used for coordinate encoding in this tile.
- * Coordinates are specified as (positive) offsets relative to the southwest 
- * corner of the tile, except for COORD_WIDTH_32, where absolute values are 
- * used.
- */
-enum uint8 CoordinateWidth
-{
-    /** 8 bit coordinate offsets. */
-    COORD_WIDTH_8 = 8,
-
-    /** 12 bit coordinate offsets. */
-    COORD_WIDTH_12 = 12,
-
-    /** 16 bit coordinate offsets. */
-    COORD_WIDTH_16 = 16,
-
-    /** 24 bit coordinate offsets. */
-    COORD_WIDTH_24 = 24,
-
-    /** Absolute coordinates as int32. */
-    COORD_WIDTH_32 = 32
-};
-
-/**
  * Point feature types.  
- * @todo Assign values. The value sets for point, line and area feature types
+ * The value sets for point, line and area feature types
  * must be disjoint.
  */
 enum uint8 PointFeatureType
 {
-    POINT_CITY_CENTRE,
-    POINT_CITY_DISTRICT_CENTRE,
-    POINT_HAMLET
+    POINT_CITY_CENTRE           = 0x00,
+    POINT_CITY_DISTRICT_CENTRE  = 0x01,
+    POINT_HAMLET                = 0x02
 };
 
 /**
  * Line feature types.  
- * @todo Assign values. The value sets for point, line and area feature types
+ * The value sets for point, line and area feature types
  * must be disjoint.
  */
 enum uint8 LineFeatureType
 {
-    LINE_ROAD_FRC_0,
-    LINE_ROAD_FRC_1,
-    LINE_ROAD_FRC_2,
-    LINE_ROAD_FRC_3,
-    LINE_ROAD_FRC_4,
-    LINE_ROAD_FRC_5,
-    LINE_ROAD_FRC_6,
-    LINE_ROAD_FRC_7,
-    LINE_BORDER,
-    LINE_WATERWAY,
-    LINE_RAILWAY
+    LINE_ROAD_FRC_0             = 0x20,
+    LINE_ROAD_FRC_1             = 0x21,
+    LINE_ROAD_FRC_2             = 0x22,
+    LINE_ROAD_FRC_3             = 0x23,
+    LINE_ROAD_FRC_4             = 0x24,
+    LINE_ROAD_FRC_5             = 0x25,
+    LINE_ROAD_FRC_6             = 0x26,
+    LINE_ROAD_FRC_7             = 0x27,
+    LINE_BORDER                 = 0x30,
+    LINE_WATERWAY               = 0x31,
+    LINE_RAILWAY                = 0x32,
+    LINE_CONTOUR                = 0x33,
+    LINE_TIME_ZONE              = 0x34
 };
 
 /**
  * Area feature types.  
- * @todo Assign values. The value sets for point, line and area feature types
+ * The value sets for point, line and area feature types
  * must be disjoint.
  */
 enum uint8 AreaFeatureType
 {
-    AREA_WATER,
-    AREA_ADMIN,
-    AREA_POSTAL_DISTRICT,
-    AREA_PARK,
-    AREA_BUILT_UP,
-    AREA_INDUSTRIAL,
-    AREA_BUILDING,
-    AREA_PEDESTRIAN,
-    AREA_TRAFFIC,
-    AREA_WOODLAND,
-    AREA_AIRPORT,
-    AREA_RUNWAY,
-    AREA_HOSPITAL,
-    AREA_CEMETARY
+    AREA_WATER                  = 0x60,
+    AREA_ADMIN                  = 0x61,
+    AREA_POSTAL_DISTRICT        = 0x62,
+    AREA_PARK                   = 0x63,
+    AREA_BUILT_UP               = 0x64,
+    AREA_INDUSTRIAL             = 0x65,
+    AREA_BUILDING               = 0x66,
+    AREA_PEDESTRIAN             = 0x67,
+    AREA_TRAFFIC                = 0x68,
+    AREA_WOODLAND               = 0x69,
+    AREA_AIRPORT                = 0x6A,
+    AREA_RUNWAY                 = 0x6B,
+    AREA_HOSPITAL               = 0x6C,
+    AREA_CEMETARY               = 0x6D
 };
 
 /**
@@ -287,45 +268,45 @@ AreaFeature(TileHeader header)
      * For numbers larger than 15, this value is set to 1, and the actual
      * number of vertices is encoded in the optional field extNumVertices.
      */
-    bit:4   				numVertices;
+    bit:4                               numVertices;
     
     /**
      * Scale sublevel for this feature.
      * @see LevelHeader
      */
-    bit:4				scaleSublevel;
+    bit:4                               scaleSublevel;
     
     /**
      * Administrative level of this area.
      */
-    bit:4				adminLevel;	    
+    bit:4                               adminLevel;         
     /**
      * Method for obtaining the name for this feature.
      */
-    NameSource   			nameSource;
+    NameSource                          nameSource;
     
     /**
      * Additional data for obtaining the name for this feature.
      */
-    NameInfo(nameSource)		nameInfo;
+    NameInfo(nameSource)                nameInfo;
     
     /**
      * Extended number of vertices. This field is present only if 
      * the feature has more than 15 vertices.
      */
-    NumberOfVertices   			extNumVx if numVertices == 1;
+    NumberOfVertices                    extNumVx if numVertices == 1;
     
     /**
      * Compressed list of vertex coordinates. The default coordinate width
      * and the actual number of vertices are passed to the child type.
      */
     AreaCoordXY(header,
-    	    (numVertices != 1) 
-		? numVertices 
-		: (extNumVx.numVx8 == 255) 
-		  ? extNumVx.numVx16
-		  : extNumVx.numVx8)		
-		    			coord;    
+            (numVertices != 1) 
+                ? numVertices 
+                : (extNumVx.numVx8 == 255) 
+                  ? extNumVx.numVx16
+                  : extNumVx.numVx8)            
+                                        coord;    
 };
 
 /**
@@ -401,7 +382,7 @@ AreaFeature(TileHeader header)
  * abs.x = corner.x + ((anchor.x + v.x) << coordShift)
  * abx.y = corner.y + ((anchor.y + v.y) << coordShift)
  * 
- * If header.coordWidth == COORD_WIDTH_32, the anchor coordinates are
+ * If header.coordWidth == 32, the anchor coordinates are
  * absolute, so that
  *
  * abs.x = anchor.x + (v.x << coordShift)
@@ -411,9 +392,9 @@ AreaCoordXY(TileHeader header, int32 numPoints)
 {
     /**
      * The encoding method for coordinates of this feature.
-     */	    	
+     */         
     CoordinateEncoding                          encoding 
-    	if header.compression == COMPRESSION_VARIABLE;
+        if header.compression == COMPRESSION_VARIABLE;
 
     /**
      * Number of bits to be used for coordinate encoding.
@@ -433,14 +414,14 @@ AreaCoordXY(TileHeader header, int32 numPoints)
     union Vertices
     {
         /** Uncompressed encoding with tile dependent width. */
-        CoordXY(header.coordWidth)		uncompressed[numPoints] 
+        CoordXY(header.coordWidth)              uncompressed[numPoints] 
             : header.compression == COMPRESSION_NONE;
 
         /** Compressed encoding with feature dependent width. */
-        AreaCoordXYExplicit(numBits)   		explicit[numPoints]
+        AreaCoordXYExplicit(numBits)            explicit[numPoints]
             : encoding == COORD_SEPARATE;
 
-	/** Compressed difference encoding with feature dependent width. */
+        /** Compressed difference encoding with feature dependent width. */
         AreaCoordXYDiff(numBits, numPoints)     diff
             : encoding == COORD_DIFF;
     } vertices;
@@ -454,7 +435,7 @@ AreaCoordXY(TileHeader header, int32 numPoints)
  * polygonFlag of the first two vertices of each polygon.
  */
 enum bit:2 PolygonType
-{	
+{       
     CONVEX_POLYGON = 00b,
     TRIANGLE_STRIP = 01b,
     TRIANGLE_FAN   = 10b
@@ -463,65 +444,65 @@ enum bit:2 PolygonType
 /**
  * Explicit encoding of vertex coordinates. All coordinates are positive offsets
  * with respect to the anchor point defined in AreaCoordXY.
- * @param numBits	coordinate width (number of bits)
+ * @param numBits       coordinate width (number of bits)
  */
 AreaCoordXYExplicit(uint8 numBits)
 {
     /** x coordinate (longitude). */
-    bit<numBits>	x;
+    bit<numBits>        x;
 
     /** y coordinate (latitude). */
-    bit<numBits>	y;
+    bit<numBits>        y;
 
     /** 
      * If true, the edge associated to this vertex is a pseudo-edge.
      * The assocication depends on the polygon type.
      * @see AreaCoordXY
      */
-    bit:1		isPseudo;
+    bit:1               isPseudo;
 
     /** 
      * Indicates the polygon type and the last vertex of a polygon.
      * @see AreaCoordXY
      */
-    bit:1		polygonFlag;
+    bit:1               polygonFlag;
 };
 
 
 /**
  * Vertex list of an area feature with difference encoding of coordinates.
- * @param numBits 	number of bits for the coordinates of the first vertex
+ * @param numBits       number of bits for the coordinates of the first vertex
  * @param numVertices   total number of vertices ( >= 3)
  */
 AreaCoordXYDiff(uint8 numBits, int32 numVertices)
 {
     /** Number of bits for x coordinates. */
-    bit:5			nx;
+    bit:5                       nx;
     
     /** Number of bits for y coordinates. */
-    bit:5			ny;
+    bit:5                       ny;
     
     /** x coordinate of first vertex v0. */
-    bit<numBits>		x0;
+    bit<numBits>                x0;
 
     /** y coordinate of first vertex v0. */
-    bit<numBits>		y0;
+    bit<numBits>                y0;
 
     /** 
      * If true, the edge associated to this vertex is a pseudo-edge.
-     * The assocication depends on the polygon type.
+     * The association depends on the polygon type.
      * @see AreaCoordXY
      */
-    bit:1			isPseudo;
+    bit:1                       isPseudo;
 
     /** 
      * Indicates the polygon type and the last vertex of a polygon.
      * @see AreaCoordXY
      */
-    bit:1			faceFlag;
+    bit:1                       faceFlag;
 
     /** Remaining vertices v[1], ..., v[numVertices-1]. */
-    AreaCoordXYDiffTail(nx, ny)	tail[numVertices-1];
+    AreaCoordXYDiffTail(nx, ny) tail[numVertices-1];
 };
 
 /**
@@ -540,29 +521,29 @@ AreaCoordXYDiff(uint8 numBits, int32 numVertices)
 AreaCoordXYDiffTail(bit:5 nx, bit:5 ny)
 {
     /** Sign of x coordinate difference. */
-    bit:1		signX;
+    bit:1               signX;
 
     /** Absolute value of x coordinate difference. */
-    bit<nx>		dx;
+    bit<nx>             dx;
 
     /** Sign of y coordinate difference. */
-    bit:1		signY;
+    bit:1               signY;
 
     /** Absolute value of y coordinate difference. */
-    bit<ny>		dy;    
+    bit<ny>             dy;    
 
     /** 
      * If true, the edge associated to this vertex is a pseudo-edge.
      * The assocication depends on the polygon type.
      * @see AreaCoordXY
      */
-    bit:1		isPseudo;
+    bit:1               isPseudo;
 
     /** 
      * Indicates the polygon type and the last vertex of a polygon.
      * @see AreaCoordXY
      */
-    bit:1		faceFlag;
+    bit:1               faceFlag;
 };
 
 
@@ -572,10 +553,10 @@ AreaCoordXYDiffTail(bit:5 nx, bit:5 ny)
 enum bit:2 NameSource
 {
     /** Feature has the same name as the previous one. */
-    SAME_NAME 		= 00b,
+    SAME_NAME           = 00b,
     
     /** Feature has no name at all. */
-    NO_NAME    	 	= 01b,
+    NO_NAME             = 01b,
     
     /** 
      * Name reference for this feature can be obtained by adding the
@@ -586,16 +567,16 @@ enum bit:2 NameSource
     /**
      * Name reference follows.
      */
-    NAME_REF		= 11b
+    NAME_REF            = 11b
 };
 
 /**
  * Additional data for obtaining a name reference.
- * @param source	method for obtaining a name reference.
+ * @param source        method for obtaining a name reference.
  */
 NameInfo(NameSource source)
 {
-    /** Offset with respect to previous name reference. (May be negative!) */	
+    /** Offset with respect to previous name reference. (May be negative!) */   
     int16   nameRefOffset if source == NAME_REF_OFFSET;
     
     /** Explicit name reference. */
@@ -608,13 +589,13 @@ NameInfo(NameSource source)
 enum bit:2 AttributeSource
 {
     /** Feature has the same attribute values as the previous one. */    
-    ATTR_PREVIOUS	= 00b,
+    ATTR_PREVIOUS       = 00b,
     
     /** 
      * The following uint8 is an index into the attribute table, the
      * attribute can be read from table[index].
      */
-    ATTR_INDEX_8   	= 01b,
+    ATTR_INDEX_8        = 01b,
 
     /** 
      * The following uint16 is an index into the attribute table, the
@@ -625,7 +606,7 @@ enum bit:2 AttributeSource
     /**
      * The following uint32 is the attribute value.
      */
-    ATTR_VALUE		= 11b
+    ATTR_VALUE          = 11b
 };
 
 /**
@@ -635,13 +616,13 @@ enum bit:2 AttributeSource
 union AttributeInfo(AttributeSource source)
 {
     /** Index into attribute table. */
-    uint8       index8  	: source == ATTR_INDEX_8;
+    uint8       index8          : source == ATTR_INDEX_8;
 
     /** Index into attribute table. */
-    uint16      index16 	: source == ATTR_INDEX_16;
+    uint16      index16         : source == ATTR_INDEX_16;
 
     /** Explicit attribute value. */
-    RoadAttributes     attr 	: source == ATTR_VALUE;
+    RoadAttributes     attr     : source == ATTR_VALUE;
 };
 
 
@@ -651,8 +632,8 @@ union AttributeInfo(AttributeSource source)
  */
 NumberOfVertices
 {
-    uint8 	numVx8;
-    uint16	numVx16 	if numVx8 == 255;
+    uint8       numVx8;
+    uint16      numVx16         if numVx8 == 255;
 };
 
 
@@ -666,42 +647,42 @@ NumberOfVertices
  */
 LineFeature(TileHeader header)
 {
-    LineFeatureType		type;	
+    LineFeatureType             type;   
     /** 
      * Number of vertices of this feature. If the actual number is larger than
      * 15, this value is set to 1 and the actual number is stored in extNumVx.
      */
-    bit:4   			numVertices;
+    bit:4                       numVertices;
     
     /** Method for obtaining the attributes. */
-    AttributeSource		attrSource;
+    AttributeSource             attrSource;
 
-    /** Method for obtaining a name reference. */	
-    NameSource   		nameSource;
+    /** Method for obtaining a name reference. */       
+    NameSource                  nameSource;
     
     /** Additional data for obtaining the attributes. */
-    AttributeInfo(attrSource)	attrInfo;
+    AttributeInfo(attrSource)   attrInfo;
     
     /** Additional data for obtaining a name reference. */
-    NameInfo(nameSource)	nameInfo;
+    NameInfo(nameSource)        nameInfo;
     
     /** 
      * Optional field to be used if the number of vertices is larger than 15.
      * In this case, numVertices is set to 1, and this field must be present.
      */
-    NumberOfVertices		extNumVx 	if numVertices == 1;
+    NumberOfVertices            extNumVx        if numVertices == 1;
 
     /**
      * List of vertices for this line feature.
-     */	
+     */ 
     LineCoordXYZ(header.coordWidth, 
-    	    (numVertices > 1) 
-		? numVertices 
-		: (extNumVx.numVx8 == 255) 
-		  ? extNumVx.numVx16
-		  : extNumVx.numVx8)		
-		    		
-		    		coord;
+            (numVertices > 1) 
+                ? numVertices 
+                : (extNumVx.numVx8 == 255) 
+                  ? extNumVx.numVx16
+                  : extNumVx.numVx8)            
+                                
+                                coord;
 };
 
 /**
@@ -753,10 +734,10 @@ enum bit:3 SpeedCategory
  */
 enum bit:2 Direction
 {
-    DIRECTION_NONE	= 00b,
+    DIRECTION_NONE      = 00b,
     DIRECTION_POSITIVE  = 01b,
     DIRECTION_NEGATIVE  = 10b,
-    DIRECTION_BOTH	= 11b
+    DIRECTION_BOTH      = 11b
 };
 
 /**
@@ -764,22 +745,22 @@ enum bit:2 Direction
  */
 RoadAttributes
 {
-    bit:3			scaleSublevel;	    		// 3
-    bit:3			adminRoadClass;			// 6
-    SpeedCategory		speedCat;			// 9
-    Direction			oneway;				// 11
-    Direction			specialCharge;			// 13
-    Direction			tollRoad;			// 15
-    bit:1			isBridge;			// 16
-    bit:1			isTunnel;			// 17
-    bit:1			isFerry;			// 18
-    bit:1			isPedestrian;			// 19
-    bit:1			isUnpaved;			// 20
-    bit:1			isInProcess;			// 21
-    bit:1			hasRightHandTraffic;		// 22
-    bit:1			hasSlope;			// 23
-    bit:1			unused;				// 24
-    int8			slope    if hasSlope == 1;	// 32
+    bit:3                       scaleSublevel;                  // 3
+    bit:3                       adminRoadClass;                 // 6
+    SpeedCategory               speedCat;                       // 9
+    Direction                   oneway;                         // 11
+    Direction                   specialCharge;                  // 13
+    Direction                   tollRoad;                       // 15
+    bit:1                       isBridge;                       // 16
+    bit:1                       isTunnel;                       // 17
+    bit:1                       isFerry;                        // 18
+    bit:1                       isPedestrian;                   // 19
+    bit:1                       isUnpaved;                      // 20
+    bit:1                       isInProcess;                    // 21
+    bit:1                       hasRightHandTraffic;            // 22
+    bit:1                       hasSlope;                       // 23
+    bit:1                       unused;                         // 24
+    int8                        slope    if hasSlope == 1;      // 32
 };
 
 /**
@@ -803,7 +784,7 @@ enum bit:3 CoordinateEncoding
  */
 enum uint8 ZCoordType
 {
-    /** The feature has no z-coordinates. */	
+    /** The feature has no z-coordinates. */    
     Z_NONE   = 0,
     
     /** 
@@ -824,7 +805,7 @@ enum uint8 ZCoordType
  * Coordinates of a line feature. In contrast to area features, a line feature
  * may have z-coordinates in addition to x and y-coordinates.
  */
-LineCoordXYZ(CoordinateWidth width, int32 numPoints)
+LineCoordXYZ(uint8 width, int32 numPoints)
 {
     /** Encoding method for x and y coordinates. */
     CoordinateEncoding                          encoding;
@@ -833,35 +814,28 @@ LineCoordXYZ(CoordinateWidth width, int32 numPoints)
     bit:5                                       numBits;
     
     /**
-     * Anchor point for the current line feature. In general, this point 
-     * is not a vertex of the feature. It should be the south-west vertex
-     * of the bounding rectangle.
-     */ 
-    CoordXY(width)                              anchor;
-    
-    /**
      * List of vertices in a variety of encodings.
      */
     union Vertices
     {
         /** Separate encoding of vertices. */
-        LineCoordXYExplicit(numBits)   		explicit[numPoints] 
-        					: encoding == COORD_SEPARATE;
+        LineCoordXYExplicit(width, numBits, numPoints)    explicit 
+                                                : encoding == COORD_SEPARATE;
 
         /** Difference encoding of vertices. */
-        LineCoordXYDiff(numBits, numPoints)     diff                
-        					: encoding == COORD_DIFF;
+        LineCoordXYDiff(width, numBits, numPoints)     diff                
+                                                : encoding == COORD_DIFF;
 
         /** Compact encoding of a line with 2 points */
-        LineCoordXYPair(numBits)		pair		    
-        					: encoding == COORD_PAIR &&  numPoints == 2;
+        LineCoordXYPair(width)                  pair                
+                                                : encoding == COORD_PAIR &&  numPoints == 2;
     } vertices;
 
-    /** Type of z coordinates. */	
-    ZCoordType					zType;
+    /** Type of z coordinates. */       
+    ZCoordType                                  zType;
 
     /** List of z coordinates. */
-    CoordZ(numPoints)				zCoords if zType != Z_NONE;
+    CoordZ(numPoints)                           zCoords if zType != Z_NONE;
 };
 
 
@@ -869,33 +843,61 @@ LineCoordXYZ(CoordinateWidth width, int32 numPoints)
  * Pair of x,y coordinates with a given width.
  * @param numBits   number of bits for coordinate encoding
  */
-LineCoordXYExplicit(uint8 numBits)
+LineCoordXYExplicit(uint8 width, uint8 numBits, int32 numPoints)
 {
-    bit<numBits>	x;
-    bit<numBits>	y;
+    /**
+     * Anchor point for the current line feature. In general, this point 
+     * is not a vertex of the feature. It should be the south-west vertex
+     * of the bounding rectangle.
+     */ 
+    CoordXY(width)                              anchor;
+    
+    /** Offset of each vertex from the anchor point. */
+        OffsetXY(numBits)                           offsets[numPoints];
+};
+
+
+/**
+ * Coordinates offset with respect to a given anchor point.
+ */
+OffsetXY(uint8 numBits)
+{
+        /** x coordinate offset. */
+    bit<numBits>        x;
+
+        /** y coordinate offset. */
+    bit<numBits>        y;
 };
 
 /**
  * Vertex list of a line feature with difference encoding of coordinates.
- * @param numBits 	number of bits for the coordinates of the first vertex
+ * @param width                 coordinate width of the current tile
+ * @param numBits       number of bits for the coordinates of the first vertex
  * @param numVertices   total number of vertices ( >= 3)
  */
-LineCoordXYDiff(uint8 numBits, int32 numPoints)
+LineCoordXYDiff(uint8 width, uint8 numBits, int32 numPoints)
 {
+    /**
+     * Anchor point for the current line feature. In general, this point 
+     * is not a vertex of the feature. It should be the south-west vertex
+     * of the bounding rectangle.
+     */ 
+    CoordXY(width)              anchor;
+
     /** Number of bits for x coordinates. */
-    bit:5			nx;
+    bit:5                       nx;
 
     /** Number of bits for y coordinates. */
-    bit:5			ny;
+    bit:5                       ny;
 
     /** x coordinate of first vertex v0. */
-    bit<numBits>		x0;
+    bit<numBits>                x0;
 
     /** y coordinate of first vertex v0. */
-    bit<numBits>		y0;
+    bit<numBits>                y0;
 
-    /** List of coordinates for remaining vertices. */	
-    LineCoordXYDiffTail(nx, ny)	tail[numPoints-1];
+    /** List of coordinates for remaining vertices. */  
+    LineCoordXYDiffTail(nx, ny) tail[numPoints-1];
 };
 
 /**
@@ -907,8 +909,8 @@ LineCoordXYDiff(uint8 numBits, int32 numPoints)
  * v[i].x = v[i-1].x + (1-2*signX) * dx 
  * v[i].y = v[i-1].y + (1-2*signY) * dy
  *
- * @param nx	number of bits for x coordinates
- * @param ny	number of bits for y coordinates
+ * @param nx    number of bits for x coordinates
+ * @param ny    number of bits for y coordinates
  *
  * @todo When DataScript support signed and unsigned bitfields,
  * we can replace each pair of sign and absolute value by a single
@@ -918,49 +920,56 @@ LineCoordXYDiff(uint8 numBits, int32 numPoints)
 LineCoordXYDiffTail(bit:5 nx, bit:5 ny)
 {
     /** Sign of x coordinate difference. */
-    bit:1		signX;
+    bit:1               signX;
 
     /** Absolute value of x coordinate difference. */
-    bit<nx>		dx;
+    bit<nx>             dx;
 
     /** Sign of y coordinate difference. */
-    bit:1		signY;
+    bit:1               signY;
 
     /** Absolute value of y coordinate difference. */
-    bit<ny>		dy;    
+    bit<ny>             dy;    
 };
 
 /**
  * Compact encoding of a line feature with 2 vertices with respect to 
- * the anchor point.
+ * the tile anchor.
  * 
- * The anchor is the south-west corner of the bounding rectangle of the 
- * line. The vector (dx, dy) rooted at this anchor defines the north-east
- * corner of this rectangle. 
+ * The tile anchor is the south-west corner of the current tile.
+ * The points (minX, minY), (maxX, maxY) define the bounding rectangle
+ * of the line feature in relative coodinates with respect to the tile
+ * anchor.
  *
  * The line is then the south-west to north-east diagonal of the rectangle,
  * or the north-west to south-east diagonal, if flip == 1.
  *
  * flip == 0:
- * v[0].x = anchor.x        v[1].x = anchor.x + dx
- * v[0].y = anchor.y        v[1].y = anchor.y + dy
+ * v[0].x = minX        v[1].x = maxX
+ * v[0].y = minY        v[1].y = maxY
  *
  * flip == 1:
- * v[0].x = anchor.x        v[1].x = anchor.x + dx
- * v[0].y = anchor.y + dy   v[1].y = anchor.y
+ * v[0].x = maxX        v[1].x = minX
+ * v[0].y = minY                v[1].y = maxY
  *
  * @todo Do we need another flag for the direction?
  */
 LineCoordXYPair(uint8 numBits)
 {
-    /** Width of bounding rectangle. */
-    bit<numBits>	dx;
+    /** minimum x offset */
+    bit<numBits>        minX;
 
-    /** Height of bounding rectangle. */
-    bit<numBits>	dy;
+    /** minimum y offset */
+    bit<numBits>        minY;
+
+    /** maximum x offset */
+    bit<numBits>        maxX;
+
+    /** maximum y offset */
+    bit<numBits>        maxY;
     
     /** Selects one of the two diagonals. */
-    bit:1		flip;
+    bit:1               flip;
 };
 
 /**
@@ -973,16 +982,16 @@ LineCoordXYPair(uint8 numBits)
 PointFeature(TileHeader header)
 {
     /** Type of point feature. */
-    PointFeatureType		type;
+    PointFeatureType            type;
     
     /** Attributes of point feature. */
-    PointAttributes		attr;
+    PointAttributes             attr;
     
     /** Name reference. */
-    NameReference		nameRef;
+    NameReference               nameRef;
     
     /** (x,y) coordinates. */
-    CoordXY(header.coordWidth)	coords;
+    CoordXY(header.coordWidth)  coords;
 };
 
 
@@ -994,10 +1003,10 @@ PointFeature(TileHeader header)
  */
 PointAttributes
 {
-    bit:1			more;
-    bit:3			scaleLevel;
-    Population			population;
-    CapitalAdminLevel		adminLevel    if more == 1;
+    bit:1                       more;
+    bit:3                       scaleLevel;
+    Population                  population;
+    CapitalAdminLevel           adminLevel    if more == 1;
 };
 
 
@@ -1025,7 +1034,11 @@ enum bit:4 CapitalAdminLevel
     CAPITAL_ORDER_6 = 6,
 
     /** City is a capital or order 7 admin area. */
-    CAPITAL_ORDER_7 = 7
+    CAPITAL_ORDER_7 = 7,
+
+    /** City is the capital of the current country */
+    CAPITAL_COUNTRY = 15
+
 };
 
 /**
@@ -1064,49 +1077,20 @@ enum bit:4 Population
  * from an anchor point.
  * @param width     number of bits per coordinate
  */
-union CoordXY(CoordinateWidth width)
+union CoordXY(uint8 width)
 {
-    CoordXY8	c8 	: width == COORD_WIDTH_8;      
-    CoordXY12	c12 	: width == COORD_WIDTH_12;      
-    CoordXY16	c16 	: width == COORD_WIDTH_16;      
-    CoordXY24	c24 	: width == COORD_WIDTH_24;      
-    CoordXY32	c32 	: width == COORD_WIDTH_32;      
+    CoordXY32          c32     : width == 32;
+    VarCoordXY(width)  c       : width < 32;
 };
 
 /**
- * Pair of 8 bit coordinates.
+ * Pair of coordinates with a variable number of bits.
+ * @param width     number of bits per coordinate
  */
-CoordXY8
+VarCoordXY(uint8 width)
 {
-    uint8	x;
-    uint8	y;    
-};
-
-/**
- * Pair of 12 bit coordinates.
- */
-CoordXY12
-{
-    bit:12	x;
-    bit:12	y;    
-};
-
-/**
- * Pair of 16 bit coordinates.
- */
-CoordXY16
-{
-    uint16	x;
-    uint16	y;    
-};
-
-/**
- * Pair of 24 bit coordinates.
- */
-CoordXY24
-{
-    bit:24	x;
-    bit:24	y;    
+    bit<width>      x;
+    bit<width>      y;    
 };
 
 /**
@@ -1114,8 +1098,8 @@ CoordXY24
  */
 CoordXY32
 {
-    int32	x;
-    int32	y;    
+    int32       x;
+    int32       y;    
 };
 
 /**
@@ -1125,7 +1109,7 @@ CoordXY32
 CoordZ(int32 numPoints)
 {
      /** Number of bits for each coordinate. */
-     bit:5		numBits;
+     bit:5              numBits;
      
      /** 
       * Array for z-coordinates. The z-coordinate at index i belongs
@@ -1134,7 +1118,7 @@ CoordZ(int32 numPoints)
       * @todo This should be int<numBits> as soon as DataScript supports that
       * syntax.
       */
-     bit<numBits>	z[numPoints];
+     bit<numBits>       z[numPoints];
 };
 
 
@@ -1144,5 +1128,5 @@ CoordZ(int32 numPoints)
  */
 NameReference
 {
-    int32		dummy;
+    int32               dummy;
 };
