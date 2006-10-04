@@ -212,6 +212,9 @@ enum uint8 PointFeatureType
  * Line feature types.  
  * The value sets for point, line and area feature types
  * must be disjoint.
+ * To save space for road feature attributes, we encode the 
+ * functional road class in the line feature type.
+ * @see RoadAttributes
  */
 enum uint8 LineFeatureType
 {
@@ -418,8 +421,8 @@ AreaCoordXY(TileHeader header, int32 numPoints)
             : header.compression == COMPRESSION_NONE;
 
         /** Compressed encoding with feature dependent width. */
-        AreaCoordXYExplicit(numBits)            explicit[numPoints]
-            : encoding == COORD_SEPARATE;
+        AreaCoordXYRelative(numBits)            relative[numPoints]
+            : encoding == COORD_RELATIVE;
 
         /** Compressed difference encoding with feature dependent width. */
         AreaCoordXYDiff(numBits, numPoints)     diff
@@ -446,7 +449,7 @@ enum bit:2 PolygonType
  * with respect to the anchor point defined in AreaCoordXY.
  * @param numBits       coordinate width (number of bits)
  */
-AreaCoordXYExplicit(uint8 numBits)
+AreaCoordXYRelative(uint8 numBits)
 {
     /** x coordinate (longitude). */
     bit<numBits>        x;
@@ -745,21 +748,98 @@ enum bit:2 Direction
  */
 RoadAttributes
 {
+    /**
+     * Scale sublevel for this feature.
+     * @see LevelHeader
+     */     
     bit:3                       scaleSublevel;                  // 3
+
+	/**
+	 * Administrative road class, defined by the local authorities.
+	 * Lower values stand for higher road classes. 0 is always the 
+	 * highest road class (e.g. motorway). The meaning of the 
+	 * individual values 0..7 is country specific.
+	 */
     bit:3                       adminRoadClass;                 // 6
+    
+    /**
+     * Approximately indicates the allowed maximum speed on this road.
+     */
     SpeedCategory               speedCat;                       // 9
-    Direction                   oneway;                         // 11
+    
+    /**
+     * Indicates which direction, if any, of this road is prohibited.
+     * prohibited == POSITIVE means that the road may not be used in 
+     * positive direction, i.e. it is a one-way road in negative direction.
+     * prohibited == BOTH can be used to identify inaccessible roads.
+     */
+    Direction                   prohibited;                     // 11
+    
+    /**
+     * Indicates which direction, if any, of this road is subject to
+     * special charge.
+     * Special charge refers to a flat fee to be paid for an extended
+     * time period, whereas tollRoad refers to a fee per use.
+     */
     Direction                   specialCharge;                  // 13
+
+    /**
+     * Indicates which direction, if any, of this road is subject to
+     * toll payment.
+     * This attribute refers to a fee per use, whereas the specialCharge
+     * attribute refers to a flat fee to be paid for an extended time period.
+     */
     Direction                   tollRoad;                       // 15
+    
+    /**
+     * Non-zero iff (part of) the road is a bridge.
+     */
     bit:1                       isBridge;                       // 16
+
+    /**
+     * Non-zero iff (part of) the road is a bridge.
+     */
     bit:1                       isTunnel;                       // 17
+
+
+    /**
+     * Non-zero iff the line feature is a ferry connection.
+     */
     bit:1                       isFerry;                        // 18
+
+    /**
+     * Non-zero iff (part of) the road is for pedestrian use only.
+     */
     bit:1                       isPedestrian;                   // 19
+
+    /**
+     * Non-zero iff (part of) the road is for pedestrian use only.
+     */
     bit:1                       isUnpaved;                      // 20
+
+    /**
+     * Non-zero iff (part of) the road is not fully digitised or 
+     * attributed.
+     */
     bit:1                       isInProcess;                    // 21
-    bit:1                       hasRightHandTraffic;            // 22
+
+    /**
+     * Non-zero iff the road has left-hand traffic (e.g. in UK).
+     */
+    bit:1                       hasLeftHandTraffic;             // 22
+
+    /**
+     * Non-zero iff the slope attribute is set.
+     */
     bit:1                       hasSlope;                       // 23
+
+	/** Reserved for future use. */
     bit:1                       unused;                         // 24
+
+	/**
+	 * Maximum slope of the road in percent. Positive and negative
+	 * values indicate ascent and descent, respectively.
+	 */
     int8                        slope    if hasSlope == 1;      // 32
 };
 
@@ -768,8 +848,8 @@ RoadAttributes
  */
 enum bit:3 CoordinateEncoding
 {
-    /** Coordinates are specified separately for each vertex. */
-    COORD_SEPARATE = 0,
+    /** Coordinates are specified as offsets from a given anchor. */
+    COORD_RELATIVE = 0,
     
     /** Coordinates are specified as differences to the predecessor. */
     COORD_DIFF  = 1,
@@ -819,8 +899,8 @@ LineCoordXYZ(uint8 width, int32 numPoints)
     union Vertices
     {
         /** Separate encoding of vertices. */
-        LineCoordXYExplicit(width, numBits, numPoints)    explicit 
-                                                : encoding == COORD_SEPARATE;
+        LineCoordXYRelative(width, numBits, numPoints)    relative 
+                                                : encoding == COORD_RELATIVE;
 
         /** Difference encoding of vertices. */
         LineCoordXYDiff(width, numBits, numPoints)     diff                
@@ -843,7 +923,7 @@ LineCoordXYZ(uint8 width, int32 numPoints)
  * Pair of x,y coordinates with a given width.
  * @param numBits   number of bits for coordinate encoding
  */
-LineCoordXYExplicit(uint8 width, uint8 numBits, int32 numPoints)
+LineCoordXYRelative(uint8 width, uint8 numBits, int32 numPoints)
 {
     /**
      * Anchor point for the current line feature. In general, this point 
@@ -853,7 +933,7 @@ LineCoordXYExplicit(uint8 width, uint8 numBits, int32 numPoints)
     CoordXY(width)                              anchor;
     
     /** Offset of each vertex from the anchor point. */
-        OffsetXY(numBits)                           offsets[numPoints];
+    OffsetXY(numBits)                           offsets[numPoints];
 };
 
 
@@ -862,10 +942,10 @@ LineCoordXYExplicit(uint8 width, uint8 numBits, int32 numPoints)
  */
 OffsetXY(uint8 numBits)
 {
-        /** x coordinate offset. */
+    /** x coordinate offset. */
     bit<numBits>        x;
 
-        /** y coordinate offset. */
+    /** y coordinate offset. */
     bit<numBits>        y;
 };
 
@@ -1079,18 +1159,8 @@ enum bit:4 Population
  */
 union CoordXY(uint8 width)
 {
-    CoordXY32          c32     : width == 32;
-    VarCoordXY(width)  c       : width < 32;
-};
-
-/**
- * Pair of coordinates with a variable number of bits.
- * @param width     number of bits per coordinate
- */
-VarCoordXY(uint8 width)
-{
-    bit<width>      x;
-    bit<width>      y;    
+    CoordXY32        c     : width == 32;
+    OffsetXY(width)  o     : width < 32;
 };
 
 /**
