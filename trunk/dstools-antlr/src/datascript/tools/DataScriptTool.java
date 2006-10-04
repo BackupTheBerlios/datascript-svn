@@ -51,7 +51,7 @@ import datascript.ast.TokenAST;
 import datascript.emit.Emitter;
 import datascript.emit.java.JavaEmitter;
 
-public class DataScriptSyntaxTreeTest 
+public class DataScriptTool 
 {
     private ToolContext context;
     private DataScriptParser parser;
@@ -121,7 +121,7 @@ public class DataScriptSyntaxTreeTest
     public static void main(String[] args)
     {
         String fileName = args[0];
-        DataScriptSyntaxTreeTest dsTool = new DataScriptSyntaxTreeTest();
+        DataScriptTool dsTool = new DataScriptTool();
         try
         {
             dsTool.parseDatascript(fileName);

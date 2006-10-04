@@ -20,6 +20,7 @@ LongBitField
     int16	c;
 };
 
+/*
 Outer
 {
     int16 	a;
@@ -40,6 +41,8 @@ Inner
     int32	e;
     Colour	c;
 };
+
+*/
 
 IntegerArray
 {

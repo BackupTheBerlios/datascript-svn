@@ -1,8 +1,11 @@
-<project name="ds-antlr" default="compile" basedir=".">
+<project name="ds-antlr" default="jar" basedir=".">
 
   <property name="build" value="${basedir}/build"/>
   <property name="src" value="${basedir}/src"/>
+  <property name="lib" value="${basedir}/lib"/>
+  <property name="test" value="${basedir}/test"/>
   <property name="gen" value="${build}/gen"/>
+  <property name="jar" value="${build}/jar"/>
   <property name="jet.timestamp" value="${build}/gen/jet.ts"/>
   <property name="classes" value="${build}/classes"/>
   <property name="antlr" value="${basedir}/antlr"/>
@@ -34,11 +37,21 @@
        property="jet.uptodate" targetfile="${jet.timestamp}">
       <srcfiles dir="${basedir}" includes="jet/java/*"/>
     </uptodate>    
+
+    <available classname="junit.framework.Test" property="junit.available">
+    </available>
+  </target>
+
+  <target name="check.junit" unless="junit.available">
+    <fail message="JUnit is not available."/>
   </target>
 
   <target name="prepare" depends="init">
     <mkdir dir="${build}" />
+    <mkdir dir="${build}/test/classes" />
+    <mkdir dir="${build}/test/gen" />
     <mkdir dir="${gen}" />
+    <mkdir dir="${jar}" />
     <mkdir dir="${classes}" />
     <mkdir dir="${antlr.out}" />
   </target>
@@ -105,7 +118,7 @@
 
   
   
-  <target name="compile" depends="prepare, jet" description="Compiles all project files">
+  <target name="compile" depends="prepare, antlr, jet" description="Compiles all project files">
     <javac destdir="${classes}" debug="on">
       <classpath>
         <pathelement path="${classes}"/>
@@ -117,12 +130,46 @@
   </target>
 
   <target name="jar" depends="compile" description="Builds the distribution jar file (default)">
-    <jar destfile="${build}/datascript.jar"
+    <jar destfile="${jar}/datascript.jar"
       basedir="${classes}"
       manifest="${src}/Manifest.txt"
       includes="**" />
   </target>
+  
+  
+  <target name="test.gen" depends="jar" description="Generates parser for test cases"  unless="bits.uptodate">
+    <java jar="${jar}/datascript.jar" dir="${test}" failonerror="true" fork="yes">
+        <classpath>
+          <pathelement path="${gen}"/>
+          <pathelement path="${lib}/antlr.jar"/>
+        </classpath>
+      <arg line="bits.ds"/>
+    </java>
+  </target>
+          
+  <target name="test.compile" depends="test.gen, jar, check.junit" description="Builds the test cases">
+    <javac destdir="${build}/test/classes" debug="on">
+      <classpath>
+        <pathelement path="${jar}/datascript.jar"/>
+      </classpath>
+        <src path="${build}/test/gen" />
+        <src path="${test}" />
+    </javac>
+  </target>
 
+  <target name="test.run" depends="test.compile" description="Runs the unit tests">
+    <junit printsummary="no">
+        <classpath>
+          <pathelement path="${build}/test/classes"/>
+          <pathelement path="${jar}/datascript.jar"/>
+        </classpath>
+       <batchtest>
+         <fileset dir="${test}">
+           <include name="**/*Test.java"/>      
+         </fileset>       
+         <formatter type="plain" usefile="false"/>
+       </batchtest> 
+    </junit>     
+  </target>
 
-                        
 </project>
