@@ -6,6 +6,6 @@
 	<classpathentry kind="lib" path="lib/jetc-task.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/antlr.jar"/>
-	<classpathentry kind="lib" path="C:/Programme/eclipse/plugins/org.junit_3.8.1/junit.jar"/>
+	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
