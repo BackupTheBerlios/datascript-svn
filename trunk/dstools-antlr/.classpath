@@ -2,14 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="src" path="build/gen"/>
-	<classpathentry sourcepath="D:/work/antlr-2.7.6" kind="lib" path="lib/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/jetc-task.jar"/>
 	<classpathentry kind="lib" path="C:/Programme/Eclipse-3.1.1/eclipse/plugins/org.junit_3.8.1/junit.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/jdk1.5.0/lib/tools.jar"/>
-	<classpathentry kind="lib" path="C:/jdk1.5.0/lib/htmlconverter.jar"/>
-	<classpathentry kind="lib" path="C:/jdk1.5.0/lib/jconsole.jar"/>
-	<classpathentry kind="lib" path="C:/jdk1.5.0/lib/dt.jar"/>
+	<classpathentry kind="lib" path="lib/antlr.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
