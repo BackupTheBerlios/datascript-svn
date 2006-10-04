@@ -1,0 +1,91 @@
+Unsigned
+{
+    uint8	u8;
+    uint16	u16;
+    uint32      u32;
+    uint64      u64;
+};
+
+BitStruct
+{
+    bit:4	a;
+    uint8	b;
+    bit:4	c;
+};
+
+LongBitField
+{
+    uint8	a;
+    bit:80	b;
+    int16	c;
+};
+
+Outer
+{
+    int16 	a;
+    Header	header;
+    Inner 	inner;
+};
+
+Header
+{
+    int16	len;
+    int16	c;
+};
+
+Inner
+{
+    int8	d;
+    int16	list[Outer.header.len];
+    int32	e;
+    Colour	c;
+};
+
+IntegerArray
+{
+     uint16		numElems;
+     int16		intList[numElems];
+     uint16		uintList[numElems];
+};
+
+CompoundArray
+{
+    int16	numItems;
+    ItemA	a[numItems];
+    ItemB   	b[numItems];
+};
+
+ItemA
+{
+    uint8       tag = 1;
+    uint16      value;
+};
+
+ItemB
+{
+    uint8       tag = 2;
+    uint32      value;
+};
+
+enum uint16 Colour
+{
+    RED = 1,
+    GREEN,
+    YELLOW,
+    BLUE = 7
+};
+
+enum uint8 Dimension
+{
+    LENGTH = 1,
+    WIDTH = 2,
+    HEIGHT = 3
+};
+
+Enums
+{
+    Colour colour1;
+    Colour colour2;
+    Dimension dim1;
+    Dimension dim2;
+};

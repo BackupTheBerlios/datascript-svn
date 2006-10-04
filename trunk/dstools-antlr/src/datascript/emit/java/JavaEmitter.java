@@ -37,16 +37,23 @@
  */
 package datascript.emit.java;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+
 import antlr.collections.AST;
+import datascript.ast.EnumType;
 import datascript.ast.StructType;
 import datascript.ast.TypeInterface;
 import datascript.emit.Emitter;
 
 public class JavaEmitter implements Emitter
 {
+    private static String JAVA_EXT = ".java";
     private String packageName;
     private StructEmitter sequenceEmitter = new StructEmitter(this);
     private TypeNameEmitter typeEmitter = new TypeNameEmitter(this);
+    private PrintStream out;
     
     public void setPackageName(String packageName)
     {
@@ -87,9 +94,32 @@ public class JavaEmitter implements Emitter
 
     }
 
+    private void openOutputFile(String typeName)
+    {
+        File directory = new File(packageName);
+        if (! directory.exists())
+        {
+            directory.mkdir();
+        }
+        File outputFile = new File(directory, typeName + JAVA_EXT);
+        outputFile.delete();
+        try
+        {
+            outputFile.createNewFile();
+            out = new PrintStream(outputFile);
+        }
+        catch (IOException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+
     public void beginSequence(AST s)
     {
-        StructType sequence = (StructType)s;
+        StructType sequence = (StructType) s;
+        String typeName = getTypeName(sequence);
+        openOutputFile(typeName);
+        sequenceEmitter.setOutputStream(out);
         sequenceEmitter.begin(sequence);
     }
 
@@ -97,6 +127,7 @@ public class JavaEmitter implements Emitter
     {
         StructType sequence = (StructType)s;
         sequenceEmitter.end(sequence);
+        out.close();
     }
 
     public void beginUnion(AST u)
@@ -113,14 +144,17 @@ public class JavaEmitter implements Emitter
 
     public void beginEnumeration(AST e)
     {
-        // TODO Auto-generated method stub
-
+        EnumType enumType = (EnumType) e;
+        EnumerationEmitter enumEmitter = new EnumerationEmitter(this, enumType);
+        String typeName = getTypeName(enumType);
+        openOutputFile(typeName);
+        enumEmitter.setOutputStream(out);
+        enumEmitter.emit(enumType);
     }
 
     public void endEnumeration(AST e)
     {
-        // TODO Auto-generated method stub
-
+        out.close();
     }
 
     public void beginEnumItem(AST e)

@@ -37,11 +37,30 @@
  */
 package datascript.ast;
 
+import java.util.Iterator;
+
 public class EnumType extends SetType
 {
+    private TokenAST members;
+    
     public EnumType()
     {
         
     }
     
+    
+    public Iterable<EnumItem> getItems()
+    {
+        if (members == null)
+        {
+            members = (TokenAST) getFirstChild().getNextSibling()
+                .getNextSibling();            
+        }
+        return new Iterable<EnumItem>() {
+            public Iterator<EnumItem> iterator()
+            {
+                return new ChildIterator<EnumItem>(members);
+            }            
+        };
+    }
 }

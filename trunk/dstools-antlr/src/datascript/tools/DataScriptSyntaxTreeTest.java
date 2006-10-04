@@ -110,7 +110,7 @@ public class DataScriptSyntaxTreeTest
         exprEval.translationUnit(rootNode);
         
         console = new JavaEmitter();
-        console.setPackageName("bmd");
+        console.setPackageName("bits");
         emitter = new DataScriptEmitter();
         emitter.setEmitter(console);
         emitter.translationUnit(rootNode);

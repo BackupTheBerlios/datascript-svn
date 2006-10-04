@@ -92,6 +92,7 @@
 
   <xsl:template match="FIELD" mode="topleveltype">
     <xsl:apply-templates select="*" mode="summary"/>
+    <h3>Member Details</h3>
     <xsl:apply-templates select="*" mode="detail"/>
   </xsl:template>
 
@@ -119,7 +120,10 @@
     <xsl:call-template name="detailsheader">
       <xsl:with-param name="prefix" select="'sequence'"/>
     </xsl:call-template>
+    <h3>Type Description</h3>
     <xsl:apply-templates select="../DOC" mode="doc"/>
+
+    <h3>Member Overview</h3>
     <table cellpadding="5" cellspacing="0" border="0" >
       <xsl:apply-templates select="MEMBERS/FIELD" mode="field"/>	
     </table>    
@@ -153,14 +157,25 @@
       <xsl:with-param name="prefix" select="'enumeration'"/>
     </xsl:call-template>
 
+    <h3>Type Description</h3>
+    <xsl:apply-templates select="../DOC" mode="doc"/>
+
+    <h3>Member Overview</h3>
     <table cellpadding="5" cellspacing="0" border="0" >
-      <xsl:apply-templates select="MEMBERS/FIELD" mode="enum"/>	
+      <xsl:apply-templates select="MEMBERS/ITEM" mode="enum"/>	
+    </table>    
+
+    <h3>Member Details</h3>
+    <table cellpadding="5" cellspacing="0" border="0" >
+      <dl>
+        <xsl:apply-templates select="MEMBERS/ITEM" mode="fielddoc"/>	
+      </dl>  
     </table>    
   </xsl:template>
 
 <!-- ====================================================================== -->
 
-  <xsl:template match="FIELD" mode="enum">
+  <xsl:template match="ITEM" mode="enum">
     <tr>
       <td><xsl:value-of select="ID"/></td>
       <xsl:if test="INTEGER_LITERAL">
@@ -173,14 +188,14 @@
 
   <xsl:template match="FIELD" mode="field">
     <tr>
-      <td><xsl:value-of select="ID"/></td>
       <td><xsl:apply-templates select="*[1]" mode="type"/></td>
+      <td><xsl:value-of select="ID"/></td>
     </tr>  
   </xsl:template>
 
 <!-- ====================================================================== -->
 
-  <xsl:template match="FIELD" mode="fielddoc">
+  <xsl:template match="FIELD|ITEM" mode="fielddoc">
       <dt><b><xsl:value-of select="ID"/></b></dt>
       <dd><xsl:value-of select="DOC"/></dd>
   </xsl:template>

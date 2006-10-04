@@ -120,7 +120,7 @@ public class TypeNameEmitter
 
             case DataScriptParserTokenTypes.UINT32:
             case DataScriptParserTokenTypes.INT64:
-                return "int";
+                return "long";
 
             case DataScriptParserTokenTypes.UINT64:
                 return "BigInteger";
@@ -153,9 +153,31 @@ public class TypeNameEmitter
         String elTypeName = getTypeName(elType);
         if (elType instanceof IntegerType)
         {
+            IntegerType intType = (IntegerType) elType;
             if (! elTypeName.equals("BigInteger"))
             {
-                return StringUtil.firstToUpper(elTypeName) + "Array";
+                switch (intType.getType())
+                {
+                    case DataScriptParserTokenTypes.INT8:
+                        return "ByteArray";
+
+                    case DataScriptParserTokenTypes.UINT8:
+                    case DataScriptParserTokenTypes.INT16:
+                        return "ShortArray";
+
+                    case DataScriptParserTokenTypes.UINT16:
+                        return "UnsignedShortArray";
+
+                    case DataScriptParserTokenTypes.INT32:
+                        return "IntArray";
+
+                    case DataScriptParserTokenTypes.UINT32:
+                    case DataScriptParserTokenTypes.INT64:
+                        return "LongArray";
+
+                    default:
+                        throw new IllegalArgumentException();
+                }
             }
         }
         return "ObjectArray<" + elTypeName +  ">";        

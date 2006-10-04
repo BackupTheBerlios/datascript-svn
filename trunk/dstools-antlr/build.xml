@@ -3,6 +3,7 @@
   <property name="build" value="${basedir}/build"/>
   <property name="src" value="${basedir}/src"/>
   <property name="gen" value="${build}/gen"/>
+  <property name="jet.timestamp" value="${build}/gen/jet.ts"/>
   <property name="classes" value="${build}/classes"/>
   <property name="antlr" value="${basedir}/antlr"/>
   <property name="antlr.out" value="${gen}/datascript/antlr"/>
@@ -29,6 +30,10 @@
   </target>
 
   <target name="init">
+    <uptodate 
+       property="jet.uptodate" targetfile="${jet.timestamp}">
+      <srcfiles dir="${basedir}" includes="jet/java/*"/>
+    </uptodate>    
   </target>
 
   <target name="prepare" depends="init">
@@ -91,15 +96,16 @@
   </target>
 
   
-  <target name="jet" depends="prepare">
+  <target name="jet" depends="prepare" unless="jet.uptodate">
     <jetc destdir="${build}/gen">
       <fileset dir="${basedir}" includes="jet/java/*.*jet"/>
     </jetc>
+    <touch file="${jet.timestamp}"/>
   </target>
 
   
   
-  <target name="compile" depends="prepare" description="Compiles all project files">
+  <target name="compile" depends="prepare, jet" description="Compiles all project files">
     <javac destdir="${classes}" debug="on">
       <classpath>
         <pathelement path="${classes}"/>

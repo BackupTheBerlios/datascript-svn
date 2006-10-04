@@ -320,7 +320,7 @@ opExpression
     |   #(BANG expression)
     |   #("sizeof" expression)
     |   #("lengthof" expression)
-    |   #(DOT expression expression)
+    |   #(DOT expression ID)
     |   #(ARRAYELEM expression expression)
     |   #(INST (expression)+)
     |   #(LPAREN expression)

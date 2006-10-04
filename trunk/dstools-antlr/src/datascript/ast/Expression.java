@@ -154,17 +154,24 @@ public class Expression extends TokenAST
         if (obj == null)
         {
             ToolContext.logError(this, "'" + symbol + 
-                    "' undefined in current scope");
+                    "' undefined in scope of '" + scope.getOwner().getName() + 
+                    "'");
         }
-        if (obj instanceof Field)
+        else if (obj instanceof Field)
         {
             Field field = (Field)obj;
             type = TypeReference.resolveType(field.getFieldType());
         }
         else if (obj instanceof TypeReference)
         {
+            //System.out.println("evaluateIdentifier(): " + symbol + "-> TypeReference");
             TypeReference ref = (TypeReference)obj;
             type = TypeReference.resolveType(ref);
+            if (type instanceof CompoundType)
+            {
+                CompoundType compound = (CompoundType)type;
+                scope = compound.getScope();
+            }
         }
         else if (obj instanceof IntegerType)
         {

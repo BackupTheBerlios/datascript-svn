@@ -68,7 +68,7 @@ public class SetType extends TokenAST implements TypeInterface
         return name;
     }
 
-    TypeInterface getBaseType()
+    public TypeInterface getBaseType()
     {
         return (TypeInterface)getFirstChild();
     }

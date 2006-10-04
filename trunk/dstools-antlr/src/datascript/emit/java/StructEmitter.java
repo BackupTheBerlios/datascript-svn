@@ -37,6 +37,8 @@
  */
 package datascript.emit.java;
 
+import java.io.PrintStream;
+
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
@@ -68,6 +70,7 @@ public class StructEmitter
     private SequenceRead readTmpl = new SequenceRead();
     private ArrayRead arrayTmpl = new ArrayRead();
     private StringBuilder buffer;
+    private PrintStream out;
     
     public StructEmitter(JavaEmitter j)
     {
@@ -85,33 +88,39 @@ public class StructEmitter
     {
         return global;
     }
+
+    public void setOutputStream(PrintStream out)
+    {
+        this.out = out;
+        fieldEmitter.setOutputStream(out);
+    }
     
     public void begin(StructType s)
     {
         struct = s;
         String result = beginTmpl.generate(this);
-        System.out.print(result);
+        out.print(result);
         
         for (Field field : s.getFields())
         {
-            //System.out.println("    // field "+ field.getName());
+            //out.println("    // field "+ field.getName());
             fieldEmitter.emit(field);
         }
         result = readTmpl.generate(this);
-        System.out.print(result);
+        out.print(result);
     }
     
     public void end(StructType s)
     {
         String result = endTmpl.generate(this);
-        System.out.print(result);
+        out.print(result);
     }
     
     public void readFields()
     {
         for (Field field : struct.getFields())
         {
-            //System.out.println("    // field "+ field.getName());
+            //out.println("    // field "+ field.getName());
             readField(field);
         }
     }
@@ -157,6 +166,13 @@ public class StructEmitter
     
     private void readIntegerField(Field field, IntegerType type)
     {
+        buffer.append(field.getName());
+        buffer.append(" = ");
+        readIntegerValue(type);
+    }
+    
+    private void readIntegerValue(IntegerType type)
+    {
         String methodSuffix;
         String cast = "";
         String arg = "";
@@ -165,39 +181,62 @@ public class StructEmitter
             case DataScriptParserTokenTypes.INT8:
                 methodSuffix = "Byte";
                 break;
+            
             case DataScriptParserTokenTypes.INT16:
                 methodSuffix = "Short";
                 break;
+            
             case DataScriptParserTokenTypes.INT32:
                 methodSuffix = "Int";
                 break;
+            
             case DataScriptParserTokenTypes.INT64:
                 methodSuffix = "Long";
                 break;
+            
             case DataScriptParserTokenTypes.UINT8:
                 methodSuffix = "UnsignedByte";
                 cast = "(short) ";
                 break;
+            
             case DataScriptParserTokenTypes.UINT16:
                 methodSuffix = "UnsignedShort";                
                 break;
+            
             case DataScriptParserTokenTypes.UINT32:
                 methodSuffix = "UnsignedInt";
                 break;
+            
             case DataScriptParserTokenTypes.UINT64:
                 methodSuffix = "BigInteger";
                 arg = "64";
                 break;
+
             case DataScriptParserTokenTypes.BIT:
-                methodSuffix = "Bits";
                 Expression lengthExpr = ((BitFieldType)type).getLengthExpression();
+                Value lengthValue = lengthExpr.getValue();
+                if (lengthValue == null)
+                {
+                    methodSuffix = "BigInteger";
+                }
+                else
+                {
+                    int length = lengthValue.integerValue().intValue();
+                    if (length < 64)
+                    {
+                        methodSuffix = "Bits";
+                        cast = "(" + typeNameEmitter.getTypeName(type) + ") ";
+                    }
+                    else
+                    {
+                        methodSuffix = "BigInteger";
+                    }
+                }
                 arg = exprEmitter.emit(lengthExpr);
                 break;
             default:
                 throw new InternalError("unhandled type = " + type.getType());
         }
-        buffer.append(field.getName());
-        buffer.append(" = ");
         buffer.append(cast);
         buffer.append("__in.read");
         buffer.append(methodSuffix);
@@ -211,7 +250,7 @@ public class StructEmitter
         buffer.append(field.getName());
         buffer.append(" = new ");
         buffer.append(type.getName());
-        buffer.append("(__in, __cc)");
+        buffer.append("(__in, __cc);");
     }
     
     private void readArrayField(Field field, ArrayType array)
@@ -229,9 +268,9 @@ public class StructEmitter
         {
             Expression length = array.getLengthExpression();
             buffer.append(field.getName());
-            buffer.append(" = new (");
+            buffer.append(" = new ");
             buffer.append(elTypeJavaName);
-            buffer.append("__in, ");
+            buffer.append("(__in, ");
             buffer.append(getLengthExpression(length));
             buffer.append(");");
         }
@@ -239,15 +278,34 @@ public class StructEmitter
     
     private void readEnumField(Field field, EnumType type)
     {
-        buffer.append("// enum type");        
+        IntegerType baseType = (IntegerType) type.getBaseType();
+        String baseTypeName = typeNameEmitter.getTypeName(baseType);
+        String fname = field.getName();
+        buffer.append(baseTypeName);
+        buffer.append(" __");
+        buffer.append(field.getName());
+        buffer.append(" = ");
+        readIntegerValue(baseType);
+        buffer.append(nl);
+        indent();
+        buffer.append(fname);
+        buffer.append(" = ");
+        buffer.append(type.getName());
+        buffer.append(".toEnum(__");
+        buffer.append(fname);
+        buffer.append(");");        
     }
     
     private String getLengthExpression(Expression expr)
     {
+/*        
         // TODO handle variable length
         Value value = expr.getValue();
         int length = (value == null) ? 0 : value.integerValue().intValue();
         
         return Integer.toString(length);
+*/        
+        return exprEmitter.emit(expr);
+        
     }
 }

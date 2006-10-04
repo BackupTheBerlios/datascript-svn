@@ -48,20 +48,25 @@ import antlr.collections.AST;
 public class ChildIterator<E> implements Iterator<E>
 {
     private AST child;
+    private AST next;
     
     public ChildIterator(AST parent)
     {
-        this.child = parent.getFirstChild();
+        this.next = parent.getFirstChild();
     }
     
     public boolean hasNext()
     {
-        return child != null;
+        return next != null;
     }
     
     public E next()
     {
-        child = child.getNextSibling();
+        child = next;
+        if (child != null)
+        {
+            next = next.getNextSibling();
+        }
         return (E)child;
     }
     

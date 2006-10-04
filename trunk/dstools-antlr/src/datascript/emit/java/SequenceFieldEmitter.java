@@ -37,6 +37,8 @@
  */
 package datascript.emit.java;
 
+import java.io.PrintStream;
+
 import datascript.ast.Field;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
@@ -46,6 +48,7 @@ public class SequenceFieldEmitter
 {
     private JavaEmitter global;
     private Field field;
+    private PrintStream out;
     
     public SequenceFieldEmitter(JavaEmitter j)
     {
@@ -57,12 +60,17 @@ public class SequenceFieldEmitter
         return global;
     }
     
+    public void setOutputStream(PrintStream out)
+    {
+        this.out = out;
+    }
+    
     public void emit(Field f)
     {
         this.field = f;
         SequenceFieldAccessor template = new SequenceFieldAccessor();
         String result = template.generate(this);
-        System.out.print(result);
+        out.print(result);
     }
     
     public String getTypeName()

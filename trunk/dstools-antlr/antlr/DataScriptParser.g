@@ -485,7 +485,7 @@ functionArgumentList
     ;
 
 dotOperand
-    :   DOT^ ID
+    :   DOT^ ID<AST=datascript.ast.Expression>
     ;
 
 
