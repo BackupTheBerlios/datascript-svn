@@ -151,7 +151,7 @@ fieldCondition
     ;
 
 typeDeclaration
-    :   structDeclaration
+    :   sequenceDeclaration
     |   unionDeclaration
     |   enumDeclaration
     |   bitmaskDeclaration
@@ -159,7 +159,7 @@ typeDeclaration
     ;
 
 typeReference
-    :   structDeclaration
+    :   sequenceDeclaration
     |   unionDeclaration
     |   definedType
     |   enumDeclaration
@@ -176,8 +176,8 @@ paramTypeInstantiation
     : #(INST definedType typeArgumentList)
     ;
     
-structDeclaration
-    :   #(STRUCT (ID)? (parameterList)? memberList)
+sequenceDeclaration
+    :   #(SEQUENCE (ID)? (parameterList)? memberList)
     ;
 
 unionDeclaration

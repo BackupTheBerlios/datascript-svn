@@ -47,41 +47,41 @@ import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
-import datascript.ast.StructType;
+import datascript.ast.SequenceType;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.Value;
 import datascript.jet.java.ArrayRead;
 import datascript.jet.java.SequenceRead;
-import datascript.jet.java.StructBegin;
-import datascript.jet.java.StructEnd;
+import datascript.jet.java.SequenceBegin;
+import datascript.jet.java.SequenceEnd;
 
-public class StructEmitter
+public class SequenceEmitter
 {
     private static String nl = System.getProperties().getProperty("line.separator");
-    private StructType struct;
+    private SequenceType seq;
     private JavaEmitter global;
     private SequenceFieldEmitter fieldEmitter;
     private TypeNameEmitter typeNameEmitter;
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
-    private StructBegin beginTmpl = new StructBegin();
-    private StructEnd endTmpl = new StructEnd();
+    private SequenceBegin beginTmpl = new SequenceBegin();
+    private SequenceEnd endTmpl = new SequenceEnd();
     private SequenceRead readTmpl = new SequenceRead();
     private ArrayRead arrayTmpl = new ArrayRead();
     private StringBuilder buffer;
     private PrintStream out;
     
-    public StructEmitter(JavaEmitter j)
+    public SequenceEmitter(JavaEmitter j)
     {
         this.global = j;
         this.fieldEmitter = new SequenceFieldEmitter(j);
         this.typeNameEmitter = new TypeNameEmitter(j);
     }
    
-    public StructType getSequenceType()
+    public SequenceType getSequenceType()
     {
-        return struct;
+        return seq;
     }
     
     public JavaEmitter getGlobal()
@@ -95,9 +95,9 @@ public class StructEmitter
         fieldEmitter.setOutputStream(out);
     }
     
-    public void begin(StructType s)
+    public void begin(SequenceType s)
     {
-        struct = s;
+        seq = s;
         String result = beginTmpl.generate(this);
         out.print(result);
         
@@ -110,7 +110,7 @@ public class StructEmitter
         out.print(result);
     }
     
-    public void end(StructType s)
+    public void end(SequenceType s)
     {
         String result = endTmpl.generate(this);
         out.print(result);
@@ -118,7 +118,7 @@ public class StructEmitter
     
     public void readFields()
     {
-        for (Field field : struct.getFields())
+        for (Field field : seq.getFields())
         {
             //out.println("    // field "+ field.getName());
             readField(field);

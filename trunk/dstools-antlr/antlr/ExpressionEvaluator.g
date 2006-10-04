@@ -185,7 +185,7 @@ fieldCondition
     ;
 
 typeDeclaration
-    :   structDeclaration
+    :   sequenceDeclaration
     |   unionDeclaration
     |   enumDeclaration
     |   bitmaskDeclaration
@@ -193,7 +193,7 @@ typeDeclaration
     ;
 
 typeReference
-    :   structDeclaration
+    :   sequenceDeclaration
     |   unionDeclaration
     |   definedType
     |   enumDeclaration
@@ -211,8 +211,8 @@ paramTypeInstantiation
       { ((TypeInstantiation)#INST).checkArguments(); }
     ;
     
-structDeclaration
-    :   #(s:STRUCT              { pushScope(((StructType)s).getScope()); }
+sequenceDeclaration
+    :   #(s:SEQUENCE              { pushScope(((SequenceType)s).getScope()); }
           (i:ID)? 
           (parameterList)? 
           memberList)		{ popScope(); }

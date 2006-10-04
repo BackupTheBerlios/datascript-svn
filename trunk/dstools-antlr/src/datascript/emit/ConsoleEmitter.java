@@ -41,7 +41,7 @@ import antlr.collections.AST;
 import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
 import datascript.ast.Field;
-import datascript.ast.StructType;
+import datascript.ast.SequenceType;
 import datascript.ast.UnionType;
 
 /**
@@ -92,7 +92,7 @@ public class ConsoleEmitter implements Emitter
      */
     public void beginSequence(AST s)
     {
-        StructType struct = (StructType)s;
+        SequenceType struct = (SequenceType)s;
         System.out.println("begin " + struct.getName());
     }
 
@@ -101,7 +101,7 @@ public class ConsoleEmitter implements Emitter
      */
     public void endSequence(AST s)
     {
-        StructType struct = (StructType)s;
+        SequenceType struct = (SequenceType)s;
         System.out.println("end " + struct.getName());
     }
 

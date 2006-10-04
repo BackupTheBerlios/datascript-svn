@@ -41,9 +41,9 @@
         imports="datascript.ast.* datascript.emit.java.*" 
         class="SequenceRead" %>
 <% 
-    StructEmitter e = (StructEmitter) argument;
+    SequenceEmitter e = (SequenceEmitter) argument;
     JavaEmitter global = e.getGlobal();
-    StructType s = e.getSequenceType();
+    SequenceType s = e.getSequenceType();
     String name = s.getName(); 
 %>
     // TODO: Emit constructor from member values.

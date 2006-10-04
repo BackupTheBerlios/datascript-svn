@@ -54,7 +54,7 @@ options
 tokens
 {
     FIELD<AST=datascript.ast.Field>;
-    STRUCT<AST=datascript.ast.StructType>;
+    SEQUENCE<AST=datascript.ast.SequenceType>;
     UNION<AST=datascript.ast.UnionType>;
     PARAM;
     INST<AST=datascript.ast.TypeInstantiation>;
@@ -243,7 +243,7 @@ fieldCondition
 
 typeDeclaration
     :   ( (byteOrderModifier)? ("union")? (ID)? (LPAREN parameterDefinition | LCURLY)) =>
-        structDeclaration
+        sequenceDeclaration
     |   definedType
     |   enumDeclaration
     |   bitmaskDeclaration
@@ -251,7 +251,7 @@ typeDeclaration
 
 typeReference
     :   ( (byteOrderModifier)? ("union")? (ID)? (LPAREN parameterDefinition | LCURLY)) =>
-        structDeclaration
+        sequenceDeclaration
     |   (ID LPAREN) => paramTypeInstantiation
     |   definedType
     |   enumDeclaration
@@ -262,18 +262,18 @@ paramTypeInstantiation
     :   definedType typeArgumentList
         { #paramTypeInstantiation = #([INST, "INST"], paramTypeInstantiation); }
     ;
-structDeclaration!
+sequenceDeclaration!
     :   (byteOrderModifier)? 
         (u:"union")? 
         (n:ID)?
         (p:parameterList)? m:memberList
         { if (u == null)
           {
-              #structDeclaration = #([STRUCT, "struct"], n, p, m); 
+              #sequenceDeclaration = #([SEQUENCE, "sequence"], n, p, m); 
           }
           else
           {
-              #structDeclaration = #([UNION, "union"], n, p, m); 
+              #sequenceDeclaration = #([UNION, "union"], n, p, m); 
           }
         } 
     ;

@@ -98,7 +98,7 @@
 
 <!-- ====================================================================== -->
 
-  <xsl:template match="STRUCT">
+  <xsl:template match="SEQUENCE">
     <li><xsl:call-template name="linkbyname"/></li>
   </xsl:template>
 
@@ -116,7 +116,7 @@
 
 <!-- ====================================================================== -->
 
-  <xsl:template match="STRUCT" mode="summary">
+  <xsl:template match="SEQUENCE" mode="summary">
     <xsl:call-template name="detailsheader">
       <xsl:with-param name="prefix" select="'sequence'"/>
     </xsl:call-template>
@@ -132,7 +132,7 @@
 
 <!-- ====================================================================== -->
 
-  <xsl:template match="STRUCT" mode="detail">
+  <xsl:template match="SEQUENCE" mode="detail">
     <dl>
       <xsl:apply-templates select="MEMBERS/FIELD" mode="fielddoc"/>	
     </dl>    

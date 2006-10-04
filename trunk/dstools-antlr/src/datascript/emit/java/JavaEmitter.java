@@ -43,7 +43,7 @@ import java.io.PrintStream;
 
 import antlr.collections.AST;
 import datascript.ast.EnumType;
-import datascript.ast.StructType;
+import datascript.ast.SequenceType;
 import datascript.ast.TypeInterface;
 import datascript.emit.Emitter;
 
@@ -51,7 +51,7 @@ public class JavaEmitter implements Emitter
 {
     private static String JAVA_EXT = ".java";
     private String packageName;
-    private StructEmitter sequenceEmitter = new StructEmitter(this);
+    private SequenceEmitter sequenceEmitter = new SequenceEmitter(this);
     private TypeNameEmitter typeEmitter = new TypeNameEmitter(this);
     private PrintStream out;
     
@@ -116,7 +116,7 @@ public class JavaEmitter implements Emitter
 
     public void beginSequence(AST s)
     {
-        StructType sequence = (StructType) s;
+        SequenceType sequence = (SequenceType) s;
         String typeName = getTypeName(sequence);
         openOutputFile(typeName);
         sequenceEmitter.setOutputStream(out);
@@ -125,7 +125,7 @@ public class JavaEmitter implements Emitter
 
     public void endSequence(AST s)
     {
-        StructType sequence = (StructType)s;
+        SequenceType sequence = (SequenceType)s;
         sequenceEmitter.end(sequence);
         out.close();
     }
