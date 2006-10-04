@@ -68,7 +68,7 @@ import datascript.antlr.DocCommentParser;
 import datascript.antlr.DocCommentParserTokenTypes;
 import datascript.ast.TokenAST;
 
-public class DataScriptTool extends XMLFilterImpl
+public class DataScriptXmlDumper extends XMLFilterImpl
 {
     private ContentHandler handler;
     private AttributesImpl noAttr = new AttributesImpl();
@@ -246,7 +246,7 @@ public class DataScriptTool extends XMLFilterImpl
         try
         {
             String fileName = args[0];
-            DataScriptTool dsTool = new DataScriptTool();
+            DataScriptXmlDumper dsTool = new DataScriptXmlDumper();
             dsTool.parseDatascript(fileName);
             //OutputStreamWriter os = new OutputStreamWriter(System.out);
             //root.xmlSerialize(os);
