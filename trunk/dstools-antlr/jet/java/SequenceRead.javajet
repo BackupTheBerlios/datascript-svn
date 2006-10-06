@@ -50,15 +50,22 @@
     	
     public <%=name%>(String __filename) throws IOException 
     {
-        this(new BitStreamReader(__filename), new CallChain());
+        BitStreamReader __in = new BitStreamReader(__filename);
+        read(__in, new CallChain());
+        __in.close();
     }
 
     public <%=name%>(BitStreamReader __in) throws IOException 
     {
-    	this(__in, new CallChain());
+    	read(__in, new CallChain());
     }
 
     public <%=name%>(BitStreamReader __in, CallChain __cc) throws IOException 
+    {
+    	read(__in, __cc);
+    }
+
+    public void read(BitStreamReader __in, CallChain __cc) throws IOException 
     {
         try 
         {
@@ -77,7 +84,7 @@
             } 
             catch (IOException __e1) 
             {
-        	__in.setBitPosition(__fpos);
+                __in.setBitPosition(__fpos);
                 throw __e1;
        	    }
         }

@@ -50,8 +50,6 @@ public class BitsParserTest extends TestCase
      */
     private void writeAndReadBitStruct(int a, int b, int c) throws IOException
     {
-        
-        file.delete();
         os = new FileImageOutputStream(file);
         os.writeBits(a, 4);
         os.writeBits(b, 8);
