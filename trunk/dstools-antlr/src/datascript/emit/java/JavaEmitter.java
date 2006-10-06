@@ -45,6 +45,7 @@ import antlr.collections.AST;
 import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
 import datascript.ast.TypeInterface;
+import datascript.ast.UnionType;
 import datascript.emit.Emitter;
 
 public class JavaEmitter implements Emitter
@@ -52,6 +53,7 @@ public class JavaEmitter implements Emitter
     private static String JAVA_EXT = ".java";
     private String packageName;
     private SequenceEmitter sequenceEmitter = new SequenceEmitter(this);
+    private UnionEmitter unionEmitter = new UnionEmitter(this);
     private TypeNameEmitter typeEmitter = new TypeNameEmitter(this);
     private PrintStream out;
     
@@ -132,14 +134,18 @@ public class JavaEmitter implements Emitter
 
     public void beginUnion(AST u)
     {
-        // TODO Auto-generated method stub
-
+        UnionType union = (UnionType) u;
+        String typeName = getTypeName(union);
+        openOutputFile(typeName);
+        unionEmitter.setOutputStream(out);
+        unionEmitter.begin(union);
     }
 
     public void endUnion(AST u)
     {
-        // TODO Auto-generated method stub
-
+        UnionType union = (UnionType)u;
+        unionEmitter.end(union);
+        out.close();
     }
 
     public void beginEnumeration(AST e)

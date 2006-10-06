@@ -100,7 +100,7 @@ public class Expression extends TokenAST
         }                        
     }
 
-    
+/*    
     public void evaluate(Scope scope)
     {
         this.scope = scope;
@@ -116,12 +116,21 @@ public class Expression extends TokenAST
                 
         }
     }
-    
-    public void evaluate()
+*/    
+    public void evaluate(Scope scope)
     {
+        this.scope = scope;
         switch (getType())
         {
             
+            case DataScriptParserTokenTypes.ID:
+                evaluateIdentifier();
+                break;
+                
+            case DataScriptParserTokenTypes.INTEGER_LITERAL:
+                evaluateInteger();
+                break;
+
             case DataScriptParserTokenTypes.LPAREN:
                 type  = op1().type;
                 value = op1().value;
@@ -140,9 +149,40 @@ public class Expression extends TokenAST
                 evaluateConditionalExpression();
                 break;
 
+            case DataScriptParserTokenTypes.INDEX:
+                evaluateIndexExpression();
+                break;
+                
+            case DataScriptParserTokenTypes.LT:
+            case DataScriptParserTokenTypes.LE:
+            case DataScriptParserTokenTypes.GT:
+            case DataScriptParserTokenTypes.GE:
+            case DataScriptParserTokenTypes.EQ:
+            case DataScriptParserTokenTypes.NE:
+                evaluateRelationalExpression();
+                break;
+                
+            case DataScriptParserTokenTypes.PLUS:
+            case DataScriptParserTokenTypes.MINUS:
+            case DataScriptParserTokenTypes.MULTIPLY:
+            case DataScriptParserTokenTypes.DIVIDE:
+            case DataScriptParserTokenTypes.MODULO:
+            case DataScriptParserTokenTypes.LSHIFT:
+            case DataScriptParserTokenTypes.RSHIFT:
+                evaluateArithmeticExpression();
+                break;
+                
+            case DataScriptParserTokenTypes.LOGICALAND:
+            case DataScriptParserTokenTypes.LOGICALOR:
+                evaluateLogicalExpression();
+                break;
+                
+                
+
             default:
                 throw new InternalError("illegal operation: type = " + 
-                                        getType());
+                                        getType() + toStringTree() + ", " 
+                                        + getLine() + ":" + getColumn());
                 
         }
     }
@@ -206,6 +246,12 @@ public class Expression extends TokenAST
             ToolContext.logError(this, "cannot resolve symbol '" + symbol + "'");
         }
     }    
+    
+    private void evaluateInteger()
+    {
+        value = Value.makeValue(getText());
+        type  = value.getType();
+    }
 
     private void evaluateMember()
     {
@@ -280,6 +326,80 @@ public class Expression extends TokenAST
             ((BooleanValue)op1.value).booleanValue() ? op2 : op3;
             value = result.value;
             type  = result.type;
+        }
+    }
+
+    public void evaluateArithmeticExpression()
+    {
+        Expression op1 = op1();
+        Expression op2 = op2();
+        if (! IntegerType.checkCompatibility(op1.type, op2.type))
+        {
+            ToolContext.logError(op1, "types in arithmetic expression are incompatible");
+        }
+
+        // TODO: calculate value if operands are constant 
+        value = null;
+        type  = IntegerType.integerType;        
+    }
+
+    public void evaluateRelationalExpression()
+    {
+        Expression op1 = op1();
+        Expression op2 = op2();
+        if (! IntegerType.checkCompatibility(op1.type, op2.type))
+        {
+            ToolContext.logError(op1, "types in relational expression are incompatible");
+        }
+
+        // TODO: calculate value if operands are constant 
+        value = null;
+        type  = BooleanType.booleanType;        
+    }
+
+    public void evaluateLogicalExpression()
+    {
+        Expression op1 = op1();
+        Expression op2 = op2();
+        checkBooleanOperand(op1);
+        checkBooleanOperand(op2);
+        type  = BooleanType.booleanType;
+        if (op1.value != null && op2.value != null)
+        {
+            boolean val1 = op1.value.booleanValue();
+            boolean val2 = op1.value.booleanValue();
+            switch (getType())
+            {
+                case DataScriptParserTokenTypes.LOGICALAND:
+                    value = new BooleanValue(val1 && val2);
+                    break;
+
+                case DataScriptParserTokenTypes.LOGICALOR:
+                    value = new BooleanValue(val1 || val2);
+                    break;
+            }
+        }
+    }
+
+    public void evaluateIndexExpression()
+    {
+        type = IntegerType.integerType;
+        Field field = scope.getCurrentField();
+        if (field == null)
+        {
+            ToolContext.logError(op1(), "index expression can only be used in an array field context");
+            return;
+        }
+        if (field.getFieldType() instanceof ArrayType)
+        {
+            if (!field.getName().equals(op1().getText()))
+            {
+                ToolContext.logError(op1(), "index expression must refer to field '" + field.getName() + "'");                
+            }
+        }
+        else
+        {
+            ToolContext.logError(op1(), "'" + field.getName() + "' is not an array");            
         }
     }
 }

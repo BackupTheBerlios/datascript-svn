@@ -59,6 +59,7 @@ tokens
     PARAM;
     INST<AST=datascript.ast.TypeInstantiation>;
     ARRAY<AST=datascript.ast.ArrayType>;
+    INDEX<AST=datascript.ast.Expression>;
     LABEL;
     BLOCK;
     CAST;
@@ -466,8 +467,11 @@ postfixExpression!
     ;
     
 postfixOperand
-    :    
-        arrayOperand | functionArgumentList | dotOperand | choiceOperand
+    :   arrayOperand 
+    |   functionArgumentList 
+    |   dotOperand 
+    |   choiceOperand
+    |   indexOperand
     ;
 
 choiceOperand
@@ -488,6 +492,10 @@ dotOperand
     :   DOT^ ID<AST=datascript.ast.Expression>
     ;
 
+indexOperand!
+    :   DOLLAR "index"
+        { #indexOperand = #[INDEX]; }
+    ;
 
 primaryExpression
     :   variableName

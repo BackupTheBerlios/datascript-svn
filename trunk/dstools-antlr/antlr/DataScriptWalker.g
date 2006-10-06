@@ -278,6 +278,7 @@ expression
     |   #(INST (expression)+)
     |   #(LPAREN expression)
     |   #("is" ID)
+    |   #(INDEX ID)
     |   ID
     |   INTEGER_LITERAL 
     |   STRING_LITERAL

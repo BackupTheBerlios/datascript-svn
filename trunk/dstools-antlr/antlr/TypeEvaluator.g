@@ -390,6 +390,7 @@ expression
     |   INST
     |   LPAREN
     |   "is"
+    |   INDEX
     |   ID
     |   INTEGER_LITERAL 
     |   STRING_LITERAL

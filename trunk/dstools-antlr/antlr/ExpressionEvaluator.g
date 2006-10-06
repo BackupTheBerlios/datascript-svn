@@ -156,7 +156,7 @@ constDeclaration
     ;
 
 fieldDefinition
-    :   #(FIELD
+    :   #(f:FIELD                       { scope().setCurrentField((Field)f); }
           typeReference 
           (i:ID)? 
           (in:fieldInitializer)?
@@ -325,13 +325,14 @@ opExpression
     |   #(INST (expression)+)
     |   #(LPAREN expression)
     |   #("is" ID)
+    |   #(INDEX ID)
       )
-      { ((Expression)#opExpression).evaluate(); }
+      { ((Expression)#opExpression).evaluate(scope()); }
     ;	
 
 atom
     :   id:ID 			{ ((Expression)id).evaluate(scope()); }
-    |   il:INTEGER_LITERAL 	{ ((IntegerExpression)il).evaluate(); }	
+    |   il:INTEGER_LITERAL 	{ ((IntegerExpression)il).evaluate(scope()); }	
     |   sl:STRING_LITERAL
     ;
 

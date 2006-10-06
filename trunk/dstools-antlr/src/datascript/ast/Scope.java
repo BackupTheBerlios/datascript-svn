@@ -49,6 +49,7 @@ public class Scope implements Context, LinkAction
 
     private Context parentScope;
     private CompoundType owner;
+    private Field currentField;
 
     private Vector<LinkAction> linkActions = new Vector();
 
@@ -71,10 +72,21 @@ public class Scope implements Context, LinkAction
         return owner;
     }
     
-    void setOwner(CompoundType owner)
+    public void setOwner(CompoundType owner)
     {
         this.owner = owner;
     }
+    
+    public Field getCurrentField()
+    {
+        return currentField;
+    }
+    
+    public void setCurrentField(Field f)
+    {
+        currentField = f;
+    }
+    
     /**
      * get this symbol from this or a parent scope
      */
