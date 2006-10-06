@@ -70,6 +70,25 @@ ItemB
     uint32      value;
 };
 
+ItemC
+{
+    uint8       tag = 3;
+    int64       value;
+};
+
+union AnyItem
+{
+    ItemA a;	    
+    ItemB b;
+    ItemC c;	    
+};
+
+MixedArray
+{
+    uint16	numItems;
+    AnyItem	items[numItems];
+};
+
 enum uint16 Colour
 {
     RED = 1,

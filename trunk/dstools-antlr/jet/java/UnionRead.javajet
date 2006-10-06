@@ -39,9 +39,58 @@
 %> 
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="SequenceEnd" %>
+        class="UnionRead" %>
 <% 
+    UnionEmitter e = (UnionEmitter) argument;
+    JavaEmitter global = e.getGlobal();
+    UnionType s = e.getUnionType();
+    String name = s.getName();
+    AccessorNameEmitter ane = new AccessorNameEmitter(); 
 %>
-}
+    // TODO: Emit constructor from member values.
+    	
+    public <%=name%>(String __filename) throws IOException 
+    {
+        this(new BitStreamReader(__filename), new CallChain());
+    }
 
-// END OF FILE
+    public <%=name%>(BitStreamReader __in) throws IOException 
+    {
+    	this(__in, new CallChain());
+    }
+
+    public <%=name%>(BitStreamReader __in, CallChain __cc) throws IOException 
+    {
+        try 
+        {
+            __cc.push("<%=name%>", this);
+            __fpos = __in.getBitPosition();
+            
+            while (true)
+            {
+<%
+	    for (Field field : s.getFields())
+	    {
+	        String setter = ane.getSetterName(field);
+%>	
+                try 
+                {
+                    <%=setter%>(<%=e.readField(field)%>);
+                    break;
+                } 
+                catch (IOException __exc) 
+                {
+        	    __in.setBitPosition(__fpos);
+       	        }
+<%
+	    }
+%>
+                throw new IOException("no match in union");
+            }     
+        }
+        finally 
+        { 
+            __cc.pop(); 
+        }
+    }
+

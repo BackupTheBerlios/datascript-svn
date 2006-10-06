@@ -1,4 +1,3 @@
-<%
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -36,12 +35,79 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-%> 
-<%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.java.*" 
-        class="SequenceEnd" %>
-<% 
-%>
-}
+package datascript.emit.java;
 
-// END OF FILE
+import java.io.PrintStream;
+
+import datascript.ast.Field;
+import datascript.ast.TypeInterface;
+import datascript.ast.TypeReference;
+import datascript.jet.java.UnionFieldAccessor;
+
+public class UnionFieldEmitter
+{
+    private JavaEmitter global;
+    private Field field;
+    private PrintStream out;
+    
+    public UnionFieldEmitter(JavaEmitter j)
+    {
+        this.global = j;
+    }
+   
+    public JavaEmitter getGlobal()
+    {
+        return global;
+    }
+    
+    public void setOutputStream(PrintStream out)
+    {
+        this.out = out;
+    }
+    
+    public void emit(Field f)
+    {
+        this.field = f;
+        UnionFieldAccessor template = new UnionFieldAccessor();
+        String result = template.generate(this);
+        out.print(result);
+    }
+    
+    public Field getField()
+    {
+        return field;
+    }
+    
+    public String getTypeName()
+    {
+        TypeInterface type = field.getFieldType();
+        type = TypeReference.resolveType(type);
+        return global.getTypeName(type);
+    }
+    
+    public String getCheckerName()
+    {
+        StringBuffer result = new StringBuffer("is");
+        return appendAccessorTail(result);
+    }
+
+    public String getGetterName()
+    {
+        StringBuffer result = new StringBuffer("get");
+        return appendAccessorTail(result);
+    }
+
+    public String getSetterName()
+    {
+        StringBuffer result = new StringBuffer("set");
+        return appendAccessorTail(result);
+    }
+
+    private String appendAccessorTail(StringBuffer buffer)
+    {
+        String name = field.getName();
+        buffer.append(name.substring(0, 1).toUpperCase());
+        buffer.append(name.substring(1, name.length()));
+        return buffer.toString();
+    }    
+}

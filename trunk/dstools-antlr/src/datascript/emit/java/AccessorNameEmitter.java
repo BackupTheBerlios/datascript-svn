@@ -1,4 +1,3 @@
-<%
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -36,12 +35,39 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-%> 
-<%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.java.*" 
-        class="SequenceEnd" %>
-<% 
-%>
-}
+package datascript.emit.java;
 
-// END OF FILE
+import datascript.ast.Field;
+
+public class AccessorNameEmitter
+{
+    public AccessorNameEmitter()
+    {
+    }
+   
+    public String getCheckerName(Field field)
+    {
+        StringBuffer result = new StringBuffer("is");
+        return appendAccessorTail(result, field);
+    }
+
+    public String getGetterName(Field field)
+    {
+        StringBuffer result = new StringBuffer("get");
+        return appendAccessorTail(result, field);
+    }
+
+    public String getSetterName(Field field)
+    {
+        StringBuffer result = new StringBuffer("set");
+        return appendAccessorTail(result, field);
+    }
+
+    private String appendAccessorTail(StringBuffer buffer, Field field)
+    {
+        String name = field.getName();
+        buffer.append(name.substring(0, 1).toUpperCase());
+        buffer.append(name.substring(1, name.length()));
+        return buffer.toString();
+    }
+}

@@ -53,21 +53,21 @@ import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.Value;
 import datascript.jet.java.ArrayRead;
-import datascript.jet.java.SequenceRead;
+import datascript.jet.java.UnionRead;
 import datascript.jet.java.UnionBegin;
 import datascript.jet.java.SequenceEnd;
 
 public class UnionEmitter
 {
     private static String nl = System.getProperties().getProperty("line.separator");
-    private UnionType seq;
+    private UnionType union;
     private JavaEmitter global;
-    private SequenceFieldEmitter fieldEmitter;
+    private UnionFieldEmitter fieldEmitter;
     private TypeNameEmitter typeNameEmitter;
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
     private UnionBegin beginTmpl = new UnionBegin();
     private SequenceEnd endTmpl = new SequenceEnd();
-    private SequenceRead readTmpl = new SequenceRead();
+    private UnionRead readTmpl = new UnionRead();
     private ArrayRead arrayTmpl = new ArrayRead();
     private StringBuilder buffer;
     private PrintStream out;
@@ -75,13 +75,13 @@ public class UnionEmitter
     public UnionEmitter(JavaEmitter j)
     {
         this.global = j;
-        this.fieldEmitter = new SequenceFieldEmitter(j);
+        this.fieldEmitter = new UnionFieldEmitter(j);
         this.typeNameEmitter = new TypeNameEmitter(j);
     }
    
     public UnionType getUnionType()
     {
-        return seq;
+        return union;
     }
     
     public JavaEmitter getGlobal()
@@ -97,7 +97,7 @@ public class UnionEmitter
     
     public void begin(UnionType s)
     {
-        seq = s;
+        union = s;
         String result = beginTmpl.generate(this);
         out.print(result);
         
@@ -118,7 +118,7 @@ public class UnionEmitter
     
     public void readFields()
     {
-        for (Field field : seq.getFields())
+        for (Field field : union.getFields())
         {
             //out.println("    // field "+ field.getName());
             readField(field);
@@ -247,10 +247,9 @@ public class UnionEmitter
     
     private void readCompoundField(Field field, CompoundType type)
     {
-        buffer.append(field.getName());
-        buffer.append(" = new ");
+        buffer.append("new ");
         buffer.append(type.getName());
-        buffer.append("(__in, __cc);");
+        buffer.append("(__in, __cc)");
     }
     
     private void readArrayField(Field field, ArrayType array)

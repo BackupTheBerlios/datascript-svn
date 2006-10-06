@@ -39,9 +39,38 @@
 %> 
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="SequenceEnd" %>
+        class="UnionFieldAccessor" %>
 <% 
+    UnionFieldEmitter e = (UnionFieldEmitter) argument;
+    String type =  e.getTypeName();
+    Field field = e.getField();
+    String fname = field.getName();
+    AccessorNameEmitter ane = new AccessorNameEmitter();
+    String getter = ane.getGetterName(field);
+    String setter = ane.getSetterName(field);
+    String checker = ane.getCheckerName(field);
 %>
-}
+    //private <%=type%> <%=fname%>;
+    
+    public boolean <%=checker%>() 
+    { 
+        return (__choiceTag == CHOICE_<%=fname%>);
+    }
+    
+    public <%=type%> <%=getter%>() throws IOException
+    { 
+        if (__choiceTag != CHOICE_<%=fname%>) 
+        {
+            throw new IOException("__choiceTag = " + __choiceTag + 
+                                  " != " + CHOICE_<%=fname%>);
+        }
+        return (<%=type%>)__objectChoice; 
+    }
+    
+    public void <%=setter%>(<%=type%> <%=fname%>) 
+    { 
+        __objectChoice = <%=field%>; 
+        __choiceTag = CHOICE_<%=field%>;
+    }
 
-// END OF FILE
+
