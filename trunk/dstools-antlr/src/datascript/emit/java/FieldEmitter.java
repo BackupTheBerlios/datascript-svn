@@ -37,39 +37,45 @@
  */
 package datascript.emit.java;
 
-import datascript.ast.ArrayType;
-import datascript.ast.Field;
+import java.io.PrintStream;
 
-/**
- * @author HWellmann
- *
- */
-public class ArrayEmitter
+import datascript.ast.Field;
+import datascript.ast.TypeInterface;
+import datascript.ast.TypeReference;
+import datascript.jet.java.SequenceFieldAccessor;
+
+abstract public class FieldEmitter
 {
-    private Field field;
-    private ArrayType array;
-    private String elTypeName;
+    private JavaEmitter global;
+    protected Field field;
+    protected PrintStream out;
     
-    public ArrayEmitter(Field field, ArrayType array, String elTypeName)
+    public FieldEmitter(JavaEmitter j)
     {
-        this.field = field;
-        this.array = array;
-        this.elTypeName = elTypeName;
+        this.global = j;
+    }
+   
+    public JavaEmitter getGlobal()
+    {
+        return global;
+    }
+    
+    public void setOutputStream(PrintStream out)
+    {
+        this.out = out;
+    }
+    
+    abstract public void emit(Field f);
+    
+    public String getTypeName()
+    {
+        TypeInterface type = field.getFieldType();
+        type = TypeReference.resolveType(type);
+        return global.getTypeName(type);
     }
     
     public Field getField()
     {
         return field;
-    }
-    
-    public String getElementTypeName()
-    {
-        return elTypeName;
-    }
-    
-    public String getLengthExpr()
-    {
-        ExpressionEmitter ee = new ExpressionEmitter();
-        return ee.emit(array.getLengthExpression());
     }
 }

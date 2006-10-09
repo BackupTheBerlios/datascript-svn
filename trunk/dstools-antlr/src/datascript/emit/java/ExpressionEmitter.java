@@ -39,6 +39,9 @@ package datascript.emit.java;
 
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.Expression;
+import datascript.ast.Field;
+import datascript.ast.TypeInterface;
+import datascript.ast.TypeReference;
 import datascript.ast.Value;
 
 /**
@@ -90,12 +93,14 @@ public class ExpressionEmitter
         switch (expr.getType())
         {
             case DataScriptParserTokenTypes.INTEGER_LITERAL:
+            case DataScriptParserTokenTypes.UINT8:
                 Value value = expr.getValue();
                 buffer.append(value.integerValue());
                 break;
 
             case DataScriptParserTokenTypes.ID:
-                buffer.append(expr.getText());
+                //buffer.append(expr.getText());
+                appendIdentifier(expr);
                 break;
 
             default:
@@ -252,5 +257,31 @@ public class ExpressionEmitter
         buffer.append('.');
         
         append(expr.op2());        
+    }
+    
+    private void appendIdentifier(Expression expr)
+    {
+        String symbol = expr.getText();
+        Object obj = expr.getScope().getSymbol(symbol);
+        if (obj instanceof TypeInterface)
+        {
+            buffer.append("((");
+            buffer.append(symbol);
+            buffer.append(")__cc.find(\"");
+            buffer.append(symbol);
+            buffer.append("\"))");
+        }
+        else if (obj instanceof Field)
+        {
+            Field field = (Field)obj;
+            String getter = new AccessorNameEmitter().getGetterName(field);
+            buffer.append(getter);
+            buffer.append("()");
+        }
+        else
+        {
+            throw new InternalError("unhandled type of identifier: " +
+                    obj.getClass().getName());
+        }
     }
 }

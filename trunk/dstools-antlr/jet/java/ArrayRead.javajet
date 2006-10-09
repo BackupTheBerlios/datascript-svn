@@ -42,8 +42,10 @@
         class="ArrayRead" %>
 <% 
     ArrayEmitter e = (ArrayEmitter) argument;
+    AccessorNameEmitter ane = new AccessorNameEmitter();
     String elType = e.getElementTypeName();
-    String field  = e.getFieldName();
+    Field field  = e.getField();
+    String setter = ane.getSetterName(field);
     String length = e.getLengthExpr();
 %>
 {
@@ -52,5 +54,5 @@
                     {
                         v.addElement(new <%=elType%>(__in, __cc));
                     }
-                    <%=field%> = new ObjectArray<<%=elType%>>(v);
+                    <%=setter%>(new ObjectArray<<%=elType%>>(v));
                 }

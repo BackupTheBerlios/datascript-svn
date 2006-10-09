@@ -47,43 +47,35 @@ import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
-import datascript.ast.SequenceType;
+import datascript.ast.Parameter;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.Value;
 import datascript.jet.java.ArrayRead;
-import datascript.jet.java.SequenceRead;
-import datascript.jet.java.SequenceBegin;
-import datascript.jet.java.SequenceEnd;
 
-public class CompoundEmitter
+abstract public class CompoundEmitter
 {
     private static String nl = System.getProperties().getProperty("line.separator");
-    private SequenceType seq;
     private JavaEmitter global;
-    private SequenceFieldEmitter fieldEmitter;
     private TypeNameEmitter typeNameEmitter;
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
-    private SequenceBegin beginTmpl = new SequenceBegin();
-    private SequenceEnd endTmpl = new SequenceEnd();
-    private SequenceRead readTmpl = new SequenceRead();
     private ArrayRead arrayTmpl = new ArrayRead();
+    private AccessorNameEmitter ane = new AccessorNameEmitter();
     private StringBuilder buffer;
-    private PrintStream out;
+    private String formalParams;
+    private String actualParams;
+    protected PrintStream out;
     
     public CompoundEmitter(JavaEmitter j)
     {
         this.global = j;
-        this.fieldEmitter = new SequenceFieldEmitter(j);
         this.typeNameEmitter = new TypeNameEmitter(j);
     }
    
-    public SequenceType getSequenceType()
-    {
-        return seq;
-    }
-    
+    abstract public CompoundType getCompoundType();
+    abstract public FieldEmitter getFieldEmitter();
+
     public JavaEmitter getGlobal()
     {
         return global;
@@ -92,35 +84,14 @@ public class CompoundEmitter
     public void setOutputStream(PrintStream out)
     {
         this.out = out;
-        fieldEmitter.setOutputStream(out);
+        getFieldEmitter().setOutputStream(out);
     }
     
-    public void begin(SequenceType s)
-    {
-        seq = s;
-        String result = beginTmpl.generate(this);
-        out.print(result);
-        
-        for (Field field : s.getFields())
-        {
-            //out.println("    // field "+ field.getName());
-            fieldEmitter.emit(field);
-        }
-        result = readTmpl.generate(this);
-        out.print(result);
-    }
-    
-    public void end(SequenceType s)
-    {
-        String result = endTmpl.generate(this);
-        out.print(result);
-    }
     
     public void readFields()
     {
-        for (Field field : seq.getFields())
+        for (Field field : getCompoundType().getFields())
         {
-            //out.println("    // field "+ field.getName());
             readField(field);
         }
     }
@@ -166,12 +137,13 @@ public class CompoundEmitter
     
     private void readIntegerField(Field field, IntegerType type)
     {
-        buffer.append(field.getName());
-        buffer.append(" = ");
-        readIntegerValue(type);
+        buffer.append(ane.getSetterName(field));
+        buffer.append("(");
+        readIntegerValue(field, type);
+        buffer.append(");");
     }
     
-    private void readIntegerValue(IntegerType type)
+    private void readIntegerValue(Field field, IntegerType type)
     {
         String methodSuffix;
         String cast = "";
@@ -242,15 +214,15 @@ public class CompoundEmitter
         buffer.append(methodSuffix);
         buffer.append("(");      
         buffer.append(arg);      
-        buffer.append(");");
+        buffer.append(")");
     }
     
     private void readCompoundField(Field field, CompoundType type)
     {
-        buffer.append(field.getName());
-        buffer.append(" = new ");
+        buffer.append(ane.getSetterName(field));
+        buffer.append("(new ");
         buffer.append(type.getName());
-        buffer.append("(__in, __cc);");
+        buffer.append("(__in, __cc));");
     }
     
     private void readArrayField(Field field, ArrayType array)
@@ -259,7 +231,7 @@ public class CompoundEmitter
         if (elTypeJavaName.startsWith("ObjectArray"))
         {
             String elTypeName = typeNameEmitter.getTypeName(array.getElementType());
-            ArrayEmitter arrayEmitter = new ArrayEmitter(field.getName(), array, 
+            ArrayEmitter arrayEmitter = new ArrayEmitter(field, array, 
                     elTypeName);
             String result = arrayTmpl.generate(arrayEmitter);
             buffer.append(result);            
@@ -267,45 +239,91 @@ public class CompoundEmitter
         else
         {
             Expression length = array.getLengthExpression();
-            buffer.append(field.getName());
-            buffer.append(" = new ");
+            buffer.append(ane.getSetterName(field));
+            buffer.append("(new ");
             buffer.append(elTypeJavaName);
             buffer.append("(__in, ");
             buffer.append(getLengthExpression(length));
-            buffer.append(");");
+            buffer.append("));");
         }
     }
     
     private void readEnumField(Field field, EnumType type)
     {
         IntegerType baseType = (IntegerType) type.getBaseType();
-        String baseTypeName = typeNameEmitter.getTypeName(baseType);
-        String fname = field.getName();
-        buffer.append(baseTypeName);
-        buffer.append(" __");
-        buffer.append(field.getName());
-        buffer.append(" = ");
-        readIntegerValue(baseType);
-        buffer.append(nl);
-        indent();
-        buffer.append(fname);
-        buffer.append(" = ");
+        buffer.append(ane.getSetterName(field));
+        buffer.append("(");
         buffer.append(type.getName());
-        buffer.append(".toEnum(__");
-        buffer.append(fname);
-        buffer.append(");");        
+        buffer.append(".toEnum(");
+        readIntegerValue(field, baseType);
+        buffer.append("));");        
     }
     
     private String getLengthExpression(Expression expr)
     {
-/*        
         // TODO handle variable length
-        Value value = expr.getValue();
-        int length = (value == null) ? 0 : value.integerValue().intValue();
-        
-        return Integer.toString(length);
-*/        
-        return exprEmitter.emit(expr);
-        
+        return exprEmitter.emit(expr);        
+    }
+    
+    public String getConstraint(Field field)
+    {
+        String result = null;
+        Expression expr = field.getCondition();
+        if (expr != null)
+        {
+            result = exprEmitter.emit(expr);
+        }
+        else
+        {
+            expr = field.getInitializer();
+            if (expr != null)
+            {
+                result = field.getName() + " == " + exprEmitter.emit(expr);
+            }
+        }
+        return result;
+    }
+    
+    public void buildParameterLists()
+    {
+        StringBuilder formal = new StringBuilder();
+        StringBuilder actual = new StringBuilder();
+        CompoundType compound = getCompoundType();
+        int numParams = compound.getParameterCount();
+        for (int p = 0; p < numParams; p++)
+        {
+            String paramName = compound.getParameterAt(p);
+            TypeInterface paramType = (TypeInterface)compound.getScope().getSymbol(paramName);
+            paramType = TypeReference.resolveType(paramType);
+            
+            String typeName = typeNameEmitter.getTypeName(paramType);
+            formal.append(", ");
+            formal.append(typeName);
+            formal.append(", ");
+            formal.append(paramName);
+
+            actual.append(", ");
+            actual.append(paramName);
+        }
+        formalParams = formal.toString();
+        actualParams = actual.toString();
+    }
+    
+    public String getFormalParameterList()
+    {
+        if (formalParams == null)
+        {
+            buildParameterLists();
+        }
+        return formalParams;
+    }
+
+    public String getActualParameterList()
+    {
+        if (actualParams == null)
+        {
+            buildParameterLists();
+        }
+        return actualParams;
     }
 }

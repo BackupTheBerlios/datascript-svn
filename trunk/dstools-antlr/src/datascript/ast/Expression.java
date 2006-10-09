@@ -69,6 +69,11 @@ public class Expression extends TokenAST
         return type;
     }
     
+    public Scope getScope()
+    {
+        return scope;
+    }
+    
     public Expression op1()
     {
         return (Expression) getFirstChild();
@@ -255,19 +260,23 @@ public class Expression extends TokenAST
 
     private void evaluateMember()
     {
-        TypeInterface t = op1().getExprType();
+        Expression op1 = op1();
+        Expression op2 = op2();
+        TypeInterface t = op1.getExprType();
         if (!(t instanceof CompoundType))
         {
             ToolContext.logError(this, "compound type expected");
         }
         CompoundType compound = (CompoundType)t;
-        String symbol = op1().getNextSibling().getText();
-        Object obj = compound.getScope().getSymbol(symbol);
+        String symbol = op2.getText();
+        Scope scope = compound.getScope();
+        Object obj = scope.getSymbol(symbol);
         if (obj == null)
         {
             ToolContext.logError(this, "'" + symbol + 
                     "' undefined in current scope");
         }
+        op2.scope = scope;
         if (obj instanceof Field)
         {
             Field field = (Field)obj;

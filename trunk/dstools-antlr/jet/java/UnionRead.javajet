@@ -45,28 +45,29 @@
     JavaEmitter global = e.getGlobal();
     UnionType s = e.getUnionType();
     String name = s.getName();
-    AccessorNameEmitter ane = new AccessorNameEmitter(); 
+    String formalPar = e.getFormalParameterList();
+    String actualPar = e.getActualParameterList();
 %>
     // TODO: Emit constructor from member values.
     	
-    public <%=name%>(String __filename) throws IOException 
+    public <%=name%>(String __filename<%=formalPar%>) throws IOException 
     {
         BitStreamReader __in = new BitStreamReader(__filename);
-        read(__in, new CallChain());
+        read(__in, new CallChain()<%=actualPar%>);
         __in.close();
     }
 
-    public <%=name%>(BitStreamReader __in) throws IOException 
+    public <%=name%>(BitStreamReader __in<%=formalPar%>) throws IOException 
     {
-    	read(__in, new CallChain());
+    	read(__in, new CallChain()<%=actualPar%>);
     }
 
-    public <%=name%>(BitStreamReader __in, CallChain __cc) throws IOException 
+    public <%=name%>(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws IOException 
     {
-    	read(__in, __cc);
+    	read(__in, __cc<%=actualPar%>);
     }
 
-    public void read(BitStreamReader __in, CallChain __cc) throws IOException 
+    public void read(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws IOException 
     {
         try 
         {
@@ -78,11 +79,10 @@
 <%
 	    for (Field field : s.getFields())
 	    {
-	        String setter = ane.getSetterName(field);
 %>	
                 try 
                 {
-                    <%=setter%>(<%=e.readField(field)%>);
+                    <%=e.readField(field)%>
                     break;
                 } 
                 catch (IOException __exc) 

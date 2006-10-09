@@ -320,12 +320,12 @@ opExpression
     |   #(BANG expression)
     |   #("sizeof" expression)
     |   #("lengthof" expression)
-    |   #(DOT expression ID)
+    |   #(DOT expression ID)    
     |   #(ARRAYELEM expression expression)
     |   #(INST (expression)+)
     |   #(LPAREN expression)
-    |   #("is" ID)
-    |   #(INDEX ID)
+    |   #("is" identifier)
+    |   #(INDEX identifier)
       )
       { ((Expression)#opExpression).evaluate(scope()); }
     ;	
@@ -334,6 +334,10 @@ atom
     :   id:ID 			{ ((Expression)id).evaluate(scope()); }
     |   il:INTEGER_LITERAL 	{ ((IntegerExpression)il).evaluate(scope()); }	
     |   sl:STRING_LITERAL
+    ;
+
+identifier
+    :   id:ID 			{ ((Expression)id).evaluate(scope()); }
     ;
 
 integerExpression

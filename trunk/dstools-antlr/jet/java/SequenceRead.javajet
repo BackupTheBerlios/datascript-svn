@@ -44,28 +44,31 @@
     SequenceEmitter e = (SequenceEmitter) argument;
     JavaEmitter global = e.getGlobal();
     SequenceType s = e.getSequenceType();
-    String name = s.getName(); 
+    String name = s.getName();
+    ExpressionEmitter ee = new ExpressionEmitter(); 
+    String formalPar = e.getFormalParameterList();
+    String actualPar = e.getActualParameterList();
 %>
     // TODO: Emit constructor from member values.
     	
-    public <%=name%>(String __filename) throws IOException 
+    public <%=name%>(String __filename<%=formalPar%>) throws IOException 
     {
         BitStreamReader __in = new BitStreamReader(__filename);
-        read(__in, new CallChain());
+        read(__in, new CallChain()<%=actualPar%>);
         __in.close();
     }
 
-    public <%=name%>(BitStreamReader __in) throws IOException 
+    public <%=name%>(BitStreamReader __in<%=formalPar%>) throws IOException 
     {
-    	read(__in, new CallChain());
+    	read(__in, new CallChain()<%=actualPar%>);
     }
 
-    public <%=name%>(BitStreamReader __in, CallChain __cc) throws IOException 
+    public <%=name%>(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws IOException 
     {
-    	read(__in, __cc);
+    	read(__in, __cc<%=actualPar%>);
     }
 
-    public void read(BitStreamReader __in, CallChain __cc) throws IOException 
+    public void read(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws IOException 
     {
         try 
         {
@@ -79,6 +82,16 @@
 %>	
                 <%=e.readField(field)%>
 <%
+            String constraint = e.getConstraint(field);
+            if (constraint != null)
+            {
+%>
+                if (!(<%=constraint%>))
+                {
+                    throw new IOException("constraint violated");
+                }
+<%            
+            }
 	}
 %>                
             } 
@@ -93,4 +106,3 @@
             __cc.pop(); 
         }
     }
-

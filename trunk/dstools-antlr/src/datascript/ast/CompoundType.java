@@ -81,7 +81,6 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
 
     protected CompoundType()
     {
-        
     }
     
     CompoundType getParent()
@@ -98,7 +97,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         parameters.addElement(param);
     }
 
-    Iterator getParameters()
+    public Iterator getParameters()
     {
         return parameters.iterator();
     }
@@ -108,7 +107,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         return parameters.elementAt(index);
     }
     
-    int getParameterCount()
+    public int getParameterCount()
     {
         return (parameters == null) ? 0 : parameters.size();
     }
@@ -192,14 +191,6 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
 
     public Iterable<Field> getFields()
     {
-        /*
-        return new Iterable<Field>() {
-            public Iterator<Field> iterator()
-            {
-                return new ChildIterator<Field>(CompoundType.this);
-            }
-        };
-        */
         return fields;
     }
 
@@ -229,51 +220,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     {
         return name;
     }
-/*
-    public void link()
-    {
-        scope.link(null);
-        resolveParameters();
-    }
-    Iterator getSetTypes()
-    {
-        return settypes.iterator();
-    }
 
-    void addSetType(SetType stype)
-    {
-        // TODO: Main.assertThat(!settypes.contains(stype));
-        settypes.addElement(stype);
-    }
-
-
-    Iterable<TypeInterface> getNestedTypes()
-    {
-        return nestedTypes;
-    }
-
-    void addNestedType(CompoundType c)
-    {
-        nestedTypes.addElement(c);
-    }
-
-    Iterator getConditions()
-    {
-        return conditions.iterator();
-    }
-
-    void addCondition(Condition c) { conditions.addElement(c); }
-    
-    int getByteOrder()
-    {
-        return byteOrder;
-    }
-
-    void setByteOrder(int byteOrder)
-    {
-        this.byteOrder = byteOrder;
-    }
-*/
     public Value castFrom(Value val)
     {
         throw new Error("casting compounds not implemented");
@@ -304,5 +251,4 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     {
         throw new InternalError("not implemented");
     }
-
 }

@@ -43,24 +43,23 @@ package datascript.ast;
  */
 public class Parameter
 {
-    String name;
+    private String name;
 
-    TypeInterface type;
+    private TypeInterface type;
 
-    Parameter(String name, TypeInterface type)
+    public Parameter(String name, TypeInterface type)
     {
         this.name = name;
         this.type = type;
     }
 
-    TypeInterface getType()
+    public TypeInterface getType()
     {
         return (type);
     }
 
-    String getName()
+    public String getName()
     {
         return (name);
     }
-
 }

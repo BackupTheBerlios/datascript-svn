@@ -102,16 +102,23 @@ public class Field extends TokenAST
         this.fieldLabel = (TokenAST)label;
     }
 
-    CompoundType getCompound()
+    public CompoundType getCompound()
     {
         return compound;
     }
 
 
 
-    TokenAST getCondition()
+    public Expression getCondition()
     {
-        return fieldCondition;
+        if (fieldCondition != null)
+        {
+            return (Expression)fieldCondition.getFirstChild();
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public void setCondition(AST fieldCondition)
@@ -129,9 +136,16 @@ public class Field extends TokenAST
         this.fieldOptionalClause = (TokenAST)optional;
     }
 
-    public TokenAST getInitializer()
+    public Expression getInitializer()
     {
-        return fieldInitializer;
+        if (fieldInitializer != null)
+        {
+            return (Expression)fieldInitializer.getFirstChild();
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public void setInitializer(AST fieldInitializer)
