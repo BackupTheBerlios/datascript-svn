@@ -24,10 +24,21 @@
      <li>We are defining a DataScript dialect supported by our
        implementation, documented in a <a href="DataScriptLanguageOverview.html">DataScript Language Overview</a>.
      </li>
+     <li><b>Relational DataScript</b> will be a language extension that allows storing
+        data in an SQL database, either in base type columns or in blobs. 
+        For the time being, we will support 
+        <a href="http://www.sqlite.org">SQLite</a> only.
+     </li>
      <li>We are working on an XML exchange format for DataScript modules and an XSL 
        stylesheet that produces Javadoc style documentation.
      </li>
-     <li>A simpler and more robust parser will be developed based on <a href="http://www.antlr.org">antlr</a>. 
+
+     <li>A simpler and more robust parser has been developed based on
+       <a href="http://www.antlr.org">antlr</a>. This parser is still
+       alpha and is only available from the 
+      <a href="https://svn.sourceforge.net/viewvc/dstools/trunk/dstools-antlr">
+       Subversion repository</a>.
+
      </li>
      <li>The Java code generator will be ported to this new front-end.
      </li>
