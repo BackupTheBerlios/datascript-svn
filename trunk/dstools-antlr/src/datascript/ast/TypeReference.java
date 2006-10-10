@@ -134,7 +134,7 @@ public class TypeReference extends TokenAST implements TypeInterface,
 
     public void resolve(Context ctxt)
     {
-
+        //System.out.println("to be resolved: " + getName() + " in scope " + ctxt.getOwner().getName());
         ctxt.postLinkAction(this);
     }
 

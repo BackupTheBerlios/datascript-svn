@@ -22,7 +22,7 @@ import datascript.runtime.ShortArray;
  * @author HWellmann
  *
  */
-public class ContainmentTest extends TestCase
+public class TypeInstantiationTest extends TestCase
 {
     private FileImageOutputStream os;
     private String fileName = "containment.bin";
@@ -32,7 +32,7 @@ public class ContainmentTest extends TestCase
      * Constructor for BitStreamReaderTest.
      * @param name
      */
-    public ContainmentTest(String name)
+    public TypeInstantiationTest(String name)
     {
         super(name);
     }
@@ -52,26 +52,43 @@ public class ContainmentTest extends TestCase
         file.delete();
     }
 
-    public void testContainment() throws IOException
+    private void writeBytes(int numBytes) throws IOException
     {
-        short a = 99;
-        short length = 5;
-        short c = -4711;
-        byte  d = 3;
-        short e = 1234;
-        os = new FileImageOutputStream(file);
-        os.writeShort(a);
-        os.writeShort(length);
-        os.writeShort(c);
-        os.writeByte(d);
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < numBytes; i++)
         {
-            os.writeShort(20*i);
+            os.writeByte(11+i);
         }
-        os.writeInt(e);
+    }
+
+    public void testInstantiation() throws IOException
+    {
+        short[] sizes = new short[] { 1, 3, 4 };
+        short numBlocks = (short) sizes.length;
+        byte unsorted = 3;
+        byte sorted = 9;
+        os = new FileImageOutputStream(file);
+        os.writeShort(numBlocks);
+        
+        // block 0
+        os.writeByte(sorted);
+        os.writeShort(sizes[0]);
+        os.writeInt(0xDEADBEEF);
+        writeBytes(sizes[0]);
+        
+        // block 1
+        os.writeByte(unsorted);
+        os.writeShort(sizes[1]);
+        os.writeInt(0xDEADBEEF);
+        writeBytes(sizes[1]);
+        
+        // block 2
+        os.writeByte(sorted);
+        os.writeShort(sizes[2]);
+        os.writeInt(0xDEADBEEF);
+        writeBytes(sizes[2]);
         os.close();
         
-        Outer outer = new Outer(fileName);
+        Blocks blocks = new Blocks(fileName);
         assertEquals(a, outer.getA());
         Header header = outer.getHeader();
         Inner  inner  = outer.getInner();

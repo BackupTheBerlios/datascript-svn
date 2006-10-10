@@ -80,6 +80,12 @@ abstract public class CompoundEmitter
     {
         return global;
     }
+    
+    protected void reset()
+    {
+        formalParams = null;
+        actualParams = null;
+    }
 
     public void setOutputStream(PrintStream out)
     {
@@ -290,6 +296,7 @@ abstract public class CompoundEmitter
         StringBuilder actual = new StringBuilder();
         CompoundType compound = getCompoundType();
         int numParams = compound.getParameterCount();
+        System.out.println(compound + " has " + numParams + " parameters");
         for (int p = 0; p < numParams; p++)
         {
             String paramName = compound.getParameterAt(p);
@@ -299,7 +306,7 @@ abstract public class CompoundEmitter
             String typeName = typeNameEmitter.getTypeName(paramType);
             formal.append(", ");
             formal.append(typeName);
-            formal.append(", ");
+            formal.append(" ");
             formal.append(paramName);
 
             actual.append(", ");

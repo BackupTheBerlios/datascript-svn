@@ -110,3 +110,33 @@ Enums
     Dimension dim1;
     Dimension dim2;
 };
+
+Blocks
+{
+    uint16    		numBlocks;
+    Block		blocks[numBlocks];
+};
+
+Block
+{
+    BlockHeader		header;
+    BlockData(header)	data;
+};
+
+BlockHeader
+{
+    BlockType		type;
+    uint16		size;
+};
+
+BlockData(BlockHeader header)
+{
+    uint32		magic = 0x0EADBEEF;
+    uint8		bytes[header.size];
+};
+
+enum uint8 BlockType
+{
+    UNSORTED = 3,
+    SORTED   = 9
+};

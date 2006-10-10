@@ -124,6 +124,7 @@ public class Expression extends TokenAST
 */    
     public void evaluate(Scope scope)
     {
+        //System.out.println("evaluating " + getText() + " in " + scope.getOwner());
         this.scope = scope;
         switch (getType())
         {
@@ -215,7 +216,7 @@ public class Expression extends TokenAST
             if (type instanceof CompoundType)
             {
                 CompoundType compound = (CompoundType)type;
-                scope = compound.getScope();
+                // ??? scope = compound.getScope();
             }
         }
         else if (obj instanceof IntegerType)

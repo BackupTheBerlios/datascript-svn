@@ -76,6 +76,7 @@ public class UnionEmitter extends CompoundEmitter
     public void begin(UnionType s)
     {
         union = s;
+        reset();        
         String result = beginTmpl.generate(this);
         out.print(result);
         

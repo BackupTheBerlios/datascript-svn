@@ -76,6 +76,7 @@ public class SequenceEmitter extends CompoundEmitter
     public void begin(SequenceType s)
     {
         seq = s;
+        reset();
         String result = beginTmpl.generate(this);
         out.print(result);
         

@@ -38,10 +38,11 @@
 package datascript.emit.java;
 
 import datascript.antlr.DataScriptParserTokenTypes;
+import datascript.ast.CompoundType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
+import datascript.ast.Scope;
 import datascript.ast.TypeInterface;
-import datascript.ast.TypeReference;
 import datascript.ast.Value;
 
 /**
@@ -262,14 +263,25 @@ public class ExpressionEmitter
     private void appendIdentifier(Expression expr)
     {
         String symbol = expr.getText();
-        Object obj = expr.getScope().getSymbol(symbol);
+        Scope scope = expr.getScope();
+        Object obj = scope.getSymbol(symbol);
+        //String scopeName = scope.getOwner().getName();
+        //System.out.println("emitting " + symbol + " in " + scopeName);
         if (obj instanceof TypeInterface)
         {
-            buffer.append("((");
-            buffer.append(symbol);
-            buffer.append(")__cc.find(\"");
-            buffer.append(symbol);
-            buffer.append("\"))");
+            CompoundType compound = scope.getOwner();
+            if (compound != null && compound.isParameter(symbol))
+            {
+                buffer.append(symbol);
+            }
+            else
+            {
+                buffer.append("((");
+                buffer.append(symbol);
+                buffer.append(")__cc.find(\"");
+                buffer.append(symbol);
+                buffer.append("\"))");
+            }
         }
         else if (obj instanceof Field)
         {
