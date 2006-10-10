@@ -9,14 +9,12 @@ import java.io.IOException;
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
-import bits.CompoundArray;
-import bits.Header;
-import bits.Inner;
-import bits.ItemA;
-import bits.ItemB;
-import bits.Outer;
-import datascript.runtime.ObjectArray;
-import datascript.runtime.ShortArray;
+import bits.Block;
+import bits.BlockData;
+import bits.BlockHeader;
+import bits.BlockType;
+import bits.Blocks;
+import datascript.runtime.ByteArray;
 
 /**
  * @author HWellmann
@@ -66,40 +64,49 @@ public class TypeInstantiationTest extends TestCase
         short numBlocks = (short) sizes.length;
         byte unsorted = 3;
         byte sorted = 9;
+        int magic = 0x0EADBEEF;
         os = new FileImageOutputStream(file);
         os.writeShort(numBlocks);
         
         // block 0
         os.writeByte(sorted);
         os.writeShort(sizes[0]);
-        os.writeInt(0xDEADBEEF);
+        os.writeInt(magic);
         writeBytes(sizes[0]);
         
         // block 1
         os.writeByte(unsorted);
         os.writeShort(sizes[1]);
-        os.writeInt(0xDEADBEEF);
+        os.writeInt(magic);
         writeBytes(sizes[1]);
         
         // block 2
         os.writeByte(sorted);
         os.writeShort(sizes[2]);
-        os.writeInt(0xDEADBEEF);
+        os.writeInt(magic);
         writeBytes(sizes[2]);
         os.close();
         
         Blocks blocks = new Blocks(fileName);
-        assertEquals(a, outer.getA());
-        Header header = outer.getHeader();
-        Inner  inner  = outer.getInner();
-        assertEquals(length, header.getLen());
-        assertEquals(c, header.getC());
-        assertEquals(d, inner.getD());
-        assertEquals(e, inner.getE());
-        for (int i = 0; i < length; i++)
+        assertEquals(numBlocks, blocks.getNumBlocks());
+
+        for (int i = 0; i < numBlocks; i++)
         {
-            ShortArray array = inner.getList();
-            assertEquals(20*i, array.elementAt(i));
+        	Block block = blocks.getBlocks().elementAt(i);
+        	BlockHeader header = block.getHeader();
+        	BlockType type = (i % 2 == 0) ? BlockType.SORTED : BlockType.UNSORTED;
+
+        	assertEquals(type, header.getType());
+        	assertEquals(sizes[i], header.getSize());
+
+        	BlockData data = block.getData();
+        	assertEquals(magic, data.getMagic());
+
+        	ByteArray bytes = data.getBytes();
+        	for (int j = 0; j < sizes[i]; j++)
+        	{
+        		assertEquals(11+j, bytes.elementAt(j));
+        	}
         }        
     }
 }

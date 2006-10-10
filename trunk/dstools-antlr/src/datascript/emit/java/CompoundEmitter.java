@@ -113,7 +113,7 @@ abstract public class CompoundEmitter
         }
         else if (type instanceof CompoundType)
         {
-            readCompoundField(field, (CompoundType)type);
+            readCompoundField(field, (CompoundType)type, null);
         }
         else if (type instanceof ArrayType)
         {
@@ -127,7 +127,7 @@ abstract public class CompoundEmitter
         {
             TypeInstantiation inst = (TypeInstantiation)type;
             CompoundType compound = inst.getBaseType();
-            readCompoundField(field, compound);
+            readCompoundField(field, compound, inst.getArguments());
         }
         else
         {
@@ -223,12 +223,23 @@ abstract public class CompoundEmitter
         buffer.append(")");
     }
     
-    private void readCompoundField(Field field, CompoundType type)
+    private void readCompoundField(Field field, CompoundType type, 
+    							   Iterable<Expression> arguments)
     {
         buffer.append(ane.getSetterName(field));
         buffer.append("(new ");
         buffer.append(type.getName());
-        buffer.append("(__in, __cc));");
+        buffer.append("(__in, __cc");
+        if (arguments != null)
+        {
+        	for (Expression arg : arguments)
+        	{
+        		String javaArg = exprEmitter.emit(arg);
+        		buffer.append(", ");
+        		buffer.append(javaArg);
+        	}
+        }
+        buffer.append("));");
     }
     
     private void readArrayField(Field field, ArrayType array)
@@ -296,7 +307,7 @@ abstract public class CompoundEmitter
         StringBuilder actual = new StringBuilder();
         CompoundType compound = getCompoundType();
         int numParams = compound.getParameterCount();
-        System.out.println(compound + " has " + numParams + " parameters");
+        //System.out.println(compound + " has " + numParams + " parameters");
         for (int p = 0; p < numParams; p++)
         {
             String paramName = compound.getParameterAt(p);

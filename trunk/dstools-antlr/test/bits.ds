@@ -1,60 +1,60 @@
 Unsigned
 {
-    uint8	u8;
-    uint16	u16;
+    uint8       u8;
+    uint16      u16;
     uint32      u32;
     uint64      u64;
 };
 
 BitStruct
 {
-    bit:4	a;
-    uint8	b;
-    bit:4	c;
+    bit:4       a;
+    uint8       b;
+    bit:4       c;
 };
 
 LongBitField
 {
-    uint8	a;
-    bit:80	b;
-    int16	c;
+    uint8       a;
+    bit:80      b;
+    int16       c;
 };
 
 
 Outer
 {
-    int16 	a;
-    Header	header;
-    Inner 	inner;
+    int16       a;
+    Header      header;
+    Inner       inner;
 };
 
 Header
 {
-    int16	len;
-    int16	c;
+    int16       len;
+    int16       c;
 };
 
 Inner
 {
-    int8	d;
-    int16	list[Outer.header.len];
-    int32	e;
+    int8        d;
+    int16       list[Outer.header.len];
+    int32       e;
 };
 
 
 
 IntegerArray
 {
-     uint16		numElems;
-     int16		intList[numElems];
-     uint16		uintList[numElems];
+     uint16             numElems;
+     int16              intList[numElems];
+     uint16             uintList[numElems];
 };
 
 CompoundArray
 {
-    int16	numItems;
-    ItemA	a[numItems];
-    ItemB   	b[numItems];
+    int16       numItems;
+    ItemA       a[numItems];
+    ItemB       b[numItems];
 };
 
 ItemA
@@ -77,15 +77,15 @@ ItemC
 
 union AnyItem
 {
-    ItemA a;	    
+    ItemA a;        
     ItemB b;
-    ItemC c;	    
+    ItemC c;        
 };
 
 MixedArray
 {
-    uint16	numItems;
-    AnyItem	items[numItems];
+    uint16      numItems;
+    AnyItem     items[numItems];
 };
 
 enum uint16 Colour
@@ -113,26 +113,29 @@ Enums
 
 Blocks
 {
-    uint16    		numBlocks;
-    Block		blocks[numBlocks];
+    uint16              numBlocks;
+    Block               blocks[numBlocks];
 };
 
 Block
 {
-    BlockHeader		header;
-    BlockData(header)	data;
+    BlockHeader         header;
+    BlockData(header)   data;
 };
 
 BlockHeader
 {
-    BlockType		type;
-    uint16		size;
+    BlockType           type;
+    uint16              size;
 };
 
 BlockData(BlockHeader header)
 {
-    uint32		magic = 0x0EADBEEF;
-    uint8		bytes[header.size];
+    // TODO: emit "L" constant for long values
+    uint32              magic = 0x0EADBEEF;
+    
+    // TODO: emit UnsignedByteArray when element type is uint8
+    int8                bytes[header.size];
 };
 
 enum uint8 BlockType

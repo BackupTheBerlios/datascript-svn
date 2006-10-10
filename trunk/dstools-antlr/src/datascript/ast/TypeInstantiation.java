@@ -37,6 +37,8 @@
  */
 package datascript.ast;
 
+import java.util.Vector;
+
 import datascript.tools.ToolContext;
 
 
@@ -44,6 +46,8 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
 {
     /** Reference to a compound type with a parameter list. */
     private CompoundType compound;
+    
+    private Vector<Expression> arguments;
     
     public TypeInstantiation()
     {
@@ -112,8 +116,7 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
         // the -1.
         if (getNumberOfChildren()-1 != numParams)
         {
-            ToolContext.logError(refType, "wrong number of parameters");
-            
+            ToolContext.logError(refType, "wrong number of parameters");            
         }
         
         // Get scope of parameterized compound type to look up names of
@@ -121,10 +124,12 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
         Scope scope = compound.getScope();
         
         // Iterate over arguments
+        arguments = new Vector<Expression>();
         Expression arg = (Expression)refType.getNextSibling();
         for (int paramIndex = 0; paramIndex < numParams; 
              paramIndex++, arg = (Expression)arg.getNextSibling())
         {
+        	arguments.add(arg);
             // Get parameter name corresponding to current argument
             String paramName = compound.getParameterAt(paramIndex);
             // Lookup the type in scope. This will be a defined type or a
@@ -139,6 +144,11 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
                         (paramIndex+1));
             }                
         }
+    }
+    
+    public Iterable<Expression> getArguments()
+    {
+    	return arguments;
     }
 
     public int getLength()
