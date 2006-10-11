@@ -42,20 +42,19 @@ import java.io.PrintStream;
 import datascript.ast.Field;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
-import datascript.jet.java.SequenceFieldAccessor;
 
 abstract public class FieldEmitter
 {
-    private JavaEmitter global;
+    private CompoundEmitter global;
     protected Field field;
     protected PrintStream out;
     
-    public FieldEmitter(JavaEmitter j)
+    public FieldEmitter(CompoundEmitter j)
     {
         this.global = j;
     }
    
-    public JavaEmitter getGlobal()
+    public CompoundEmitter getCompoundEmitter()
     {
         return global;
     }
@@ -66,14 +65,15 @@ abstract public class FieldEmitter
     }
     
     abstract public void emit(Field f);
-    
+
+/*    
     public String getTypeName()
     {
         TypeInterface type = field.getFieldType();
         type = TypeReference.resolveType(type);
         return global.getTypeName(type);
     }
-    
+*/    
     public Field getField()
     {
         return field;

@@ -54,7 +54,7 @@ public class JavaEmitter implements Emitter
     private String packageName;
     private SequenceEmitter sequenceEmitter = new SequenceEmitter(this);
     private UnionEmitter unionEmitter = new UnionEmitter(this);
-    private TypeNameEmitter typeEmitter = new TypeNameEmitter(this);
+    private TypeNameEmitter typeEmitter = new TypeNameEmitter();
     private PrintStream out;
     
     public void setPackageName(String packageName)

@@ -46,7 +46,7 @@ import datascript.jet.java.SequenceFieldAccessor;
 
 public class SequenceFieldEmitter extends FieldEmitter
 {    
-    public SequenceFieldEmitter(JavaEmitter j)
+    public SequenceFieldEmitter(SequenceEmitter j)
     {
         super(j);
     }

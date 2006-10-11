@@ -55,7 +55,7 @@ public class SequenceEmitter extends CompoundEmitter
     public SequenceEmitter(JavaEmitter j)
     {
         super(j);
-        fieldEmitter = new SequenceFieldEmitter(j);
+        fieldEmitter = new SequenceFieldEmitter(this);
     }
    
     public SequenceType getSequenceType()

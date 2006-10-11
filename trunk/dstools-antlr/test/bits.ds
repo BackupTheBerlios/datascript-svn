@@ -143,3 +143,13 @@ enum uint8 BlockType
     UNSORTED = 3,
     SORTED   = 9
 };
+
+Optional
+{
+    uint8       tag;
+    uint16      a;
+    uint32      b if tag == 99;
+    ItemA	ia if tag == 98;
+    uint16	c;
+};
+

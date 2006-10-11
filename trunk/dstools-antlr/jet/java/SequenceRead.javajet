@@ -79,9 +79,22 @@
 <%
 	for (Field field : s.getFields())
 	{
-%>	
+	    String optional = e.getOptionalClause(field);
+	    if (optional != null)
+	    {	    
+%>
+                if (<%=optional%>)
+                {
+                    <%=e.readField(field)%>
+                }
+<%
+            }
+            else
+            {
+%>                            
                 <%=e.readField(field)%>
 <%
+            }
             String constraint = e.getConstraint(field);
             if (constraint != null)
             {

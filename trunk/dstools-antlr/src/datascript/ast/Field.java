@@ -126,9 +126,16 @@ public class Field extends TokenAST
         this.fieldCondition = (TokenAST) fieldCondition;
     }
 
-    public TokenAST getOptionalClause()
+    public Expression getOptionalClause()
     {
-        return fieldOptionalClause;
+        if (fieldOptionalClause != null)
+        {
+            return (Expression) fieldOptionalClause.getFirstChild();
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public void setOptionalClause(AST optional)

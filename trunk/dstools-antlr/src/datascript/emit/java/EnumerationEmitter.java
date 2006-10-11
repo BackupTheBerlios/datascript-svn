@@ -85,7 +85,7 @@ public class EnumerationEmitter
     {
         if (javaType == null)
         {
-            TypeNameEmitter te = new TypeNameEmitter(global);
+            TypeNameEmitter te = new TypeNameEmitter();
             javaType = te.getTypeName(enumType.getBaseType());
         }
         return javaType;

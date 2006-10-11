@@ -55,7 +55,7 @@ public class UnionEmitter extends CompoundEmitter
     public UnionEmitter(JavaEmitter j)
     {
         super(j);
-        fieldEmitter = new UnionFieldEmitter(j);
+        fieldEmitter = new UnionFieldEmitter(this);
     }
    
     public UnionType getUnionType()

@@ -70,7 +70,7 @@ abstract public class CompoundEmitter
     public CompoundEmitter(JavaEmitter j)
     {
         this.global = j;
-        this.typeNameEmitter = new TypeNameEmitter(j);
+        this.typeNameEmitter = new TypeNameEmitter();
     }
    
     abstract public CompoundType getCompoundType();
@@ -297,6 +297,17 @@ abstract public class CompoundEmitter
             {
                 result = field.getName() + " == " + exprEmitter.emit(expr);
             }
+        }
+        return result;
+    }
+    
+    public String getOptionalClause(Field field)
+    {
+        String result = null;
+        Expression expr = field.getOptionalClause();
+        if (expr != null)
+        {
+            result = exprEmitter.emit(expr);
         }
         return result;
     }

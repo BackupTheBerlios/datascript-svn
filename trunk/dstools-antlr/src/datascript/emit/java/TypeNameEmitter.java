@@ -55,11 +55,8 @@ import datascript.emit.StringUtil;
  */
 public class TypeNameEmitter
 {
-    private JavaEmitter global;
-
-    public TypeNameEmitter(JavaEmitter j)
+    public TypeNameEmitter()
     {
-        this.global = j;
     }
 
     public String getTypeName(TypeInterface t)

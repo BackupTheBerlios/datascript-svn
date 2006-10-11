@@ -37,18 +37,14 @@
  */
 package datascript.emit.java;
 
-import java.io.PrintStream;
-
 import datascript.ast.Field;
-import datascript.ast.TypeInterface;
-import datascript.ast.TypeReference;
 import datascript.jet.java.UnionFieldAccessor;
 
 public class UnionFieldEmitter extends FieldEmitter
 {
-    public UnionFieldEmitter(JavaEmitter j)
+    public UnionFieldEmitter(UnionEmitter ue)
     {
-        super(j);
+        super(ue);
     }
    
     public void emit(Field f)

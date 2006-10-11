@@ -42,13 +42,15 @@
         class="SequenceFieldAccessor" %>
 <% 
     SequenceFieldEmitter e = (SequenceFieldEmitter) argument;
-    String type =  e.getTypeName();
     Field field = e.getField();
+    TypeNameEmitter tne = new TypeNameEmitter();
+    String type =  tne.getTypeName(field.getFieldType());    
     String fname = field.getName();
     AccessorNameEmitter ane = new AccessorNameEmitter();
     String getter = ane.getGetterName(field);
     String setter = ane.getSetterName(field);
     String checker = ane.getCheckerName(field);
+    CompoundEmitter ce = e.getCompoundEmitter();
 %>
     private <%=type%> <%=field%>;
     
