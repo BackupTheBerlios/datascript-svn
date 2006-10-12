@@ -153,3 +153,10 @@ Optional
     uint16	c;
 };
 
+VarArray
+{
+    ItemA	a[];
+    ItemB   	b;
+};
+
+

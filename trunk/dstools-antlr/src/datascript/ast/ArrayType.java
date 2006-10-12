@@ -66,7 +66,7 @@ public class ArrayType extends TokenAST implements TypeInterface
     
     public boolean isVariable()
     {
-        return getLength() != 0;
+        return getFirstChild().getNextSibling() == null;
     }
 
 

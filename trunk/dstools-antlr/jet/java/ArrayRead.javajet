@@ -42,17 +42,46 @@
         class="ArrayRead" %>
 <% 
     ArrayEmitter e = (ArrayEmitter) argument;
+    ArrayType array = e.getArrayType();
     AccessorNameEmitter ane = new AccessorNameEmitter();
     String elType = e.getElementTypeName();
     Field field  = e.getField();
     String setter = ane.getSetterName(field);
-    String length = e.getLengthExpr();
+    
+    if (array.isVariable())
+    {
 %>
-{
-                    Vector<<%=elType%>> v = new Vector<<%=elType%>>((int)(<%=length%>)); // XXX TODO sure cast doesn't narrow
-                    for (int i = 0; i < (<%=length%>); i++) 
+                {
+                    Vector<<%=elType%>> v = new Vector<<%=elType%>>();
+                    long __afpos = 0;
+                    try 
                     {
-                        v.addElement(new <%=elType%>(__in, __cc));
+                        while (true) 
+                        {
+                            __afpos = __in.getBitPosition();
+                            v.add(new <%=elType%>(__in, __cc));
+                        }
+                    } 
+                    catch (IOException __e) 
+                    {
+                        __in.setBitPosition(__afpos);
                     }
                     <%=setter%>(new ObjectArray<<%=elType%>>(v));
                 }
+<%
+    }
+    else
+    {
+        String length = e.getLengthExpr();
+%>    
+                {
+                    Vector<<%=elType%>> v = new Vector<<%=elType%>>((int)(<%=length%>));
+                    for (int i = 0; i < (<%=length%>); i++) 
+                    {
+                        v.add(new <%=elType%>(__in, __cc));
+                    }
+                    <%=setter%>(new ObjectArray<<%=elType%>>(v));
+                }
+<%
+    }
+%>    

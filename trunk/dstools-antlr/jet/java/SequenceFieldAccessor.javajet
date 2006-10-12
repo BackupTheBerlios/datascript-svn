@@ -49,8 +49,9 @@
     AccessorNameEmitter ane = new AccessorNameEmitter();
     String getter = ane.getGetterName(field);
     String setter = ane.getSetterName(field);
-    String checker = ane.getCheckerName(field);
-    CompoundEmitter ce = e.getCompoundEmitter();
+    String indicator = ane.getIndicatorName(field);
+    SequenceEmitter se = (SequenceEmitter)e.getCompoundEmitter();
+    String constraint = se.getOptionalClause(field);
 %>
     private <%=type%> <%=field%>;
     
@@ -63,5 +64,16 @@
     { 
         this.<%=field%> = <%=field%>; 
     }
+<%
+    if (constraint != null)
+    {
+%>    
 
+    public boolean <%=indicator%>()
+    {
+        return <%=constraint%>;
+    }
+<%
+    }
+%>            
 

@@ -51,6 +51,12 @@ public class AccessorNameEmitter
         return appendAccessorTail(result, field);
     }
 
+    public String getIndicatorName(Field field)
+    {
+        StringBuffer result = new StringBuffer("has");
+        return appendAccessorTail(result, field);
+    }
+
     public String getGetterName(Field field)
     {
         StringBuffer result = new StringBuffer("get");

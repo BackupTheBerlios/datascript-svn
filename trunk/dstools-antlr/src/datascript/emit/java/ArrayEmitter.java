@@ -72,4 +72,9 @@ public class ArrayEmitter
         ExpressionEmitter ee = new ExpressionEmitter();
         return ee.emit(array.getLengthExpression());
     }
+    
+    public ArrayType getArrayType()
+    {
+        return array;
+    }
 }

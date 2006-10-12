@@ -59,6 +59,8 @@ Optional
         assertEquals(97, opt.getTag());
         assertEquals(1000, opt.getA());
         assertEquals(2000, opt.getC());
+        assertEquals(false, opt.hasIa());
+        assertEquals(false, opt.hasB());
     }
 
     public void testOptional2() throws IOException
@@ -74,6 +76,8 @@ Optional
         Optional opt = new Optional(fileName);
         assertEquals(98, opt.getTag());
         assertEquals(1000, opt.getA());
+        assertEquals(true, opt.hasIa());
+        assertEquals(false, opt.hasB());
         ItemA ia = opt.getIa();
         assertEquals(1, ia.getTag());
         assertEquals(40000, ia.getValue());
@@ -92,6 +96,8 @@ Optional
         Optional opt = new Optional(fileName);
         assertEquals(99, opt.getTag());
         assertEquals(1000, opt.getA());
+        assertEquals(false, opt.hasIa());
+        assertEquals(true, opt.hasB());
         assertEquals(123456, opt.getB());
         assertEquals(2000, opt.getC());
     }
