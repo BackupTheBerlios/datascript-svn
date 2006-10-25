@@ -52,9 +52,10 @@ public class UnionEmitter extends CompoundEmitter
     private SequenceEnd endTmpl = new SequenceEnd();
     private UnionRead readTmpl = new UnionRead();
     
-    public UnionEmitter(JavaEmitter j)
+    public UnionEmitter(JavaEmitter j, UnionType union)
     {
         super(j);
+        this.union = union;
         fieldEmitter = new UnionFieldEmitter(this);
     }
    
@@ -73,14 +74,13 @@ public class UnionEmitter extends CompoundEmitter
         return fieldEmitter;
     }
     
-    public void begin(UnionType s)
+    public void begin()
     {
-        union = s;
-        reset();        
+        //reset();        
         String result = beginTmpl.generate(this);
         out.print(result);
         
-        for (Field field : s.getFields())
+        for (Field field : union.getFields())
         {
             fieldEmitter.emit(field);
         }
@@ -88,7 +88,7 @@ public class UnionEmitter extends CompoundEmitter
         out.print(result);
     }
     
-    public void end(UnionType s)
+    public void end()
     {
         String result = endTmpl.generate(this);
         out.print(result);

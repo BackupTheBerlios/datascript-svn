@@ -160,3 +160,18 @@ VarArray
 };
 
 
+/*
+ParamArray
+{
+    uint16                          numItems;
+    uint16				            size[numItems];
+    ParamBlock(size[block$index])   block[numItems];
+};
+
+ParamBlock(uint16 size)
+{
+    uint8       data[size];
+};
+*/
+
+

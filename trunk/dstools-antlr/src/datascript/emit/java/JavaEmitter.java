@@ -52,8 +52,8 @@ public class JavaEmitter implements Emitter
 {
     private static String JAVA_EXT = ".java";
     private String packageName;
-    private SequenceEmitter sequenceEmitter = new SequenceEmitter(this);
-    private UnionEmitter unionEmitter = new UnionEmitter(this);
+    private SequenceEmitter sequenceEmitter;
+    private UnionEmitter unionEmitter;
     private TypeNameEmitter typeEmitter = new TypeNameEmitter();
     private PrintStream out;
     
@@ -121,14 +121,14 @@ public class JavaEmitter implements Emitter
         SequenceType sequence = (SequenceType) s;
         String typeName = getTypeName(sequence);
         openOutputFile(typeName);
+        sequenceEmitter = new SequenceEmitter(this, sequence);
         sequenceEmitter.setOutputStream(out);
-        sequenceEmitter.begin(sequence);
+        sequenceEmitter.begin();
     }
 
     public void endSequence(AST s)
     {
-        SequenceType sequence = (SequenceType)s;
-        sequenceEmitter.end(sequence);
+        sequenceEmitter.end();
         out.close();
     }
 
@@ -137,14 +137,14 @@ public class JavaEmitter implements Emitter
         UnionType union = (UnionType) u;
         String typeName = getTypeName(union);
         openOutputFile(typeName);
+        unionEmitter = new UnionEmitter(this, union);
         unionEmitter.setOutputStream(out);
-        unionEmitter.begin(union);
+        unionEmitter.begin();
     }
 
     public void endUnion(AST u)
     {
-        UnionType union = (UnionType)u;
-        unionEmitter.end(union);
+        unionEmitter.end();
         out.close();
     }
 

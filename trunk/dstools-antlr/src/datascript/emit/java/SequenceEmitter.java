@@ -52,9 +52,10 @@ public class SequenceEmitter extends CompoundEmitter
     private SequenceEnd endTmpl = new SequenceEnd();
     private SequenceRead readTmpl = new SequenceRead();
     
-    public SequenceEmitter(JavaEmitter j)
+    public SequenceEmitter(JavaEmitter j, SequenceType sequence)
     {
         super(j);
+        seq = sequence;
         fieldEmitter = new SequenceFieldEmitter(this);
     }
    
@@ -73,14 +74,13 @@ public class SequenceEmitter extends CompoundEmitter
         return fieldEmitter;
     }
     
-    public void begin(SequenceType s)
+    public void begin()
     {
-        seq = s;
-        reset();
+        //reset();
         String result = beginTmpl.generate(this);
         out.print(result);
         
-        for (Field field : s.getFields())
+        for (Field field : seq.getFields())
         {
             fieldEmitter.emit(field);
         }
@@ -88,10 +88,9 @@ public class SequenceEmitter extends CompoundEmitter
         out.print(result);
     }
 
-    public void end(SequenceType s)
+    public void end()
     {
         String result = endTmpl.generate(this);
         out.print(result);
-    }
-    
+    }    
 }
