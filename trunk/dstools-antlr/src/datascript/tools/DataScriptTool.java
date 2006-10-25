@@ -60,10 +60,27 @@ public class DataScriptTool
     private ExpressionEvaluator exprEval;
     private TokenAST rootNode;
     private Scope globals;
-    private JavaEmitter console;
+    private JavaEmitter javaEmitter;
     private DataScriptEmitter emitter;
+    private String packageName;
+    private String fileName;
     
-    public void parseDatascript(String fileName) throws Exception
+    public void parseArguments(String[] args)
+    {
+    	for (int i = 0; i < args.length; i++)
+    	{
+    		if (args[i].equals("-pkg"))
+    		{
+    			packageName = args[++i]; 
+    		}
+    		else
+    		{
+    			fileName = args[i];
+    		}
+    	}
+    }
+    
+    public void parseDatascript() throws Exception
     {
         // create tool context for information exchange between pipeline
         // components
@@ -109,22 +126,20 @@ public class DataScriptTool
         exprEval.pushScope(globals);
         exprEval.translationUnit(rootNode);
         
-        console = new JavaEmitter();
-        console.setPackageName("bits");
+        javaEmitter = new JavaEmitter();
+        javaEmitter.setPackageName(packageName);
         emitter = new DataScriptEmitter();
-        emitter.setEmitter(console);
+        emitter.setEmitter(javaEmitter);
         emitter.translationUnit(rootNode);
-        
-        
     }
 
     public static void main(String[] args)
     {
-        String fileName = args[0];
         DataScriptTool dsTool = new DataScriptTool();
         try
         {
-            dsTool.parseDatascript(fileName);
+        	dsTool.parseArguments(args);
+            dsTool.parseDatascript();
             //ASTFrame frame = new ASTFrame("AST", dsTool.rootNode);
             //frame.setVisible(true);            
         }

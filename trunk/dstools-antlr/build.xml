@@ -143,7 +143,7 @@
           <pathelement path="${gen}"/>
           <pathelement path="${lib}/antlr.jar"/>
         </classpath>
-      <arg line="bits.ds"/>
+      <arg line="-pkg bits bits.ds"/>
     </java>
   </target>
           
