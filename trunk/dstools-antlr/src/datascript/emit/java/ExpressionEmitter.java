@@ -39,8 +39,10 @@ package datascript.emit.java;
 
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.CompoundType;
+import datascript.ast.EnumItem;
 import datascript.ast.Expression;
 import datascript.ast.Field;
+import datascript.ast.IntegerValue;
 import datascript.ast.Scope;
 import datascript.ast.TypeInterface;
 import datascript.ast.Value;
@@ -292,6 +294,12 @@ public class ExpressionEmitter
             String getter = new AccessorNameEmitter().getGetterName(field);
             buffer.append(getter);
             buffer.append("()");
+        }
+        else if (obj instanceof EnumItem)
+        {
+        	EnumItem item = (EnumItem)obj;
+        	IntegerValue value = item.getValue();
+        	buffer.append(value.integerValue());
         }
         else
         {
