@@ -39,8 +39,8 @@
 %> 
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="ArrayRead" %>
-<% 
+        class="ArrayRead" 
+%><% 
     ArrayEmitter e = (ArrayEmitter) argument;
     ArrayType array = e.getArrayType();
     AccessorNameEmitter ane = new AccessorNameEmitter();
@@ -51,7 +51,7 @@
     //System.out.println("elType = " + elType + ", param = " + actPar);
     
     if (array.isVariable())
-    {
+    { 
 %>
                 {
                     Vector<<%=elType%>> v = new Vector<<%=elType%>>();
@@ -75,7 +75,7 @@
     else
     {
         String length = e.getLengthExpr();
-%>    
+%>
                 {
                     Vector<<%=elType%>> v = new Vector<<%=elType%>>((int)(<%=length%>));
                     for (int __index = 0; __index < (<%=length%>); __index++) 

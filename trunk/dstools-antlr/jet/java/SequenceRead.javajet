@@ -79,6 +79,16 @@
 <%
 	for (Field field : s.getFields())
 	{
+	    String label = e.getLabelExpression(field);
+	    if (label != null)
+	    {
+%>
+                if (__in.getBitPosition() != <%=label%>)
+                {
+                    throw new IOException("wrong offset for field '<%=field.getName()%>'");
+                } 
+<%	    
+	    }
 	    String optional = e.getOptionalClause(field);
 	    if (optional != null)
 	    {	    

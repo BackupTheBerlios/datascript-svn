@@ -92,9 +92,16 @@ public class Field extends TokenAST
         return t;
     }
 
-    TokenAST getLabel()
+    public Expression getLabel()
     {
-        return fieldLabel;
+    	if (fieldLabel != null)
+    	{
+    		return (Expression)fieldLabel.getFirstChild();
+    	}
+    	else
+    	{
+    		return null;
+    	}
     }
     
     public void setLabel(AST label)

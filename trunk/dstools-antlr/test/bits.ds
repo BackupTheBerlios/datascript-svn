@@ -149,13 +149,13 @@ Optional
     uint8       tag;
     uint16      a;
     uint32      b if tag == 99;
-    ItemA	ia if tag == 98;
-    uint16	c;
+    ItemA       ia if tag == 98;
+    uint16      c;
 };
 
 VarArray
 {
-    ItemA	a[];
+    ItemA       a[];
     ItemB   	b;
 };
 
@@ -172,3 +172,21 @@ ParamBlock(uint16 size)
     int8       data[size];
 };
 
+
+GlobalLabelSeq
+{
+    uint16		    magic = 0xFFFF;
+    LabelledType    lt;
+};
+
+LabelledType
+{
+    uint16		numItems;
+    uint16      dataOffset;
+    uint16      globalOffset;
+    Header		headers[numItems];
+dataOffset:    
+    ItemA		a[numItems];
+GlobalLabelSeq::globalOffset:
+    int32		x;
+};

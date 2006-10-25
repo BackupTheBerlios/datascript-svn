@@ -39,6 +39,7 @@ package datascript.emit.java;
 
 import java.io.PrintStream;
 
+import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
@@ -47,7 +48,6 @@ import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
-import datascript.ast.Parameter;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
@@ -354,5 +354,30 @@ abstract public class CompoundEmitter
             buildParameterLists();
         }
         return actualParams;
+    }
+    
+    public String getLabelExpression(Field field)
+    {
+    	String result = null;
+		Expression label = field.getLabel();
+		if (label != null)
+    	{
+    		StringBuilder buffer = new StringBuilder();
+			AST labelBase = label.getNextSibling();
+			if (labelBase != null)
+			{
+				String name = labelBase.getText();
+				buffer.append("((");
+				buffer.append(name);
+				buffer.append(")__cc.find(\"");
+				buffer.append(name);
+				buffer.append("\")).");
+			}
+			buffer.append("__fpos + 8*");
+    		String labelExpr = exprEmitter.emit(label);
+    		buffer.append(labelExpr);
+    		result = buffer.toString();
+    	}
+    	return result;
     }
 }
