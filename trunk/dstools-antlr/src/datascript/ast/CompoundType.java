@@ -102,9 +102,13 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         return (parameters != null) && parameters.contains(param);
     }
 
-    public Iterator getParameters()
+    public Iterable<String> getParameters()
     {
-        return parameters.iterator();
+        if (parameters == null)
+        {
+            parameters = new Vector<String>();
+        }
+        return parameters;
     }
 
     public String getParameterAt(int index)

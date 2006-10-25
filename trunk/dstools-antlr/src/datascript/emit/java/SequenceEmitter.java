@@ -39,7 +39,9 @@ package datascript.emit.java;
 
 import datascript.ast.CompoundType;
 import datascript.ast.Field;
+import datascript.ast.Scope;
 import datascript.ast.SequenceType;
+import datascript.ast.TypeInterface;
 import datascript.jet.java.SequenceBegin;
 import datascript.jet.java.SequenceEnd;
 import datascript.jet.java.SequenceRead;
@@ -83,6 +85,15 @@ public class SequenceEmitter extends CompoundEmitter
         for (Field field : seq.getFields())
         {
             fieldEmitter.emit(field);
+        }
+        
+        Scope scope = seq.getScope();
+        for (String param : seq.getParameters())
+        {
+            TypeInterface type = (TypeInterface)scope.getSymbol(param);
+            TypeNameEmitter tne = new TypeNameEmitter();
+            String typeName = tne.getTypeName(type);
+            out.println("    private " + typeName + " " + param + ";");
         }
         result = readTmpl.generate(this);
         out.print(result);
