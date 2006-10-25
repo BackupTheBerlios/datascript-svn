@@ -159,8 +159,6 @@ VarArray
     ItemB   	b;
 };
 
-
-/*
 ParamArray
 {
     uint16                          numItems;
@@ -170,8 +168,7 @@ ParamArray
 
 ParamBlock(uint16 size)
 {
-    uint8       data[size];
+    // TODO: emit UnsignedByteArray when element type is uint8
+    int8       data[size];
 };
-*/
-
 

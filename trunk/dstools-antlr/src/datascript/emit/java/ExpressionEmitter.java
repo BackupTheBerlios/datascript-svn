@@ -131,6 +131,9 @@ public class ExpressionEmitter
                 op = '(';
                 paren = true;
                 break;
+            case DataScriptParserTokenTypes.INDEX:
+            	buffer.append("__index");
+            	return;
             default:
                 throw new IllegalArgumentException();
         }
@@ -247,9 +250,9 @@ public class ExpressionEmitter
     private void appendArrayExpression(Expression expr)
     {
         append(expr.op1());
-        buffer.append('[');
+        buffer.append(".elementAt(");
         append(expr.op2());
-        buffer.append(']');        
+        buffer.append(')');        
     }
 
     private void appendDotExpression(Expression expr)

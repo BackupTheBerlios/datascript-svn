@@ -38,7 +38,13 @@
 package datascript.emit.java;
 
 import datascript.ast.ArrayType;
+import datascript.ast.CompoundType;
+import datascript.ast.Expression;
 import datascript.ast.Field;
+import datascript.ast.SequenceType;
+import datascript.ast.TypeInstantiation;
+import datascript.ast.TypeInterface;
+import datascript.ast.UnionType;
 
 /**
  * @author HWellmann
@@ -76,5 +82,42 @@ public class ArrayEmitter
     public ArrayType getArrayType()
     {
         return array;
+    }
+    
+    public String getActualParameterList()
+    {
+    	StringBuilder buffer = new StringBuilder();
+    	TypeInterface elType = array.getElementType();    	
+    	if (elType instanceof TypeInstantiation)
+    	{
+    		ExpressionEmitter exprEmitter = new ExpressionEmitter();
+    		TypeInstantiation inst = (TypeInstantiation)elType;
+    		Iterable<Expression> arguments = inst.getArguments();
+        	for (Expression arg : arguments)
+        	{
+        		String javaArg = exprEmitter.emit(arg);
+        		buffer.append(", ");
+        		buffer.append(javaArg);
+        	}
+    		
+/*    		
+    		CompoundType compound = inst.getBaseType();
+    		CompoundEmitter ce = null;
+    		if (compound instanceof SequenceType)
+    		{
+    			ce = new SequenceEmitter(null, (SequenceType)compound);
+    		
+    		}
+    		else if (compound instanceof UnionType)
+    		{
+    			ce = new UnionEmitter(null, (UnionType)compound);
+    		}
+    		if (ce != null)
+    		{
+    			result = ce.getActualParameterList();
+    		}
+*/    	
+    	}
+    	return buffer.toString();
     }
 }

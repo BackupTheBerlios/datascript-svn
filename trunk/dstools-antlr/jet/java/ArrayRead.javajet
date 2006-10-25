@@ -47,6 +47,8 @@
     String elType = e.getElementTypeName();
     Field field  = e.getField();
     String setter = ane.getSetterName(field);
+    String actPar = e.getActualParameterList();
+    //System.out.println("elType = " + elType + ", param = " + actPar);
     
     if (array.isVariable())
     {
@@ -59,7 +61,7 @@
                         while (true) 
                         {
                             __afpos = __in.getBitPosition();
-                            v.add(new <%=elType%>(__in, __cc));
+                            v.add(new <%=elType%>(__in, __cc<%=actPar%>));
                         }
                     } 
                     catch (IOException __e) 
@@ -76,9 +78,9 @@
 %>    
                 {
                     Vector<<%=elType%>> v = new Vector<<%=elType%>>((int)(<%=length%>));
-                    for (int i = 0; i < (<%=length%>); i++) 
+                    for (int __index = 0; __index < (<%=length%>); __index++) 
                     {
-                        v.add(new <%=elType%>(__in, __cc));
+                        v.add(new <%=elType%>(__in, __cc<%=actPar%>));
                     }
                     <%=setter%>(new ObjectArray<<%=elType%>>(v));
                 }
