@@ -69,9 +69,4 @@ public class ExpressionTest extends TestCase
     {
         writeSequence(37);
     }
-
-    public void testCondExpr2() throws IOException
-    {
-        writeSequence(1234);
-    }
 }

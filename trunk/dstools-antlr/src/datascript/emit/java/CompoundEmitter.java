@@ -48,6 +48,7 @@ import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
+import datascript.ast.StdIntegerType;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
@@ -113,7 +114,7 @@ abstract public class CompoundEmitter
         }
         else if (type instanceof CompoundType)
         {
-            readCompoundField(field, (CompoundType)type, null);
+            readCompoundField(field, (CompoundType)type);
         }
         else if (type instanceof ArrayType)
         {
@@ -127,7 +128,7 @@ abstract public class CompoundEmitter
         {
             TypeInstantiation inst = (TypeInstantiation)type;
             CompoundType compound = inst.getBaseType();
-            readCompoundField(field, compound, inst.getArguments());
+            readInstantiatedField(field, compound, inst);
         }
         else
         {
@@ -223,23 +224,73 @@ abstract public class CompoundEmitter
         buffer.append(")");
     }
     
-    private void readCompoundField(Field field, CompoundType type, 
-                                   Iterable<Expression> arguments)
+    private void readCompoundField(Field field, CompoundType type) 
+    {
+        buffer.append(ane.getSetterName(field));
+        buffer.append("(new ");
+        buffer.append(type.getName());
+        buffer.append("(__in, __cc));");
+    }
+
+    private void readInstantiatedField(Field field, CompoundType type,
+                                       TypeInstantiation inst)
     {
         buffer.append(ane.getSetterName(field));
         buffer.append("(new ");
         buffer.append(type.getName());
         buffer.append("(__in, __cc");
+        Iterable<Expression> arguments = inst.getArguments();
         if (arguments != null)
         {
+            int argIndex = 0;
             for (Expression arg : arguments)
             {
-                String javaArg = exprEmitter.emit(arg);
                 buffer.append(", ");
-        	buffer.append(javaArg);
+                boolean cast = emitTypeCast(type, arg, argIndex);
+                String javaArg = exprEmitter.emit(arg);
+                buffer.append(javaArg);
+                if (cast)
+                {
+                    buffer.append(")");
+                }
+                argIndex++;
             }
         }
         buffer.append("));");
+    }
+
+    
+    
+    /**
+     * Emits a type cast for passing an argument to a parameterized type.
+     * @param type              compound type with parameters
+     * @param expr              argument expression in type instantiation
+     * @param paramIndex        index of argument in argument list
+     */
+    private boolean emitTypeCast(CompoundType type, Expression expr, 
+                              int paramIndex)
+    {
+        boolean cast = false;
+        String param = type.getParameterAt(paramIndex);
+        Object obj = type.getScope().getSymbol(param);
+        if (obj instanceof StdIntegerType)
+        {
+            StdIntegerType intType = (StdIntegerType)obj;
+            switch (intType.getType())
+            {
+                case DataScriptParserTokenTypes.INT8:
+                    buffer.append("(byte)(");
+                    cast = true;
+                    break;
+                    
+                case DataScriptParserTokenTypes.UINT8:
+                case DataScriptParserTokenTypes.INT16:
+                    buffer.append("(short)(");
+                    cast = true;
+                    break;
+            }
+        }
+        return cast;
     }
     
     private void readArrayField(Field field, ArrayType array)
