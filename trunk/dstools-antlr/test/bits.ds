@@ -162,7 +162,7 @@ VarArray
 ParamArray
 {
     uint16                          numItems;
-    uint16				            size[numItems];
+    uint16		            size[numItems];
     ParamBlock(size[block$index])   block[numItems];
 };
 
@@ -181,12 +181,23 @@ GlobalLabelSeq
 
 LabelledType
 {
-    uint16		numItems;
+    uint16	numItems;
     uint16      dataOffset;
     uint16      globalOffset;
-    Header		headers[numItems];
+    Header	headers[numItems];
 dataOffset:    
-    ItemA		a[numItems];
+    ItemA	a[numItems];
 GlobalLabelSeq::globalOffset:
-    int32		x;
+    int32	x;
+};
+
+CondExpr
+{
+    uint8	    tag;
+    CondBlock(tag % 2 == 0 ? 47 : 11)  block;
+};
+
+CondBlock(uint8 tag)
+{
+    int32	    value : value == tag;
 };

@@ -225,7 +225,7 @@ public class ExpressionEmitter
                 break;
         
             case DataScriptParserTokenTypes.MODULO:
-                op = " > ";
+                op = " % ";
                 break;
         
             case DataScriptParserTokenTypes.ARRAYELEM:
@@ -246,7 +246,19 @@ public class ExpressionEmitter
 
     private void emitTernaryExpression(Expression expr)
     {
-        
+        switch (expr.getType())
+        {
+            case DataScriptParserTokenTypes.QUESTIONMARK:
+                buffer.append('(');
+                append(expr.op1());
+                buffer.append(") ? ");
+                append(expr.op2());
+                buffer.append(" : ");
+                append(expr.op3());
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }        
     }
     
     private void appendArrayExpression(Expression expr)

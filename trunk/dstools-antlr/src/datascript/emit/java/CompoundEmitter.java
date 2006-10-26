@@ -224,7 +224,7 @@ abstract public class CompoundEmitter
     }
     
     private void readCompoundField(Field field, CompoundType type, 
-    							   Iterable<Expression> arguments)
+                                   Iterable<Expression> arguments)
     {
         buffer.append(ane.getSetterName(field));
         buffer.append("(new ");
@@ -232,12 +232,12 @@ abstract public class CompoundEmitter
         buffer.append("(__in, __cc");
         if (arguments != null)
         {
-        	for (Expression arg : arguments)
-        	{
-        		String javaArg = exprEmitter.emit(arg);
-        		buffer.append(", ");
-        		buffer.append(javaArg);
-        	}
+            for (Expression arg : arguments)
+            {
+                String javaArg = exprEmitter.emit(arg);
+                buffer.append(", ");
+        	buffer.append(javaArg);
+            }
         }
         buffer.append("));");
     }
