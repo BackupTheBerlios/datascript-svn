@@ -150,31 +150,35 @@ public class TypeNameEmitter
         if (elType instanceof IntegerType)
         {
             IntegerType intType = (IntegerType) elType;
-                switch (intType.getType())
-                {
-                    case DataScriptParserTokenTypes.INT8:
-                        return "ByteArray";
+            switch (intType.getType())
+            {
+                case DataScriptParserTokenTypes.INT8:
+                    return "ByteArray";
 
-                    case DataScriptParserTokenTypes.UINT8:
-                    case DataScriptParserTokenTypes.INT16:
-                        return "ShortArray";
+                case DataScriptParserTokenTypes.UINT8:
+                    return "UnsignedByteArray";
 
-                    case DataScriptParserTokenTypes.UINT16:
-                        return "UnsignedShortArray";
+                case DataScriptParserTokenTypes.INT16:
+                    return "ShortArray";
 
-                    case DataScriptParserTokenTypes.INT32:
-                        return "IntArray";
+                case DataScriptParserTokenTypes.UINT16:
+                    return "UnsignedShortArray";
 
-                    case DataScriptParserTokenTypes.UINT32:
-                    case DataScriptParserTokenTypes.INT64:
-                        return "LongArray";
-                        
-                    case DataScriptParserTokenTypes.BIT:
-                        return "BitFieldArray";
-                        
-                    default:
-                        throw new IllegalArgumentException();
-                }
+                case DataScriptParserTokenTypes.INT32:
+                    return "IntArray";
+
+                case DataScriptParserTokenTypes.UINT32:
+                    return "UnsignedIntArray";
+
+                case DataScriptParserTokenTypes.INT64:
+                    return "LongArray";
+
+                case DataScriptParserTokenTypes.BIT:
+                    return "BitFieldArray";
+
+                default:
+                    throw new IllegalArgumentException();
+            }
         }
         return "ObjectArray<" + elTypeName +  ">";        
     }

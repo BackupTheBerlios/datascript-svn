@@ -46,8 +46,12 @@ Inner
 IntegerArray
 {
      uint16             numElems;
-     int16              intList[numElems];
-     uint16             uintList[numElems];
+     int8               int8List[numElems];
+     uint8              uint8List[numElems];
+     int16              int16List[numElems];
+     uint16             uint16List[numElems];
+     int32              int32List[numElems];
+     uint32             uint32List[numElems];
 };
 
 CompoundArray
