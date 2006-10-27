@@ -118,9 +118,12 @@ conditionExpression
 */
 
 parameterList 
-    :   #(PARAM (definedType ID)+)
+    :   #(PARAMLIST (parameterDefinition)+)
     ;
 
+parameterDefinition
+    :   #(PARAM definedType ID)
+    ;
 
 
 /******************* begin of enumerator stuff *****************/

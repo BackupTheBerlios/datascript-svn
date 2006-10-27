@@ -129,12 +129,11 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
         for (int paramIndex = 0; paramIndex < numParams; 
              paramIndex++, arg = (Expression)arg.getNextSibling())
         {
-        	arguments.add(arg);
-            // Get parameter name corresponding to current argument
-            String paramName = compound.getParameterAt(paramIndex);
-            // Lookup the type in scope. This will be a defined type or a
-            // built-in type, so we need to resolve it.
-            TypeInterface paramType = (TypeInterface)scope.getSymbol(paramName);
+            arguments.add(arg);
+            // Get parameter corresponding to current argument
+            Parameter param = compound.getParameterAt(paramIndex);
+            // Resolve the type.
+            TypeInterface paramType = param.getType();
             paramType = TypeReference.resolveType(paramType);
             
             // Types must be compatible.

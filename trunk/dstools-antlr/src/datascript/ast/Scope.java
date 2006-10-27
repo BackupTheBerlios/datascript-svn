@@ -99,6 +99,29 @@ public class Scope implements Context, LinkAction
     }
 
     /**
+     * Get the owner is whose scope this symbol is defined.
+     */
+    public CompoundType getDefiningType(String name)
+    {
+        Object obj = symbolTable.get(name);
+        if (obj == null)
+        {
+            if (parentScope == null)
+            {
+                return null;
+            }
+            else
+            {
+                return ((Scope)parentScope).getDefiningType(name);
+            }
+        }
+        else
+        {
+            return owner;
+        }
+    }
+
+    /**
      * get this symbol from this scope
      */
     public Object getSymbolFromThis(String name)

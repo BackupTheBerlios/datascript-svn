@@ -39,6 +39,7 @@ package datascript.emit.java;
 
 import datascript.ast.CompoundType;
 import datascript.ast.Field;
+import datascript.ast.Parameter;
 import datascript.ast.Scope;
 import datascript.ast.SequenceType;
 import datascript.ast.TypeInterface;
@@ -53,6 +54,7 @@ public class SequenceEmitter extends CompoundEmitter
     private SequenceBegin beginTmpl = new SequenceBegin();
     private SequenceEnd endTmpl = new SequenceEnd();
     private SequenceRead readTmpl = new SequenceRead();
+    private TypeNameEmitter tne = new TypeNameEmitter();
     
     public SequenceEmitter(JavaEmitter j, SequenceType sequence)
     {
@@ -87,13 +89,10 @@ public class SequenceEmitter extends CompoundEmitter
             fieldEmitter.emit(field);
         }
         
-        Scope scope = seq.getScope();
-        for (String param : seq.getParameters())
+        for (Parameter param : seq.getParameters())
         {
-            TypeInterface type = (TypeInterface)scope.getSymbol(param);
-            TypeNameEmitter tne = new TypeNameEmitter();
-            String typeName = tne.getTypeName(type);
-            out.println("    private " + typeName + " " + param + ";");
+            String typeName = tne.getTypeName(param.getType());
+            out.println("    " + typeName + " " + param.getName() + ";");
         }
         result = readTmpl.generate(this);
         out.print(result);

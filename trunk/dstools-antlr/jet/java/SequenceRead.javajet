@@ -71,10 +71,11 @@
     public void read(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws IOException 
     {
 <%
-        for (String param : s.getParameters())
+        for (Parameter param : s.getParameters())
         {
+            String pName = param.getName();
 %>
-        this.<%=param%> = <%=param%>;
+        this.<%=pName%> = <%=pName%>;
 <%        
         }
 %>    

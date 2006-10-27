@@ -123,12 +123,12 @@ conditionExpression
 */
 
 parameterList 
-    :   #(PARAM 
-          (e:definedType i:ID  		{ scope().setSymbol(i, e); }
-          )+
-        )
+    :   #(PARAMLIST (parameterDefinition)+)
     ;
 
+parameterDefinition
+    :   #(p:PARAM definedType i:ID)
+    ;
 
 
 /******************* begin of enumerator stuff *****************/

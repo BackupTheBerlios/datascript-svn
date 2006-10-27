@@ -42,7 +42,7 @@ import datascript.ast.CompoundType;
 import datascript.ast.EnumItem;
 import datascript.ast.Expression;
 import datascript.ast.Field;
-import datascript.ast.IntegerValue;
+import datascript.ast.Parameter;
 import datascript.ast.Scope;
 import datascript.ast.TypeInterface;
 import datascript.ast.Value;
@@ -300,10 +300,40 @@ public class ExpressionEmitter
                 buffer.append("\"))");
             }
         }
+        else if (obj instanceof Parameter)
+        {
+            Parameter param = (Parameter)obj;
+            String pName = param.getName();
+            if (scope.getSymbolFromThis(pName) == null)
+            {
+                CompoundType def = scope.getDefiningType(pName);
+                String defName = def.getName();
+                buffer.append("((");
+                buffer.append(defName);
+                buffer.append(")__cc.find(\"");
+                buffer.append(defName);
+                buffer.append("\")).");
+                buffer.append(param.getName());
+            }
+            else
+            {
+                buffer.append(param.getName());
+            }
+        }
         else if (obj instanceof Field)
         {
             Field field = (Field)obj;
             String getter = new AccessorNameEmitter().getGetterName(field);
+            if (scope.getSymbolFromThis(symbol) == null)
+            {
+                CompoundType def = scope.getDefiningType(symbol);
+                String defName = def.getName();
+                buffer.append("((");
+                buffer.append(defName);
+                buffer.append(")__cc.find(\"");
+                buffer.append(defName);
+                buffer.append("\")).");
+            }
             buffer.append(getter);
             buffer.append("()");
         }

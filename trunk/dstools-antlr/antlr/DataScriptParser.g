@@ -57,6 +57,7 @@ tokens
     SEQUENCE<AST=datascript.ast.SequenceType>;
     UNION<AST=datascript.ast.UnionType>;
     PARAM;
+    PARAMLIST;
     INST<AST=datascript.ast.TypeInstantiation>;
     ARRAY<AST=datascript.ast.ArrayType>;
     INDEX<AST=datascript.ast.Expression>;
@@ -152,7 +153,7 @@ conditionDefinition
 
 parameterList 
     :   LPAREN! (parameterDefinition ( COMMA! parameterDefinition )* )? RPAREN!
-        { #parameterList = #([PARAM, "param"], #parameterList); }
+        { #parameterList = #([PARAMLIST, "paramlist"], #parameterList); }
     ;
 
 conditionBlock!
@@ -162,6 +163,7 @@ conditionBlock!
 
 parameterDefinition
     : definedType ID
+      { #parameterDefinition = #([PARAM, "param"], #parameterDefinition); }
     ;
 
 

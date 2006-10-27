@@ -56,7 +56,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     // / enum and bitmasks lexically contained in this compound
     Vector settypes = new Vector();
 
-    Vector<String> parameters = null;
+    Vector<Parameter> parameters = new Vector<Parameter>();
 
     // / set of compound types that can contain this type
     Vector containers = new Vector();
@@ -87,7 +87,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     {
         return parent;
     }
-
+/*
     public void addParameter(String param)
     {
         if (parameters == null)
@@ -96,29 +96,25 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         }
         parameters.addElement(param);
     }
-
+*/
     public boolean isParameter(String param)
     {
         return (parameters != null) && parameters.contains(param);
     }
 
-    public Iterable<String> getParameters()
+    public Iterable<Parameter> getParameters()
     {
-        if (parameters == null)
-        {
-            parameters = new Vector<String>();
-        }
         return parameters;
     }
 
-    public String getParameterAt(int index)
+    public Parameter getParameterAt(int index)
     {
-        return parameters.elementAt(index);
+        return parameters.get(index);
     }
     
     public int getParameterCount()
     {
-        return (parameters == null) ? 0 : parameters.size();
+        return parameters.size();
     }
     
     
@@ -239,18 +235,27 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     public void storeParameters()
     {
         AST node = getFirstChild().getNextSibling();
-        if (node.getType() == DataScriptParserTokenTypes.PARAM)
+        if (node.getType() == DataScriptParserTokenTypes.PARAMLIST)
         {
-            parameters = new Vector(node.getNumberOfChildren()/2);
+            parameters = new Vector(node.getNumberOfChildren());
             AST p = node.getFirstChild();
             while (p != null)
             {
-                AST pname = p.getNextSibling();
-                parameters.addElement(pname.getText());
-                p = pname.getNextSibling();                
+                storeParameter(p);
+                p = p.getNextSibling();
             }
         }
     }
+    
+    private void storeParameter(AST param)
+    {
+        AST type = param.getFirstChild();
+        AST id = type.getNextSibling();
+        Parameter p = new Parameter(id.getText(), (TypeInterface)type);
+        parameters.add(p);
+        scope.setSymbol(id, p);
+    }
+    
     public int getLength()
     {
         throw new InternalError("not implemented");

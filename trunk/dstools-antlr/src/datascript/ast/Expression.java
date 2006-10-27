@@ -208,6 +208,11 @@ public class Expression extends TokenAST
             Field field = (Field)obj;
             type = TypeReference.resolveType(field.getFieldType());
         }
+        else if (obj instanceof Parameter)
+        {
+            Parameter param = (Parameter)obj;
+            type = TypeReference.resolveType(param.getType());            
+        }
         else if (obj instanceof TypeReference)
         {
             //System.out.println("evaluateIdentifier(): " + symbol + "-> TypeReference");

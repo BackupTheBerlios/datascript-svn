@@ -48,6 +48,7 @@ import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
+import datascript.ast.Parameter;
 import datascript.ast.StdIntegerType;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
@@ -271,11 +272,11 @@ abstract public class CompoundEmitter
                               int paramIndex)
     {
         boolean cast = false;
-        String param = type.getParameterAt(paramIndex);
-        Object obj = type.getScope().getSymbol(param);
-        if (obj instanceof StdIntegerType)
+        Parameter param = type.getParameterAt(paramIndex);
+        TypeInterface paramType = TypeReference.resolveType(param.getType());
+        if (paramType instanceof StdIntegerType)
         {
-            StdIntegerType intType = (StdIntegerType)obj;
+            StdIntegerType intType = (StdIntegerType)paramType;
             switch (intType.getType())
             {
                 case DataScriptParserTokenTypes.INT8:
@@ -368,13 +369,10 @@ abstract public class CompoundEmitter
         StringBuilder formal = new StringBuilder();
         StringBuilder actual = new StringBuilder();
         CompoundType compound = getCompoundType();
-        int numParams = compound.getParameterCount();
-        //System.out.println(compound + " has " + numParams + " parameters");
-        for (int p = 0; p < numParams; p++)
+        for (Parameter param : compound.getParameters())
         {
-            String paramName = compound.getParameterAt(p);
-            TypeInterface paramType = (TypeInterface)compound.getScope().getSymbol(paramName);
-            paramType = TypeReference.resolveType(paramType);
+            String paramName = param.getName();
+            TypeInterface paramType = TypeReference.resolveType(param.getType());
             
             String typeName = typeNameEmitter.getTypeName(paramType);
             formal.append(", ");
@@ -409,26 +407,26 @@ abstract public class CompoundEmitter
     
     public String getLabelExpression(Field field)
     {
-    	String result = null;
-		Expression label = field.getLabel();
-		if (label != null)
-    	{
-    		StringBuilder buffer = new StringBuilder();
-			AST labelBase = label.getNextSibling();
-			if (labelBase != null)
-			{
-				String name = labelBase.getText();
-				buffer.append("((");
-				buffer.append(name);
-				buffer.append(")__cc.find(\"");
-				buffer.append(name);
-				buffer.append("\")).");
-			}
-			buffer.append("__fpos + 8*");
-    		String labelExpr = exprEmitter.emit(label);
-    		buffer.append(labelExpr);
-    		result = buffer.toString();
-    	}
-    	return result;
+        String result = null;
+        Expression label = field.getLabel();
+        if (label != null)
+        {
+            StringBuilder buffer = new StringBuilder();
+            AST labelBase = label.getNextSibling();
+            if (labelBase != null)
+            {
+                String name = labelBase.getText();
+                buffer.append("((");
+                buffer.append(name);
+                buffer.append(")__cc.find(\"");
+                buffer.append(name);
+                buffer.append("\")).");
+            }
+            buffer.append("__fpos + 8*");
+            String labelExpr = exprEmitter.emit(label);
+            buffer.append(labelExpr);
+            result = buffer.toString();
+        }
+        return result;
     }
 }
