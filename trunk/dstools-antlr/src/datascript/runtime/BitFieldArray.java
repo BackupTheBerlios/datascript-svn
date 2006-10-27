@@ -38,10 +38,11 @@
 package datascript.runtime;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 public class BitFieldArray implements Array, SizeOf
 {
-    long[] data; // data is between [offset... offset+length-1]
+    BigInteger[] data; // data is between [offset... offset+length-1]
 
     int offset;
 
@@ -63,10 +64,10 @@ public class BitFieldArray implements Array, SizeOf
         {
             this.length = length;
             this.numBits = numBits;
-            data = new long[length];
+            data = new BigInteger[length];
             for (int i = 0; i < length; i++)
             {
-                data[i] = in.readBits(numBits);
+                data[i] = in.readBigInteger(numBits);
             }
             this.offset = 0;
         }
@@ -74,10 +75,10 @@ public class BitFieldArray implements Array, SizeOf
 
     public BitFieldArray(int length, int numBits)
     {
-        this(new long[length], 0, length, numBits);
+        this(new BigInteger[length], 0, length, numBits);
     }
 
-    public BitFieldArray(long[] data, int offset, int length, int numBits)
+    public BitFieldArray(BigInteger[] data, int offset, int length, int numBits)
     {
         this.data = data;
         this.offset = offset;
@@ -85,7 +86,7 @@ public class BitFieldArray implements Array, SizeOf
         this.numBits = numBits;
     }
 
-    public long elementAt(int i)
+    public BigInteger elementAt(int i)
     {
         return data[offset + i];
     }
@@ -108,8 +109,7 @@ public class BitFieldArray implements Array, SizeOf
         BitFieldArray result = new BitFieldArray(length, numBits);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = ((Long) m.map(new Long(data[offset + i])))
-                    .longValue();
+            result.data[i] = ((BigInteger) m.map(data[offset + i]));
         }
         return result;
     }
@@ -122,13 +122,13 @@ public class BitFieldArray implements Array, SizeOf
     }
 
     /**
-     * @TODO this is incorrect. Need to implement BitStreamWriter first.
+     * @TODO this is incorrect. Only works up to 64 bits.
      */
     public void write(java.io.DataOutput out, CallChain cc) throws IOException
     {
         for (int i = offset; i < offset + length; i++)
         {
-            out.writeLong(data[i]);
+            out.writeLong(data[i].longValue());
         }
     }
 }

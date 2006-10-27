@@ -11,6 +11,7 @@ import javax.imageio.stream.FileImageOutputStream;
 import junit.framework.TestCase;
 import bits.Coord;
 import bits.VarBitField;
+import datascript.runtime.BitFieldArray;
 
 /**
  * @author HWellmann
@@ -55,13 +56,18 @@ public class ParamBitFieldTest extends TestCase
         os.writeBits(numBits, 5);
         os.writeBits(x, numBits);
         os.writeBits(y, numBits);
+        os.writeBits(x, numBits);
+        os.writeBits(y, numBits);
         os.close();
 
         VarBitField var = new VarBitField(fileName);
         assertEquals(numBits, var.getNumBits());
         Coord c = var.getCoord();
         assertEquals(x, c.getX().intValue());
-        assertEquals(y, c.getY().intValue());        
+        assertEquals(y, c.getY().intValue());
+        BitFieldArray array = c.getArray();
+        assertEquals(x, array.elementAt(0).intValue());
+        assertEquals(y, array.elementAt(1).intValue());
     }
         
     public void testBitField1() throws IOException
@@ -70,6 +76,11 @@ public class ParamBitFieldTest extends TestCase
     }
 
     public void testBitField2() throws IOException
+    {
+        writeBitField(5, 15, 27);
+    }
+
+    public void testBitField3() throws IOException
     {
         writeBitField(10, 500, 1000);
     }

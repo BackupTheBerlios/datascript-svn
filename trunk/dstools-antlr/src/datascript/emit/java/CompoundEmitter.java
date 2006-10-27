@@ -313,6 +313,14 @@ abstract public class CompoundEmitter
             buffer.append(elTypeJavaName);
             buffer.append("(__in, ");
             buffer.append(getLengthExpression(length));
+            TypeInterface elType = array.getElementType();
+            if (elType instanceof BitFieldType)
+            {
+                BitFieldType bitField = (BitFieldType) elType;
+                Expression numBits = bitField.getLengthExpression();
+                buffer.append(", ");
+                buffer.append(getLengthExpression(numBits));
+            }
             buffer.append("));");
         }
     }

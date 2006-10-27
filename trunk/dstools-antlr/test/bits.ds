@@ -212,5 +212,6 @@ Coord(bit:5 n)
 {    
     bit<n>    x;
     bit<n>    y;
+    bit<n>    array[2];	
 };
 

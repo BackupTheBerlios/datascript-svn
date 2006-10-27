@@ -151,8 +151,6 @@ public class TypeNameEmitter
         if (elType instanceof IntegerType)
         {
             IntegerType intType = (IntegerType) elType;
-            if (! elTypeName.equals("BigInteger"))
-            {
                 switch (intType.getType())
                 {
                     case DataScriptParserTokenTypes.INT8:
@@ -171,11 +169,13 @@ public class TypeNameEmitter
                     case DataScriptParserTokenTypes.UINT32:
                     case DataScriptParserTokenTypes.INT64:
                         return "LongArray";
-
+                        
+                    case DataScriptParserTokenTypes.BIT:
+                        return "BitFieldArray";
+                        
                     default:
                         throw new IllegalArgumentException();
                 }
-            }
         }
         return "ObjectArray<" + elTypeName +  ">";        
     }

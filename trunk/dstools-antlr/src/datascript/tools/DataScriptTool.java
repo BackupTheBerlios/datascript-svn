@@ -68,16 +68,16 @@ public class DataScriptTool
     public void parseArguments(String[] args)
     {
     	for (int i = 0; i < args.length; i++)
-    	{
-    		if (args[i].equals("-pkg"))
-    		{
-    			packageName = args[++i]; 
-    		}
-    		else
-    		{
-    			fileName = args[i];
-    		}
-    	}
+        {
+            if (args[i].equals("-pkg"))
+            {
+                packageName = args[++i];
+            }
+            else
+            {
+                fileName = args[i];
+            }
+        }
     }
     
     public void parseDatascript() throws Exception
@@ -86,13 +86,13 @@ public class DataScriptTool
         // components
         context = ToolContext.getInstance();
         context.setFileName(fileName);
+
         // set up lexer, parser and token buffer
         FileInputStream is = new FileInputStream(fileName); 
         DataScriptLexer lexer = new DataScriptLexer(is);
         lexer.setFilename(fileName);
         TokenBuffer buffer = new TokenBuffer(lexer);
         parser = new DataScriptParser(buffer);
-        //lexer.setContext(context);
         parser.setContext(context);
 
         // must call this to see file name in error messages
@@ -105,13 +105,17 @@ public class DataScriptTool
         parser.translationUnit();
         rootNode = (TokenAST) parser.getAST();
 
-        // validate the syntax tree - this has no side effects
-        if (context.getErrorCount() == 0)
-        {
-            walker = new DataScriptWalker();
-            walker.setContext(context);
-            walker.translationUnit(rootNode);
-        }
+        if (context.getErrorCount() != 0)
+            return;
+
+        // Validate the syntax tree - this has no side effects.
+        // TODO: make this optional, controlled by a command line option
+        walker = new DataScriptWalker();
+        walker.setContext(context);
+        walker.translationUnit(rootNode);
+
+        if (context.getErrorCount() != 0)
+            return;
 
         // create name scopes and resolve references
         typeEval = new TypeEvaluator();
@@ -126,6 +130,9 @@ public class DataScriptTool
         exprEval.pushScope(globals);
         exprEval.translationUnit(rootNode);
         
+        if (context.getErrorCount() != 0)
+            return;
+
         javaEmitter = new JavaEmitter();
         javaEmitter.setPackageName(packageName);
         emitter = new DataScriptEmitter();
@@ -138,10 +145,8 @@ public class DataScriptTool
         DataScriptTool dsTool = new DataScriptTool();
         try
         {
-        	dsTool.parseArguments(args);
+            dsTool.parseArguments(args);
             dsTool.parseDatascript();
-            //ASTFrame frame = new ASTFrame("AST", dsTool.rootNode);
-            //frame.setVisible(true);            
         }
         catch (TokenStreamRecognitionException exc)
         {
