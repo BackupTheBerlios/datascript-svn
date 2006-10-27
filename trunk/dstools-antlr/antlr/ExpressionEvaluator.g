@@ -322,7 +322,7 @@ opExpression
     |   #(TILDE expression)
     |   #(BANG expression)
     |   #("sizeof" expression)
-    |   #("lengthof" expression)
+    |   #(LENGTHOF expression)
     |   #(DOT expression ID)    
     |   #(ARRAYELEM expression expression)
     |   #(INST (expression)+)

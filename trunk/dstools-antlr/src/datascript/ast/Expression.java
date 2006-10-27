@@ -183,7 +183,9 @@ public class Expression extends TokenAST
                 evaluateLogicalExpression();
                 break;
                 
-                
+            case DataScriptParserTokenTypes.LENGTHOF:
+                evaluateLengthOfExpression();
+                break;
 
             default:
                 throw new InternalError("illegal operation: type = " + 
@@ -415,6 +417,16 @@ public class Expression extends TokenAST
         else
         {
             ToolContext.logError(op1(), "'" + field.getName() + "' is not an array");            
+        }
+    }
+    
+    private void evaluateLengthOfExpression()
+    {
+        type = IntegerType.integerType;
+        value = null;
+        if (!(op1().getExprType() instanceof ArrayType))
+        {
+            ToolContext.logError(op1(), "lengthof operator requires array type argument");            
         }
     }
 }

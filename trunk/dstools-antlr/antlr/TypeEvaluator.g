@@ -384,7 +384,7 @@ expression
     |   TILDE
     |   BANG
     |   "sizeof"
-    |   "lengthof"
+    |   LENGTHOF
     |   DOT
     |   ARRAYELEM
     |   INST

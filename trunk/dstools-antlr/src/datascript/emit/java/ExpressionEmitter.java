@@ -136,6 +136,10 @@ public class ExpressionEmitter
             case DataScriptParserTokenTypes.INDEX:
             	buffer.append("__index");
             	return;
+            case DataScriptParserTokenTypes.LENGTHOF:
+                append(expr.op1());
+                buffer.append(".length()");
+                return;
             default:
                 throw new IllegalArgumentException();
         }

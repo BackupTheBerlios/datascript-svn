@@ -91,6 +91,7 @@ tokens
     XOR<AST=datascript.ast.IntegerExpression>;
     AND<AST=datascript.ast.IntegerExpression>;
     TILDE<AST=datascript.ast.IntegerExpression>;
+    LENGTHOF<AST=datascript.ast.IntegerExpression>;
     EQ<AST=datascript.ast.BooleanExpression>;
     NE<AST=datascript.ast.BooleanExpression>;
     LT<AST=datascript.ast.BooleanExpression>;
@@ -456,8 +457,9 @@ sizeOfOperand
     :   "sizeof"^ unaryExpression
     ;
 
-lengthOfOperand
-    :   "lengthof"^ unaryExpression
+lengthOfOperand!
+    :   "lengthof"^ e:unaryExpression
+        { #lengthOfOperand = #([LENGTHOF, "LENGTHOF"], e); }
     ;
 
 postfixExpression!

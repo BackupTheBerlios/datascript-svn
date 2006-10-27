@@ -294,7 +294,7 @@ expression
     |   #(TILDE expression)
     |   #(BANG expression)
     |   #("sizeof" expression)
-    |   #("lengthof" expression)
+    |   #(LENGTHOF expression)
     |   #(DOT expression)
     |   #(ARRAYELEM expression)
     |   #(INST (expression)+)

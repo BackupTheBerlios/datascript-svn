@@ -161,6 +161,7 @@ VarArray
 {
     ItemA       a[];
     ItemB   	b;
+    uint16      len : len == lengthof a;
 };
 
 ParamArray
