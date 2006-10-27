@@ -311,8 +311,9 @@ abstract public class CompoundEmitter
             buffer.append(ane.getSetterName(field));
             buffer.append("(new ");
             buffer.append(elTypeJavaName);
-            buffer.append("(__in, ");
+            buffer.append("(__in, (int)(");
             buffer.append(getLengthExpression(length));
+            buffer.append(")");
             TypeInterface elType = array.getElementType();
             if (elType instanceof BitFieldType)
             {
