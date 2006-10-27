@@ -118,7 +118,7 @@ conditionExpression
 */
 
 parameterList 
-    :   #(PARAM (typeDeclaration ID)*)
+    :   #(PARAM (definedType ID)+)
     ;
 
 

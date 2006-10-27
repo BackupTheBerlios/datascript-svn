@@ -201,3 +201,16 @@ CondBlock(uint8 tag)
 {
     int32	    value : value == tag;
 };
+
+VarBitField
+{
+    bit:5           numBits;
+    Coord(numBits)  coord;
+};
+
+Coord(bit:5 n)
+{    
+    bit<n>    x;
+    bit<n>    y;
+};
+
