@@ -215,3 +215,13 @@ Coord(bit:5 n)
     bit<n>    array[2];	
 };
 
+BaseTypes
+{
+    uint8     tag;
+    union BaseTypeUnion
+    {
+        int8  v8  : tag == 8;
+        int16 v16 : tag == 16;
+        int32 v32 : tag == 32;
+    } value;    
+};

@@ -101,7 +101,6 @@ public class TypeNameEmitter
 
     private String getTypeName(StdIntegerType t)
     {
-
         switch (t.getType())
         {
             case DataScriptParserTokenTypes.INT8:
@@ -178,5 +177,47 @@ public class TypeNameEmitter
                 }
         }
         return "ObjectArray<" + elTypeName +  ">";        
+    }
+
+    public String getClassName(TypeInterface t)
+    {
+        String result = null;
+        t = TypeReference.resolveType(t);
+        if (t instanceof StdIntegerType)
+        {
+            result = getClassName((StdIntegerType) t);
+        }
+        else
+        {
+            result = getTypeName(t);
+        }
+        return result;
+    }
+    
+    private String getClassName(StdIntegerType t)
+    {
+        switch (t.getType())
+        {
+            case DataScriptParserTokenTypes.INT8:
+                return "Byte";
+
+            case DataScriptParserTokenTypes.UINT8:
+            case DataScriptParserTokenTypes.INT16:
+                return "Short";
+
+            case DataScriptParserTokenTypes.UINT16:
+            case DataScriptParserTokenTypes.INT32:
+                return "Integer";
+
+            case DataScriptParserTokenTypes.UINT32:
+            case DataScriptParserTokenTypes.INT64:
+                return "Long";
+
+            case DataScriptParserTokenTypes.UINT64:
+                return "BigInteger";
+
+            default:
+                throw new IllegalArgumentException();
+        }        
     }
 }

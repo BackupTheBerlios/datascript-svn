@@ -83,6 +83,18 @@
                 try 
                 {
                     <%=e.readField(field)%>
+<%                    
+                String constraint = e.getConstraint(field);
+                if (constraint != null)
+                {
+%>
+                    if (!(<%=constraint%>))
+                    {
+                        throw new IOException("constraint violated");
+                    }
+<%            
+                }
+%>                    
                     break;
                 } 
                 catch (IOException __exc) 
