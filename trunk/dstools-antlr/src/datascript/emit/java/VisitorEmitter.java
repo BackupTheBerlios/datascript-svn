@@ -1,4 +1,3 @@
-<%
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -36,70 +35,74 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-%>
-<%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.java.*" 
-        class="Enumeration" %>
-<% 
-    EnumerationEmitter e = (EnumerationEmitter) argument;
-    JavaEmitter global = e.getGlobal();
-    EnumType en = e.getEnumerationType();
-    String name = en.getName();
-    String baseType = e.getBaseType();
-    String cast = baseType.equals("int") ? "" : ("(" + baseType + ")");
-%>
-<%@include file="FileHeader.inc"%>
-public enum <%=name%>
+package datascript.emit.java;
+
+import antlr.collections.AST;
+import datascript.ast.EnumType;
+import datascript.ast.SequenceType;
+import datascript.ast.UnionType;
+import datascript.jet.java.SequenceEnd;
+import datascript.jet.java.Visitor;
+
+public class VisitorEmitter extends JavaEmitter
 {
-    <% 
-       for (EnumItem item : en.getItems()) 
-       {
-           String iname = item.getName();
-           int value = item.getValue().integerValue().intValue();
-    %>
-    <%=iname%>(<%=cast%><%=value%>),
-    <%
-       }
-    %>   
-    __INVALID(<%=cast%>-1);
+    private Visitor visitorTmpl = new Visitor();
+    private SequenceEnd endTmpl = new SequenceEnd();
 
-    private <%=baseType%> value;
-    
-    <%=name%>(<%=baseType%> value)
+    public void beginTranslationUnit()
     {
-        this.value = value;
-    }
-    
-    public <%=baseType%> getValue()
-    {
-        return value;
-    }
-    
-    public static <%=name%> toEnum(<%=baseType%> v)
-    {
-        switch (v)
-        {
-        <% 
-           for (EnumItem item : en.getItems()) 
-           {
-               String iname = item.getName();
-               int value = item.getValue().integerValue().intValue();
-        %>
-            case <%=value%>:
-                return <%=iname%>;
-        <%
-           }
-        %>   
-            default:
-                throw new IllegalArgumentException();
-        }
+        openOutputFile("__Visitor");
+        String result = visitorTmpl.generate(this);
+        out.print(result);
     }
 
-    public void accept(__Visitor visitor, Object arg)
+    public void endTranslationUnit()
     {
-        visitor.visit(this, arg);
+        String result = endTmpl.generate(this);
+        out.print(result);
+        out.close();
+    }
+
+    private void emitVisitor(String typeName)
+    {
+        StringBuilder buffer = new StringBuilder("    public void visit");
+        //buffer.append(typeName);
+        buffer.append("(");
+        buffer.append(typeName);
+        buffer.append(" node, Object arg);");
+        out.println(buffer);
     }
     
+    public void beginSequence(AST s)
+    {
+        SequenceType sequence = (SequenceType) s;
+        String typeName = getTypeName(sequence);
+        emitVisitor(typeName);
+    }
+
+    public void endSequence(AST s)
+    {
+    }
+
+    public void beginUnion(AST u)
+    {
+        UnionType union = (UnionType) u;
+        String typeName = getTypeName(union);
+        emitVisitor(typeName);
+    }
+
+    public void endUnion(AST u)
+    {
+    }
+
+    public void beginEnumeration(AST e)
+    {
+        EnumType enumType = (EnumType) e;
+        String typeName = getTypeName(enumType);
+        emitVisitor(typeName);
+    }
+
+    public void endEnumeration(AST e)
+    {
+    }
 }
-
-

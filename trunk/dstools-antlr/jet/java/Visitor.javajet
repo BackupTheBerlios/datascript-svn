@@ -39,67 +39,30 @@
 %>
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="Enumeration" %>
+        class="Visitor" %>
 <% 
-    EnumerationEmitter e = (EnumerationEmitter) argument;
-    JavaEmitter global = e.getGlobal();
-    EnumType en = e.getEnumerationType();
-    String name = en.getName();
-    String baseType = e.getBaseType();
-    String cast = baseType.equals("int") ? "" : ("(" + baseType + ")");
+    VisitorEmitter global = (VisitorEmitter) argument;
 %>
 <%@include file="FileHeader.inc"%>
-public enum <%=name%>
+public interface __Visitor
 {
-    <% 
-       for (EnumItem item : en.getItems()) 
-       {
-           String iname = item.getName();
-           int value = item.getValue().integerValue().intValue();
-    %>
-    <%=iname%>(<%=cast%><%=value%>),
-    <%
-       }
-    %>   
-    __INVALID(<%=cast%>-1);
+    public void visitInt8(byte n, Object arg);
+    public void visitInt16(short n, Object arg);
+    public void visitInt32(int n, Object arg);
+    public void visitInt64(long n, Object arg);
+    public void visitUInt8(short n, Object arg);
+    public void visitUInt16(int n, Object arg);
+    public void visitUInt32(long n, Object arg);
+    public void visitUInt64(BigInteger n, Object arg);
+    public void visitBitField(byte n, int length, Object arg);
+    public void visitBitField(short n, int length, Object arg);
+    public void visitBitField(int n, int length, Object arg);
+    public void visitBitField(long n, int length, Object arg);
+    public void visitBitField(BigInteger n, int length, Object arg);
+    public void visitString(String n, Object arg);
 
-    private <%=baseType%> value;
-    
-    <%=name%>(<%=baseType%> value)
+    public interface Acceptor 
     {
-        this.value = value;
+        public void accept(__Visitor visitor, Object arg);
     }
-    
-    public <%=baseType%> getValue()
-    {
-        return value;
-    }
-    
-    public static <%=name%> toEnum(<%=baseType%> v)
-    {
-        switch (v)
-        {
-        <% 
-           for (EnumItem item : en.getItems()) 
-           {
-               String iname = item.getName();
-               int value = item.getValue().integerValue().intValue();
-        %>
-            case <%=value%>:
-                return <%=iname%>;
-        <%
-           }
-        %>   
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    public void accept(__Visitor visitor, Object arg)
-    {
-        visitor.visit(this, arg);
-    }
-    
-}
-
 

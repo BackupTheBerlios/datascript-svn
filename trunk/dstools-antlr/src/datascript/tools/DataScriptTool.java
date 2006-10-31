@@ -48,8 +48,9 @@ import datascript.antlr.ExpressionEvaluator;
 import datascript.antlr.TypeEvaluator;
 import datascript.ast.Scope;
 import datascript.ast.TokenAST;
-import datascript.emit.Emitter;
+import datascript.emit.java.DepthFirstVisitorEmitter;
 import datascript.emit.java.JavaEmitter;
+import datascript.emit.java.VisitorEmitter;
 
 public class DataScriptTool 
 {
@@ -62,6 +63,8 @@ public class DataScriptTool
     private Scope globals;
     private JavaEmitter javaEmitter;
     private DataScriptEmitter emitter;
+    private VisitorEmitter visitorEmitter;
+    private DepthFirstVisitorEmitter dfVisitorEmitter;
     private String packageName;
     private String fileName;
     
@@ -125,6 +128,7 @@ public class DataScriptTool
         typeEval.translationUnit(rootNode);
         globals.link(null);
         
+        // check expression types and evaluate constant expressions
         exprEval = new ExpressionEvaluator();
         exprEval.setContext(context);
         exprEval.pushScope(globals);
@@ -133,11 +137,24 @@ public class DataScriptTool
         if (context.getErrorCount() != 0)
             return;
 
+        // emit Java code for decoders
         javaEmitter = new JavaEmitter();
         javaEmitter.setPackageName(packageName);
         emitter = new DataScriptEmitter();
         emitter.setEmitter(javaEmitter);
         emitter.translationUnit(rootNode);
+
+        // emit Java __Visitor interface
+        visitorEmitter = new VisitorEmitter();
+        visitorEmitter.setPackageName(packageName);
+        emitter.setEmitter(visitorEmitter);
+        emitter.translationUnit(rootNode);        
+
+        // emit Java __DepthFirstVisitor class
+        dfVisitorEmitter = new DepthFirstVisitorEmitter();
+        dfVisitorEmitter.setPackageName(packageName);
+        emitter.setEmitter(dfVisitorEmitter);
+        emitter.translationUnit(rootNode);        
     }
 
     public static void main(String[] args)

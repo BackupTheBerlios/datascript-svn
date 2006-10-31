@@ -47,7 +47,11 @@
     String name = s.getName(); 
 %>
 <%@include file="FileHeader.inc"%>
-public class <%=name%>
+public class <%=name%> implements __Visitor.Acceptor
 {
     long __fpos;
 
+    public void accept(__Visitor visitor, Object arg)
+    {
+        visitor.visit(this, arg);
+    }

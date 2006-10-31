@@ -41,6 +41,7 @@ import datascript.ast.Field;
 
 public class AccessorNameEmitter
 {
+    // TODO: make all methods static
     public AccessorNameEmitter()
     {
     }
@@ -57,7 +58,7 @@ public class AccessorNameEmitter
         return appendAccessorTail(result, field);
     }
 
-    public String getGetterName(Field field)
+    public static String getGetterName(Field field)
     {
         StringBuffer result = new StringBuffer("get");
         return appendAccessorTail(result, field);
@@ -68,8 +69,14 @@ public class AccessorNameEmitter
         StringBuffer result = new StringBuffer("set");
         return appendAccessorTail(result, field);
     }
+    
+    public static String getVisitorName(Field field)
+    {
+        StringBuffer result = new StringBuffer("visit");
+        return appendAccessorTail(result, field);        
+    }
 
-    private String appendAccessorTail(StringBuffer buffer, Field field)
+    private static String appendAccessorTail(StringBuffer buffer, Field field)
     {
         String name = field.getName();
         buffer.append(name.substring(0, 1).toUpperCase());

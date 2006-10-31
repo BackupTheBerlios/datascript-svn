@@ -47,19 +47,28 @@
     String name = u.getName(); 
 %>
 <%@include file="FileHeader.inc"%>
-public class <%=name%>
+public class <%=name%> implements __Visitor.Acceptor
 {
     long __fpos;
     Object __objectChoice;
     int	__choiceTag = -1;
 
+    public void accept(__Visitor visitor, Object arg)
+    {
+        visitor.visit(this, arg);
+    }
+    
+    public int getChoiceTag()
+    {
+        return __choiceTag;
+    }
 <%
     int i = 0;
     for (Field field : u.getFields())
     {
 	String fname = field.getName();
 %>	
-    private static int CHOICE_<%=fname%> = <%=i%>;
+    public static final int CHOICE_<%=fname%> = <%=i%>;
 <%
         i++;
     }

@@ -55,6 +55,7 @@ public class ExpressionEmitter
 {
     private Expression expression;
     private StringBuilder buffer;
+    private String compoundName;
     
     public ExpressionEmitter()
     {
@@ -64,6 +65,16 @@ public class ExpressionEmitter
     public String emit(Expression expr)
     {
         this.expression = expr;
+        this.compoundName = null;
+        buffer = new StringBuilder();
+        append(expr);
+        return buffer.toString();
+    }
+    
+    public String emit(Expression expr, String compoundName)
+    {
+        this.expression = expr;
+        this.compoundName = compoundName;
         buffer = new StringBuilder();
         append(expr);
         return buffer.toString();
@@ -293,13 +304,16 @@ public class ExpressionEmitter
             CompoundType compound = scope.getOwner();
             if (compound != null && compound.isParameter(symbol))
             {
+                emitCompoundPrefix();
                 buffer.append(symbol);
             }
             else
             {
                 buffer.append("((");
                 buffer.append(symbol);
-                buffer.append(")__cc.find(\"");
+                buffer.append(")");
+                emitCompoundPrefix();
+                buffer.append("__cc.find(\"");
                 buffer.append(symbol);
                 buffer.append("\"))");
             }
@@ -314,27 +328,32 @@ public class ExpressionEmitter
                 String defName = def.getName();
                 buffer.append("((");
                 buffer.append(defName);
-                buffer.append(")__cc.find(\"");
+                buffer.append(")");
+                emitCompoundPrefix();
+                buffer.append("__cc.find(\"");
                 buffer.append(defName);
                 buffer.append("\")).");
                 buffer.append(param.getName());
             }
             else
             {
+                emitCompoundPrefix();
                 buffer.append(param.getName());
             }
         }
         else if (obj instanceof Field)
         {
             Field field = (Field)obj;
-            String getter = new AccessorNameEmitter().getGetterName(field);
+            String getter = AccessorNameEmitter.getGetterName(field);
             if (scope.getSymbolFromThis(symbol) == null)
             {
                 CompoundType def = scope.getDefiningType(symbol);
                 String defName = def.getName();
                 buffer.append("((");
                 buffer.append(defName);
-                buffer.append(")__cc.find(\"");
+                buffer.append(")");
+                emitCompoundPrefix();
+                buffer.append("__cc.find(\"");
                 buffer.append(defName);
                 buffer.append("\")).");
             }
@@ -354,6 +373,15 @@ public class ExpressionEmitter
         {
             throw new InternalError("unhandled type of identifier: " +
                     obj.getClass().getName());
+        }
+    }
+    
+    private void emitCompoundPrefix()
+    {
+        if (compoundName != null)
+        {
+            buffer.append(compoundName);
+            buffer.append(".");
         }
     }
 }

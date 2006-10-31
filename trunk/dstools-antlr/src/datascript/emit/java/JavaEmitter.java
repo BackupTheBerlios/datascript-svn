@@ -55,7 +55,7 @@ public class JavaEmitter implements Emitter
     private SequenceEmitter sequenceEmitter;
     private UnionEmitter unionEmitter;
     private TypeNameEmitter typeEmitter = new TypeNameEmitter();
-    private PrintStream out;
+    protected PrintStream out;
     
     public void setPackageName(String packageName)
     {
@@ -96,7 +96,7 @@ public class JavaEmitter implements Emitter
 
     }
 
-    private void openOutputFile(String typeName)
+    protected void openOutputFile(String typeName)
     {
         File directory = new File(packageName);
         if (! directory.exists())

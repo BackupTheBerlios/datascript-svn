@@ -36,70 +36,56 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-%>
+%> 
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="Enumeration" %>
+        class="DepthFirstSequence" %>
 <% 
-    EnumerationEmitter e = (EnumerationEmitter) argument;
-    JavaEmitter global = e.getGlobal();
-    EnumType en = e.getEnumerationType();
-    String name = en.getName();
-    String baseType = e.getBaseType();
-    String cast = baseType.equals("int") ? "" : ("(" + baseType + ")");
+    DepthFirstVisitorEmitter e = (DepthFirstVisitorEmitter) argument;
+    SequenceType s = e.getSequenceType();
+    String name = s.getName();
 %>
-<%@include file="FileHeader.inc"%>
-public enum <%=name%>
-{
-    <% 
-       for (EnumItem item : en.getItems()) 
-       {
-           String iname = item.getName();
-           int value = item.getValue().integerValue().intValue();
-    %>
-    <%=iname%>(<%=cast%><%=value%>),
-    <%
-       }
-    %>   
-    __INVALID(<%=cast%>-1);
-
-    private <%=baseType%> value;
-    
-    <%=name%>(<%=baseType%> value)
+    public void visit(<%=name%> node, Object arg)
     {
-        this.value = value;
-    }
-    
-    public <%=baseType%> getValue()
-    {
-        return value;
-    }
-    
-    public static <%=name%> toEnum(<%=baseType%> v)
-    {
-        switch (v)
+<%
+	for (Field field : s.getFields())
+	{
+            String visitor = e.getVisitor(field);
+            String fname   = AccessorNameEmitter.getGetterName(field);
+	    String optional = e.getOptionalClause(field);
+	    if (optional != null)
+	    {	    
+%>
+        if (node.<%=optional%>)
         {
-        <% 
-           for (EnumItem item : en.getItems()) 
-           {
-               String iname = item.getName();
-               int value = item.getValue().integerValue().intValue();
-        %>
-            case <%=value%>:
-                return <%=iname%>;
-        <%
-           }
-        %>   
-            default:
-                throw new IllegalArgumentException();
+            <%=visitor%>;
         }
+<%
+            }
+            else
+            {
+                String elType = e.getElementType(field);
+                if (elType != null)
+                {
+                    String elemVisitor = e.getElementVisitor(field);
+%>
+        {
+	    int __length = node.<%=fname%>().length();
+            for (int __index = 0; __index < __length; __index++)
+            {
+                <%=elType%> __elem = node.<%=fname%>().elementAt(__index);
+                <%=elemVisitor%>;
+            }
+        }            
+<%
+                }
+                else
+                {
+%>
+        <%=visitor%>;
+<%                
+                }
+            }
+        }    
+%>
     }
-
-    public void accept(__Visitor visitor, Object arg)
-    {
-        visitor.visit(this, arg);
-    }
-    
-}
-
-
