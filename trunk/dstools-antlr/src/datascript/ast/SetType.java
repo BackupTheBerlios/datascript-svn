@@ -106,7 +106,7 @@ public class SetType extends TokenAST implements TypeInterface
 
     public IntegerValue sizeof(Context ctxt)
     {
-        return type.sizeof(ctxt);
+        return getBaseType().sizeof(ctxt);
     }
 
     public Value castFrom(Value val)

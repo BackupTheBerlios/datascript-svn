@@ -85,11 +85,7 @@ public class BitFieldType extends IntegerType
 
     public IntegerValue sizeof(Context ctxt)
     {
-        /** @TODO handle variable length! */
-        if (length % 8 == 0)
-            return new IntegerValue(length / 8);
-        throw new ComputeError(
-                "bitfield length not an integral number of bytes");
+        return new IntegerValue(length);
     }
 
     public boolean isMember(Context ctxt, Value val)
