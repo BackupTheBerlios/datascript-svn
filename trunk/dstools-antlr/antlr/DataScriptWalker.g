@@ -273,7 +273,7 @@ expression
     |   #(UMINUS expression)
     |   #(TILDE expression)
     |   #(BANG expression)
-    |   #("sizeof" expression)
+    |   #(SIZEOF expression)
     |   #(LENGTHOF expression)
     |   #(DOT expression expression)
     |   #(ARRAYELEM expression expression)

@@ -187,6 +187,10 @@ public class Expression extends TokenAST
                 evaluateLengthOfExpression();
                 break;
 
+            case DataScriptParserTokenTypes.SIZEOF:
+                evaluateSizeOfExpression();
+                break;
+
             default:
                 throw new InternalError("illegal operation: type = " + 
                                         getType() + toStringTree() + ", " 
@@ -428,5 +432,11 @@ public class Expression extends TokenAST
         {
             ToolContext.logError(op1(), "lengthof operator requires array type argument");            
         }
+    }
+
+    private void evaluateSizeOfExpression()
+    {
+        type = IntegerType.integerType;
+        value = null;
     }
 }

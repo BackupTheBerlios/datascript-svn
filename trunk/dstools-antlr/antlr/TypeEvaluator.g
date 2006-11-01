@@ -332,8 +332,8 @@ expression
     |   #(UMINUS expression)
     |   #(TILDE expression)
     |   #(BANG expression)
-    |   #("sizeof" expression)
-    |   #("lengthof" expression)
+    |   #(SIZEOF expression)
+    |   #(LENGTHOF expression)
     |   #(DOT expression expression)
     |   #(ARRAYELEM expression expression)
     |   #(INST (expression)+)
@@ -383,7 +383,7 @@ expression
     |   UMINUS
     |   TILDE
     |   BANG
-    |   "sizeof"
+    |   SIZEOF
     |   LENGTHOF
     |   DOT
     |   ARRAYELEM

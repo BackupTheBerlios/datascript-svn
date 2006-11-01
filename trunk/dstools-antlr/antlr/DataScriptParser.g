@@ -92,6 +92,7 @@ tokens
     AND<AST=datascript.ast.IntegerExpression>;
     TILDE<AST=datascript.ast.IntegerExpression>;
     LENGTHOF<AST=datascript.ast.IntegerExpression>;
+    SIZEOF<AST=datascript.ast.IntegerExpression>;
     EQ<AST=datascript.ast.BooleanExpression>;
     NE<AST=datascript.ast.BooleanExpression>;
     LT<AST=datascript.ast.BooleanExpression>;
@@ -453,8 +454,9 @@ unaryOperator
     |   BANG
     ;
 
-sizeOfOperand
-    :   "sizeof"^ unaryExpression
+sizeOfOperand!
+    :   "sizeof"^ e:unaryExpression
+        { #sizeOfOperand = #([SIZEOF, "SIZEOF"], e); }
     ;
 
 lengthOfOperand!

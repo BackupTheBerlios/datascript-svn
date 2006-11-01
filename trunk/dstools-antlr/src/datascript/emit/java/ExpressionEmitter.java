@@ -151,6 +151,10 @@ public class ExpressionEmitter
                 append(expr.op1());
                 buffer.append(".length()");
                 return;
+            case DataScriptParserTokenTypes.SIZEOF:
+                append(expr.op1());
+                buffer.append(".sizeof()");
+                return;
             default:
                 throw new IllegalArgumentException();
         }

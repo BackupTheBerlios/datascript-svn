@@ -164,6 +164,12 @@ VarArray
     uint16      len : len == lengthof a;
 };
 
+VarArrayWithSize
+{
+   VarArray     var;
+   uint16       size = sizeof var;
+};
+
 ParamArray
 {
     uint16                          numItems;
