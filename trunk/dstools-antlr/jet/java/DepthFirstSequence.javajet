@@ -48,6 +48,13 @@
     public void visit(<%=name%> node, Object arg)
     {
 <%
+	String start = e.startType();
+	if (start != null)
+	{
+%>
+	<%=start%>
+<%	
+	}	
 	for (Field field : s.getFields())
 	{
             String visitor = e.getVisitor(field);
@@ -87,5 +94,12 @@
                 }
             }
         }    
+        String end = e.endType();
+        if (end != null)
+        {
+%>
+        <%=end%>
+<%        
+        }
 %>
     }

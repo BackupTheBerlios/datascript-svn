@@ -52,6 +52,7 @@ import datascript.emit.java.DepthFirstVisitorEmitter;
 import datascript.emit.java.JavaEmitter;
 import datascript.emit.java.SizeOfEmitter;
 import datascript.emit.java.VisitorEmitter;
+import datascript.emit.java.XmlDumperEmitter;
 
 public class DataScriptTool 
 {
@@ -67,6 +68,7 @@ public class DataScriptTool
     private VisitorEmitter visitorEmitter;
     private DepthFirstVisitorEmitter dfVisitorEmitter;
     private SizeOfEmitter sizeOfEmitter;
+    
     private String packageName;
     private String fileName;
     
@@ -162,6 +164,12 @@ public class DataScriptTool
         sizeOfEmitter = new SizeOfEmitter();
         sizeOfEmitter.setPackageName(packageName);
         emitter.setEmitter(sizeOfEmitter);
+        emitter.translationUnit(rootNode);        
+
+        // emit Java __XmlDumper class
+        XmlDumperEmitter xmlDumper = new XmlDumperEmitter();
+        xmlDumper.setPackageName(packageName);
+        emitter.setEmitter(xmlDumper);
         emitter.translationUnit(rootNode);        
     }
 

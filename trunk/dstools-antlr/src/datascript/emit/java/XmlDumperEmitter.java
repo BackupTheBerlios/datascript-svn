@@ -45,63 +45,21 @@ import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
-import datascript.ast.SequenceType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
-import datascript.ast.UnionType;
-import datascript.jet.java.DepthFirstEnumeration;
-import datascript.jet.java.DepthFirstSequence;
-import datascript.jet.java.DepthFirstUnion;
-import datascript.jet.java.DepthFirstVisitor;
-import datascript.jet.java.SequenceEnd;
+import datascript.jet.java.XmlDumper;
+import datascript.jet.java.XmlDumperEnumeration;
 
-public class DepthFirstVisitorEmitter extends JavaEmitter
+public class XmlDumperEmitter extends DepthFirstVisitorEmitter
 {
-    private DepthFirstVisitor visitorTmpl = new DepthFirstVisitor();
-    private DepthFirstSequence sequenceTmpl = new DepthFirstSequence();
-    private DepthFirstUnion unionTmpl = new DepthFirstUnion();
-    private DepthFirstEnumeration enumerationTmpl = new DepthFirstEnumeration();
-    private SequenceEnd endTmpl = new SequenceEnd();
-    private SequenceType sequence;
-    private UnionType union;
-    protected EnumType enumeration;
-    protected ExpressionEmitter exprEmitter = new ExpressionEmitter();
-    private TypeNameEmitter typeEmitter = new TypeNameEmitter();
-
+    private XmlDumper dumperTmpl = new XmlDumper();
+    private XmlDumperEnumeration enumerationTmpl = new XmlDumperEnumeration();
+    
     public void beginTranslationUnit()
     {
-        openOutputFile("__DepthFirstVisitor");
-        String result = visitorTmpl.generate(this);
+        openOutputFile("__XmlDumper");
+        String result = dumperTmpl.generate(this);
         out.print(result);
-    }
-
-    public void endTranslationUnit()
-    {
-        String result = endTmpl.generate(this);
-        out.print(result);
-        out.close();
-    }
-
-    public void beginSequence(AST s)
-    {
-        sequence = (SequenceType) s;
-        String result = sequenceTmpl.generate(this);
-        out.print(result);
-    }
-
-    public void endSequence(AST s)
-    {
-    }
-
-    public void beginUnion(AST u)
-    {
-        union = (UnionType) u;
-        String result = unionTmpl.generate(this);
-        out.print(result);
-    }
-
-    public void endUnion(AST u)
-    {
     }
 
     public void beginEnumeration(AST e)
@@ -111,38 +69,15 @@ public class DepthFirstVisitorEmitter extends JavaEmitter
         out.print(result);
     }
 
-    public void endEnumeration(AST e)
-    {
-    }
-    
-    public SequenceType getSequenceType()
-    {
-        return sequence;
-    }
-    
-    public UnionType getUnionType()
-    {
-        return union;
-    }
-    
-    public EnumType getEnumerationType()
-    {
-        return enumeration;
-    }
-    
-    public String getOptionalClause(Field field)
-    {
-        SequenceEmitter e = new SequenceEmitter(this, sequence);
-        return e.getOptionalClause(field);
-    }
-    
+
     public String getVisitor(Field field)
     {
         TypeInterface type = field.getFieldType();
-        return getVisitor(type, "node." + AccessorNameEmitter.getGetterName(field) + "()");
+        return getVisitor(type, "node." + AccessorNameEmitter.getGetterName(field) + "()",
+                field.getName());
     }
     
-    public String getVisitor(TypeInterface type, String nodeName)
+    public String getVisitor(TypeInterface type, String nodeName, String fieldName)
     {
         type = TypeReference.resolveType(type);
         Expression length = null;
@@ -190,38 +125,20 @@ public class DepthFirstVisitorEmitter extends JavaEmitter
                 buffer.append(", ");
                 buffer.append(exprEmitter.emit(length, "node"));                    
             }
-            buffer.append(", arg)");
+            buffer.append(", \"");
+            buffer.append(fieldName);
+            buffer.append("\")");
         }
         else
         {
-            /*
-            String typeName = typeEmitter.getTypeName(type);
-            buffer.append("visit");
-            buffer.append(typeName.substring(0, 1).toUpperCase());
-            buffer.append(typeName.substring(1, typeName.length()));
-            
-            buffer.append("(");
             buffer.append(nodeName);
-            buffer.append(", arg)");
-            */
-            buffer.append(nodeName);
-            buffer.append(".accept(this, arg)");
+            buffer.append(".accept(this, \"");
+            buffer.append(fieldName);
+            buffer.append("\")");
         }
         return buffer.toString();
     }
     
-    
-    public String getElementType(Field field)
-    {
-        String result = null;
-        TypeInterface type = field.getFieldType();
-        if (type instanceof ArrayType)
-        {
-            ArrayType array = (ArrayType)type;            
-            result = typeEmitter.getTypeName(array.getElementType());
-        }
-        return result;
-    }
     
     public String getElementVisitor(Field field)
     {
@@ -231,19 +148,20 @@ public class DepthFirstVisitorEmitter extends JavaEmitter
         {
             ArrayType array = (ArrayType)type;            
             TypeInterface elemType = array.getElementType();
-            result = getVisitor(elemType, "__elem"); 
+            result = getVisitor(elemType, "__elem", field.getName()); 
         }
         
         return result;
-    }    
+    }
     
     public String startType()
     {
-        return null;
+        return "startElement(arg);";
     }
     
     public String endType()
     {
-        return null;
+        return "endElement(arg);";
     }
+    
 }

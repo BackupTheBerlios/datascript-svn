@@ -39,74 +39,23 @@
 %> 
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="DepthFirstUnion" %>
+        class="XmlDumperEnumeration" %>
 <% 
-    DepthFirstVisitorEmitter e = (DepthFirstVisitorEmitter) argument;
-    UnionType s = e.getUnionType();
+    XmlDumperEmitter e = (XmlDumperEmitter) argument;
+    EnumType s = e.getEnumerationType();
     String tname = s.getName();
 %>
     public void visit(<%=tname%> node, Object arg)
     {
-<%
-	String start = e.startType();
-	if (start != null)
-	{
-%>
-	<%=start%>
-<%	
-	}
-%>	
-        try
-        {
-            switch (node.getChoiceTag())
-            {
-<%
-        for (Field field : s.getFields())
-        {
-%>
-                case <%=tname%>.CHOICE_<%=field.getName()%>:
-<%      
-            String visitor = e.getVisitor(field);
-            String fname   = AccessorNameEmitter.getGetterName(field);
-            String elType = e.getElementType(field);
-            if (elType != null)
-            {
-                    String elemVisitor = e.getElementVisitor(field);
-%>
-                    {
-                        int __length = node.<%=fname%>().length();
-                        for (int __index = 0; __index < __length; __index++)
-                        {
-                            <%=elType%> __elem = node.<%=fname%>().elementAt(__index);
-                            <%=elemVisitor%>;
-                        }
-                    }            
-<%
-            }
-            else
-            {
-%>
-                    <%=visitor%>;
-<%                
-            }
-%>
-                    break;
-<%                
+    	try
+    	{
+    	    String tag = (String) arg;
+            handler.startElement("", tag, tag, noAttr);
+            text(node.toString());
+            handler.endElement("", tag, tag);
         }
-%>
-            }
-        }
-        catch (IOException __exc)
+        catch (SAXException exc)
         {
-            __exc.printStackTrace();
-        }
-<%
-	String end = e.endType();
-	if (end != null)
-	{
-%>
-	<%=end%>
-<%	
-	}
-%>	
+            exc.printStackTrace();
+        }        
     }
