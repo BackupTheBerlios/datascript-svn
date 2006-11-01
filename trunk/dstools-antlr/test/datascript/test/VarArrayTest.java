@@ -65,6 +65,7 @@ public class VarArrayTest extends TestCase
         os.writeByte(2);
         os.writeInt(startValue);
         os.writeShort(numElems);
+        int size = (int)os.getStreamPosition();
         os.close();
 
         VarArray array = new VarArray(fileName);
@@ -77,6 +78,7 @@ public class VarArrayTest extends TestCase
         ItemB b = array.getB();
         assertEquals(startValue, b.getValue());
         assertEquals(numElems, array.getLen());
+        assertEquals(size, array.sizeof());
     }
 
     public void testArray1() throws IOException

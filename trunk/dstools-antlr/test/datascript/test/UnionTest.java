@@ -70,6 +70,7 @@ public class UnionTest extends TestCase
                 os.writeInt(value);
                 break;
         }
+        int size = (int)os.getStreamPosition();
         os.close();
 
         BaseTypes b = new BaseTypes(fileName);
@@ -87,6 +88,7 @@ public class UnionTest extends TestCase
                 assertEquals(value, u.getV32());
                 break;
         }
+        assertEquals(size, b.sizeof());
     }
 
     public void testUnion1() throws IOException

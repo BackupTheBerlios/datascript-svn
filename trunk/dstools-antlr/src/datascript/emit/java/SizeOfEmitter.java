@@ -1,4 +1,3 @@
-<%
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -36,47 +35,64 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-%>
-<%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.java.*" 
-        class="UnionBegin" %>
-<% 
-    UnionEmitter e = (UnionEmitter) argument;
-    JavaEmitter global = e.getGlobal();
-    UnionType u = e.getUnionType();
-    String name = u.getName(); 
-%>
-<%@include file="FileHeader.inc"%>
-public class <%=name%> implements __Visitor.Acceptor
+package datascript.emit.java;
+
+import antlr.collections.AST;
+import datascript.ast.EnumType;
+import datascript.jet.java.SequenceEnd;
+import datascript.jet.java.SizeOf;
+import datascript.jet.java.SizeOfEnumeration;
+
+public class SizeOfEmitter extends JavaEmitter
 {
-    long __fpos;
-    Object __objectChoice;
-    int	__choiceTag = -1;
-
-    public void accept(__Visitor visitor, Object arg)
-    {
-        visitor.visit(this, arg);
-    }
+    private SizeOf sizeOfTmpl = new SizeOf();
+    private SizeOfEnumeration enumerationTmpl = new SizeOfEnumeration();
+    private SequenceEnd endTmpl = new SequenceEnd();
+    private EnumType enumeration;
     
-    public int sizeof() 
+    public void beginTranslationUnit()
     {
-        return __SizeOf.sizeof(this);
+        openOutputFile("__SizeOf");
+        String result = sizeOfTmpl.generate(this);
+        out.print(result);
     }
 
-    public int getChoiceTag()
+    public void endTranslationUnit()
     {
-        return __choiceTag;
+        String result = endTmpl.generate(this);
+        out.print(result);
+        out.close();
     }
-<%
-    int i = 0;
-    for (Field field : u.getFields())
+
+    public void beginSequence(AST s)
     {
-	String fname = field.getName();
-%>	
-    public static final int CHOICE_<%=fname%> = <%=i%>;
-<%
-        i++;
     }
-%>                
+
+    public void endSequence(AST s)
+    {
+    }
+
+    public void beginUnion(AST u)
+    {
+    }
+
+    public void endUnion(AST u)
+    {
+    }
+
+    public void beginEnumeration(AST e)
+    {
+        enumeration = (EnumType)e;
+        String result = enumerationTmpl.generate(this);
+        out.print(result);
+    }
+
+    public void endEnumeration(AST e)
+    {
+    }    
     
-
+    public EnumType getEnumerationType()
+    {
+        return enumeration;
+    }
+}

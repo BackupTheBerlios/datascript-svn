@@ -78,6 +78,7 @@ public class LabelTest extends TestCase
         }
         
         os.writeInt(x);
+        int size = (int) os.getStreamPosition();
         os.close();
 
         GlobalLabelSeq seq = new GlobalLabelSeq(fileName);
@@ -98,5 +99,6 @@ public class LabelTest extends TestCase
         	assertEquals(30+i, a.getValue());
         }
         assertEquals(x, lt.getX());
+        assertEquals(size, seq.sizeof());
     }
 }

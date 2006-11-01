@@ -67,6 +67,7 @@ public class CompoundArrayTest extends TestCase
             os.writeByte(2);
             os.writeInt((int)valueB+i);
         }
+        int size = (int) os.getStreamPosition();
         os.close();
 
         CompoundArray array = new CompoundArray(fileName);
@@ -84,6 +85,7 @@ public class CompoundArrayTest extends TestCase
             ItemB itemB = (ItemB) b.elementAt(i);
             assertEquals(valueB+i, itemB.getValue());
         }
+        assertEquals(size, array.sizeof());
     }
 
     public void testArray1() throws IOException

@@ -39,44 +39,87 @@
 %>
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="UnionBegin" %>
+        class="SizeOf" %>
 <% 
-    UnionEmitter e = (UnionEmitter) argument;
-    JavaEmitter global = e.getGlobal();
-    UnionType u = e.getUnionType();
-    String name = u.getName(); 
+    SizeOfEmitter global = (SizeOfEmitter) argument;
 %>
 <%@include file="FileHeader.inc"%>
-public class <%=name%> implements __Visitor.Acceptor
+public class __SizeOf extends __DepthFirstVisitor
 {
-    long __fpos;
-    Object __objectChoice;
-    int	__choiceTag = -1;
-
-    public void accept(__Visitor visitor, Object arg)
+    private int __size = 0;
+    
+    public void visitInt8(byte n, Object arg) 
     {
-        visitor.visit(this, arg);
+    	__size += 8;
     }
     
-    public int sizeof() 
+    public void visitInt16(short n, Object arg)
     {
-        return __SizeOf.sizeof(this);
+    	__size += 16;
     }
-
-    public int getChoiceTag()
-    {
-        return __choiceTag;
-    }
-<%
-    int i = 0;
-    for (Field field : u.getFields())
-    {
-	String fname = field.getName();
-%>	
-    public static final int CHOICE_<%=fname%> = <%=i%>;
-<%
-        i++;
-    }
-%>                
     
-
+    public void visitInt32(int n, Object arg)
+    {
+    	__size += 32;
+    }
+    
+    public void visitInt64(long n, Object arg)
+    {
+    	__size += 64;
+    }
+    
+    public void visitUInt8(short n, Object arg)
+    {
+    	__size += 8;
+    }
+    
+    public void visitUInt16(int n, Object arg)
+    {
+    	__size += 16;
+    }
+    
+    public void visitUInt32(long n, Object arg)
+    {
+    	__size += 32;
+    }
+    
+    public void visitUInt64(BigInteger n, Object arg)
+    {
+    	__size += 64;
+    }
+    
+    public void visitBitField(byte n, int length, Object arg)
+    {
+    	__size += length;
+    }
+    
+    public void visitBitField(short n, int length, Object arg)
+    {
+    	__size += length;
+    }
+    
+    public void visitBitField(int n, int length, Object arg)
+    {
+    	__size += length;
+    }
+    
+    public void visitBitField(long n, int length, Object arg)
+    {
+    	__size += length;
+    }
+    
+    public void visitBitField(BigInteger n, int length, Object arg)
+    {
+    	__size += length;
+    }
+    
+    public static int sizeof(__Visitor.Acceptor a) 
+    {
+        __SizeOf v = new __SizeOf();
+        a.accept(v, null);
+        if (v.__size % 8 != 0) 
+        {
+            throw new RuntimeException("sizeof not integer: " + v.__size);
+        }
+    	return v.__size / 8;
+    }

@@ -70,7 +70,7 @@ public class ParamArrayTest extends TestCase
         		os.writeByte(startValue+j);
         	}
         }
-        
+        int sizeof = (int)os.getStreamPosition();
         os.close();
 
         ParamArray array = new ParamArray(fileName);
@@ -88,5 +88,6 @@ public class ParamArrayTest extends TestCase
         		assertEquals(startValue+j, block.getData().elementAt(j));
         	}
         }
+        assertEquals(sizeof, array.sizeof());
     }
 }

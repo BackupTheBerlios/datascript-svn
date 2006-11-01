@@ -50,6 +50,7 @@ import datascript.ast.Scope;
 import datascript.ast.TokenAST;
 import datascript.emit.java.DepthFirstVisitorEmitter;
 import datascript.emit.java.JavaEmitter;
+import datascript.emit.java.SizeOfEmitter;
 import datascript.emit.java.VisitorEmitter;
 
 public class DataScriptTool 
@@ -65,6 +66,7 @@ public class DataScriptTool
     private DataScriptEmitter emitter;
     private VisitorEmitter visitorEmitter;
     private DepthFirstVisitorEmitter dfVisitorEmitter;
+    private SizeOfEmitter sizeOfEmitter;
     private String packageName;
     private String fileName;
     
@@ -154,6 +156,12 @@ public class DataScriptTool
         dfVisitorEmitter = new DepthFirstVisitorEmitter();
         dfVisitorEmitter.setPackageName(packageName);
         emitter.setEmitter(dfVisitorEmitter);
+        emitter.translationUnit(rootNode);        
+
+        // emit Java __SizeOf class
+        sizeOfEmitter = new SizeOfEmitter();
+        sizeOfEmitter.setPackageName(packageName);
+        emitter.setEmitter(sizeOfEmitter);
         emitter.translationUnit(rootNode);        
     }
 

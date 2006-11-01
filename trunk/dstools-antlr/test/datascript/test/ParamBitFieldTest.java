@@ -58,6 +58,7 @@ public class ParamBitFieldTest extends TestCase
         os.writeBits(y, numBits);
         os.writeBits(x, numBits);
         os.writeBits(y, numBits);
+        int size = (int) os.getStreamPosition();
         os.close();
 
         VarBitField var = new VarBitField(fileName);
@@ -68,6 +69,15 @@ public class ParamBitFieldTest extends TestCase
         BitFieldArray array = c.getArray();
         assertEquals(x, array.elementAt(0).intValue());
         assertEquals(y, array.elementAt(1).intValue());
+        try
+        { 
+            int s = var.sizeof();
+            fail("RuntimeException expected");
+        }
+        catch (RuntimeException exc)
+        {
+            // expected exception
+        }
     }
         
     public void testBitField1() throws IOException

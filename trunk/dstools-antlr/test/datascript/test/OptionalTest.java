@@ -53,6 +53,7 @@ Optional
         os.writeByte(97);
         os.writeShort(1000);
         os.writeShort(2000);
+        int size = (int) os.getStreamPosition();
         os.close();
         
         Optional opt = new Optional(fileName);
@@ -61,6 +62,7 @@ Optional
         assertEquals(2000, opt.getC());
         assertEquals(false, opt.hasIa());
         assertEquals(false, opt.hasB());
+        assertEquals(size, opt.sizeof());
     }
 
     public void testOptional2() throws IOException
@@ -71,6 +73,7 @@ Optional
         os.writeByte(1);
         os.writeShort(40000);
         os.writeShort(2000);
+        int size = (int) os.getStreamPosition();
         os.close();
         
         Optional opt = new Optional(fileName);
@@ -82,6 +85,7 @@ Optional
         assertEquals(1, ia.getTag());
         assertEquals(40000, ia.getValue());
         assertEquals(2000, opt.getC());
+        assertEquals(size, opt.sizeof());
     }
 
     public void testOptional3() throws IOException
@@ -91,6 +95,7 @@ Optional
         os.writeShort(1000);
         os.writeInt(123456);
         os.writeShort(2000);
+        int size = (int) os.getStreamPosition();
         os.close();
         
         Optional opt = new Optional(fileName);
@@ -100,5 +105,6 @@ Optional
         assertEquals(true, opt.hasB());
         assertEquals(123456, opt.getB());
         assertEquals(2000, opt.getC());
+        assertEquals(size, opt.sizeof());
     }
 }

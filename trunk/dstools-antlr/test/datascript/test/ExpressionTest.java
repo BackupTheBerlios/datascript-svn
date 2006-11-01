@@ -57,12 +57,14 @@ public class ExpressionTest extends TestCase
         os.writeByte(tag);
         int value = (tag % 2 == 0) ? 47 : 11;
         os.writeInt(value);
+        int size = (int) os.getStreamPosition();
         os.close();
 
         CondExpr ce = new CondExpr(fileName);
         assertEquals(tag, ce.getTag());
         CondBlock cb = ce.getBlock();
         assertEquals(value, cb.getValue());
+        assertEquals(size, ce.sizeof());
     }
     
     public void testCondExpr1() throws IOException

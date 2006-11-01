@@ -78,6 +78,7 @@ public class MixedArrayTest extends TestCase
                     break;
             }
         }
+        int size = (int) os.getStreamPosition();
         os.close();
 
         MixedArray array = new MixedArray(fileName);
@@ -105,6 +106,7 @@ public class MixedArrayTest extends TestCase
                     break;
             }
         }
+        assertEquals(size, array.sizeof());
     }
 
     public void testArray1() throws IOException

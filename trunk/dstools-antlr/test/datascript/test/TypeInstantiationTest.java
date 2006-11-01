@@ -67,46 +67,49 @@ public class TypeInstantiationTest extends TestCase
         int magic = 0x0EADBEEF;
         os = new FileImageOutputStream(file);
         os.writeShort(numBlocks);
-        
+
         // block 0
         os.writeByte(sorted);
         os.writeShort(sizes[0]);
         os.writeInt(magic);
         writeBytes(sizes[0]);
-        
+
         // block 1
         os.writeByte(unsorted);
         os.writeShort(sizes[1]);
         os.writeInt(magic);
         writeBytes(sizes[1]);
-        
+
         // block 2
         os.writeByte(sorted);
         os.writeShort(sizes[2]);
         os.writeInt(magic);
         writeBytes(sizes[2]);
+        int sizeof = (int) os.getStreamPosition();
         os.close();
-        
+
         Blocks blocks = new Blocks(fileName);
         assertEquals(numBlocks, blocks.getNumBlocks());
 
         for (int i = 0; i < numBlocks; i++)
         {
-        	Block block = blocks.getBlocks().elementAt(i);
-        	BlockHeader header = block.getHeader();
-        	BlockType type = (i % 2 == 0) ? BlockType.SORTED : BlockType.UNSORTED;
+            Block block = blocks.getBlocks().elementAt(i);
+            BlockHeader header = block.getHeader();
+            BlockType type = (i % 2 == 0) ? BlockType.SORTED
+                    : BlockType.UNSORTED;
 
-        	assertEquals(type, header.getType());
-        	assertEquals(sizes[i], header.getSize());
+            assertEquals(type, header.getType());
+            assertEquals(sizes[i], header.getSize());
 
-        	BlockData data = block.getData();
-        	assertEquals(magic, data.getMagic());
+            BlockData data = block.getData();
+            assertEquals(magic, data.getMagic());
 
-        	ByteArray bytes = data.getBytes();
-        	for (int j = 0; j < sizes[i]; j++)
-        	{
-        		assertEquals(11+j, bytes.elementAt(j));
-        	}
-        }        
+            ByteArray bytes = data.getBytes();
+            for (int j = 0; j < sizes[i]; j++)
+            {
+                assertEquals(11 + j, bytes.elementAt(j));
+            }
+        }
+        assertEquals(sizeof, blocks.sizeof());
     }
 }

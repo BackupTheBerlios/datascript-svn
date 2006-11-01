@@ -72,6 +72,7 @@ public class UnsignedTest extends TestCase
         os.writeBits(u16, 16);
         os.writeBits(u32, 32);
         os.writeBits(u64, 64);
+        int size = (int)os.getStreamPosition();
         os.close();
 
         bits.Unsigned u = new bits.Unsigned(fileName);
@@ -79,7 +80,7 @@ public class UnsignedTest extends TestCase
         assertEquals(u16, u.getU16());
         assertEquals(u32, u.getU32());
         assertTrue(BigInteger.valueOf(u64).equals(u.getU64()));
-        //assertEquals(15, u.sizeof());
+        assertEquals(size, u.sizeof());
     }
 
     public void testUnsigned1() throws IOException

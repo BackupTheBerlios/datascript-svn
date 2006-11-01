@@ -60,7 +60,7 @@ public class BitsParserTest extends TestCase
         assertEquals(a, bits.getA());
         assertEquals(b, bits.getB());
         assertEquals(c, bits.getC());
-        //assertEquals(2, bits.sizeof());
+        assertEquals(2, bits.sizeof());
     }
 
     public void testBitStruct1() throws IOException

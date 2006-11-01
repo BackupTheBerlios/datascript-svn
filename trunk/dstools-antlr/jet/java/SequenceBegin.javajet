@@ -55,3 +55,9 @@ public class <%=name%> implements __Visitor.Acceptor
     {
         visitor.visit(this, arg);
     }
+    
+    public int sizeof() 
+    {
+        return __SizeOf.sizeof(this);
+    }
+    

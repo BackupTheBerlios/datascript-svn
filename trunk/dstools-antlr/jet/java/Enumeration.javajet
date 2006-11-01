@@ -100,6 +100,10 @@ public enum <%=name%>
         visitor.visit(this, arg);
     }
     
+    public int sizeof() 
+    {
+        return <%=en.sizeof(null).integerValue().intValue()%>;
+    }
 }
 
 

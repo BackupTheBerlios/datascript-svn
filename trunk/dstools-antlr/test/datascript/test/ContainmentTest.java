@@ -69,6 +69,7 @@ public class ContainmentTest extends TestCase
             os.writeShort(20*i);
         }
         os.writeInt(e);
+        int size = (int) os.getStreamPosition();
         os.close();
         
         Outer outer = new Outer(fileName);
@@ -84,5 +85,6 @@ public class ContainmentTest extends TestCase
             ShortArray array = inner.getList();
             assertEquals(20*i, array.elementAt(i));
         }        
+        assertEquals(size, outer.sizeof());
     }
 }

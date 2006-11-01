@@ -68,6 +68,7 @@ public class EnumerationTest extends TestCase
         assertEquals(c2, e.getColour2());
         assertEquals(d1, e.getDim1());
         assertEquals(d2, e.getDim2());
+        assertEquals(6, e.sizeof());
     }
 
     public void testUnsigned1() throws IOException

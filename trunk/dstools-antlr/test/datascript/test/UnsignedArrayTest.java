@@ -87,6 +87,7 @@ public class UnsignedArrayTest extends TestCase
         {
             os.writeInt(i);
         }
+        int size = (int) os.getStreamPosition();
         os.close();
 
         IntegerArray array = new IntegerArray(fileName);
@@ -124,6 +125,7 @@ public class UnsignedArrayTest extends TestCase
         {            
             assertEquals(startUInt32+i, unsigned32.elementAt(i));
         }
+        assertEquals(size, array.sizeof());
     }
 
     public void testArray1() throws IOException
