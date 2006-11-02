@@ -68,9 +68,9 @@ public class ToolContext
         this.fileName = fileName;
     }
     
-    public String getFileName()
+    public static String getFileName()
     {
-        return fileName;
+        return getInstance().fileName;
     }
     public int getErrorCount()
     {
@@ -113,13 +113,17 @@ public class ToolContext
     
     private void appendLocation(StringBuffer message, TokenAST token)
     {
+/*        
         if (fileName != null)
         {
             message.append(fileName);
             message.append(":");
         }
+*/        
         if (token != null)
         {
+            message.append(token.getFileName());
+            message.append(":");
             message.append(token.getLine());
             message.append(":");
             message.append(token.getColumn());

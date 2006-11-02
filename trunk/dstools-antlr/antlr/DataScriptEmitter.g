@@ -64,11 +64,23 @@ options
 
 translationUnit
     :   { em.beginTranslationUnit(); }
-        #(MEMBERS (declaration)*)
+        #(ROOT (packageDeclaration)? (importDeclaration)* members)
         { em.endTranslationUnit(); }
     ;    
 
 
+packageDeclaration
+    :   #(PACKAGE (ID)+)
+    ;
+    
+importDeclaration
+    :   #(IMPORT (ID)+)
+    ;
+        	
+members
+    :   #(MEMBERS (declaration)*)
+    ;
+    
 declaration
     :   fieldDefinition 
     //|   conditionDefinition

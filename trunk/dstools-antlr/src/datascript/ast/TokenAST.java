@@ -61,7 +61,7 @@ public class TokenAST extends BaseAST
 
     public void initialize(int t, String txt)
     {
-        token = new CommonToken(t, txt);
+        token = new FileNameToken(t, txt);
     }
 
     public void initialize(AST t)
@@ -71,7 +71,7 @@ public class TokenAST extends BaseAST
 
     public void initialize(Token t)
     {
-        token = (CommonToken) t;
+        token = (FileNameToken) t;
     }
 ///////////////////////////////
     
@@ -83,6 +83,11 @@ public class TokenAST extends BaseAST
     public int getColumn()
     {
         return token.getColumn();
+    }
+    
+    public String getFileName()
+    {
+        return token.getFilename();
     }
 
     /** Get the token text for this node */
@@ -103,11 +108,6 @@ public class TokenAST extends BaseAST
     /** Set the token type for this node */
     public void setType(int ttype) {
         token.setType(ttype);
-    }
-
-    public void accept(Visitor v)
-    {
-        v.visit(this);
     }
 }
 

@@ -36,16 +36,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package datascript.tools;
+import java.io.File;
 import java.io.FileInputStream;
 
 import antlr.TokenBuffer;
 import antlr.TokenStreamRecognitionException;
+import antlr.collections.AST;
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.DataScriptLexer;
 import datascript.antlr.DataScriptParser;
+import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.DataScriptWalker;
 import datascript.antlr.ExpressionEvaluator;
 import datascript.antlr.TypeEvaluator;
+import datascript.ast.DataScriptException;
+import datascript.ast.ParserException;
 import datascript.ast.Scope;
 import datascript.ast.TokenAST;
 import datascript.emit.java.DepthFirstVisitorEmitter;
@@ -94,10 +99,12 @@ public class DataScriptTool
         context = ToolContext.getInstance();
         context.setFileName(fileName);
 
+/*        
         // set up lexer, parser and token buffer
         FileInputStream is = new FileInputStream(fileName); 
         DataScriptLexer lexer = new DataScriptLexer(is);
         lexer.setFilename(fileName);
+        lexer.setTokenObjectClass("datascript.ast.FileNameToken");
         TokenBuffer buffer = new TokenBuffer(lexer);
         parser = new DataScriptParser(buffer);
         parser.setContext(context);
@@ -111,9 +118,12 @@ public class DataScriptTool
         // parse file and get root node of syntax tree
         parser.translationUnit();
         rootNode = (TokenAST) parser.getAST();
-
+*/        
+        rootNode = (TokenAST) parsePackage(fileName);
         if (context.getErrorCount() != 0)
-            return;
+            throw new ParserException("Parser errors.");
+        
+        parseImportedPackages();
 
         // Validate the syntax tree - this has no side effects.
         // TODO: make this optional, controlled by a command line option
@@ -122,7 +132,7 @@ public class DataScriptTool
         walker.translationUnit(rootNode);
 
         if (context.getErrorCount() != 0)
-            return;
+            throw new ParserException("Parser errors.");
 
         // create name scopes and resolve references
         typeEval = new TypeEvaluator();
@@ -139,7 +149,7 @@ public class DataScriptTool
         exprEval.translationUnit(rootNode);
         
         if (context.getErrorCount() != 0)
-            return;
+            throw new ParserException("Parser errors.");
 
         // emit Java code for decoders
         javaEmitter = new JavaEmitter();
@@ -172,6 +182,89 @@ public class DataScriptTool
         emitter.setEmitter(xmlDumper);
         emitter.translationUnit(rootNode);        
     }
+    
+    private void parseImportedPackages() throws Exception
+    {
+        AST node = rootNode.getFirstChild();
+        if (node.getType() == DataScriptParserTokenTypes.PACKAGE)
+        {
+            while (true)
+            {
+                node = node.getNextSibling();
+                if (node == null || 
+                    node.getType() != DataScriptParserTokenTypes.IMPORT)
+                    break;
+                
+                String fileName = getPackageFile(node);
+                AST packageRoot = parsePackage(fileName);
+                
+                mergeSyntaxTrees(rootNode, packageRoot);
+            }
+        }
+    }
+    
+    private String getPackageFile(AST node)
+    {
+        AST sibling = node.getFirstChild();
+        String fileName = sibling.getText();
+        File file = new File(fileName);
+        while (true)
+        {
+            sibling = sibling.getNextSibling();
+            if (sibling == null)
+                break;
+            
+            file = new File(file, sibling.getText());
+        }
+        return file.getPath() + ".ds";
+    }
+    
+    private AST parsePackage(String fileName) throws Exception
+    {
+        System.out.println("Parsing " + fileName);
+
+        context = ToolContext.getInstance();
+        context.setFileName(fileName);
+
+        // set up lexer, parser and token buffer
+        FileInputStream is = new FileInputStream(fileName); 
+        DataScriptLexer lexer = new DataScriptLexer(is);
+        lexer.setFilename(fileName);
+        lexer.setTokenObjectClass("datascript.ast.FileNameToken");
+        TokenBuffer buffer = new TokenBuffer(lexer);
+        DataScriptParser parser = new DataScriptParser(buffer);
+        parser.setContext(context);
+
+        // must call this to see file name in error messages
+        parser.setFilename(fileName);
+        
+        // use custom node class containing line information
+        parser.setASTNodeClass("datascript.ast.TokenAST");
+
+        // parse file and get root node of syntax tree
+        parser.translationUnit();
+        if (context.getErrorCount() != 0)
+            throw new ParserException("Parser errors.");
+
+        return parser.getAST();
+    }
+    
+    private void mergeSyntaxTrees(AST rootNode, AST packageRoot)
+    {
+        AST rootMembers = getMembersNode(rootNode);
+        AST importedMembers = getMembersNode(packageRoot);
+        rootMembers.addChild(importedMembers.getFirstChild());
+    }
+    
+    private AST getMembersNode(AST root)
+    {
+        AST node = root.getFirstChild();
+        while (node != null && node.getType() != DataScriptParserTokenTypes.MEMBERS)
+        {
+            node = node.getNextSibling();
+        }        
+        return node;
+    }
 
     public static void main(String[] args)
     {
@@ -180,6 +273,10 @@ public class DataScriptTool
         {
             dsTool.parseArguments(args);
             dsTool.parseDatascript();
+        }
+        catch (DataScriptException exc)
+        {
+            System.err.println(exc);
         }
         catch (TokenStreamRecognitionException exc)
         {

@@ -84,10 +84,22 @@ options
 }
 
 translationUnit
-    :   #(MEMBERS (declaration)*)
+    :   #(ROOT (packageDeclaration)? (importDeclaration)* members)
     ;    
 
 
+packageDeclaration
+    :   #(PACKAGE (ID)+)
+    ;
+    
+importDeclaration
+    :   #(IMPORT (ID)+)
+    ;
+        	
+members
+    :   #(MEMBERS (declaration)*)
+    ;
+    
 declaration
     :   fieldDefinition 
     //|   conditionDefinition

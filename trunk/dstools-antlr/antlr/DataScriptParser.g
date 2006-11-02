@@ -64,7 +64,10 @@ tokens
     LABEL;
     BLOCK;
     CAST;
+    ROOT;
     MEMBERS;
+    PACKAGE;
+    IMPORT;
     TYPEREF<AST=datascript.ast.TypeReference>;
     UPLUS<AST=datascript.ast.IntegerExpression>;
     UMINUS<AST=datascript.ast.IntegerExpression>;
@@ -118,8 +121,20 @@ tokens
 
 
 translationUnit
-    :   declarationList EOF!
+    : (packageDeclaration)? (importDeclaration)*
+      declarationList EOF!
+      { #translationUnit = #([ROOT, "ROOT"], translationUnit); }
     ;    
+
+packageDeclaration
+    : "package"! ID (DOT! ID)* SEMICOLON!
+      { #packageDeclaration = #([PACKAGE, "PACKAGE"], packageDeclaration); }
+    ;
+    
+importDeclaration
+    : "import"! ID (DOT! ID)* DOT! MULTIPLY! SEMICOLON!
+      { #importDeclaration = #([IMPORT, "IMPORT"], importDeclaration); }
+    ;   
 
 declarationList
     :   (declaration)*
