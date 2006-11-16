@@ -23,6 +23,12 @@
 
         <date>20 July 2006</date>
       </revision>
+
+      <revision>
+        <revnumber>0.2</revnumber>
+
+        <date>16 November 2006</date>
+      </revision>
     </revhistory>
   </articleinfo>
 
@@ -842,7 +848,83 @@ Database::header.offset:
     argument list for the <literal>Block</literal> reference indicates that
     the i-th element of the <literal>blocks</literal> array is of type
     <literal>Block</literal> instantiated with the i-th header
-    <literal>headers[i]</literal>. </para>
+    <literal>headers[i]</literal>.</para>
+  </section>
+
+  <section>
+    <title>Comments</title>
+
+    <section>
+      <title>Standard Comments</title>
+
+      <para>DataScript supports the standard comment syntax of Java or C++.
+      Single line comments start with <literal>//</literal> and extend to the
+      end of the line. A comments starting with <literal>/*</literal> is
+      terminated by the next occurrence of <literal>*/</literal>, which may or
+      may not be on the same line.</para>
+
+      <programlisting>// This is a single-line comment.
+
+
+/* This is an example
+   of a multi-line comment
+   spanning three lines. */</programlisting>
+    </section>
+
+    <section>
+      <title>Documentation Comments</title>
+
+      <para>To support inline documentation within a DataScript module,
+      multi-line comments starting with <literal>/**</literal> are treated as
+      special documentation comments. The idea and syntax are borrowed from
+      Java(doc). A documentation comment is associated to the following type
+      or field definition. The documentation comment and the corresponding
+      definition may only be separated by whitespace.</para>
+
+      <programlisting>/**
+ * Traffic flow on links.
+ */
+enum bit:2 Direction
+{
+    /** No traffic flow allowed */
+    NONE,
+    /** Traffic allowed from start to end node. */
+    POSITIVE,
+    /** Traffic allowed from end to start node. */
+    NEGATIVE,
+    /** Traffic allowed in both directions. */
+    BOTH
+};</programlisting>
+
+      <para>The content of a documentation comment, excluding its delimiters,
+      is parsed line by line. Each line is stripped of leading whitespace, a
+      sequence of asterisks (<literal>*</literal>), and more whitespace, if
+      present. After stripping, a comment is composed of one or more
+      paragraphs, followed by zero or more tag blocks. Paragraphs are
+      separated by lines.</para>
+
+      <para>A line starting with whitespace and a keyword preceded by an
+      at-sign (<literal>@</literal>) is the beginning of a tag block and also
+      indicates the end of the preceding tag block or comment
+      paragraph.</para>
+
+      <para>The only tag currently supported is <literal>@param</literal>,
+      which is used for documenting the arguments of a parameterized type. The
+      documentation comment should contain one <literal>@param</literal> block
+      for each argument in the correct order. The <literal>@param</literal>
+      tag is followed by the parameter name and the parameter description. The
+      parameter name must be enclosed by whitespace.</para>
+
+      <programlisting>/**
+ * This type takes two arguments.
+ * @param  arg1   The first argument.
+ * @param  arg2   The second argument.
+ */
+ParamType(Foo arg1, Blah arg2)
+{
+    ...
+};</programlisting>
+    </section>
   </section>
 
   <bibliography>
