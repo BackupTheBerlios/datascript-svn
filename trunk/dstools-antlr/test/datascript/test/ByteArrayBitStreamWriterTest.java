@@ -3,28 +3,24 @@
  */
 package datascript.test;
 
-import java.io.File;
-
 import junit.framework.TestCase;
-import datascript.runtime.FileBitStreamReader;
-import datascript.runtime.FileBitStreamWriter;
+import datascript.runtime.ByteArrayBitStreamReader;
+import datascript.runtime.ByteArrayBitStreamWriter;
 
 /**
  * @author HWellmann
  *
  */
-public class BitStreamWriterTest extends TestCase
+public class ByteArrayBitStreamWriterTest extends TestCase
 {
-    private FileBitStreamWriter os;
-    private String fileName = "bitstreamwritertest.bin";
-    private File file = new File(fileName);
-    private FileBitStreamReader in;
+    private ByteArrayBitStreamWriter os;
+    private ByteArrayBitStreamReader in;
 
     /**
      * Constructor for BitStreamReaderTest.
      * @param name
      */
-    public BitStreamWriterTest(String name)
+    public ByteArrayBitStreamWriterTest(String name)
     {
         super(name);
     }
@@ -45,7 +41,7 @@ public class BitStreamWriterTest extends TestCase
 
     public void test1() throws Exception
     {
-        os = new FileBitStreamWriter(fileName);
+        os = new ByteArrayBitStreamWriter();
         os.writeBits(6, 4);
         os.writeBits(7, 4);
         os.writeBits(8, 4);
@@ -59,7 +55,7 @@ public class BitStreamWriterTest extends TestCase
         os.writeBits(14, 4);
         os.writeBits(15, 4);
         os.close();
-        in = new FileBitStreamReader(fileName);
+        in = new ByteArrayBitStreamReader(os.toByteArray());
         long a = 0;
         a = in.readBits(4);
         assertEquals(a, 6);
@@ -89,12 +85,11 @@ public class BitStreamWriterTest extends TestCase
         assertEquals(a, 15);
 
         in.close();
-        file.delete();        
     }
 
     public void test2() throws Exception
     {
-        os = new FileBitStreamWriter(fileName);
+        os = new ByteArrayBitStreamWriter();
         os.writeBits(6, 4);
         os.writeByte(0x78);
         os.writeByte(0x91);
@@ -103,7 +98,7 @@ public class BitStreamWriterTest extends TestCase
         os.writeByte(0xDE);
         os.writeBits(0xF, 4);
         os.close();
-        in = new FileBitStreamReader(fileName);
+        in = new ByteArrayBitStreamReader(os.toByteArray());
         long a = 0;
         a = in.readBits(4);
         assertEquals(a, 6);
@@ -133,19 +128,18 @@ public class BitStreamWriterTest extends TestCase
         assertEquals(a, 15);
 
         in.close();
-        file.delete();        
     }
 
     public void test3() throws Exception
     {
-        os = new FileBitStreamWriter(fileName);
+        os = new ByteArrayBitStreamWriter();
         os.writeBits(6, 4);
         os.writeShort(0x7891);
         os.writeShort(0x234C);
         os.writeBits(0xD, 4);
         os.writeByte(0xEF);
         os.close();
-        in = new FileBitStreamReader(fileName);
+        in = new ByteArrayBitStreamReader(os.toByteArray());
         long a = 0;
         a = in.readBits(4);
         assertEquals(a, 6);
@@ -175,6 +169,5 @@ public class BitStreamWriterTest extends TestCase
         assertEquals(a, 15);
 
         in.close();
-        file.delete();        
     }
 }

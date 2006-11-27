@@ -3,41 +3,33 @@
  */
 package datascript.test;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
 
 import junit.framework.TestCase;
-import datascript.runtime.FileBitStreamReader;
+import datascript.runtime.ByteArrayBitStreamReader;
 
 /**
  * @author HWellmann
  *
  */
-public class BitStreamReaderTest extends TestCase
+public class ByteArrayBitStreamReaderTest extends TestCase
 {
-    private FileImageOutputStream os;
-    private String fileName = "bitstreamreadertest.bin";
-    private File file = new File(fileName);
-    private FileBitStreamReader in;
+    private ByteArrayOutputStream baos;
+    private MemoryCacheImageOutputStream os;
+    private ByteArrayBitStreamReader in;
 
-    /**
-     * Constructor for BitStreamReaderTest.
-     * @param name
-     */
-    public BitStreamReaderTest(String name)
+    public ByteArrayBitStreamReaderTest(String name)
     {
         super(name);
     }
 
-    /*
-     * @see TestCase#setUp()
-     */
     protected void setUp() throws Exception
     {
-        //super.setUp();
-        os = new FileImageOutputStream(file);
+        baos = new ByteArrayOutputStream();
+        os = new MemoryCacheImageOutputStream(baos);
         os.writeBits(6, 4);
         os.writeBits(7, 4);
         os.writeBits(8, 4);
@@ -51,22 +43,15 @@ public class BitStreamReaderTest extends TestCase
         os.writeBits(14, 4);
         os.writeBits(15, 4);
         os.close();
-        in = new FileBitStreamReader(fileName);
+        baos.close();
+        in = new ByteArrayBitStreamReader(baos.toByteArray());
     }
 
-    /*
-     * @see TestCase#tearDown()
-     */
     protected void tearDown() throws Exception
     {
-        //super.tearDown();
         in.close();
-        file.delete();
     }
 
-    /*
-     * Test method for 'datascript.library.BitStreamReader.readByte()'
-     */
     public void testReadByte() throws IOException
     {
         byte b;
@@ -94,9 +79,6 @@ public class BitStreamReaderTest extends TestCase
         assertTrue(bytePos == 2);
     }
 
-    /*
-     * Test method for 'datascript.library.BitStreamReader.readUnsignedByte()'
-     */
     public void testReadUnsignedByte() throws IOException
     {
         int b = in.readByte();
@@ -120,9 +102,6 @@ public class BitStreamReaderTest extends TestCase
         assertTrue(bytePos == 2);
     }
 
-    /*
-     * Test method for 'datascript.library.BitStreamReader.readUnsignedByte()'
-     */
     public void testReadUnsignedInt1() throws IOException
     {
         short uint8 = (short) in.readUnsignedByte();
@@ -178,9 +157,6 @@ public class BitStreamReaderTest extends TestCase
         assertTrue(in.getStreamPosition() == 2);
     }
 
-    /*
-     * Test method for 'datascript.library.BitStreamReader.getBitPosition()'
-     */
     public void testReadByteNotAligned() throws IOException
     {
         long v;
@@ -197,9 +173,6 @@ public class BitStreamReaderTest extends TestCase
         assertTrue(in.getStreamPosition() == 2);        
     }
 
-    /*
-     * Test method for 'datascript.library.BitStreamReader.setBitPosition(long)'
-     */
     public void testSetBitPosition() throws IOException
     {
         short s;
@@ -238,5 +211,4 @@ public class BitStreamReaderTest extends TestCase
         assertTrue(in.getStreamPosition() == 1);
         assertTrue(in.getBitPosition() == 12);
     }
-
 }

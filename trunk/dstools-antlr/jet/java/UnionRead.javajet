@@ -52,7 +52,7 @@
     	
     public <%=name%>(String __filename<%=formalPar%>) throws IOException 
     {
-        BitStreamReader __in = new BitStreamReader(__filename);
+        FileBitStreamReader __in = new FileBitStreamReader(__filename);
         read(__in, new CallChain()<%=actualPar%>);
         __in.close();
     }

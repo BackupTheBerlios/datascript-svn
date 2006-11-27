@@ -34,76 +34,64 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */ 
+package datascript.runtime;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+/**
+ * @author HWellmann
+ *
  */
-package datascript.emit.java;
-
-import datascript.ast.CompoundType;
-import datascript.ast.Field;
-import datascript.ast.Parameter;
-import datascript.ast.SequenceType;
-import datascript.jet.java.SequenceBegin;
-import datascript.jet.java.SequenceEnd;
-import datascript.jet.java.SequenceRead;
-import datascript.jet.java.SequenceWrite;
-
-public class SequenceEmitter extends CompoundEmitter
+public class ByteArrayBitStreamReader extends BitStreamReader
 {
-    private SequenceType seq;
-    private SequenceFieldEmitter fieldEmitter;
-    private SequenceBegin beginTmpl = new SequenceBegin();
-    private SequenceEnd endTmpl = new SequenceEnd();
-    private SequenceRead readTmpl = new SequenceRead();
-    private SequenceWrite writeTmpl = new SequenceWrite();
-    private TypeNameEmitter tne = new TypeNameEmitter();
+    private ByteArrayInputStream bais;
+    private long length;
     
-    public SequenceEmitter(JavaEmitter j, SequenceType sequence)
+    public ByteArrayBitStreamReader(byte[] b) throws IOException
     {
-        super(j);
-        seq = sequence;
-        fieldEmitter = new SequenceFieldEmitter(this);
-    }
-   
-    public SequenceType getSequenceType()
-    {
-        return seq;
+        bais = new ByteArrayInputStream(b);
+        length = b.length;
     }
     
-    public CompoundType getCompoundType()
+    public int read() throws IOException
     {
-        return seq;
-    }        
-
-    public FieldEmitter getFieldEmitter()
-    {
-        return fieldEmitter;
-    }
-    
-    public void begin()
-    {
-        //reset();
-        String result = beginTmpl.generate(this);
-        out.print(result);
-        
-        for (Field field : seq.getFields())
+        checkClosed();
+        bitOffset = 0;
+        int val = bais.read();
+        if (val != -1) 
         {
-            fieldEmitter.emit(field);
+            ++streamPos;
         }
-        
-        for (Parameter param : seq.getParameters())
-        {
-            String typeName = tne.getTypeName(param.getType());
-            out.println("    " + typeName + " " + param.getName() + ";");
+        return val;
+    }
+    
+    public int read(byte[] b, int off, int len) throws IOException 
+    {
+        checkClosed();
+        bitOffset = 0;
+        int nbytes = bais.read(b, off, len);
+        if (nbytes != -1) {
+            streamPos += nbytes;
         }
-        result = readTmpl.generate(this);
-        out.print(result);
-
-        result = writeTmpl.generate(this);
-        out.print(result);
+        return nbytes;
     }
 
-    public void end()
+    public long length() 
     {
-        String result = endTmpl.generate(this);
-        out.print(result);
-    }    
+        return length;
+    }
+
+    public void seek(long pos) throws IOException 
+    {
+        checkClosed();
+        if (pos < flushedPos) {
+            throw new IndexOutOfBoundsException("pos < flushedPos!");
+        }
+        bitOffset = 0;
+        bais.reset();
+        bais.skip(pos);
+        streamPos = pos;
+    }
 }

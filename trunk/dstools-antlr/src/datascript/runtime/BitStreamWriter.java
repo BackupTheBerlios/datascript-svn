@@ -37,21 +37,24 @@
  */ 
 package datascript.runtime;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigInteger;
 
-import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
 
 /**
  * @author HWellmann
  *
  */
-public class BitStreamWriter extends FileImageOutputStream
+public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
 {
-    public BitStreamWriter(String fileName) throws IOException
+    protected OutputStream os;
+    
+    public BitStreamWriter(OutputStream os)
     {
-        super(new File(fileName));
+        super(os);
+        this.os = os;
     }
     
     public long getBitPosition() throws IOException
@@ -134,7 +137,7 @@ public class BitStreamWriter extends FileImageOutputStream
         }
     }
     
-    public void writeBigInteger(int numBits, BigInteger value) throws IOException
+    public void writeBigInteger(BigInteger value, int numBits) throws IOException
     {
 /*
         BigInteger result = BigInteger.ZERO;

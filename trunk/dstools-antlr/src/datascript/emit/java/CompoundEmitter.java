@@ -58,7 +58,6 @@ import datascript.jet.java.ArrayRead;
 
 abstract public class CompoundEmitter
 {
-    private static String nl = System.getProperties().getProperty("line.separator");
     private JavaEmitter global;
     private TypeNameEmitter typeNameEmitter;
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
@@ -437,5 +436,229 @@ abstract public class CompoundEmitter
             result = buffer.toString();
         }
         return result;
+    }
+
+    public String writeField(Field field)
+    {
+        buffer = new StringBuilder();
+        TypeInterface type = field.getFieldType();
+        type = TypeReference.resolveType(type);
+        if (type instanceof IntegerType)
+        {
+            writeIntegerField(field, (IntegerType)type);
+        }
+        else if (type instanceof CompoundType)
+        {
+            writeNotImplemented();
+            //writeCompoundField(field, (CompoundType)type);
+        }
+        else if (type instanceof ArrayType)
+        {
+            writeNotImplemented();
+            //writeArrayField(field, (ArrayType)type);
+        }
+        else if (type instanceof EnumType)
+        {
+            writeNotImplemented();
+            //writeEnumField(field, (EnumType)type);
+        }
+        else if (type instanceof TypeInstantiation)
+        {
+            TypeInstantiation inst = (TypeInstantiation)type;
+            CompoundType compound = inst.getBaseType();
+            writeNotImplemented();
+            //writeInstantiatedField(field, compound, inst);
+        }
+        else
+        {
+            throw new InternalError("unhandled type: " + type.getClass().getName());
+        }
+        return buffer.toString();
+    }
+    
+    private void writeIntegerField(Field field, IntegerType type)
+    {
+        writeIntegerValue(field, type);
+    }
+    
+    private void writeIntegerValue(Field field, IntegerType type)
+    {
+        String methodSuffix;
+        String cast = "";
+        String arg = "";
+        switch (type.getType())
+        {
+            case DataScriptParserTokenTypes.INT8:
+                methodSuffix = "Byte";
+                break;
+            
+            case DataScriptParserTokenTypes.INT16:
+                methodSuffix = "Short";
+                break;
+            
+            case DataScriptParserTokenTypes.INT32:
+                methodSuffix = "Int";
+                break;
+            
+            case DataScriptParserTokenTypes.INT64:
+                methodSuffix = "Long";
+                break;
+            
+            case DataScriptParserTokenTypes.UINT8:
+                methodSuffix = "Byte";
+                cast = "(short) ";
+                break;
+            
+            case DataScriptParserTokenTypes.UINT16:
+                methodSuffix = "Short";                
+                break;
+            
+            case DataScriptParserTokenTypes.UINT32:
+                methodSuffix = "UnsignedInt";
+                cast = "(int) ";
+                break;
+            
+            case DataScriptParserTokenTypes.UINT64:
+                methodSuffix = "BigInteger";
+                arg = "64";
+                break;
+
+            case DataScriptParserTokenTypes.BIT:
+                Expression lengthExpr = ((BitFieldType)type).getLengthExpression();
+                Value lengthValue = lengthExpr.getValue();
+                if (lengthValue == null)
+                {
+                    methodSuffix = "BigInteger";
+                }
+                else
+                {
+                    int length = lengthValue.integerValue().intValue();
+                    if (length < 64)
+                    {
+                        methodSuffix = "Bits";
+                        cast = "(" + typeNameEmitter.getTypeName(type) + ") ";
+                    }
+                    else
+                    {
+                        methodSuffix = "BigInteger";
+                    }
+                }
+                arg = exprEmitter.emit(lengthExpr);
+                break;
+            default:
+                throw new InternalError("unhandled type = " + type.getType());
+        }
+        buffer.append("__out.write");
+        buffer.append(methodSuffix);
+        buffer.append("(");
+        buffer.append(cast);
+        buffer.append(AccessorNameEmitter.getGetterName(field));
+        buffer.append("()");
+        if (arg.length() != 0)
+        {
+            buffer.append(", ");
+            buffer.append(arg);
+        }
+        buffer.append(");");
+    }
+  
+    
+    private void writeNotImplemented()
+    {
+        buffer.append("notImplemented();");
+    }
+    
+    private void writeCompoundField(Field field, CompoundType type) 
+    {
+/*        
+        buffer.append(ane.getSetterName(field));
+        buffer.append("(new ");
+        buffer.append(type.getName());
+        buffer.append("(__out, __cc));");
+*/        
+    }
+
+    private void writeInstantiatedField(Field field, CompoundType type,
+                                       TypeInstantiation inst)
+    {
+/*        
+        buffer.append(ane.getSetterName(field));
+        buffer.append("(new ");
+        buffer.append(type.getName());
+        buffer.append("(__out, __cc");
+        Iterable<Expression> arguments = inst.getArguments();
+        if (arguments != null)
+        {
+            int argIndex = 0;
+            for (Expression arg : arguments)
+            {
+                buffer.append(", ");
+                boolean cast = emitTypeCast(type, arg, argIndex);
+                String javaArg = exprEmitter.emit(arg);
+                buffer.append(javaArg);
+                if (cast)
+                {
+                    buffer.append(")");
+                }
+                argIndex++;
+            }
+        }
+        buffer.append("));");
+*/        
+    }
+
+    
+    
+    /**
+     * Emits a type cast for passing an argument to a parameterized type.
+     * @param type              compound type with parameters
+     * @param expr              argument expression in type instantiation
+     * @param paramIndex        index of argument in argument list
+     */
+    private void writeArrayField(Field field, ArrayType array)
+    {
+/*
+        String elTypeJavaName = typeNameEmitter.getTypeName(array);
+        if (elTypeJavaName.startsWith("ObjectArray"))
+        {
+            String elTypeName = typeNameEmitter.getTypeName(array.getElementType());
+            ArrayEmitter arrayEmitter = new ArrayEmitter(field, array, 
+                    elTypeName);
+            String result = arrayTmpl.generate(arrayEmitter);
+            buffer.append(result);            
+        }
+        else
+        {
+            Expression length = array.getLengthExpression();
+            buffer.append(ane.getSetterName(field));
+            buffer.append("(new ");
+            buffer.append(elTypeJavaName);
+            buffer.append("(__out, (int)(");
+            buffer.append(getLengthExpression(length));
+            buffer.append(")");
+            TypeInterface elType = array.getElementType();
+            if (elType instanceof BitFieldType)
+            {
+                BitFieldType bitField = (BitFieldType) elType;
+                Expression numBits = bitField.getLengthExpression();
+                buffer.append(", ");
+                buffer.append(getLengthExpression(numBits));
+            }
+            buffer.append("));");
+        }
+*/        
+    }
+    
+    private void writeEnumField(Field field, EnumType type)
+    {
+/*        
+        IntegerType baseType = (IntegerType) type.getBaseType();
+        buffer.append(ane.getSetterName(field));
+        buffer.append("(");
+        buffer.append(type.getName());
+        buffer.append(".toEnum(");
+        writeIntegerValue(field, baseType);
+        buffer.append("));");
+*/
     }
 }

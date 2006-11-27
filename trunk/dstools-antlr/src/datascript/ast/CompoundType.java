@@ -37,13 +37,11 @@
  */
 package datascript.ast;
 
-import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
 
-import datascript.antlr.DataScriptParserTokenTypes;
-
 import antlr.collections.AST;
+import datascript.antlr.DataScriptParserTokenTypes;
 
 abstract public class CompoundType extends TokenAST implements TypeInterface
 {
@@ -197,6 +195,11 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     public Iterable<Field> getFields()
     {
         return fields;
+    }
+    
+    public int getNumFields()
+    {
+        return fields.size();
     }
 
     public void addField(Field f)

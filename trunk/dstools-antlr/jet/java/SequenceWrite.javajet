@@ -39,7 +39,7 @@
 %> 
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="SequenceRead" %>
+        class="SequenceWrite" %>
 <% 
     SequenceEmitter e = (SequenceEmitter) argument;
     JavaEmitter global = e.getGlobal();
@@ -48,27 +48,49 @@
     ExpressionEmitter ee = new ExpressionEmitter(); 
     String formalPar = e.getFormalParameterList();
     String actualPar = e.getActualParameterList();
+    TypeNameEmitter tne = new TypeNameEmitter();
 %>
-    // TODO: Emit constructor from member values.
+    public <%=name%>(
+<%
+    int fieldCount = 0;
+    int numFields = s.getNumFields();
+    for (Field field : s.getFields())    
+    {
+    	String fieldName = field.getName();
+    	String fieldType = tne.getTypeName(field.getFieldType());
+    	String sep = (fieldCount == numFields-1) ? "" : ", ";
+%>
+        <%=fieldType%> <%=fieldName%><%=sep%> 
+<%    	
+        fieldCount++;
+    }
+%>
+        )
+    {
+<%    
+    for (Field field : s.getFields())    
+    {
+    	String fieldName = field.getName();
+%>
+        this.<%=fieldName%> = <%=fieldName%>;
+<%    	
+    }
+%>
+    }    
     	
-    public <%=name%>(String __filename<%=formalPar%>) throws IOException 
+    public void write(String __filename<%=formalPar%>) throws IOException 
     {
-        FileBitStreamReader __in = new FileBitStreamReader(__filename);
-        read(__in, new CallChain()<%=actualPar%>);
-        __in.close();
+        FileBitStreamWriter __out = new FileBitStreamWriter(__filename);
+        write(__out, new CallChain()<%=actualPar%>);
+        __out.close();
     }
 
-    public <%=name%>(BitStreamReader __in<%=formalPar%>) throws IOException 
+    public void write(BitStreamWriter __out<%=formalPar%>) throws IOException 
     {
-    	read(__in, new CallChain()<%=actualPar%>);
+    	write(__out, new CallChain()<%=actualPar%>);
     }
 
-    public <%=name%>(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws IOException 
-    {
-    	read(__in, __cc<%=actualPar%>);
-    }
-
-    public void read(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws IOException 
+    public void write(BitStreamWriter __out, CallChain __cc<%=formalPar%>) throws IOException 
     {
 <%
         for (Parameter param : s.getParameters())
@@ -82,7 +104,7 @@
         try 
         {
             __cc.push("<%=name%>", this);
-            __fpos = __in.getBitPosition();
+            __fpos = __out.getBitPosition();
             try 
             {
 <%
@@ -92,7 +114,7 @@
 	    if (label != null)
 	    {
 %>
-                if (__in.getBitPosition() != <%=label%>)
+                if (__out.getBitPosition() != <%=label%>)
                 {
                     throw new IOException("wrong offset for field '<%=field.getName()%>'");
                 } 
@@ -104,32 +126,22 @@
 %>
                 if (<%=optional%>)
                 {
-                    <%=e.readField(field)%>
+                    <%=e.writeField(field)%>
                 }
 <%
             }
             else
             {
 %>                            
-                <%=e.readField(field)%>
+                <%=e.writeField(field)%>
 <%
-            }
-            String constraint = e.getConstraint(field);
-            if (constraint != null)
-            {
-%>
-                if (!(<%=constraint%>))
-                {
-                    throw new IOException("constraint violated");
-                }
-<%            
             }
 	}
 %>                
             } 
             catch (IOException __e1) 
             {
-                __in.setBitPosition(__fpos);
+                __out.setBitPosition(__fpos);
                 throw __e1;
        	    }
         }
@@ -137,4 +149,9 @@
         { 
             __cc.pop(); 
         }
+    }
+    
+    private void notImplemented() throws IOException
+    {
+        throw new IOException("not yet implemented");
     }

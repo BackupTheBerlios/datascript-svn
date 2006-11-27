@@ -34,76 +34,74 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */ 
+package datascript.runtime;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
+/**
+ * @author HWellmann
+ *
  */
-package datascript.emit.java;
-
-import datascript.ast.CompoundType;
-import datascript.ast.Field;
-import datascript.ast.Parameter;
-import datascript.ast.SequenceType;
-import datascript.jet.java.SequenceBegin;
-import datascript.jet.java.SequenceEnd;
-import datascript.jet.java.SequenceRead;
-import datascript.jet.java.SequenceWrite;
-
-public class SequenceEmitter extends CompoundEmitter
+public class FileBitStreamReader extends BitStreamReader
 {
-    private SequenceType seq;
-    private SequenceFieldEmitter fieldEmitter;
-    private SequenceBegin beginTmpl = new SequenceBegin();
-    private SequenceEnd endTmpl = new SequenceEnd();
-    private SequenceRead readTmpl = new SequenceRead();
-    private SequenceWrite writeTmpl = new SequenceWrite();
-    private TypeNameEmitter tne = new TypeNameEmitter();
+    private RandomAccessFile raf;
     
-    public SequenceEmitter(JavaEmitter j, SequenceType sequence)
+    public FileBitStreamReader(String fileName) throws IOException
     {
-        super(j);
-        seq = sequence;
-        fieldEmitter = new SequenceFieldEmitter(this);
-    }
-   
-    public SequenceType getSequenceType()
-    {
-        return seq;
+        raf = new RandomAccessFile(fileName, "r");
     }
     
-    public CompoundType getCompoundType()
+    public int read() throws IOException
     {
-        return seq;
-    }        
-
-    public FieldEmitter getFieldEmitter()
-    {
-        return fieldEmitter;
-    }
-    
-    public void begin()
-    {
-        //reset();
-        String result = beginTmpl.generate(this);
-        out.print(result);
-        
-        for (Field field : seq.getFields())
-        {
-            fieldEmitter.emit(field);
+        checkClosed();
+        bitOffset = 0;
+        int val = raf.read();
+        if (val != -1) {
+            ++streamPos;
         }
-        
-        for (Parameter param : seq.getParameters())
-        {
-            String typeName = tne.getTypeName(param.getType());
-            out.println("    " + typeName + " " + param.getName() + ";");
+        return val;
+    }
+    
+    public int read(byte[] b, int off, int len) throws IOException 
+    {
+        checkClosed();
+        bitOffset = 0;
+        int nbytes = raf.read(b, off, len);
+        if (nbytes != -1) {
+            streamPos += nbytes;
         }
-        result = readTmpl.generate(this);
-        out.print(result);
-
-        result = writeTmpl.generate(this);
-        out.print(result);
+        return nbytes;
     }
 
-    public void end()
+    public long length() {
+        try 
+        {
+            checkClosed();
+            return raf.length();
+        } 
+        catch (IOException e) 
+        {
+            return -1L;
+        }
+    }
+
+    public void seek(long pos) throws IOException 
     {
-        String result = endTmpl.generate(this);
-        out.print(result);
-    }    
+        checkClosed();
+        if (pos < flushedPos) {
+            throw new IndexOutOfBoundsException("pos < flushedPos!");
+        }
+        bitOffset = 0;
+        raf.seek(pos);
+        streamPos = raf.getFilePointer();
+    }
+
+    public void close() throws IOException 
+    {
+        super.close();
+        raf.close();
+    }
+    
 }

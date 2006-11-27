@@ -37,23 +37,17 @@
  */ 
 package datascript.runtime;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStreamImpl;
 
 /**
  * @author HWellmann
  *
  */
-public class BitStreamReader extends FileImageInputStream
+public abstract class BitStreamReader extends ImageInputStreamImpl
 {
-    public BitStreamReader(String fileName) throws IOException
-    {
-        super(new File(fileName));
-    }
-    
     public long getBitPosition() throws IOException
     {
         long pos = 8*streamPos + bitOffset;

@@ -39,7 +39,6 @@ package datascript.runtime;
 
 import java.io.DataInput;
 import java.io.IOException;
-import java.io.PrintStream;
 
 public class UnsignedByteArray implements Array, SizeOf
 {
