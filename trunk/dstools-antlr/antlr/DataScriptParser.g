@@ -108,6 +108,13 @@ tokens
     QUESTIONMARK<AST=datascript.ast.Expression>;
     DOT<AST=datascript.ast.Expression>;
     LPAREN<AST=datascript.ast.Expression>;
+    
+    SQL;
+    SQL_DATABASE<AST=datascript.ast.SqlDatabaseType>;
+    SQL_PRAGMA;
+    SQL_METADATA;
+    SQL_TABLE<AST=datascript.ast.SqlTableType>;
+    SQL_INTEGER;
 }
 
 {
@@ -146,6 +153,9 @@ declaration
     :   fieldDefinition SEMICOLON!
     |   conditionDefinition
     |   constDeclaration  SEMICOLON!
+    |   sqlDatabaseDefinition  SEMICOLON!
+    |   sqlTableDeclaration  SEMICOLON!
+//    |   sqlIntegerDeclaration  SEMICOLON!
     ;
 
 
@@ -267,6 +277,8 @@ typeDeclaration
     |   definedType
     |   enumDeclaration
     |   bitmaskDeclaration
+    |   sqlIntegerDeclaration
+    |   sqlTableDeclaration
     ;
 
 typeReference
@@ -350,8 +362,75 @@ arrayRange
     :   LBRACKET! (r:rangeExpression)? RBRACKET!
     ;
 
+/*********************************************************************/
 
+sqlDatabaseDefinition
+    : "sql_database" ID LCURLY! 
+      (sqlPragmaBlock)? 
+      (sqlMetadataBlock)? 
+      ((DOC)? sqlTableDefinition)+ 
+      (sqlConstraint SEMICOLON! )?
+      RCURLY!
+    ;
+    
+sqlPragmaBlock
+    : "sql_pragma" LCURLY! (sqlPragma)+ RCURLY! SEMICOLON!
+    ;
+    
+sqlPragma
+    : (DOC)? sqlPragmaType ID (fieldInitializer)? (fieldCondition)? SEMICOLON!
+    ;    
 
+sqlPragmaType
+    :   integerType
+    |   "string"     
+    ;
+
+sqlMetadataBlock
+    : "sql_metadata" LCURLY! (sqlMetadataField)+ RCURLY! SEMICOLON!    
+    ;
+    
+sqlMetadataField
+    : (d:DOC)?
+      t:typeReference
+      f:ID
+      (i:fieldInitializer)? 
+      (c:fieldCondition)?
+      SEMICOLON!
+    ;    
+
+sqlTableDefinition
+    : sqlTableDeclaration (ID)? SEMICOLON!
+    | sqlTableReference ID SEMICOLON!
+    ;
+
+sqlTableDeclaration
+    : "sql_table" ID LCURLY! 
+      (sqlFieldDefinition)+
+      (sqlConstraint SEMICOLON)?
+      RCURLY!
+    ;
+    
+sqlTableReference
+    : ID
+    ;    
+    
+sqlFieldDefinition
+    : (DOC)? definedType ID (fieldCondition)? ("sql_key")? (sqlConstraint)? SEMICOLON!
+    ;
+    
+sqlConstraint
+    : "sql" STRING_LITERAL (COMMA! STRING_LITERAL)*     
+    ;  
+    
+sqlIntegerDeclaration
+    : (DOC)? "sql_integer" LCURLY! (sqlIntegerFieldDefinition)+ RCURLY! SEMICOLON!
+    ;
+    
+sqlIntegerFieldDefinition
+    : (DOC)? integerType ID (fieldCondition)? SEMICOLON
+    ;    
+    
 /*********************************************************************/
 
 
@@ -398,7 +477,7 @@ constantExpression
     ;
 
 rangeExpression
-    :   expression (RANGE! expression)?
+    :   expression (RANGE!expression)?
     ;
 
 logicalOrExpression

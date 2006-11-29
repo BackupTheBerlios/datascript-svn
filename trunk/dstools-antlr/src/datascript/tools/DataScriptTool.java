@@ -99,26 +99,6 @@ public class DataScriptTool
         context = ToolContext.getInstance();
         context.setFileName(fileName);
 
-/*        
-        // set up lexer, parser and token buffer
-        FileInputStream is = new FileInputStream(fileName); 
-        DataScriptLexer lexer = new DataScriptLexer(is);
-        lexer.setFilename(fileName);
-        lexer.setTokenObjectClass("datascript.ast.FileNameToken");
-        TokenBuffer buffer = new TokenBuffer(lexer);
-        parser = new DataScriptParser(buffer);
-        parser.setContext(context);
-
-        // must call this to see file name in error messages
-        parser.setFilename(fileName);
-        
-        // use custom node class containing line information
-        parser.setASTNodeClass("datascript.ast.TokenAST");
-
-        // parse file and get root node of syntax tree
-        parser.translationUnit();
-        rootNode = (TokenAST) parser.getAST();
-*/        
         rootNode = (TokenAST) parsePackage(fileName);
         if (context.getErrorCount() != 0)
             throw new ParserException("Parser errors.");

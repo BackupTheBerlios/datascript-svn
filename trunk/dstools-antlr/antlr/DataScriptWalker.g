@@ -83,6 +83,9 @@ declaration
     :   fieldDefinition 
     //|   conditionDefinition
     |   constDeclaration 
+    |   sqlDatabaseDefinition
+    |   sqlTableDeclaration
+    |   sqlIntegerDeclaration
     ;
 
 
@@ -211,6 +214,12 @@ builtinType
     ;
 
 builtinTypeDefaultOrder
+    :   integerType
+    |   "string"
+    |   bitField
+    ;
+
+integerType
     :   UINT8
     |   UINT16
     |   UINT32
@@ -219,9 +228,8 @@ builtinTypeDefaultOrder
     |   INT16
     |   INT32
     |   INT64
-    |   "string"
-    |   bitField
     ;
+
 
 bitField
     :   #(BIT expression)
@@ -241,6 +249,76 @@ typeValue
     :   expression
     |   #(LCURLY (typeValue)+)
     ;
+
+/*********************************************************************/
+
+sqlDatabaseDefinition
+    : #(SQL_DATABASE ID 
+        (sqlPragmaBlock)? 
+        (sqlMetadataBlock)? 
+        ((DOC)? sqlTableDefinition)+ 
+        (sqlConstraint)?
+       )
+    ;
+    
+sqlPragmaBlock
+    : #(SQL_PRAGMA (sqlPragma)+)
+    ;
+    
+sqlPragma
+    : #(FIELD sqlPragmaType ID (DOC)? (fieldInitializer)? (fieldCondition)?)
+    ;    
+
+sqlPragmaType
+    :   integerType
+    |   "string"     
+    ;
+
+sqlMetadataBlock
+    : #(SQL_METADATA (sqlMetadataField)+ )
+    ;
+    
+sqlMetadataField
+    : #(FIELD typeReference
+        ID
+        (DOC)?
+        (fieldInitializer)? 
+        (fieldCondition)?
+      )
+    ;    
+
+sqlTableDefinition
+    : sqlTableDeclaration (ID)? SEMICOLON!
+    | sqlTableReference ID SEMICOLON!
+    ;
+
+sqlTableDeclaration
+    : "sql_table" ID LCURLY! 
+      (sqlFieldDefinition)+
+      (sqlConstraint SEMICOLON)?
+      RCURLY!
+    ;
+    
+sqlTableReference
+    : ID
+    ;    
+    
+sqlFieldDefinition
+    : (DOC)? definedType ID (fieldCondition)? ("sql_key")? (sqlConstraint)? SEMICOLON!
+    ;
+    
+sqlConstraint
+    : "sql" STRING_LITERAL (COMMA! STRING_LITERAL)*     
+    ;  
+    
+sqlIntegerDeclaration
+    : (DOC)? "sql_integer" LCURLY! (sqlIntegerFieldDefinition)+ RCURLY! SEMICOLON!
+    ;
+    
+sqlIntegerFieldDefinition
+    : (DOC)? integerType ID (fieldCondition)? SEMICOLON
+    ;    
+    
 
 
 
