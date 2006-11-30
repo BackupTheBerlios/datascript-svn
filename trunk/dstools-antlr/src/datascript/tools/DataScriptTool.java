@@ -53,11 +53,11 @@ import datascript.ast.DataScriptException;
 import datascript.ast.ParserException;
 import datascript.ast.Scope;
 import datascript.ast.TokenAST;
+import datascript.emit.XmlDumperEmitter;
 import datascript.emit.java.DepthFirstVisitorEmitter;
 import datascript.emit.java.JavaEmitter;
 import datascript.emit.java.SizeOfEmitter;
 import datascript.emit.java.VisitorEmitter;
-import datascript.emit.java.XmlDumperEmitter;
 
 public class DataScriptTool 
 {
