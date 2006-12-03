@@ -33,14 +33,11 @@
        stylesheet that produces Javadoc style documentation.
      </li>
 
-     <li>A simpler and more robust parser has been developed based on
-       <a href="http://www.antlr.org">antlr</a>. This parser is still
-       alpha and is only available from the 
-      <a href="https://svn.sourceforge.net/viewvc/dstools/trunk/dstools-antlr">
-       Subversion repository</a>.
-
-     </li>
-     <li>The Java code generator will be ported to this new front-end.
+     <li>A simpler and more robust parser and code generator has been developed based on
+       <a href="http://www.antlr.org">antlr</a>. The parser is complete, the code generator currently 
+       only supports read() methods for plain DataScript. write() methods and relational extensions are still missing.
+       This reimplementation can be downloaded as rds-bin or rds-src package. 
+        
      </li>
      <li>A C++ code generator will be developed.
      </li>

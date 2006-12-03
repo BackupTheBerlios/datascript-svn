@@ -1,19 +1,54 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Installing and Building the DataScript Tools</title><meta name="generator" content="DocBook XSL Stylesheets V1.69.0"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="id2458477"></a>Installing and Building the DataScript Tools</h2></div><div><div class="author"><h3 class="author"><span class="firstname">Harald</span> <span class="surname">Wellmann</span></h3><code class="email">&lt;<a href="mailto:HWellmann@harmanbecker.com">HWellmann@harmanbecker.com</a>&gt;</code></div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.1</td><td align="left">28 September 2006</td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#id2481784">1. Introduction</a></span></dt><dt><span class="section"><a href="#id2481796">2. Installing and Running</a></span></dt><dt><span class="section"><a href="#id2481806">3. Building from Source</a></span></dt><dd><dl><dt><span class="section"><a href="#id2481820">3.1. Installing Eclipse</a></span></dt><dt><span class="section"><a href="#id2458650">3.2. Installing the Subclipse plugin</a></span></dt><dt><span class="section"><a href="#id2458821">3.3. Creating a local dstools project from the Subversion
-      repository</a></span></dt><dt><span class="section"><a href="#id2459103">3.4. Setting up the project properties</a></span></dt><dt><span class="section"><a href="#id2459263">3.5. Building the dstools project</a></span></dt></dl></dd></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2481784"></a>1. Introduction</h2></div></div></div><p>This is a short guide for installing and running the datascript
-    tools and for getting the source and building the tools from
-    source.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2481796"></a>2. Installing and Running</h2></div></div></div><p>T.b.d.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2481806"></a>3. Building from Source</h2></div></div></div><p>The only supported build environment for the dstools project is
-    Eclipse 3.1 or 3.2. If you know what you are doing, you will also be able
-    to build dstools in other environments, but Eclipse is the only one that
-    the authors will document and support.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2481820"></a>3.1. Installing Eclipse</h3></div></div></div><p>Subclipse is a Subversion client plugin for Eclipse. Using this
-      plugin, you can directly access Subversion repositories from
-      Eclipse.</p><div class="itemizedlist"><ul type="disc"><li><p>Install JDK 1.5.0 from
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Installing and Building the DataScript Tools</title><meta name="generator" content="DocBook XSL Stylesheets V1.69.0"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="id2458477"></a>Installing and Building the DataScript Tools</h2></div><div><div class="author"><h3 class="author"><span class="firstname">Harald</span> <span class="surname">Wellmann</span></h3><code class="email">&lt;<a href="mailto:HWellmann@harmanbecker.com">HWellmann@harmanbecker.com</a>&gt;</code></div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.1</td><td align="left">28 September 2006</td></tr><tr><td align="left" colspan="2">
+          <p>Initial version describing the build process.</p>
+        </td></tr><tr><td align="left">Revision 0.2</td><td align="left">3 December 2006</td></tr><tr><td align="left" colspan="2">
+          <p>Installation description added. Updated the Building from
+          Source section.</p>
+        </td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#id2481808">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#id2481813">1.1. Purpose</a></span></dt><dt><span class="section"><a href="#id2481825">1.2. Package Overview</a></span></dt><dt><span class="section"><a href="#id2458666">1.3. Platform Support</a></span></dt></dl></dd><dt><span class="section"><a href="#id2458694">2. Installing and Running</a></span></dt><dt><span class="section"><a href="#id2458791">3. Building from Source</a></span></dt><dd><dl><dt><span class="section"><a href="#id2458811">3.1. Installing Eclipse</a></span></dt><dt><span class="section"><a href="#id2459069">3.2. Installing the Subclipse plugin</a></span></dt><dt><span class="section"><a href="#id2459257">3.3. Creating a local dstools project from the Subversion
+      repository</a></span></dt><dt><span class="section"><a href="#id2459582">3.4. Repository Structure</a></span></dt><dt><span class="section"><a href="#id2459688">3.5. Setting up the project properties</a></span></dt><dt><span class="section"><a href="#id2459849">3.6. Building the dstools project</a></span></dt></dl></dd></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2481808"></a>1. Introduction</h2></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2481813"></a>1.1. Purpose</h3></div></div></div><p>This is a short guide for installing and running the DataScript
+      tools and for getting the source and building the tools from
+      source.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2481825"></a>1.2. Package Overview</h3></div></div></div><p>This guide relates to the packages available from the
+      <code class="literal">dstools</code> project at Sourceforge (see <a href="???" target="_top">http://dstools.sourceforge.net</a>). There are the
+      following packages:</p><div class="itemizedlist"><ul type="disc"><li><p><code class="literal">dstools-bin</code>: Binary distribution of a
+          DataScript parser and code generator, directly derived from the
+          reference implementation of Godmar Back. This was the starting point
+          of the dstools project, which is due to be superseded by a
+          reimplementation called rds (Relational DataScript).</p></li><li><p><code class="literal">dstools-src</code>: The source package
+          corresponding to <span class="emphasis"><em>dstools-bin</em></span>.</p></li><li><p><code class="literal">rds-bin</code>: Binary distribution of Relational
+          DataScript, our current baseline version for a DataScript parser.
+          The parser is complete, the code generator is still lacking support
+          for relational extensions and for write() methods.</p></li><li><p><code class="literal">rds-src</code>: The source package corresponding
+          to <code class="literal">rds-bin</code>.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2458666"></a>1.3. Platform Support</h3></div></div></div><p>The development platform for DataScript is Windows 2000, but the
+      packages should run on all platforms supporting a Java SE 1.5.0. To use
+      the relational extensions, you need a JDBC driver for SQLite which
+      depends on a platform-specific native library. <code class="literal">rds</code>
+      itself, however, does not use native code.</p><p>This guide uses Windows syntax for command lines and path names,
+      trusting in the ability of Unix users to silently make the necessary
+      changes.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2458694"></a>2. Installing and Running</h2></div></div></div><p>To install the DataScript tools, download the
+    <code class="literal">rds-bin</code> package and unzip it to an installation
+    directory <code class="literal">%RDS_HOME%</code>. <code class="literal">rds</code> is
+    implemented in Java. You need a Java VM 1.5.0 or higher to run it.</p><p><code class="literal">rds.jar</code> is an executable Java Archive which can
+    be run by</p><pre class="programlisting">java -jar %RDS_HOME%\rds.jar -pkg <span class="emphasis"><em>&lt;output package&gt;</em></span> <span class="emphasis"><em>&lt;input file&gt;</em></span></pre><p>The output package option specifies the package name for the
+    generated Java files. The files will be created in a subdirectory
+    <span class="emphasis"><em>&lt;output package&gt;</em></span> of the current working
+    directory. Nested output package names (e.g.
+    <code class="literal">foo.bar.bla</code>) are not yet supported.</p><p><span class="emphasis"><em>&lt;input file&gt;</em></span> is an absolute or relative
+    file name for the top-level DataScript package to be parsed. If this
+    package contains imports, e.g. <code class="literal">import foo.bar.bla.*</code>,
+    <code class="literal">rds</code> will convert this package name to a relative path
+    name and try to read the imported package from
+    <code class="literal">foo\bar\bla.ds</code>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2458791"></a>3. Building from Source</h2></div></div></div><p>The only supported build environment for the dstools project is
+    Eclipse 3.2. Version 3.1.1 also works, but this guide is targeted at 3.2.
+    If you know what you are doing, you will be able to build dstools in other
+    environments, but Eclipse is the only one that the authors will document
+    and support.</p><p>The following instructions refer to the rds-src package. For the
+    dstools-src package, some path and target names need to be adapted.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2458811"></a>3.1. Installing Eclipse</h3></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>Install JDK 1.5.0 from
             <code class="literal">http://java.sun.com</code>.</p></li><li><p>Install Eclipse 3.2 from
             <code class="literal">http://www.eclipse.org</code>.</p></li><li><p>Start Eclipse and set the proxy options in <span class="emphasis"><em>Window
             | Preferences | Install/Update</em></span>.</p></li><li><p>Goto <span class="emphasis"><em>Help | Software Updates | Find and
             Install</em></span> to install the Eclipse Modelling Framework
             (EMF).</p></li><li><p>Select <span class="emphasis"><em>Callisto Discovery Site</em></span>. EMF is
             in the category <span class="emphasis"><em>Models and Model
-            Development</em></span>.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2458650"></a>3.2. Installing the Subclipse plugin</h3></div></div></div><p>Subclipse is a Subversion client plugin for Eclipse. Using this
+            Development</em></span>.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2459069"></a>3.2. Installing the Subclipse plugin</h3></div></div></div><p>Subclipse is a Subversion client plugin for Eclipse. Using this
       plugin, you can directly access Subversion repositories from
       Eclipse.</p><div class="itemizedlist"><ul type="disc"><li><p>Goto <span class="emphasis"><em>Help | Software Updates | Find and
           Install</em></span>. Select <span class="emphasis"><em>Search for new features to
@@ -30,26 +65,40 @@
           Repository</em></span>.</p></li><li><p>If you are forced to use a proxy for HTTP and HTTPS, you have
           to edit a configuration file so that Subversion will use your proxy.
           Using any text editor, open the file servers in the folder
-          <code class="literal">%APPDATA%\Subversion</code>. If this folder does not
-          exist, make sure you did not miss any of the preceding steps. The
-          folder gets created when you first open the SVN Repository
-          view.</p><p>Go to the <code class="literal">[global]</code> section at the end of
+          <code class="literal">%APPDATA%\Subversion</code>.
+          (<code class="literal">%APPDATA%</code> is a Windows environment variable
+          referring to a folder with user-dependent application settings,
+          which translates to something like <code class="literal">C:\Dokumente und
+          Einstellungen\HWellmann\Anwendungsdaten</code>.) If this folder
+          does not exist, make sure you did not miss any of the preceding
+          steps. The folder gets created when you first open the SVN
+          Repository view.</p><p>Go to the <code class="literal">[global]</code> section at the end of
           the file, uncomment and edit the lines
           <code class="literal">http-proxy-host</code> and
           <code class="literal">http-proxy-port</code> to reflect the proxy settings at
-          your site.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2458821"></a>3.3. Creating a local dstools project from the Subversion
+          your site.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2459257"></a>3.3. Creating a local dstools project from the Subversion
       repository</h3></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>In Eclipse, go to the SVN Repository view in the SVN
           Repository Exploring perspective.</p></li><li><p>Select <span class="emphasis"><em>New | Repository Location</em></span> from the
           context menu.</p></li><li><p>Fill in the URL
-          <code class="literal">https://svn.sourceforge.net/svnroot/dstools</code>.
+          <code class="literal">https://svn.sourceforge.net/svnroot/dstools-antlr</code>.
           Click <span class="emphasis"><em>Finish</em></span>.</p></li><li><p>When prompted for accepting a digital certificate, click
           <span class="emphasis"><em>Accept Permanently</em></span>.</p></li><li><p>Expand the repository tree and select the subnode
-          <code class="literal">trunk/dstools</code>.</p></li><li><p>Select <span class="emphasis"><em>Checkout...</em></span> from the context menu
+          <code class="literal">trunk/dstools-antlr</code>.</p></li><li><p>Select <span class="emphasis"><em>Checkout...</em></span> from the context menu
           of this node.</p></li><li><p>Enter a project name. If you are expecting to work on multiple
           versions in parallel (e.g. trunk and development), make sure to
-          select a meaningful name, e.g. <code class="literal">dstools-trunk</code>.
-          Click <span class="emphasis"><em>Finish</em></span>.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2459103"></a>3.4. Setting up the project properties</h3></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>Switch to the Java perspective and select your new project
-          <code class="literal">dstools-trunk</code>.</p></li><li><p>Select the Ant build file <code class="literal">build.xml</code> from
+          select a meaningful name, e.g. <code class="literal">rds-trunk</code>. Click
+          <span class="emphasis"><em>Finish</em></span>.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2459582"></a>3.4. Repository Structure</h3></div></div></div><p>Following Subversion conventions, the repository has the following
+      folders:</p><div class="itemizedlist"><ul type="disc"><li><p><code class="literal">branches</code>: Development branches for tasks
+          that should not interfer with main-line development on the
+          trunk.</p></li><li><p><code class="literal">tags</code>: Release tags. To create a release, a
+          given version of a trunk subfolder is simply copied to a new
+          subfolder of the tags folder.</p></li><li><p><code class="literal">trunk</code>: The main development line.</p></li></ul></div><p>The trunk has the several subfolders or packages:</p><div class="itemizedlist"><ul type="disc"><li><p><code class="literal">dstools</code>: Sources for the dstools-src
+          package.</p></li><li><p><code class="literal">dstools-antlr</code>: Sources for the rds-src
+          package. The name is obsolete and will be changed to rds.</p></li><li><p><code class="literal">www</code>: Content of the project homepage at
+          <a href="???" target="_top">http://dstools.sourceforge.net</a>. Thanks to a
+          cron job running on the Sourceforge server, any commits to this
+          folder will be visible on the homepage within an hour.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2459688"></a>3.5. Setting up the project properties</h3></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>Switch to the Java perspective and select your new project
+          <code class="literal">rds-trunk</code>.</p></li><li><p>Select the Ant build file <code class="literal">build.xml</code> from
           the root directory and open <span class="emphasis"><em>Run As | 2 Ant
           Build...</em></span> from the context menu. This will open the
           <span class="emphasis"><em>External tools</em></span> dialog.</p></li><li><p>Select the <span class="emphasis"><em>Refresh</em></span> tab and activate the
@@ -61,9 +110,12 @@
           radiobutton <span class="emphasis"><em>Run in the same JRE as the
           workspace</em></span>.</p></li><li><p>Click <span class="emphasis"><em>Apply</em></span> and
           <span class="emphasis"><em>Close</em></span>.</p></li><li><p>Select <span class="emphasis"><em>Window | Show View | Ant</em></span>.</p></li><li><p>Goto the Ant view and select <span class="emphasis"><em>Add
-          Buildfiles...</em></span> from the context menu.</p></li><li><p>Select <code class="literal">dstools-trunk/build.xml</code> and click
-          OK.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2459263"></a>3.5. Building the dstools project</h3></div></div></div><p>Go to the Ant view, open the dstools node and double-click on the
-      all target. This will run an Ant build that writes diagnostic messages
-      to a console tab of the Eclipse workbench.</p><p>The build produces class files in <code class="literal">build/classes</code>
-      and a JAR file <code class="literal">datascript.jar</code> in
-      <code class="literal">build/jar</code>.</p></div></div></div></body></html>
+          Buildfiles...</em></span> from the context menu.</p></li><li><p>Select <code class="literal">rds-trunk/build.xml</code> and click
+          OK.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2459849"></a>3.6. Building the dstools project</h3></div></div></div><p>Go to the Ant view, open the <code class="literal">ds-antlr</code> node and
+      double-click on the <code class="literal">compile</code> target. This will run an
+      Ant build that writes diagnostic messages to a console tab of the
+      Eclipse workbench.</p><p>The build produces class files in
+      <code class="literal">build/classes</code>. To build an executable JAR file
+      <code class="literal">datascript.jar</code> in <code class="literal">build/jar</code>, use
+      the <code class="filename">jar</code> target.</p><p>The <code class="literal">test.run</code> target builds and runs JUnit tests
+      for the project.</p></div></div></div></body></html>
