@@ -1,0 +1,3 @@
+Main-Class: datascript.tools.DataScriptTool
+Class-Path: ../../lib/antlr.jar
+
