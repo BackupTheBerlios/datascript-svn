@@ -22,12 +22,30 @@
         <revnumber>0.1</revnumber>
 
         <date>20 July 2006</date>
+
+        <revdescription>
+          <para>Initial version.</para>
+        </revdescription>
       </revision>
 
       <revision>
         <revnumber>0.2</revnumber>
 
         <date>16 November 2006</date>
+
+        <revdescription>
+          <para>Added section on Comments.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.3</revnumber>
+
+        <date>3 December 2006</date>
+
+        <revdescription>
+          <para>Added section on Packages and Imports.</para>
+        </revdescription>
       </revision>
     </revhistory>
   </articleinfo>
@@ -42,8 +60,8 @@
     specification to an existing binary format.</para>
 
     <para>DataScript <xref linkend="Back" /> is a language for modelling
-    binary datatypes or bitstreams. It was expressly designed by Godmar Back
-    to unambiguously define complex binary data formats. His reference
+    binary datatypes or bitstreams. It was designed by Godmar Back to
+    unambiguously define complex binary data formats. His reference
     implementation of a DataScript compiler also includes a Java code
     generator producing Java classes which are able to read and write a binary
     stream that complies with a DataScript specification.</para>
@@ -60,7 +78,7 @@
     reference implementation.</para>
 
     <para>The present document describes a DataScript dialect supported by our
-    implementation. It is more of a User's Manual than a language
+    implementation. It is more of a User's Manual than a formal language
     specification. Some features of the original DataScript specification that
     were semantically ambiguous, not fully implemented or simply not very
     important to us have been silently suppressed. New features of our own
@@ -108,7 +126,9 @@
     <para>String literals correspond to zero-terminated ASCII-encoded strings.
     Thus, the literal <literal>"You"</literal> corresponds to a sequence of 4
     bytes equal to the binary representation of the integer literal
-    <literal>0x596F7500</literal>.</para>
+    <literal>0x596F7500</literal>. The representation of strings which are not
+    ASCII-encoded (e.g. ISO 8859-1 or UTF-8) is currently undefined and shall
+    be added to a future version of DataScript.</para>
   </section>
 
   <section>
@@ -925,6 +945,37 @@ ParamType(Foo arg1, Blah arg2)
     ...
 };</programlisting>
     </section>
+  </section>
+
+  <section>
+    <title>Packages and Imports</title>
+
+    <para>Complex DataScript specifications should be split into multiple
+    packages stored in separate source files. Every user-defined type belongs
+    to a unique package. There is an unnamed default package used for files
+    without an explicit package declaration. Types from other packages can be
+    imported into the current package.</para>
+
+    <para>The package and import syntax and semantics follow the Java
+    example.</para>
+
+    <programlisting>package map;
+
+import common.geometry.*;
+import common.featuretypes.*;</programlisting>
+
+    <para>Package and file names are closely related. The above example
+    declares a package <literal>map</literal> stored in a source file
+    <literal>map.ds</literal>. The import declarations direct the parser to
+    locate and parse source files <literal>common/geometry.ds</literal> and
+    <literal>common/featuretypes.ds</literal> and to import
+    <emphasis>all</emphasis> types from these packages into the current scope.
+    Imported files may again contain import declarations.</para>
+
+    <para>Unlike Java, DataScript cannot import individual types from another
+    package (e.g. <literal>import common.geometry.Line;</literal>), nor is it
+    possible to refer to an external type via its fully qualified name without
+    an import declaration.</para>
   </section>
 
   <bibliography>

@@ -22,12 +22,21 @@
         <revnumber>0.1</revnumber>
 
         <date>28 September 2006</date>
+
+        <revdescription>
+          <para>Initial version describing the build process.</para>
+        </revdescription>
       </revision>
 
       <revision>
         <revnumber>0.2</revnumber>
 
         <date>3 December 2006</date>
+
+        <revdescription>
+          <para>Installation description added. Updated the Building from
+          Source section.</para>
+        </revdescription>
       </revision>
     </revhistory>
   </articleinfo>
@@ -288,7 +297,47 @@
     <section>
       <title>Repository Structure</title>
 
-      <para></para>
+      <para>Following Subversion conventions, the repository has the following
+      folders:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><literal>branches</literal>: Development branches for tasks
+          that should not interfer with main-line development on the
+          trunk.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>tags</literal>: Release tags. To create a release, a
+          given version of a trunk subfolder is simply copied to a new
+          subfolder of the tags folder.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>trunk</literal>: The main development line.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>The trunk has the several subfolders or packages:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><literal>dstools</literal>: Sources for the dstools-src
+          package.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>dstools-antlr</literal>: Sources for the rds-src
+          package. The name is obsolete and will be changed to rds.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>www</literal>: Content of the project homepage at
+          <ulink url="???">http://dstools.sourceforge.net</ulink>. Thanks to a
+          cron job running on the Sourceforge server, any commits to this
+          folder will be visible on the homepage within an hour.</para>
+        </listitem>
+      </itemizedlist>
     </section>
 
     <section>
