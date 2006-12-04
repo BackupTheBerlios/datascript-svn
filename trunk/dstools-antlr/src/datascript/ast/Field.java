@@ -53,10 +53,9 @@ public class Field extends TokenAST
 
     private TokenAST fieldLabel;
 
-
     private TokenAST fieldOptionalClause;
 
-
+    private TokenAST documentation;
 
 
 
@@ -171,7 +170,17 @@ public class Field extends TokenAST
     {
         this.compound = compound;
     }
+    
+    public void setDocumentation(AST doc)
+    {
+        documentation = (TokenAST)doc;
+    }
 
+    public String getDocumentation()
+    {
+        return (documentation == null) ? null : documentation.getText();
+    }
+    
     public String toString()
     {
         return getName();

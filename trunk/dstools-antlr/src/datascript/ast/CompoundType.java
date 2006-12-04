@@ -142,7 +142,13 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
 
     public String getDocumentation()
     {
-        return doc;
+        String result = "";
+        AST n = getNextSibling();
+        if (n != null && n.getType() == DataScriptParserTokenTypes.DOC)
+        {
+            result = n.getText();
+        }
+        return result;
     }
 
     void addContainer(CompoundType f)

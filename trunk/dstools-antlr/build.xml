@@ -35,7 +35,7 @@
   <target name="init">
     <uptodate 
        property="jet.uptodate" targetfile="${jet.timestamp}">
-      <srcfiles dir="${basedir}" includes="jet/java/*"/>
+      <srcfiles dir="${basedir}" includes="jet/java/* jet/html/*"/>
     </uptodate>    
 
     <available classname="junit.framework.Test" property="junit.available">
@@ -111,7 +111,7 @@
   
   <target name="jet" depends="prepare" unless="jet.uptodate">
     <jetc destdir="${build}/gen">
-      <fileset dir="${basedir}" includes="jet/java/*.*jet"/>
+      <fileset dir="${basedir}" includes="jet/java/*.*jet jet/html/*.htmljet"/>
     </jetc>
     <touch file="${jet.timestamp}"/>
   </target>

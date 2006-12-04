@@ -79,6 +79,8 @@ public class DataScriptXmlDumper extends XMLFilterImpl
     {
         FileInputStream is = new FileInputStream(fileName); 
         DataScriptLexer lexer = new DataScriptLexer(is);
+        lexer.setTokenObjectClass("datascript.ast.FileNameToken");
+        
         TokenBuffer buffer = new TokenBuffer(lexer);
         parser = new DataScriptParser(buffer);
         parser.setASTNodeClass("datascript.ast.TokenAST");

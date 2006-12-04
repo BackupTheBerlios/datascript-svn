@@ -54,6 +54,7 @@ import datascript.ast.ParserException;
 import datascript.ast.Scope;
 import datascript.ast.TokenAST;
 import datascript.emit.XmlDumperEmitter;
+import datascript.emit.html.HtmlEmitter;
 import datascript.emit.java.DepthFirstVisitorEmitter;
 import datascript.emit.java.JavaEmitter;
 import datascript.emit.java.SizeOfEmitter;
@@ -76,6 +77,7 @@ public class DataScriptTool
     
     private String packageName;
     private String fileName;
+    private boolean generateDocs = false;
     
     public void parseArguments(String[] args)
     {
@@ -84,6 +86,10 @@ public class DataScriptTool
             if (args[i].equals("-pkg"))
             {
                 packageName = args[++i];
+            }
+            else if (args[i].equals("-doc"))
+            {
+                generateDocs = true;
             }
             else
             {
@@ -161,6 +167,15 @@ public class DataScriptTool
         xmlDumper.setPackageName(packageName);
         emitter.setEmitter(xmlDumper);
         emitter.translationUnit(rootNode);        
+
+        if (generateDocs)
+        {
+            // emit HTML documentation
+            HtmlEmitter htmlEmitter = new HtmlEmitter();
+            htmlEmitter.setPackageName(packageName);
+            emitter.setEmitter(htmlEmitter);
+            emitter.translationUnit(rootNode);
+        }
     }
     
     private void parseImportedPackages() throws Exception

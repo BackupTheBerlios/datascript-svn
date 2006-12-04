@@ -185,7 +185,8 @@ fieldDefinition
           )?
           (c:fieldCondition		{ f.setCondition(c); }
           )? 
-          (DOC)? 
+          (d:DOC			{ f.setDocumentation(d); }
+          )? 
           (l:label			{ f.setLabel(l); }
           )?
           ) 

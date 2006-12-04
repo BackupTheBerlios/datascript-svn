@@ -1,5 +1,9 @@
 package bits;
 
+
+/**
+ * Comment for Unsigned.
+ */
 Unsigned
 {
     uint8       u8;
