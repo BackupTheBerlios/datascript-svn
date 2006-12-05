@@ -59,7 +59,7 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
     
     public void beginTranslationUnit()
     {
-        openOutputFile("__XmlDumper");
+        openOutputFile(dir, "__XmlDumper.java");
         String result = dumperTmpl.generate(this);
         out.print(result);
     }

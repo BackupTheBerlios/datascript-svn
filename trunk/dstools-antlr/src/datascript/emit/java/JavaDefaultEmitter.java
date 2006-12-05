@@ -1,4 +1,3 @@
-<%
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -36,28 +35,34 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-%>
-<%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.java.*" 
-        class="SequenceBegin" %>
-<% 
-    SequenceEmitter e = (SequenceEmitter) argument;
-    SequenceType s = e.getSequenceType();
-    String name = s.getName();
-    String pkg = e.getGlobal().getPackageName(); 
-%>
-<%@include file="FileHeader.inc"%>
-public class <%=name%> implements __Visitor.Acceptor
-{
-    long __fpos;
+package datascript.emit.java;
 
-    public void accept(__Visitor visitor, Object arg)
+import java.io.File;
+
+import datascript.ast.TypeInterface;
+import datascript.emit.DefaultEmitter;
+
+public class JavaDefaultEmitter extends DefaultEmitter
+{
+    protected static String JAVA_EXT = ".java";
+    protected String packageName;
+    protected File dir;
+    private TypeNameEmitter typeEmitter = new TypeNameEmitter();
+    
+    public void setPackageName(String packageName)
     {
-        visitor.visit(this, arg);
+        this.packageName = packageName;
+        dir = new File(packageName);
+    }
+
+    public String getPackageName()
+    {
+        return packageName;
+    }
+
+    public String getTypeName(TypeInterface type)
+    {
+        return typeEmitter.getTypeName(type);
     }
     
-    public int sizeof() 
-    {
-        return __SizeOf.sizeof(this);
-    }
-    
+}

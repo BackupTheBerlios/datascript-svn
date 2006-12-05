@@ -104,6 +104,9 @@ declaration
     :   fieldDefinition 
     //|   conditionDefinition
     |   constDeclaration 
+    |   sqlDatabaseDefinition
+    |   sqlTableDeclaration
+    |   sqlIntegerDeclaration
     ;
 
 
@@ -255,6 +258,12 @@ builtinType
     ;
 
 builtinTypeDefaultOrder
+    :   integerType
+    |   "string"
+    |   bitField
+    ;
+
+integerType
     :   UINT8
     |   UINT16
     |   UINT32
@@ -263,8 +272,6 @@ builtinTypeDefaultOrder
     |   INT16
     |   INT32
     |   INT64
-    |   "string"
-    |   bitField
     ;
 
 bitField
@@ -285,6 +292,87 @@ typeValue
     :   expression
     |   #(LCURLY (typeValue)+)
     ;
+
+
+
+/*********************************************************************/
+
+sqlDatabaseDefinition
+    : #(d:SQL_DATABASE                  { pushScope(((CompoundType)d).getScope()); }
+        ID 
+        (sqlPragmaBlock)? 
+        (sqlMetadataBlock)?   
+        ((DOC)? sqlTableDefinition)+ 
+        (sqlConstraint)?
+       )                                { popScope(); }   
+    ;
+    
+sqlPragmaBlock
+    : #(p:SQL_PRAGMA                    { pushScope(((CompoundType)p).getScope()); }
+        (sqlPragma)+) 			{ popScope(); }   
+    ;
+    
+sqlPragma
+    : #(f:FIELD                         { scope().setCurrentField((Field)f); }
+        (DOC)? sqlPragmaType ID 
+        (fieldInitializer)? 
+        (fieldCondition)?)
+    ;    
+
+sqlPragmaType
+    :   integerType
+    |   "string"     
+    ;
+
+sqlMetadataBlock
+    : #(m:SQL_METADATA 			{ pushScope(((CompoundType)m).getScope()); }
+        (sqlMetadataField)+ )           { popScope(); }   
+    ;
+    
+sqlMetadataField
+    : #(f:FIELD typeReference           { scope().setCurrentField((Field)f); }
+        ID
+        (fieldInitializer)? 
+        (fieldCondition)?
+        (DOC)?
+      )
+    ;    
+
+sqlTableDefinition
+    : sqlTableDeclaration (ID)? 
+    | #(TYPEREF ID ID )
+    ;
+
+sqlTableDeclaration
+    : #(t:SQL_TABLE                       { pushScope(((CompoundType)t).getScope()); }
+        ID
+        (sqlFieldDefinition)+
+        (sqlConstraint)? 
+      )                                   { popScope(); }   
+    ;
+    
+sqlFieldDefinition
+    : #(f:FIELD                           { scope().setCurrentField((Field)f); }
+        definedType ID (fieldCondition)? 
+        (SQL_KEY)? (sqlConstraint)? (DOC)?)
+    ;
+    
+sqlConstraint
+    : #(SQL (STRING_LITERAL)+)
+    ;  
+    
+sqlIntegerDeclaration
+    : #(s:SQL_INTEGER                     { pushScope(((CompoundType)s).getScope()); }
+        (DOC)? 
+        (sqlIntegerFieldDefinition)+ )    { popScope(); }   
+    ;
+    
+sqlIntegerFieldDefinition
+    : #(f:FIELD                           { scope().setCurrentField((Field)f); }
+        integerType ID (fieldCondition)? (DOC)? )
+    
+    ;    
+    
 
 
 

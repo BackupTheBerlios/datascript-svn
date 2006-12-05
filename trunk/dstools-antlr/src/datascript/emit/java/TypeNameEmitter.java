@@ -122,7 +122,7 @@ public class TypeNameEmitter
                 return "BigInteger";
 
             default:
-                throw new IllegalArgumentException();
+                throw new UnsupportedOperationException();
         }
     }
 
@@ -177,7 +177,7 @@ public class TypeNameEmitter
                     return "BitFieldArray";
 
                 default:
-                    throw new IllegalArgumentException();
+                    throw new UnsupportedOperationException();
             }
         }
         return "ObjectArray<" + elTypeName +  ">";        
@@ -221,7 +221,7 @@ public class TypeNameEmitter
                 return "BigInteger";
 
             default:
-                throw new IllegalArgumentException();
+                throw new UnsupportedOperationException();
         }        
     }
 }

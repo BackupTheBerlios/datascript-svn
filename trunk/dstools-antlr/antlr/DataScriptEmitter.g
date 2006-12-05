@@ -85,6 +85,9 @@ declaration
     :   fieldDefinition 
     //|   conditionDefinition
     |   constDeclaration 
+    |   sqlDatabaseDefinition
+    |   sqlTableDeclaration
+    |   sqlIntegerDeclaration
     ;
 
 
@@ -232,6 +235,12 @@ builtinType
     ;
 
 builtinTypeDefaultOrder
+    :   integerType
+    |   "string"
+    |   bitField
+    ;
+
+integerType
     :   UINT8
     |   UINT16
     |   UINT32
@@ -240,8 +249,6 @@ builtinTypeDefaultOrder
     |   INT16
     |   INT32
     |   INT64
-    |   "string"
-    |   bitField
     ;
 
 bitField
@@ -264,6 +271,82 @@ typeValue
     ;
 
 
+
+/*********************************************************************/
+
+sqlDatabaseDefinition
+    : #(d:SQL_DATABASE          { em.beginSqlDatabase(d); }
+        ID 
+        (sqlPragmaBlock)? 
+        (sqlMetadataBlock)? 
+        ((DOC)? 
+        sqlTableDefinition)+ 
+        (sqlConstraint)?
+       )                        { em.endSqlDatabase(d); }
+    ;
+    
+sqlPragmaBlock			{ em.beginSqlPragma(p); }
+    : #(p:SQL_PRAGMA 
+        (sqlPragma)+)           { em.endSqlPragma(p); }
+    ;
+    
+sqlPragma
+    : #(FIELD (DOC)? sqlPragmaType ID (fieldInitializer)? (fieldCondition)?)
+    ;    
+
+sqlPragmaType
+    :   integerType
+    |   "string"     
+    ;
+
+sqlMetadataBlock
+    : #(m:SQL_METADATA          { em.beginSqlMetadata(m); }
+        (sqlMetadataField)+ )   { em.endSqlMetadata(m); }
+    ;
+    
+sqlMetadataField
+    : #(FIELD typeReference
+        ID
+        (fieldInitializer)? 
+        (fieldCondition)?
+        (DOC)?
+      )
+    ;    
+
+sqlTableDefinition
+    : sqlTableDeclaration (ID)? 
+    | #(TYPEREF ID ID )
+    ;
+
+sqlTableDeclaration
+    : #(t:SQL_TABLE               { em.beginSqlTable(t); }
+        ID
+        (sqlFieldDefinition)+
+        (sqlConstraint)?
+      )                           { em.endSqlTable(t); }
+    ;
+    
+sqlFieldDefinition
+    : #(FIELD definedType ID (fieldCondition)? 
+        (SQL_KEY)? (sqlConstraint)? (DOC)?)
+    ;
+    
+sqlConstraint
+    : #(SQL (STRING_LITERAL)+)
+    ;  
+    
+sqlIntegerDeclaration
+    : #(i:SQL_INTEGER              { em.beginSqlInteger(i); }
+        (DOC)? 
+        (sqlIntegerFieldDefinition)+ 
+        )		           { em.endSqlInteger(i); }
+    ;
+    
+sqlIntegerFieldDefinition
+    : #(FIELD integerType ID (fieldCondition)? (DOC)? )
+    
+    ;    
+    
 
 // ------- expressions ----------------------------------------------------
 

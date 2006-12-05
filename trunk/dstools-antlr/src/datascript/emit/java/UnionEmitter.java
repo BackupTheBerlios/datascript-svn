@@ -52,7 +52,7 @@ public class UnionEmitter extends CompoundEmitter
     private SequenceEnd endTmpl = new SequenceEnd();
     private UnionRead readTmpl = new UnionRead();
     
-    public UnionEmitter(JavaEmitter j, UnionType union)
+    public UnionEmitter(JavaDefaultEmitter j, UnionType union)
     {
         super(j);
         this.union = union;

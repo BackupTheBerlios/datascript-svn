@@ -37,81 +37,127 @@
  */
 package datascript.emit;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+
 import antlr.collections.AST;
 
+/**
+ * Implements the Emitter interface and does nothing.
+ * Saves some typing for derived classes that only need to 
+ * implement a few of the emitter actions.
+ * @author HWellmann
+ */
 public class DefaultEmitter implements Emitter
 {
-
+    protected PrintStream out;
+    
     public void beginTranslationUnit()
     {
-        // TODO Auto-generated method stub
-
     }
 
     public void endTranslationUnit()
     {
-        // TODO Auto-generated method stub
-
     }
 
     public void beginField(AST f)
     {
-        // TODO Auto-generated method stub
-
     }
 
     public void endField(AST f)
     {
-        // TODO Auto-generated method stub
-
     }
 
     public void beginSequence(AST s)
     {
-        // TODO Auto-generated method stub
-
     }
 
     public void endSequence(AST s)
     {
-        // TODO Auto-generated method stub
-
     }
 
     public void beginUnion(AST u)
     {
-        // TODO Auto-generated method stub
-
     }
 
     public void endUnion(AST u)
     {
-        // TODO Auto-generated method stub
-
     }
 
     public void beginEnumeration(AST e)
     {
-        // TODO Auto-generated method stub
-
     }
 
     public void endEnumeration(AST e)
     {
-        // TODO Auto-generated method stub
-
     }
 
     public void beginEnumItem(AST e)
     {
-        // TODO Auto-generated method stub
-
     }
 
     public void endEnumItem(AST e)
     {
-        // TODO Auto-generated method stub
+    }
 
+    public void beginSqlDatabase(AST s)
+    {        
+    }
+    
+    public void endSqlDatabase(AST s)
+    {        
+    }
+    
+    public void beginSqlMetadata(AST s)
+    {        
+    }
+    
+    public void endSqlMetadata(AST s)
+    {        
+    }
+    
+    public void beginSqlPragma(AST s)
+    {        
+    }
+    
+    public void endSqlPragma(AST s)
+    {        
+    }
+    
+    public void beginSqlTable(AST s)
+    {        
+    }
+    
+    public void endSqlTable(AST s)
+    {        
+    }
+    
+    public void beginSqlInteger(AST s)
+    {        
+    }
+    
+    public void endSqlInteger(AST s)
+    {        
+    }    
+
+    protected void openOutputFile(File directory, String fileName)
+    {
+        if (! directory.exists())
+        {
+            directory.mkdir();
+        }
+        File outputFile = new File(directory, fileName);
+        outputFile.delete();
+        try
+        {
+            outputFile.createNewFile();
+            out = new PrintStream(outputFile);
+        }
+        catch (IOException exc)
+        {
+            exc.printStackTrace();
+        }
     }
 
 }

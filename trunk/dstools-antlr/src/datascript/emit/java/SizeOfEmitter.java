@@ -43,7 +43,7 @@ import datascript.jet.java.SequenceEnd;
 import datascript.jet.java.SizeOf;
 import datascript.jet.java.SizeOfEnumeration;
 
-public class SizeOfEmitter extends JavaEmitter
+public class SizeOfEmitter extends JavaDefaultEmitter
 {
     private SizeOf sizeOfTmpl = new SizeOf();
     private SizeOfEnumeration enumerationTmpl = new SizeOfEnumeration();
@@ -52,7 +52,7 @@ public class SizeOfEmitter extends JavaEmitter
     
     public void beginTranslationUnit()
     {
-        openOutputFile("__SizeOf");
+        openOutputFile(dir, "__SizeOf.java");
         String result = sizeOfTmpl.generate(this);
         out.print(result);
     }
@@ -64,22 +64,6 @@ public class SizeOfEmitter extends JavaEmitter
         out.close();
     }
 
-    public void beginSequence(AST s)
-    {
-    }
-
-    public void endSequence(AST s)
-    {
-    }
-
-    public void beginUnion(AST u)
-    {
-    }
-
-    public void endUnion(AST u)
-    {
-    }
-
     public void beginEnumeration(AST e)
     {
         enumeration = (EnumType)e;
@@ -87,10 +71,6 @@ public class SizeOfEmitter extends JavaEmitter
         out.print(result);
     }
 
-    public void endEnumeration(AST e)
-    {
-    }    
-    
     public EnumType getEnumerationType()
     {
         return enumeration;

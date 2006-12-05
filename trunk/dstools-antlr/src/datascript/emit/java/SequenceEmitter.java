@@ -56,7 +56,7 @@ public class SequenceEmitter extends CompoundEmitter
     private SequenceWrite writeTmpl = new SequenceWrite();
     private TypeNameEmitter tne = new TypeNameEmitter();
     
-    public SequenceEmitter(JavaEmitter j, SequenceType sequence)
+    public SequenceEmitter(JavaDefaultEmitter j, SequenceType sequence)
     {
         super(j);
         seq = sequence;

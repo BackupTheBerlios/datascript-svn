@@ -266,7 +266,7 @@ sqlPragmaBlock
     ;
     
 sqlPragma
-    : #(FIELD sqlPragmaType ID (DOC)? (fieldInitializer)? (fieldCondition)?)
+    : #(FIELD (DOC)? sqlPragmaType ID (fieldInitializer)? (fieldCondition)?)
     ;    
 
 sqlPragmaType
@@ -281,42 +281,40 @@ sqlMetadataBlock
 sqlMetadataField
     : #(FIELD typeReference
         ID
-        (DOC)?
         (fieldInitializer)? 
         (fieldCondition)?
+        (DOC)?
       )
     ;    
 
 sqlTableDefinition
-    : sqlTableDeclaration (ID)? SEMICOLON!
-    | sqlTableReference ID SEMICOLON!
+    : sqlTableDeclaration (ID)?  
+    | #(TYPEREF ID ID )
     ;
 
 sqlTableDeclaration
-    : "sql_table" ID LCURLY! 
-      (sqlFieldDefinition)+
-      (sqlConstraint SEMICOLON)?
-      RCURLY!
+    : #(SQL_TABLE ID
+        (sqlFieldDefinition)+
+        (sqlConstraint)? 
+      )
     ;
     
-sqlTableReference
-    : ID
-    ;    
-    
 sqlFieldDefinition
-    : (DOC)? definedType ID (fieldCondition)? ("sql_key")? (sqlConstraint)? SEMICOLON!
+    : #(FIELD definedType ID (fieldCondition)? 
+        (SQL_KEY)? (sqlConstraint)? (DOC)?)
     ;
     
 sqlConstraint
-    : "sql" STRING_LITERAL (COMMA! STRING_LITERAL)*     
+    : #(SQL (STRING_LITERAL)+)
     ;  
     
 sqlIntegerDeclaration
-    : (DOC)? "sql_integer" LCURLY! (sqlIntegerFieldDefinition)+ RCURLY! SEMICOLON!
+    : #(SQL_INTEGER (DOC)? (sqlIntegerFieldDefinition)+ )
     ;
     
 sqlIntegerFieldDefinition
-    : (DOC)? integerType ID (fieldCondition)? SEMICOLON
+    : #(FIELD integerType ID (fieldCondition)? (DOC)? )
+    
     ;    
     
 

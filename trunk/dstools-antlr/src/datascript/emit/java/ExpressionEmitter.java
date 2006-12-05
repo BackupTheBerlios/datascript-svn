@@ -53,18 +53,15 @@ import datascript.ast.Value;
  */
 public class ExpressionEmitter
 {
-    private Expression expression;
     private StringBuilder buffer;
     private String compoundName;
     
     public ExpressionEmitter()
-    {
-        
+    {        
     }
     
     public String emit(Expression expr)
     {
-        this.expression = expr;
         this.compoundName = null;
         buffer = new StringBuilder();
         append(expr);
@@ -73,7 +70,6 @@ public class ExpressionEmitter
     
     public String emit(Expression expr, String compoundName)
     {
-        this.expression = expr;
         this.compoundName = compoundName;
         buffer = new StringBuilder();
         append(expr);
@@ -97,7 +93,7 @@ public class ExpressionEmitter
                 emitTernaryExpression(expr);
                 break;
             default:
-                throw new IllegalArgumentException();
+                throw new UnsupportedOperationException();
                 
         }       
     }
@@ -118,7 +114,7 @@ public class ExpressionEmitter
                 break;
 
             default:
-                throw new IllegalArgumentException("type = " + expr.getType());
+                throw new UnsupportedOperationException("type = " + expr.getType());
         }
     }
 
@@ -156,7 +152,7 @@ public class ExpressionEmitter
                 buffer.append(".sizeof()");
                 return;
             default:
-                throw new IllegalArgumentException();
+                throw new UnsupportedOperationException();
         }
         buffer.append(op);
         append(expr.op1());
@@ -256,7 +252,7 @@ public class ExpressionEmitter
                 return;
         
             default:
-                throw new IllegalArgumentException();
+                throw new UnsupportedOperationException();
         }
         append(expr.op1());
         buffer.append(op);
@@ -276,7 +272,7 @@ public class ExpressionEmitter
                 append(expr.op3());
                 break;
             default:
-                throw new IllegalArgumentException();
+                throw new UnsupportedOperationException();
         }        
     }
     

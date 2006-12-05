@@ -55,7 +55,7 @@ import datascript.jet.java.DepthFirstUnion;
 import datascript.jet.java.DepthFirstVisitor;
 import datascript.jet.java.SequenceEnd;
 
-public class DepthFirstVisitorEmitter extends JavaEmitter
+public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 {
     private DepthFirstVisitor visitorTmpl = new DepthFirstVisitor();
     private DepthFirstSequence sequenceTmpl = new DepthFirstSequence();
@@ -66,11 +66,10 @@ public class DepthFirstVisitorEmitter extends JavaEmitter
     private UnionType union;
     protected EnumType enumeration;
     protected ExpressionEmitter exprEmitter = new ExpressionEmitter();
-    private TypeNameEmitter typeEmitter = new TypeNameEmitter();
 
     public void beginTranslationUnit()
     {
-        openOutputFile("__DepthFirstVisitor");
+        openOutputFile(dir, "__DepthFirstVisitor.java");
         String result = visitorTmpl.generate(this);
         out.print(result);
     }
@@ -89,32 +88,18 @@ public class DepthFirstVisitorEmitter extends JavaEmitter
         out.print(result);
     }
 
-    public void endSequence(AST s)
-    {
-    }
-
     public void beginUnion(AST u)
     {
         union = (UnionType) u;
         String result = unionTmpl.generate(this);
         out.print(result);
     }
-
-    public void endUnion(AST u)
-    {
-    }
-
     public void beginEnumeration(AST e)
     {
         enumeration = (EnumType) e;
         String result = enumerationTmpl.generate(this);
         out.print(result);
     }
-
-    public void endEnumeration(AST e)
-    {
-    }
-    
     public SequenceType getSequenceType()
     {
         return sequence;
@@ -218,7 +203,7 @@ public class DepthFirstVisitorEmitter extends JavaEmitter
         if (type instanceof ArrayType)
         {
             ArrayType array = (ArrayType)type;            
-            result = typeEmitter.getTypeName(array.getElementType());
+            result = getTypeName(array.getElementType());
         }
         return result;
     }

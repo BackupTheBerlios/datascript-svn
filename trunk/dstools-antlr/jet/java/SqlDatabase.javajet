@@ -39,25 +39,67 @@
 %>
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="SequenceBegin" %>
+        class="SqlDatabase" %>
 <% 
-    SequenceEmitter e = (SequenceEmitter) argument;
-    SequenceType s = e.getSequenceType();
-    String name = s.getName();
-    String pkg = e.getGlobal().getPackageName(); 
+    SqlDatabaseEmitter e = (SqlDatabaseEmitter) argument;
+    String pkg = e.getGlobal().getPackageName();
+    SqlDatabaseType s = e.getSqlDatabaseType();
+    TypeNameEmitter tne = new TypeNameEmitter();
+    String name = s.getName(); 
 %>
 <%@include file="FileHeader.inc"%>
-public class <%=name%> implements __Visitor.Acceptor
-{
-    long __fpos;
 
-    public void accept(__Visitor visitor, Object arg)
+import java.sql.*;
+
+public class <%=name%>
+{
+    private Connection dbc;
+<%
+    for (Field f : s.getFields())
     {
-        visitor.visit(this, arg);
+        String fname = f.getName();
+        String type =  tne.getTypeName(f.getFieldType());    
+%>    
+    private <%=type%> <%=fname%>;
+<%
+    }
+%>    
+    
+    
+    public <%=name%>(String fileName) throws SQLException, ClassNotFoundException
+    {
+        Class.forName("org.sqlite.JDBC");
+        dbc = DriverManager.getConnection("jdbc:sqlite:" + fileName);
     }
     
-    public int sizeof() 
+    public void close() throws SQLException
     {
-        return __SizeOf.sizeof(this);
+        dbc.close();
     }
+    
+    public Connection getConnection()
+    {
+        return dbc;
+    }
+    
+    public void createSchema() throws SQLException
+    {
+        Statement st = dbc.createStatement();
+        st.executeUpdate("CREATE TABLE __metadata(__name, __value)");
+<%
+    for (Field f : s.getFields())
+    {
+        String fname = f.getName();
+%>    
+        <%=fname%>.createTable("<%=fname%>");
+<%
+    }
+%>    
+    }
+    
+    
+    
+}
+
+// END OF FILE
     

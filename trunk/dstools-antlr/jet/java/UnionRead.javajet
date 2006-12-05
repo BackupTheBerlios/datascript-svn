@@ -42,7 +42,6 @@
         class="UnionRead" %>
 <% 
     UnionEmitter e = (UnionEmitter) argument;
-    JavaEmitter global = e.getGlobal();
     UnionType s = e.getUnionType();
     String name = s.getName();
     String formalPar = e.getFormalParameterList();

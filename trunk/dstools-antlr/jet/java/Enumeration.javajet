@@ -42,7 +42,7 @@
         class="Enumeration" %>
 <% 
     EnumerationEmitter e = (EnumerationEmitter) argument;
-    JavaEmitter global = e.getGlobal();
+    String pkg = e.getGlobal().getPackageName(); 
     EnumType en = e.getEnumerationType();
     String name = en.getName();
     String baseType = e.getBaseType();

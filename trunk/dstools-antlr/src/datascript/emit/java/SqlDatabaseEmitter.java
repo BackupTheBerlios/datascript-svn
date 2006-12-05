@@ -1,4 +1,3 @@
-<%
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -36,28 +35,54 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-%>
-<%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.java.*" 
-        class="SequenceBegin" %>
-<% 
-    SequenceEmitter e = (SequenceEmitter) argument;
-    SequenceType s = e.getSequenceType();
-    String name = s.getName();
-    String pkg = e.getGlobal().getPackageName(); 
-%>
-<%@include file="FileHeader.inc"%>
-public class <%=name%> implements __Visitor.Acceptor
-{
-    long __fpos;
+package datascript.emit.java;
 
-    public void accept(__Visitor visitor, Object arg)
+import java.io.PrintStream;
+
+import datascript.ast.SqlDatabaseType;
+import datascript.jet.java.SqlDatabase;
+
+/**
+ * @author HWellmann
+ * 
+ */
+public class SqlDatabaseEmitter
+{
+    private JavaEmitter global;
+    private SqlDatabaseType dbType;
+    private PrintStream out;
+    private SqlDatabase dbTmpl;
+    
+    public SqlDatabaseEmitter(JavaEmitter j, SqlDatabaseType db)
     {
-        visitor.visit(this, arg);
+        this.global = j;
+        this.dbType = db;
+        dbTmpl = new SqlDatabase();
+    }
+    public JavaEmitter getGlobal()
+    {
+        return global;
+    }
+
+    
+    public String getName()
+    {
+        return dbType.getName();
     }
     
-    public int sizeof() 
+    public SqlDatabaseType getSqlDatabaseType()
     {
-        return __SizeOf.sizeof(this);
+        return dbType;
     }
     
+    public void setOutputStream(PrintStream out)
+    {
+        this.out = out;
+    }
+    
+    public void emit(SqlDatabaseType SqlDatabaseType)
+    {
+        String result = dbTmpl.generate(this);
+        out.print(result);
+    }
+}

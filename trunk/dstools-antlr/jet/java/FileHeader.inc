@@ -39,10 +39,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-<% String p = global.getPackageName();
-   if (p != null)
+<% if (pkg != null)
    {%>
-package <%=p%>;
+package <%=pkg%>;
 
 import datascript.runtime.*;
 import java.io.IOException;

@@ -42,6 +42,7 @@
         class="DepthFirstVisitor" %>
 <% 
     DepthFirstVisitorEmitter global = (DepthFirstVisitorEmitter) argument;
+    String pkg = global.getPackageName(); 
 %>
 <%@include file="FileHeader.inc"%>
 public class __DepthFirstVisitor implements __Visitor

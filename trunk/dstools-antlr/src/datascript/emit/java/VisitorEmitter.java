@@ -40,18 +40,19 @@ package datascript.emit.java;
 import antlr.collections.AST;
 import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
+import datascript.ast.SqlDatabaseType;
 import datascript.ast.UnionType;
 import datascript.jet.java.SequenceEnd;
 import datascript.jet.java.Visitor;
 
-public class VisitorEmitter extends JavaEmitter
+public class VisitorEmitter extends JavaDefaultEmitter
 {
     private Visitor visitorTmpl = new Visitor();
     private SequenceEnd endTmpl = new SequenceEnd();
 
     public void beginTranslationUnit()
     {
-        openOutputFile("__Visitor");
+        openOutputFile(dir, "__Visitor.java");
         String result = visitorTmpl.generate(this);
         out.print(result);
     }
@@ -79,11 +80,6 @@ public class VisitorEmitter extends JavaEmitter
         String typeName = getTypeName(sequence);
         emitVisitor(typeName);
     }
-
-    public void endSequence(AST s)
-    {
-    }
-
     public void beginUnion(AST u)
     {
         UnionType union = (UnionType) u;
@@ -91,18 +87,10 @@ public class VisitorEmitter extends JavaEmitter
         emitVisitor(typeName);
     }
 
-    public void endUnion(AST u)
-    {
-    }
-
     public void beginEnumeration(AST e)
     {
         EnumType enumType = (EnumType) e;
         String typeName = getTypeName(enumType);
         emitVisitor(typeName);
-    }
-
-    public void endEnumeration(AST e)
-    {
     }
 }

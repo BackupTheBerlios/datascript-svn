@@ -111,10 +111,10 @@ tokens
     
     SQL;
     SQL_DATABASE<AST=datascript.ast.SqlDatabaseType>;
-    SQL_PRAGMA;
-    SQL_METADATA;
+    SQL_PRAGMA<AST=datascript.ast.SqlPragmaType>;
+    SQL_METADATA<AST=datascript.ast.SqlMetadataType>;
     SQL_TABLE<AST=datascript.ast.SqlTableType>;
-    SQL_INTEGER;
+    SQL_INTEGER<AST=datascript.ast.SqlIntegerType>;
 }
 
 {
@@ -365,20 +365,23 @@ arrayRange
 /*********************************************************************/
 
 sqlDatabaseDefinition
-    : "sql_database" ID LCURLY! 
+    : "sql_database"! ID LCURLY! 
       (sqlPragmaBlock)? 
       (sqlMetadataBlock)? 
       ((DOC)? sqlTableDefinition)+ 
       (sqlConstraint SEMICOLON! )?
       RCURLY!
+      { #sqlDatabaseDefinition = #([SQL_DATABASE], sqlDatabaseDefinition); }
     ;
     
 sqlPragmaBlock
-    : "sql_pragma" LCURLY! (sqlPragma)+ RCURLY! SEMICOLON!
+    : "sql_pragma"! LCURLY! (sqlPragma)+ RCURLY! SEMICOLON!
+      { #sqlPragmaBlock = #([SQL_PRAGMA], sqlPragmaBlock); }
     ;
     
 sqlPragma
     : (DOC)? sqlPragmaType ID (fieldInitializer)? (fieldCondition)? SEMICOLON!
+      { #sqlPragma = #([FIELD], sqlPragma); }
     ;    
 
 sqlPragmaType
@@ -387,48 +390,60 @@ sqlPragmaType
     ;
 
 sqlMetadataBlock
-    : "sql_metadata" LCURLY! (sqlMetadataField)+ RCURLY! SEMICOLON!    
+    : "sql_metadata"! LCURLY! (sqlMetadataField)+ RCURLY! SEMICOLON!    
+      { #sqlMetadataBlock = #([SQL_METADATA], sqlMetadataBlock); }
     ;
     
-sqlMetadataField
+sqlMetadataField!
     : (d:DOC)?
       t:typeReference
       f:ID
       (i:fieldInitializer)? 
       (c:fieldCondition)?
       SEMICOLON!
+      { #sqlMetadataField = #([FIELD, "field"], t, f, i, c, d); }
     ;    
 
 sqlTableDefinition
     : sqlTableDeclaration (ID)? SEMICOLON!
-    | sqlTableReference ID SEMICOLON!
+    | sqlTableReference ID SEMICOLON! 
+      {#sqlTableDefinition = #([TYPEREF], #sqlTableDefinition);}
     ;
 
 sqlTableDeclaration
-    : "sql_table" ID LCURLY! 
+    : "sql_table"! ID LCURLY! 
       (sqlFieldDefinition)+
-      (sqlConstraint SEMICOLON)?
+      (sqlConstraint SEMICOLON!)?
       RCURLY!
+      {#sqlTableDeclaration = #([SQL_TABLE], #sqlTableDeclaration);}
     ;
     
 sqlTableReference
     : ID
     ;    
     
-sqlFieldDefinition
-    : (DOC)? definedType ID (fieldCondition)? ("sql_key")? (sqlConstraint)? SEMICOLON!
+sqlFieldDefinition!
+    : (d:DOC)? t:definedType i:ID (c:fieldCondition)? (k:"sql_key")? (s:sqlConstraint)? SEMICOLON!
+      { #sqlFieldDefinition = #([FIELD, "field"], t, i, c, k, s, d); }
     ;
     
 sqlConstraint
-    : "sql" STRING_LITERAL (COMMA! STRING_LITERAL)*     
+    : "sql"! STRING_LITERAL (COMMA! STRING_LITERAL)*     
+      { #sqlConstraint = #([SQL], #sqlConstraint); }
     ;  
     
-sqlIntegerDeclaration
-    : (DOC)? "sql_integer" LCURLY! (sqlIntegerFieldDefinition)+ RCURLY! SEMICOLON!
+sqlIntegerDeclaration!
+    : (d:DOC)? "sql_integer"! LCURLY! s:sqlIntegerFields RCURLY! SEMICOLON!
+      { #sqlIntegerDeclaration = #([SQL_INTEGER, "SQL_INTEGER"], d, s); }
     ;
     
-sqlIntegerFieldDefinition
-    : (DOC)? integerType ID (fieldCondition)? SEMICOLON
+sqlIntegerFields
+    : (sqlIntegerFieldDefinition)+    
+    ;
+    
+sqlIntegerFieldDefinition!
+    : (d:DOC)? t:integerType i:ID (c:fieldCondition)? SEMICOLON!
+      { #sqlIntegerFieldDefinition = #([FIELD, "FIELD"], t, i, c, d); }
     ;    
     
 /*********************************************************************/

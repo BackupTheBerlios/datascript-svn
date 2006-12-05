@@ -58,7 +58,7 @@ import datascript.jet.java.ArrayRead;
 
 abstract public class CompoundEmitter
 {
-    private JavaEmitter global;
+    private JavaDefaultEmitter global;
     private TypeNameEmitter typeNameEmitter;
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
     private ArrayRead arrayTmpl = new ArrayRead();
@@ -68,7 +68,7 @@ abstract public class CompoundEmitter
     private String actualParams;
     protected PrintStream out;
     
-    public CompoundEmitter(JavaEmitter j)
+    public CompoundEmitter(JavaDefaultEmitter j)
     {
         this.global = j;
         this.typeNameEmitter = new TypeNameEmitter();
@@ -77,7 +77,7 @@ abstract public class CompoundEmitter
     abstract public CompoundType getCompoundType();
     abstract public FieldEmitter getFieldEmitter();
 
-    public JavaEmitter getGlobal()
+    public JavaDefaultEmitter getGlobal()
     {
         return global;
     }

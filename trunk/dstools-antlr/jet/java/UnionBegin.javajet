@@ -42,7 +42,7 @@
         class="UnionBegin" %>
 <% 
     UnionEmitter e = (UnionEmitter) argument;
-    JavaEmitter global = e.getGlobal();
+    String pkg = e.getGlobal().getPackageName();
     UnionType u = e.getUnionType();
     String name = u.getName(); 
 %>

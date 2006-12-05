@@ -54,6 +54,7 @@
     <mkdir dir="${jar}" />
     <mkdir dir="${classes}" />
     <mkdir dir="${antlr.out}" />
+    <copy  file="${lib}/antlr.jar" todir="${jar}" />
   </target>
 
   <target name="antlr.DatascriptParser" depends="prepare">

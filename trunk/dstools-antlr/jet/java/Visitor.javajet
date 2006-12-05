@@ -42,6 +42,7 @@
         class="Visitor" %>
 <% 
     VisitorEmitter global = (VisitorEmitter) argument;
+    String pkg = global.getPackageName();
 %>
 <%@include file="FileHeader.inc"%>
 public interface __Visitor

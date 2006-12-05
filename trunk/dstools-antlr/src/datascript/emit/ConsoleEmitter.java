@@ -48,7 +48,7 @@ import datascript.ast.UnionType;
  * @author HWellmann
  *
  */
-public class ConsoleEmitter implements Emitter
+public class ConsoleEmitter extends DefaultEmitter
 {
 
     /* (non-Javadoc)

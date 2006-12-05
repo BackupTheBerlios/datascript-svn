@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>antlr_src</name>
-			<type>2</type>
-			<location>D:/work/antlr-2.7.6</location>
-		</link>
-	</linkedResources>
 </projectDescription>

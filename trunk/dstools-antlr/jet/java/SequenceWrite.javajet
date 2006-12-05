@@ -42,7 +42,6 @@
         class="SequenceWrite" %>
 <% 
     SequenceEmitter e = (SequenceEmitter) argument;
-    JavaEmitter global = e.getGlobal();
     SequenceType s = e.getSequenceType();
     String name = s.getName();
     ExpressionEmitter ee = new ExpressionEmitter(); 

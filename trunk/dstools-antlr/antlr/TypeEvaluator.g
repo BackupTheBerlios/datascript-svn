@@ -109,6 +109,9 @@ declaration
     :   fieldDefinition 
     //|   conditionDefinition
     |   constDeclaration 
+    |   sqlDatabaseDefinition
+    |   sqlTableDeclaration
+    |   sqlIntegerDeclaration
     ;
 
 
@@ -271,14 +274,7 @@ builtinType
     ;
 
 builtinTypeDefaultOrder
-    :   UINT8
-    |   UINT16
-    |   UINT32
-    |   UINT64
-    |   INT8
-    |   INT16
-    |   INT32
-    |   INT64
+    :   integerType
     |   "string"
     |   bitField
     ;
@@ -301,6 +297,123 @@ typeValue
     :   expression
     |   #(LCURLY (typeValue)+)
     ;
+
+integerType
+    :   UINT8
+    |   UINT16
+    |   UINT32
+    |   UINT64
+    |   INT8
+    |   INT16
+    |   INT32
+    |   INT64
+    ;
+
+/*********************************************************************/
+
+sqlDatabaseDefinition
+    : #(s:SQL_DATABASE i:ID              { scope().setSymbol(i, s); pushScope();
+    					   ((CompoundType)s).setScope(scope()); }
+        (sqlPragmaBlock)? 
+        (sqlMetadataBlock)? 
+        ((DOC)? sqlTableDefinition)+ 
+        (sqlConstraint)?                 { popScope(); }
+       )
+    ;
+    
+sqlPragmaBlock
+    : #(p:SQL_PRAGMA                     { pushScope(); 
+                                           ((CompoundType)p).setScope(scope()); }
+        (sqlPragma)+)                    { popScope(); }
+    ;
+    
+sqlPragma
+    : #(FIELD                            { Field f = (Field)#FIELD; 
+    					  CompoundType ct = scope().getOwner(); }
+        (DOC)? 
+        t:sqlPragmaType n:ID             { scope().setSymbol(n, f);
+          				   f.setName(n);
+          				   ct.addField(f);
+          				 }
+        (i:fieldInitializer              { f.setInitializer(i); }
+        )? 
+        (c:fieldCondition                { f.setCondition(c); }
+        )?)
+    ;    
+
+sqlPragmaType
+    :   integerType
+    |   "string"     
+    ;
+
+sqlMetadataBlock
+    : #(m:SQL_METADATA 			{ pushScope(); ((CompoundType)m).setScope(scope()); }
+       (sqlMetadataField)+ )            { popScope(); }  
+    ;
+    
+sqlMetadataField
+    : #(FIELD typeReference             { Field f = (Field)#FIELD; 
+    					  CompoundType ct = scope().getOwner(); }
+        n:ID                              { scope().setSymbol(n, f);
+          				   f.setName(n);
+          				   ct.addField(f);
+          				 }
+        (i:fieldInitializer              { f.setInitializer(i); }
+        )? 
+        (c:fieldCondition                { f.setCondition(c); }
+        )?
+        (DOC)?
+      )
+    ;    
+
+sqlTableDefinition
+    : sqlTableDeclaration  (ID)? 
+    | #(t:TYPEREF ID ID )                  { ((TypeReference)t).resolve(scope()); }
+    ;
+
+sqlTableDeclaration
+    : #(s:SQL_TABLE i:ID                 { scope().setSymbol(i, s); pushScope();
+    	  				   ((CompoundType)s).setScope(scope()); }
+        (sqlFieldDefinition)+
+        (sqlConstraint)?
+      )                                  { popScope(); }
+    ;
+    
+sqlFieldDefinition
+    : #(FIELD definedType                { Field f = (Field)#FIELD; 
+    					  CompoundType ct = scope().getOwner(); }
+        n:ID                             { scope().setSymbol(n, f);
+          				   f.setName(n);
+          				   ct.addField(f);
+          				 }
+        (c:fieldCondition)?              { f.setCondition(c); }
+        (SQL_KEY)? (sqlConstraint)? 
+        (DOC)?)
+    ;
+    
+sqlConstraint
+    : #(SQL (STRING_LITERAL)+)
+    ;  
+    
+sqlIntegerDeclaration
+    : #(i:SQL_INTEGER                    { pushScope(); ((CompoundType)i).setScope(scope()); }
+        (DOC)? (sqlIntegerFieldDefinition)+ )
+        				 { popScope(); }
+    ;
+    
+sqlIntegerFieldDefinition
+    : #(FIELD                            { Field f = (Field)#FIELD; 
+    					  CompoundType ct = scope().getOwner(); }
+        t:integerType n:ID               { scope().setSymbol(n, f);
+          				   f.setName(n);
+          				   ct.addField(f);
+          				 }
+        (c:fieldCondition                { f.setCondition(c); }
+        )? 
+        (DOC)? )
+    
+    ;    
+    
 
 
 
