@@ -97,7 +97,11 @@
           package. The name is obsolete and will be changed to rds.</p></li><li><p><code class="literal">www</code>: Content of the project homepage at
           <a href="???" target="_top">http://dstools.sourceforge.net</a>. Thanks to a
           cron job running on the Sourceforge server, any commits to this
-          folder will be visible on the homepage within an hour.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2459688"></a>3.5. Setting up the project properties</h3></div></div></div><div class="itemizedlist"><ul type="disc"><li><p>Switch to the Java perspective and select your new project
+          folder will be visible on the homepage within an hour.</p></li></ul></div></div>
+          
+          <div class="section" lang="en"><div class="titlepage"><h3 class="title"><a name="id2459688"></a>3.5. Setting up the project properties</h3></div>
+          <div class="itemizedlist">
+          <ul type="disc"><li><p>Switch to the Java perspective and select your new project
           <code class="literal">rds-trunk</code>.</p></li><li><p>Select the Ant build file <code class="literal">build.xml</code> from
           the root directory and open <span class="emphasis"><em>Run As | 2 Ant
           Build...</em></span> from the context menu. This will open the
@@ -109,13 +113,21 @@
           <code class="literal">%ECLIPSE_HOME%\plugins\org.junit_3.8.1\junit.jar</code>.</p></li><li><p>Select the <span class="emphasis"><em>JRE</em></span> tab and activate the
           radiobutton <span class="emphasis"><em>Run in the same JRE as the
           workspace</em></span>.</p></li><li><p>Click <span class="emphasis"><em>Apply</em></span> and
-          <span class="emphasis"><em>Close</em></span>.</p></li><li><p>Select <span class="emphasis"><em>Window | Show View | Ant</em></span>.</p></li><li><p>Goto the Ant view and select <span class="emphasis"><em>Add
+          <span class="emphasis"><em>Close</em></span>.</p></li>
+          <li><p>Go to <em>Window | Preferences | Ant | Runtime</em>. Select the Global Properties node in the tree and click Add External JARs. Select tools.jar from your JDK directory (e.g., <code class="literal">j2sdk1.5.0_07\lib\tools.jar</code>). Click <span class="emphasis"><em>Apply</em></span> and <span class="emphasis"><em>OK</em></span>, and you should be on your way.</p></li>
+          <li><p>Select <span class="emphasis"><em>Window | Show View | Ant</em></span>.</p></li><li><p>Goto the Ant view and select <span class="emphasis"><em>Add
           Buildfiles...</em></span> from the context menu.</p></li><li><p>Select <code class="literal">rds-trunk/build.xml</code> and click
-          OK.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2459849"></a>3.6. Building the dstools project</h3></div></div></div><p>Go to the Ant view, open the <code class="literal">ds-antlr</code> node and
-      double-click on the <code class="literal">compile</code> target. This will run an
+          OK.</p></li></ul></div></div>
+          
+          <div class="section" lang="en"><div class="titlepage"><h3 class="title"><a name="id2459849"></a>3.6. Building the dstools project</h3></div>
+          <div class="itemizedlist">
+          <ul type="disc"><li><p>Go to the Ant view, open the <code class="literal">ds-antlr</code> node and double-click on the <code class="literal">compile</code> target. This will run an
       Ant build that writes diagnostic messages to a console tab of the
-      Eclipse workbench.</p><p>The build produces class files in
-      <code class="literal">build/classes</code>. To build an executable JAR file
-      <code class="literal">datascript.jar</code> in <code class="literal">build/jar</code>, use
-      the <code class="filename">jar</code> target.</p><p>The <code class="literal">test.run</code> target builds and runs JUnit tests
-      for the project.</p></div></div></div></body></html>
+      Eclipse workbench.</p></li>
+      <li><p>The build produces class files in <code class="literal">build/classes</code>. To build an executable JAR file
+      <code class="literal">datascript.jar</code> in <code class="literal">build/jar</code>, use the <code class="filename">jar</code> target.</p></li>
+      <li><p>The <code class="literal">test.run</code> target builds and runs JUnit tests for the project.</p></li>
+      </ul>
+      </div></div>
+      
+      </div></body></html>
