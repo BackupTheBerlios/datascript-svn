@@ -39,95 +39,70 @@
 %>
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="SqlDatabase" %>
+        class="SqlTable" %>
 <% 
-    SqlDatabaseEmitter e = (SqlDatabaseEmitter) argument;
+    SqlTableEmitter e = (SqlTableEmitter) argument;
     String pkg = e.getGlobal().getPackageName();
-    SqlDatabaseType s = e.getSqlDatabaseType();
-    TypeNameEmitter tne = new TypeNameEmitter();
-    ExpressionEmitter exprEm = new ExpressionEmitter();
-    String name = s.getName();
-    SqlPragmaType p = s.getPragma(); 
-    SqlMetadataType m = s.getMetadata(); 
+    SqlTableType table = e.getSqlTableType();
+    SqlTypeNameEmitter ste = new SqlTypeNameEmitter();
+    String name = table.getName();
+    
+    String q = "?";
+    for (int i = 1; i < table.getNumFields(); i++)
+    {
+        q += ",?";
+    }
 %>
 <%@include file="FileHeader.inc"%>
 
 import java.sql.*;
 
-public class <%=name%> extends SqlDatabase
+public class <%=name%>
 {
-<%
-    for (Field f : s.getFields())
-    {
-        String fname = f.getName();
-        String type =  tne.getTypeName(f.getFieldType());    
-%>    
-    private <%=type%> <%=fname%> = new <%=type%>(this);
-<%
-    }
-%>    
+    private SqlDatabase db;
+    private String tableName;
+    private PreparedStatement insertRow;
     
-    
-    public <%=name%>(String fileName, Mode mode) throws SQLException, ClassNotFoundException
+    public <%=name%>(SqlDatabase db, String tableName)
     {
-        super(fileName, mode);
+        this.db = db;
+        this.tableName = tableName;
+        Connection dbc = db.getConnection();
+        insertRow = dbc.prepareStatement(
+            "INSERT OR REPLACE INTO <%=tableName%> values(<%=q%>)");
     }
     
-    public void createSchema() throws SQLException
+    public void createTable(String __tableName) throws SQLException
     {
-        Connection dbc = getConnection();
+        Connection dbc = db.getConnection();
         Statement st = dbc.createStatement();
-        
-        // create pragmata
+        StringBuilder query = new StringBuilder("CREATE TABLE ");
+        query.append(__tableName);
+        query.append("(");
 <%
-    for (Field f : p.getFields())
+    int fieldCount = 0;
+    for (Field f : table.getFields())
     {
+        String comma = (fieldCount == 0) ? "" : ", ";
         String fname = f.getName();
-        Expression init = f.getInitializer();
-        if (init != null)
-        {
-            String value = exprEm.emit(init);
+        String sqlType = ste.getTypeName(f.getFieldType());
 %>    
-        st.executeUpdate("PRAGMA <%=fname%> = <%=value%>");
+        query.append("<%=comma%><%=fname%> <%=sqlType%>  NOT NULL");
 <%
-        }
+        fieldCount++;
     }
-%>    
-
-        // create metadata
-        st.executeUpdate("CREATE TABLE __metadata(__name, __value)");
-        PreparedStatement pst = 
-            dbc.prepareStatement("INSERT INTO __metadata VALUES (?,?)");
-<%
-    for (Field f : m.getFields())
-    {
-        String fname = f.getName();
-        Expression init = f.getInitializer();
-        if (init != null)
-        {
-            String value = exprEm.emit(init);
-%>    
-        pst.setString(1, "<%=fname%>");
-        pst.setObject(2, <%=value%>);
-        pst.executeUpdate();
-<%
-        }
-    }
-%>    
-        
-        // create user defined tables
-<%
-    for (Field f : s.getFields())
-    {
-        String fname = f.getName();
-%>    
-        <%=fname%>.createTable("<%=fname%>");
-<%
-    }
-%>    
+    String constraint = e.getSqlConstraint();
+    String sql = (constraint == null) ? "" : (", " + constraint);
+%>
+        query.append("<%=sql%>)");
+        st.executeUpdate(query.toString());        
     }
     
     
+    public void write(BitStreamWriter __out) throws SQLException, IOException
+    {
+        
+    }
     
 }
 

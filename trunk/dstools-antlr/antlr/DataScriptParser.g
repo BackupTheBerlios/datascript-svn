@@ -368,7 +368,7 @@ sqlDatabaseDefinition
     : "sql_database"! ID LCURLY! 
       (sqlPragmaBlock)? 
       (sqlMetadataBlock)? 
-      ((DOC)? sqlTableDefinition)+ 
+      (sqlTableField)+ 
       (sqlConstraint SEMICOLON! )?
       RCURLY!
       { #sqlDatabaseDefinition = #([SQL_DATABASE], sqlDatabaseDefinition); }
@@ -404,6 +404,11 @@ sqlMetadataField!
       { #sqlMetadataField = #([FIELD, "field"], t, f, i, c, d); }
     ;    
 
+sqlTableField
+    : (DOC)? sqlTableDefinition
+      { #sqlTableField = #([FIELD, "FIELD"], #sqlTableField); }
+    ;
+      
 sqlTableDefinition
     : sqlTableDeclaration (ID)? SEMICOLON!
     | sqlTableReference ID SEMICOLON! 

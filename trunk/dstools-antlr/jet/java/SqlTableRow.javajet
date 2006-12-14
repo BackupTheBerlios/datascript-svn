@@ -1,3 +1,4 @@
+<%
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -35,39 +36,58 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.ast;
+%>
+<%@ jet package="datascript.jet.java" 
+        imports="datascript.ast.* datascript.emit.java.*" 
+        class="SqlTable" %>
+<% 
+    SqlTableEmitter e = (SqlTableEmitter) argument;
+    String pkg = e.getGlobal().getPackageName();
+    SqlTableType table = e.getSqlTableType();
+    SqlTypeNameEmitter ste = new SqlTypeNameEmitter();
+    String name = table.getName(); 
+%>
+<%@include file="FileHeader.inc"%>
 
-import antlr.collections.AST;
+import java.sql.*;
 
-
-public class SqlTableType extends CompoundType
+public class <%=name%>Row
 {
-    private TokenAST sqlConstraint;
+    private SqlDatabase db;
     
-    public SqlTableType()
-    {        
-    }
-    
-    public void setSqlConstraint(AST s)
+    public <%=name%>Row(SqlDatabase db)
     {
-        sqlConstraint = (TokenAST)s;
+        this.db = db;
     }
     
-    public TokenAST getSqlConstraint()
+    public void createTable(String __tableName) throws SQLException
     {
-        return sqlConstraint;
-    }
-
-
-    public IntegerValue sizeof(Context ctxt)
+        Statement st = db.getConnection().createStatement();
+        StringBuilder query = new StringBuilder("CREATE TABLE ");
+        query.append(__tableName);
+        query.append("(");
+<%
+    int fieldCount = 0;
+    for (Field f : table.getFields())
     {
-        throw new UnsupportedOperationException("sizeof not implemented");
+        String comma = (fieldCount == 0) ? "" : ", ";
+        String fname = f.getName();
+        String sqlType = ste.getTypeName(f.getFieldType());
+%>    
+        query.append("<%=comma%><%=fname%> <%=sqlType%>  NOT NULL");
+<%
+        fieldCount++;
     }
-
-    public boolean isMember(Context ctxt, Value val)
-    {
-        throw new UnsupportedOperationException("isMember not implemented");
+    String constraint = e.getSqlConstraint();
+    String sql = (constraint == null) ? "" : (", " + constraint);
+%>
+        query.append("<%=sql%>)");
+        st.executeUpdate(query.toString());
     }
-
-
+    
+    
+    
 }
+
+// END OF FILE
+    

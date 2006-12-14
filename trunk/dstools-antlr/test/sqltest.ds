@@ -2,7 +2,7 @@ package sqltest;
 
 
 
-sql_database SqlTest
+sql_database SqlTestDb
 {
     sql_pragma
     {

@@ -73,8 +73,7 @@ public class TypeNameEmitter
         }
         else if (t instanceof CompoundType)
         {
-            CompoundType compound = (CompoundType) t;
-            result = compound.getName();
+            result = getTypeName((CompoundType) t);
         }
         else if (t instanceof EnumType)
         {
@@ -83,9 +82,7 @@ public class TypeNameEmitter
         }
         else if (t instanceof TypeInstantiation)
         {
-            TypeInstantiation inst = (TypeInstantiation)t;
-            CompoundType compound = (CompoundType)inst.getBaseType();
-            result = compound.getName();
+            result = getTypeName((TypeInstantiation)t);
         }
         else if (t instanceof ArrayType)
         {
@@ -99,7 +96,7 @@ public class TypeNameEmitter
         return result;
     }
 
-    private String getTypeName(StdIntegerType t)
+    protected String getTypeName(StdIntegerType t)
     {
         switch (t.getType())
         {
@@ -126,7 +123,7 @@ public class TypeNameEmitter
         }
     }
 
-    private String getTypeName(BitFieldType t)
+    protected String getTypeName(BitFieldType t)
     {
         int length = t.getLength();
         if (length == 0)
@@ -143,7 +140,18 @@ public class TypeNameEmitter
             return "BigInteger";
     }
     
-    private String getTypeName(ArrayType array)
+    protected String getTypeName(CompoundType compound)
+    {
+        return compound.getName();                
+    }
+    
+    protected String getTypeName(TypeInstantiation inst)
+    {
+        CompoundType compound = (CompoundType)inst.getBaseType();
+        return compound.getName();        
+    }
+    
+    protected String getTypeName(ArrayType array)
     {
         TypeInterface elType = array.getElementType();
         String elTypeName = getTypeName(elType);

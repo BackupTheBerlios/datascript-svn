@@ -41,6 +41,7 @@ import antlr.collections.AST;
 import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
 import datascript.ast.SqlDatabaseType;
+import datascript.ast.SqlTableType;
 import datascript.ast.UnionType;
 
 public class JavaEmitter extends JavaDefaultEmitter
@@ -106,6 +107,21 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
     public void endSqlDatabase(AST s)
+    {
+        out.close();
+    }
+
+    public void beginSqlTable(AST s)
+    {
+        SqlTableType table = (SqlTableType)s;
+        SqlTableEmitter tableEmitter = new SqlTableEmitter(this, table);
+        String typeName = getTypeName(table);
+        openOutputFile(dir, typeName + JAVA_EXT);
+        tableEmitter.setOutputStream(out);
+        tableEmitter.emit(table);
+    }
+
+    public void endSqlTable(AST s)
     {
         out.close();
     }

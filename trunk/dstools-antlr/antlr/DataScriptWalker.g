@@ -256,7 +256,7 @@ sqlDatabaseDefinition
     : #(SQL_DATABASE ID 
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)? 
-        ((DOC)? sqlTableDefinition)+ 
+        (sqlTableField)+ 
         (sqlConstraint)?
        )
     ;
@@ -287,6 +287,10 @@ sqlMetadataField
       )
     ;    
 
+sqlTableField
+    : #(FIELD (DOC)? sqlTableDefinition)
+    ;
+      
 sqlTableDefinition
     : sqlTableDeclaration (ID)?  
     | #(TYPEREF ID ID )

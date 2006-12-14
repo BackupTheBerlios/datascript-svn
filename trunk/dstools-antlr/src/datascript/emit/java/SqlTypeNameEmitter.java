@@ -35,39 +35,50 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.ast;
+package datascript.emit.java;
 
-import antlr.collections.AST;
+import datascript.ast.ArrayType;
+import datascript.ast.BitFieldType;
+import datascript.ast.CompoundType;
+import datascript.ast.StdIntegerType;
+import datascript.ast.TypeInstantiation;
 
-
-public class SqlTableType extends CompoundType
+/**
+ * @author HWellmann
+ * 
+ */
+public class SqlTypeNameEmitter extends TypeNameEmitter
 {
-    private TokenAST sqlConstraint;
+    public SqlTypeNameEmitter()
+    {
+    }
+
+    protected String getTypeName(StdIntegerType t)
+    {
+        return "INT";
+    }
+
+    protected String getTypeName(BitFieldType t)
+    {
+        int length = t.getLength();
+        if (length < 64)
+            return "INT";
+        else
+            return "BLOB";
+    }
     
-    public SqlTableType()
-    {        
+    protected String getTypeName(CompoundType compound)
+    {
+        return "BLOB";        
     }
     
-    public void setSqlConstraint(AST s)
+    protected String getTypeName(TypeInstantiation inst)
     {
-        sqlConstraint = (TokenAST)s;
+        return "BLOB";        
     }
     
-    public TokenAST getSqlConstraint()
+    protected String getTypeName(ArrayType array)
     {
-        return sqlConstraint;
+        return "BLOB";        
     }
-
-
-    public IntegerValue sizeof(Context ctxt)
-    {
-        throw new UnsupportedOperationException("sizeof not implemented");
-    }
-
-    public boolean isMember(Context ctxt, Value val)
-    {
-        throw new UnsupportedOperationException("isMember not implemented");
-    }
-
-
 }

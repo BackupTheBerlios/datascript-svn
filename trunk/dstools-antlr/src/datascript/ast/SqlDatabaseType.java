@@ -3,6 +3,9 @@
  */
 package datascript.ast;
 
+import datascript.antlr.DataScriptParserTokenTypes;
+import antlr.collections.AST;
+
 /**
  * @author HWellmann
  *
@@ -26,5 +29,28 @@ public class SqlDatabaseType extends CompoundType
         throw new UnsupportedOperationException("isMember not implemented");
     }
 
+    public SqlPragmaType getPragma()
+    {
+        AST node = findFirstChildOfType(DataScriptParserTokenTypes.SQL_PRAGMA);
+        return (SqlPragmaType)node;
+    }
+    
+    public SqlMetadataType getMetadata()
+    {
+        AST node = findFirstChildOfType(DataScriptParserTokenTypes.SQL_METADATA);
+        return (SqlMetadataType)node;        
+    }
 
+    private AST findFirstChildOfType(int type)
+    {
+        for (AST node = getFirstChild(); node != null; 
+             node = node.getNextSibling())
+        {
+            if (node.getType() == type)
+            {
+                return node;
+            }
+        }
+        return null;
+    }    
 }

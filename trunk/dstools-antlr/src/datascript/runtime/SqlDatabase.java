@@ -35,39 +35,44 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.ast;
+package datascript.runtime;
 
-import antlr.collections.AST;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-
-public class SqlTableType extends CompoundType
+public abstract class SqlDatabase
 {
-    private TokenAST sqlConstraint;
+    private Connection dbc;
     
-    public SqlTableType()
-    {        
+    public enum Mode
+    {
+        READONLY,
+        WRITE,
+        CREATE
+    };
+
+    public SqlDatabase(String fileName, Mode mode) throws SQLException, ClassNotFoundException
+    {
+        Class.forName("org.sqlite.JDBC");
+        dbc = DriverManager.getConnection("jdbc:sqlite:" + fileName);
+        dbc.setAutoCommit(false);
+        if (mode == Mode.CREATE)
+        {
+            createSchema();
+        }
     }
     
-    public void setSqlConstraint(AST s)
+    public void close() throws SQLException
     {
-        sqlConstraint = (TokenAST)s;
+        dbc.close();
     }
     
-    public TokenAST getSqlConstraint()
+    public Connection getConnection()
     {
-        return sqlConstraint;
+        return dbc;
     }
-
-
-    public IntegerValue sizeof(Context ctxt)
-    {
-        throw new UnsupportedOperationException("sizeof not implemented");
-    }
-
-    public boolean isMember(Context ctxt, Value val)
-    {
-        throw new UnsupportedOperationException("isMember not implemented");
-    }
-
-
+    
+    public abstract void createSchema() throws SQLException;
 }
+

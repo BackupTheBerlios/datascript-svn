@@ -35,39 +35,73 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.ast;
+package datascript.emit.java;
+
+import java.io.PrintStream;
 
 import antlr.collections.AST;
+import datascript.ast.SqlTableType;
+import datascript.ast.TokenAST;
+import datascript.jet.java.SqlTable;
 
-
-public class SqlTableType extends CompoundType
+/**
+ * @author HWellmann
+ * 
+ */
+public class SqlTableEmitter
 {
-    private TokenAST sqlConstraint;
+    private JavaEmitter global;
+    private SqlTableType tableType;
+    private PrintStream out;
+    private SqlTable tableTmpl;
     
-    public SqlTableType()
-    {        
+    public SqlTableEmitter(JavaEmitter j, SqlTableType table)
+    {
+        this.global = j;
+        this.tableType = table;
+        tableTmpl = new SqlTable();
+    }
+    public JavaEmitter getGlobal()
+    {
+        return global;
+    }
+
+    
+    public String getName()
+    {
+        return tableType.getName();
     }
     
-    public void setSqlConstraint(AST s)
+    public SqlTableType getSqlTableType()
     {
-        sqlConstraint = (TokenAST)s;
+        return tableType;
     }
     
-    public TokenAST getSqlConstraint()
+    public void setOutputStream(PrintStream out)
     {
-        return sqlConstraint;
+        this.out = out;
     }
-
-
-    public IntegerValue sizeof(Context ctxt)
+    
+    public void emit(SqlTableType SqlTableType)
     {
-        throw new UnsupportedOperationException("sizeof not implemented");
+        String result = tableTmpl.generate(this);
+        out.print(result);
     }
-
-    public boolean isMember(Context ctxt, Value val)
+    
+    public String getSqlConstraint()
     {
-        throw new UnsupportedOperationException("isMember not implemented");
+        TokenAST constraint = tableType.getSqlConstraint();
+        if (constraint == null)
+            return null;
+        
+        ;
+        StringBuilder result = new StringBuilder();
+        for (AST node = constraint.getFirstChild(); 
+             node != null; node = node.getNextSibling())
+        {
+            String text = node.getText();
+            result.append(text.substring(1, text.length()-1));
+        }
+        return result.toString();
     }
-
-
 }

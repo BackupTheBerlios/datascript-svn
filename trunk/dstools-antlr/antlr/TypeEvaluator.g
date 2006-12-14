@@ -316,7 +316,7 @@ sqlDatabaseDefinition
     					   ((CompoundType)s).setScope(scope()); }
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)? 
-        ((DOC)? sqlTableDefinition)+ 
+        (sqlTableField)+ 
         (sqlConstraint)?                 { popScope(); }
        )
     ;
@@ -366,16 +366,35 @@ sqlMetadataField
       )
     ;    
 
-sqlTableDefinition
-    : sqlTableDeclaration  (ID)? 
-    | #(t:TYPEREF ID ID )                  { ((TypeReference)t).resolve(scope()); }
+sqlTableField
+    : #(f:FIELD                           
+        (DOC)? sqlTableDefinition[f])
+    ;
+      
+sqlTableDefinition[AST fd]
+        { Field f = (Field)#fd;  
+          CompoundType ct = scope().getOwner(); 
+        }
+    : sqlTableDeclaration  
+      (n:ID                             {
+                                          scope().setSymbol(n, f);
+          				  f.setName(n); ct.addField(f);
+          				}  
+       )? 
+       
+    | #(t:TYPEREF ID m:ID )             { 
+                                          scope().setSymbol(m, f);
+          				  f.setName(m); ct.addField(f);
+          				  ((TypeReference)t).resolve(scope()); 
+                                        }
     ;
 
 sqlTableDeclaration
     : #(s:SQL_TABLE i:ID                 { scope().setSymbol(i, s); pushScope();
     	  				   ((CompoundType)s).setScope(scope()); }
         (sqlFieldDefinition)+
-        (sqlConstraint)?
+        (c:sqlConstraint                   { ((SqlTableType)s).setSqlConstraint(c); } 
+        )?
       )                                  { popScope(); }
     ;
     

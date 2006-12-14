@@ -302,7 +302,7 @@ sqlDatabaseDefinition
         ID 
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)?   
-        ((DOC)? sqlTableDefinition)+ 
+        (sqlTableField)+ 
         (sqlConstraint)?
        )                                { popScope(); }   
     ;
@@ -338,6 +338,10 @@ sqlMetadataField
       )
     ;    
 
+sqlTableField
+    : #(FIELD (DOC)? sqlTableDefinition)
+    ;
+      
 sqlTableDefinition
     : sqlTableDeclaration (ID)? 
     | #(TYPEREF ID ID )

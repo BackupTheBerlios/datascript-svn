@@ -279,8 +279,7 @@ sqlDatabaseDefinition
         ID 
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)? 
-        ((DOC)? 
-        sqlTableDefinition)+ 
+        (sqlTableField)+ 
         (sqlConstraint)?
        )                        { em.endSqlDatabase(d); }
     ;
@@ -313,6 +312,10 @@ sqlMetadataField
       )
     ;    
 
+sqlTableField
+    : #(FIELD (DOC)? sqlTableDefinition)
+    ;
+      
 sqlTableDefinition
     : sqlTableDeclaration (ID)? 
     | #(TYPEREF ID ID )
