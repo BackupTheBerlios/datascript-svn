@@ -34,89 +34,64 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package datascript.runtime;
+ */ 
+package datascript.runtime.io;
 
-import java.util.Vector;
-import java.util.List;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-public class ObjectArray<E> implements Array, SizeOf
+/**
+ * @author HWellmann
+ *
+ */
+public class ByteArrayBitStreamReader extends BitStreamReader
 {
-    // using a Vector for now means we're subject to the limitations
-    // Vectors are (i.e., max 2^31-1 elements
-    List<E> data;
-
-    public ObjectArray(int length)
+    private ByteArrayInputStream bais;
+    private long length;
+    
+    public ByteArrayBitStreamReader(byte[] b) throws IOException
     {
-        this(new Vector<E>(length));
+        bais = new ByteArrayInputStream(b);
+        length = b.length;
     }
-
-    public ObjectArray(List<E> data)
+    
+    public int read() throws IOException
     {
-        this.data = data;
-    }
-
-    public ObjectArray<E> typedMap(Mapping<E> m)
-    {
-        Vector<E> result = new Vector<E>(data.size());
-        for (int i = 0; i < data.size(); i++)
+        checkClosed();
+        bitOffset = 0;
+        int val = bais.read();
+        if (val != -1) 
         {
-            result.add(i, m.map(data.get(i)));
+            ++streamPos;
         }
-        return new ObjectArray<E>(result);
+        return val;
     }
-
-    public Array map(Mapping m)
+    
+    public int read(byte[] b, int off, int len) throws IOException 
     {
-        Vector result = new Vector(data.size());
-        for (int i = 0; i < data.size(); i++)
-        {
-            result.add(i, m.map(data.get(i)));
+        checkClosed();
+        bitOffset = 0;
+        int nbytes = bais.read(b, off, len);
+        if (nbytes != -1) {
+            streamPos += nbytes;
         }
-        return new ObjectArray(result);
+        return nbytes;
     }
 
-    public Array subRange(int begin, int length)
+    public long length() 
     {
-        return new ObjectArray<E>(data.subList(begin, begin + length));
+        return length;
     }
 
-    public int length()
+    public void seek(long pos) throws IOException 
     {
-        return data.size();
-    }
-
-    public void write(java.io.DataOutput out, CallChain cc) throws IOException
-    {
-        for (int i = 0; i < data.size(); i++)
-        {
-            ((Writer) data.get(i)).write(out, cc);
+        checkClosed();
+        if (pos < flushedPos) {
+            throw new IndexOutOfBoundsException("pos < flushedPos!");
         }
-    }
-
-    public E elementAt(int i)
-    {
-        return data.get(i);
-    }
-
-    public int sizeof()
-    {
-        int sz = 0;
-        for (int i = 0; i < data.size(); i++)
-        {
-            sz += ((SizeOf) data.get(i)).sizeof();
-        }
-        return sz;
-    }
-
-    public void remove(Object obj)
-    {
-        data.remove(obj);
-    }
-
-    public List getData()
-    {
-        return data;
+        bitOffset = 0;
+        bais.reset();
+        bais.skip(pos);
+        streamPos = pos;
     }
 }

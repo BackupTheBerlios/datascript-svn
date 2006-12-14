@@ -35,20 +35,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
-package datascript.runtime;
+package datascript.runtime.io;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import datascript.runtime.CallChain;
 
-/**
- * @author HWellmann
- *
- */
-public class FileBitStreamWriter extends BitStreamWriter
+public interface Writer
 {
-    
-    public FileBitStreamWriter(String fileName) throws IOException
-    {
-        super(new FileOutputStream(fileName));
-    }
+    public void write(java.io.DataOutput out, CallChain cc)
+            throws java.io.IOException;
 }

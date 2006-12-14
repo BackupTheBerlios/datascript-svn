@@ -6,8 +6,8 @@ package datascript.test;
 import java.io.File;
 
 import junit.framework.TestCase;
-import datascript.runtime.FileBitStreamReader;
-import datascript.runtime.FileBitStreamWriter;
+import datascript.runtime.io.FileBitStreamReader;
+import datascript.runtime.io.FileBitStreamWriter;
 
 /**
  * @author HWellmann

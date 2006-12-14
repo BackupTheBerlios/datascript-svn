@@ -35,86 +35,92 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.runtime;
+package datascript.runtime.array;
 
-import java.io.DataInput;
+import java.util.Vector;
+import java.util.List;
 import java.io.IOException;
 
-public class ShortArray implements Array, SizeOf
+import datascript.runtime.CallChain;
+import datascript.runtime.Mapping;
+import datascript.runtime.io.Writer;
+
+public class ObjectArray<E> implements Array, SizeOf
 {
-    short[] data; // data is between [offset... offset+length-1]
-    int offset;
-    int length;
+    // using a Vector for now means we're subject to the limitations
+    // Vectors are (i.e., max 2^31-1 elements
+    List<E> data;
 
-    public ShortArray(DataInput in, int length) throws IOException
+    public ObjectArray(int length)
     {
-        if (length == -1)
-        {
-            throw new RuntimeException("variable length " + getClass()
-                    + " not implemented");
-        }
-        else
-        {
-            this.length = length;
-            data = new short[length];
-            for (int i = 0; i < length; i++)
-            {
-                data[i] = in.readShort();
-            }
-            this.offset = 0;
-        }
+        this(new Vector<E>(length));
     }
 
-    public ShortArray(int length)
-    {
-        this(new short[length], 0, length);
-    }
-
-    public ShortArray(short[] data, int offset, int length)
+    public ObjectArray(List<E> data)
     {
         this.data = data;
-        this.offset = offset;
-        this.length = length;
     }
 
-    public short elementAt(int i)
+    public ObjectArray<E> typedMap(Mapping<E> m)
     {
-        return data[offset + i];
-    }
-
-    public int length()
-    {
-        return length;
-    }
-
-    public int sizeof()
-    {
-        return 2 * length;
+        Vector<E> result = new Vector<E>(data.size());
+        for (int i = 0; i < data.size(); i++)
+        {
+            result.add(i, m.map(data.get(i)));
+        }
+        return new ObjectArray<E>(result);
     }
 
     public Array map(Mapping m)
     {
-        ShortArray result = new ShortArray(length);
-        for (int i = 0; i < length; i++)
+        Vector result = new Vector(data.size());
+        for (int i = 0; i < data.size(); i++)
         {
-            result.data[i] = ((Short) m.map(new Short(data[offset + i])))
-                    .shortValue();
+            result.add(i, m.map(data.get(i)));
         }
-        return result;
+        return new ObjectArray(result);
     }
 
     public Array subRange(int begin, int length)
     {
-        if (begin < 0 || begin >= this.length || begin + length > this.length)
-            throw new ArrayIndexOutOfBoundsException();
-        return new ShortArray(data, offset + begin, length);
+        return new ObjectArray<E>(data.subList(begin, begin + length));
+    }
+
+    public int length()
+    {
+        return data.size();
     }
 
     public void write(java.io.DataOutput out, CallChain cc) throws IOException
     {
-        for (int i = offset; i < offset + length; i++)
+        for (int i = 0; i < data.size(); i++)
         {
-            out.writeShort(data[i]);
+            ((Writer) data.get(i)).write(out, cc);
         }
+    }
+
+    public E elementAt(int i)
+    {
+        return data.get(i);
+    }
+
+    public int sizeof()
+    {
+        int sz = 0;
+        for (int i = 0; i < data.size(); i++)
+        {
+            sz += ((SizeOf) data.get(i)).sizeof();
+        }
+        return sz;
+    }
+
+    public void remove(Object obj)
+    {
+        data.remove(obj);
+    }
+
+    public List getData()
+    {
+        return data;
     }
 }

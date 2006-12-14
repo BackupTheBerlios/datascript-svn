@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 
 import junit.framework.TestCase;
-import datascript.runtime.ByteArrayBitStreamReader;
+import datascript.runtime.io.ByteArrayBitStreamReader;
 
 /**
  * @author HWellmann

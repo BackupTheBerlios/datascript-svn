@@ -35,18 +35,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.runtime;
+package datascript.runtime.array;
 
-import java.io.DataInput;
 import java.io.IOException;
+import java.math.BigInteger;
 
-public class UnsignedIntArray implements Array, SizeOf
+import datascript.runtime.CallChain;
+import datascript.runtime.Mapping;
+import datascript.runtime.io.BitStreamReader;
+
+public class BitFieldArray implements Array, SizeOf
 {
-    long[] data; // data is between [offset... offset+length-1]
+    BigInteger[] data; // data is between [offset... offset+length-1]
+
     int offset;
+
+    /** Number of array elements. */
     int length;
 
-    public UnsignedIntArray(DataInput in, int length) throws IOException
+    /** Number of bits per element. */
+    int numBits;
+
+    public BitFieldArray(BitStreamReader in, int length, int numBits)
+            throws IOException
     {
         if (length == -1)
         {
@@ -56,28 +67,30 @@ public class UnsignedIntArray implements Array, SizeOf
         else
         {
             this.length = length;
-            data = new long[length];
+            this.numBits = numBits;
+            data = new BigInteger[length];
             for (int i = 0; i < length; i++)
             {
-                data[i] = in.readInt();
+                data[i] = in.readBigInteger(numBits);
             }
             this.offset = 0;
         }
     }
 
-    public UnsignedIntArray(int length)
+    public BitFieldArray(int length, int numBits)
     {
-        this(new long[length], 0, length);
+        this(new BigInteger[length], 0, length, numBits);
     }
 
-    public UnsignedIntArray(long[] data, int offset, int length)
+    public BitFieldArray(BigInteger[] data, int offset, int length, int numBits)
     {
         this.data = data;
         this.offset = offset;
         this.length = length;
+        this.numBits = numBits;
     }
 
-    public long elementAt(int i)
+    public BigInteger elementAt(int i)
     {
         return data[offset + i];
     }
@@ -87,18 +100,20 @@ public class UnsignedIntArray implements Array, SizeOf
         return length;
     }
 
+    /**
+     * @TODO This may not be the exact size in bytes!
+     */
     public int sizeof()
     {
-        return 4 * length;
+        return numBits * length / 8;
     }
 
     public Array map(Mapping m)
     {
-        UnsignedIntArray result = new UnsignedIntArray(length);
+        BitFieldArray result = new BitFieldArray(length, numBits);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = ((Integer) m.map(new Long(data[offset + i])))
-                    .intValue();
+            result.data[i] = ((BigInteger) m.map(data[offset + i]));
         }
         return result;
     }
@@ -107,14 +122,21 @@ public class UnsignedIntArray implements Array, SizeOf
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
             throw new ArrayIndexOutOfBoundsException();
-        return new UnsignedIntArray(data, offset + begin, length);
+        return new BitFieldArray(data, offset + begin, length, numBits);
     }
 
+    /**
+     * @TODO this is incorrect. Only works up to 64 bits.
+     */
     public void write(java.io.DataOutput out, CallChain cc) throws IOException
     {
         for (int i = offset; i < offset + length; i++)
         {
-            out.writeInt((int)data[i]);
+            //out.writeLong(data[i].longValue());
+            /**
+             * @DONE this could be correct to work up to 64 bits.
+             */
+            out.write(data[i].toByteArray());
         }
     }
 }

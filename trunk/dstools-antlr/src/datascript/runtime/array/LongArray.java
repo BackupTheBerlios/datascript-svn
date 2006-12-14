@@ -35,18 +35,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.runtime;
+package datascript.runtime.array;
 
 import java.io.DataInput;
 import java.io.IOException;
 
-public class IntArray implements Array, SizeOf
+import datascript.runtime.CallChain;
+import datascript.runtime.Mapping;
+
+public class LongArray implements Array, SizeOf
 {
-    int[] data; // data is between [offset... offset+length-1]
+    long[] data; // data is between [offset... offset+length-1]
     int offset;
     int length;
 
-    public IntArray(DataInput in, int length) throws IOException
+    public LongArray(DataInput in, int length) throws IOException
     {
         if (length == -1)
         {
@@ -56,28 +59,28 @@ public class IntArray implements Array, SizeOf
         else
         {
             this.length = length;
-            data = new int[length];
+            data = new long[length];
             for (int i = 0; i < length; i++)
             {
-                data[i] = in.readInt();
+                data[i] = in.readLong();
             }
             this.offset = 0;
         }
     }
 
-    public IntArray(int length)
+    public LongArray(int length)
     {
-        this(new int[length], 0, length);
+        this(new long[length], 0, length);
     }
 
-    public IntArray(int[] data, int offset, int length)
+    public LongArray(long[] data, int offset, int length)
     {
         this.data = data;
         this.offset = offset;
         this.length = length;
     }
 
-    public int elementAt(int i)
+    public long elementAt(int i)
     {
         return data[offset + i];
     }
@@ -94,11 +97,11 @@ public class IntArray implements Array, SizeOf
 
     public Array map(Mapping m)
     {
-        IntArray result = new IntArray(length);
+        LongArray result = new LongArray(length);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = ((Integer) m.map(new Integer(data[offset + i])))
-                    .intValue();
+            result.data[i] = ((Long) m.map(new Long(data[offset + i])))
+                    .longValue();
         }
         return result;
     }
@@ -107,14 +110,14 @@ public class IntArray implements Array, SizeOf
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
             throw new ArrayIndexOutOfBoundsException();
-        return new IntArray(data, offset + begin, length);
+        return new LongArray(data, offset + begin, length);
     }
 
     public void write(java.io.DataOutput out, CallChain cc) throws IOException
     {
         for (int i = offset; i < offset + length; i++)
         {
-            out.writeInt(data[i]);
+            out.writeLong(data[i]);
         }
     }
 }

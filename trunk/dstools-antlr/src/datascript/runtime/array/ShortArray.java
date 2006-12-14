@@ -35,18 +35,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.runtime;
+package datascript.runtime.array;
 
 import java.io.DataInput;
 import java.io.IOException;
 
-public class LongArray implements Array, SizeOf
+import datascript.runtime.CallChain;
+import datascript.runtime.Mapping;
+
+public class ShortArray implements Array, SizeOf
 {
-    long[] data; // data is between [offset... offset+length-1]
+    short[] data; // data is between [offset... offset+length-1]
     int offset;
     int length;
 
-    public LongArray(DataInput in, int length) throws IOException
+    public ShortArray(DataInput in, int length) throws IOException
     {
         if (length == -1)
         {
@@ -56,28 +59,28 @@ public class LongArray implements Array, SizeOf
         else
         {
             this.length = length;
-            data = new long[length];
+            data = new short[length];
             for (int i = 0; i < length; i++)
             {
-                data[i] = in.readLong();
+                data[i] = in.readShort();
             }
             this.offset = 0;
         }
     }
 
-    public LongArray(int length)
+    public ShortArray(int length)
     {
-        this(new long[length], 0, length);
+        this(new short[length], 0, length);
     }
 
-    public LongArray(long[] data, int offset, int length)
+    public ShortArray(short[] data, int offset, int length)
     {
         this.data = data;
         this.offset = offset;
         this.length = length;
     }
 
-    public long elementAt(int i)
+    public short elementAt(int i)
     {
         return data[offset + i];
     }
@@ -89,16 +92,16 @@ public class LongArray implements Array, SizeOf
 
     public int sizeof()
     {
-        return 4 * length;
+        return 2 * length;
     }
 
     public Array map(Mapping m)
     {
-        LongArray result = new LongArray(length);
+        ShortArray result = new ShortArray(length);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = ((Long) m.map(new Long(data[offset + i])))
-                    .longValue();
+            result.data[i] = ((Short) m.map(new Short(data[offset + i])))
+                    .shortValue();
         }
         return result;
     }
@@ -107,14 +110,14 @@ public class LongArray implements Array, SizeOf
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
             throw new ArrayIndexOutOfBoundsException();
-        return new LongArray(data, offset + begin, length);
+        return new ShortArray(data, offset + begin, length);
     }
 
     public void write(java.io.DataOutput out, CallChain cc) throws IOException
     {
         for (int i = offset; i < offset + length; i++)
         {
-            out.writeLong(data[i]);
+            out.writeShort(data[i]);
         }
     }
 }

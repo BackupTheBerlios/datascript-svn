@@ -15,8 +15,8 @@ import bits.Inner;
 import bits.ItemA;
 import bits.ItemB;
 import bits.Outer;
-import datascript.runtime.ObjectArray;
-import datascript.runtime.ShortArray;
+import datascript.runtime.array.ObjectArray;
+import datascript.runtime.array.ShortArray;
 
 /**
  * @author HWellmann

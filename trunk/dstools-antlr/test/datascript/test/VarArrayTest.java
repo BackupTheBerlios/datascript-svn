@@ -14,7 +14,7 @@ import bits.ItemA;
 import bits.ItemB;
 import bits.ItemC;
 import bits.VarArray;
-import datascript.runtime.ObjectArray;
+import datascript.runtime.array.ObjectArray;
 
 /**
  * @author HWellmann

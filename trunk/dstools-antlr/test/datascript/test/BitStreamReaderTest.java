@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
-import datascript.runtime.FileBitStreamReader;
+import datascript.runtime.io.FileBitStreamReader;
 
 /**
  * @author HWellmann

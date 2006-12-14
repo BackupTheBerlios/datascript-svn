@@ -4,8 +4,8 @@
 package datascript.test;
 
 import junit.framework.TestCase;
-import datascript.runtime.ByteArrayBitStreamReader;
-import datascript.runtime.ByteArrayBitStreamWriter;
+import datascript.runtime.io.ByteArrayBitStreamReader;
+import datascript.runtime.io.ByteArrayBitStreamWriter;
 
 /**
  * @author HWellmann

@@ -14,7 +14,7 @@ import bits.BlockData;
 import bits.BlockHeader;
 import bits.BlockType;
 import bits.Blocks;
-import datascript.runtime.ByteArray;
+import datascript.runtime.array.ByteArray;
 
 /**
  * @author HWellmann

@@ -34,74 +34,17 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
-package datascript.runtime;
-
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
-/**
- * @author HWellmann
- *
  */
-public class FileBitStreamReader extends BitStreamReader
+package datascript.runtime.array;
+
+import datascript.runtime.Mapping;
+import datascript.runtime.io.Writer;
+
+public interface Array extends Writer
 {
-    private RandomAccessFile raf;
-    
-    public FileBitStreamReader(String fileName) throws IOException
-    {
-        raf = new RandomAccessFile(fileName, "r");
-    }
-    
-    public int read() throws IOException
-    {
-        checkClosed();
-        bitOffset = 0;
-        int val = raf.read();
-        if (val != -1) {
-            ++streamPos;
-        }
-        return val;
-    }
-    
-    public int read(byte[] b, int off, int len) throws IOException 
-    {
-        checkClosed();
-        bitOffset = 0;
-        int nbytes = raf.read(b, off, len);
-        if (nbytes != -1) {
-            streamPos += nbytes;
-        }
-        return nbytes;
-    }
+    public Array map(Mapping m);
 
-    public long length() {
-        try 
-        {
-            checkClosed();
-            return raf.length();
-        } 
-        catch (IOException e) 
-        {
-            return -1L;
-        }
-    }
+    public Array subRange(int begin, int length);
 
-    public void seek(long pos) throws IOException 
-    {
-        checkClosed();
-        if (pos < flushedPos) {
-            throw new IndexOutOfBoundsException("pos < flushedPos!");
-        }
-        bitOffset = 0;
-        raf.seek(pos);
-        streamPos = raf.getFilePointer();
-    }
-
-    public void close() throws IOException 
-    {
-        super.close();
-        raf.close();
-    }
-    
+    public int length();
 }

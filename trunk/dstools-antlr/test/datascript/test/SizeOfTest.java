@@ -13,7 +13,7 @@ import bits.ItemA;
 import bits.ItemB;
 import bits.VarArray;
 import bits.VarArrayWithSize;
-import datascript.runtime.ObjectArray;
+import datascript.runtime.array.ObjectArray;
 
 /**
  * @author HWellmann

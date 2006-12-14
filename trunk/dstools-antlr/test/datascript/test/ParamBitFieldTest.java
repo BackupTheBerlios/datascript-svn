@@ -11,7 +11,7 @@ import javax.imageio.stream.FileImageOutputStream;
 import junit.framework.TestCase;
 import bits.Coord;
 import bits.VarBitField;
-import datascript.runtime.BitFieldArray;
+import datascript.runtime.array.BitFieldArray;
 
 /**
  * @author HWellmann

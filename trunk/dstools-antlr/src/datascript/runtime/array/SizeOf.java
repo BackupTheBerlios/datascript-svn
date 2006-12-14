@@ -34,11 +34,10 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
-package datascript.runtime;
+ */
+package datascript.runtime.array;
 
-public interface Writer
+public interface SizeOf
 {
-    public void write(java.io.DataOutput out, CallChain cc)
-            throws java.io.IOException;
+    public int sizeof();
 }

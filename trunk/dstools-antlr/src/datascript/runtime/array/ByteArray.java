@@ -35,18 +35,22 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.runtime;
+package datascript.runtime.array;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.io.PrintStream;
 
-public class UnsignedShortArray implements Array, SizeOf
+import datascript.runtime.CallChain;
+import datascript.runtime.Mapping;
+
+public class ByteArray implements Array, SizeOf
 {
-    int[] data; // data is between [offset... offset+length-1]
+    byte[] data; // data is between [offset... offset+length-1]
     int offset;
     int length;
 
-    public UnsignedShortArray(DataInput in, int length) throws IOException
+    public ByteArray(DataInput in, int length) throws IOException
     {
         if (length == -1)
         {
@@ -56,28 +60,48 @@ public class UnsignedShortArray implements Array, SizeOf
         else
         {
             this.length = length;
-            data = new int[length];
-            for (int i = 0; i < length; i++)
-            {
-                data[i] = in.readUnsignedShort();
-            }
+            data = new byte[length];
+            in.readFully(data);
             this.offset = 0;
         }
     }
 
-    public UnsignedShortArray(int length)
+    public ByteArray(int length)
     {
-        this(new int[length], 0, length);
+        this(new byte[length], 0, length);
     }
 
-    public UnsignedShortArray(int[] data, int offset, int length)
+    public ByteArray(byte[] data, int offset, int length)
     {
         this.data = data;
         this.offset = offset;
         this.length = length;
     }
 
-    public int elementAt(int i)
+    public Array map(Mapping m)
+    {
+        ByteArray result = new ByteArray(length);
+        for (int i = 0; i < length; i++)
+        {
+            result.data[i] = ((Byte) m.map(new Byte(data[offset + i])))
+                    .byteValue();
+        }
+        return result;
+    }
+
+    public Array subRange(int begin, int length)
+    {
+        if (begin < 0 || begin >= this.length || begin + length > this.length)
+            throw new ArrayIndexOutOfBoundsException();
+        return new ByteArray(data, offset + begin, length);
+    }
+
+    public void write(java.io.DataOutput out, CallChain cc) throws IOException
+    {
+        out.write(data, offset, length);
+    }
+
+    public byte elementAt(int i)
     {
         return data[offset + i];
     }
@@ -89,32 +113,48 @@ public class UnsignedShortArray implements Array, SizeOf
 
     public int sizeof()
     {
-        return 2 * length;
+        return length;
     }
 
-    public Array map(Mapping m)
+    /**
+     * Compares this byte array to a given string, assuming all characters are
+     * 8bit only (won't work for Unicode)
+     * 
+     * For small strings only.
+     */
+    public boolean compare_to_string(String str)
     {
-        UnsignedShortArray result = new UnsignedShortArray(length);
-        for (int i = 0; i < length; i++)
+        byte[] sbytes = str.getBytes();
+        if (sbytes.length > length)
         {
-            result.data[i] = ((Integer) m.map(new Integer(data[offset + i])))
-                    .intValue();
+            return false;
         }
-        return result;
-    }
 
-    public Array subRange(int begin, int length)
-    {
-        if (begin < 0 || begin >= this.length || begin + length > this.length)
-            throw new ArrayIndexOutOfBoundsException();
-        return new UnsignedShortArray(data, offset + begin, length);
-    }
-
-    public void write(java.io.DataOutput out, CallChain cc) throws IOException
-    {
-        for (int i = offset; i < offset + length; i++)
+        for (int i = 0; i < sbytes.length; i++)
         {
-            out.writeShort(data[i]);
+            if (data[offset + i] != sbytes[i])
+            {
+                return false;
+            }
         }
+
+        return true;
+    }
+
+    /** *********************************************************************** */
+
+    public void dump(PrintStream out)
+    {
+        out.print(toString());
+    }
+
+    public String toString()
+    {
+        /*
+         * for (int i = 0; i < length; i++) { if
+         * (Character.isISOControl((char)data[offset + i])) { return "<byte
+         * array of length " + length + ">"; } }
+         */
+        return new String(data, offset, length);
     }
 }

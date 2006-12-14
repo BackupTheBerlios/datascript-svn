@@ -10,12 +10,12 @@ import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
 import bits.IntegerArray;
-import datascript.runtime.ByteArray;
-import datascript.runtime.IntArray;
-import datascript.runtime.ShortArray;
-import datascript.runtime.UnsignedByteArray;
-import datascript.runtime.UnsignedIntArray;
-import datascript.runtime.UnsignedShortArray;
+import datascript.runtime.array.ByteArray;
+import datascript.runtime.array.IntArray;
+import datascript.runtime.array.ShortArray;
+import datascript.runtime.array.UnsignedByteArray;
+import datascript.runtime.array.UnsignedIntArray;
+import datascript.runtime.array.UnsignedShortArray;
 
 /**
  * @author HWellmann

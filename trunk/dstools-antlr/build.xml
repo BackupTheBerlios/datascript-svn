@@ -6,7 +6,7 @@
   <property name="test" value="${basedir}/test"/>
   <property name="gen" value="${build}/gen"/>
   <property name="jar" value="${build}/jar"/>
-  <property name="jet.timestamp" value="${build}/gen/jet.ts"/>
+  <property name="jet.timestamp" value="${gen}/jet.ts"/>
   <property name="classes" value="${build}/classes"/>
   <property name="antlr" value="${basedir}/antlr"/>
   <property name="antlr.out" value="${gen}/datascript/antlr"/>
@@ -28,9 +28,11 @@
   </taskdef>
   
 
-  <target name="clean">
+  <target name="clean" description="removes all generated datascript Java sources and classes">
     <delete dir="${build}"/>
   </target>
+	
+	<target name="cleanall" depends="clean, test.clean" description="removes all generated Java sources and classes" />
 
   <target name="init">
     <uptodate 
@@ -111,7 +113,7 @@
 
   
   <target name="jet" depends="prepare" unless="jet.uptodate">
-    <jetc destdir="${build}/gen">
+    <jetc destdir="${gen}">
       <fileset dir="${basedir}" includes="jet/java/*.*jet jet/html/*.htmljet"/>
     </jetc>
     <touch file="${jet.timestamp}"/>
@@ -172,5 +174,9 @@
        </batchtest> 
     </junit>     
   </target>
+
+	<target name="test.clean" description="removes all generated test Java sources and classes">
+		<delete dir="${test}/bits" />
+	</target>
 
 </project>

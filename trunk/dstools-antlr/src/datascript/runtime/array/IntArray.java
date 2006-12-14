@@ -35,25 +35,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.runtime;
+package datascript.runtime.array;
 
+import java.io.DataInput;
 import java.io.IOException;
-import java.math.BigInteger;
 
-public class BitFieldArray implements Array, SizeOf
+import datascript.runtime.CallChain;
+import datascript.runtime.Mapping;
+
+public class IntArray implements Array, SizeOf
 {
-    BigInteger[] data; // data is between [offset... offset+length-1]
-
+    int[] data; // data is between [offset... offset+length-1]
     int offset;
-
-    /** Number of array elements. */
     int length;
 
-    /** Number of bits per element. */
-    int numBits;
-
-    public BitFieldArray(BitStreamReader in, int length, int numBits)
-            throws IOException
+    public IntArray(DataInput in, int length) throws IOException
     {
         if (length == -1)
         {
@@ -63,30 +59,28 @@ public class BitFieldArray implements Array, SizeOf
         else
         {
             this.length = length;
-            this.numBits = numBits;
-            data = new BigInteger[length];
+            data = new int[length];
             for (int i = 0; i < length; i++)
             {
-                data[i] = in.readBigInteger(numBits);
+                data[i] = in.readInt();
             }
             this.offset = 0;
         }
     }
 
-    public BitFieldArray(int length, int numBits)
+    public IntArray(int length)
     {
-        this(new BigInteger[length], 0, length, numBits);
+        this(new int[length], 0, length);
     }
 
-    public BitFieldArray(BigInteger[] data, int offset, int length, int numBits)
+    public IntArray(int[] data, int offset, int length)
     {
         this.data = data;
         this.offset = offset;
         this.length = length;
-        this.numBits = numBits;
     }
 
-    public BigInteger elementAt(int i)
+    public int elementAt(int i)
     {
         return data[offset + i];
     }
@@ -96,20 +90,18 @@ public class BitFieldArray implements Array, SizeOf
         return length;
     }
 
-    /**
-     * @TODO This may not be the exact size in bytes!
-     */
     public int sizeof()
     {
-        return numBits * length / 8;
+        return 4 * length;
     }
 
     public Array map(Mapping m)
     {
-        BitFieldArray result = new BitFieldArray(length, numBits);
+        IntArray result = new IntArray(length);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = ((BigInteger) m.map(data[offset + i]));
+            result.data[i] = ((Integer) m.map(new Integer(data[offset + i])))
+                    .intValue();
         }
         return result;
     }
@@ -118,17 +110,14 @@ public class BitFieldArray implements Array, SizeOf
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
             throw new ArrayIndexOutOfBoundsException();
-        return new BitFieldArray(data, offset + begin, length, numBits);
+        return new IntArray(data, offset + begin, length);
     }
 
-    /**
-     * @TODO this is incorrect. Only works up to 64 bits.
-     */
     public void write(java.io.DataOutput out, CallChain cc) throws IOException
     {
         for (int i = offset; i < offset + length; i++)
         {
-            out.writeLong(data[i].longValue());
+            out.writeInt(data[i]);
         }
     }
 }

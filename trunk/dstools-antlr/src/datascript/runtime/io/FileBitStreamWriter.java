@@ -35,63 +35,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
-package datascript.runtime;
+package datascript.runtime.io;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
  * @author HWellmann
  *
  */
-public class ByteArrayBitStreamReader extends BitStreamReader
+public class FileBitStreamWriter extends BitStreamWriter
 {
-    private ByteArrayInputStream bais;
-    private long length;
     
-    public ByteArrayBitStreamReader(byte[] b) throws IOException
+    public FileBitStreamWriter(String fileName) throws IOException
     {
-        bais = new ByteArrayInputStream(b);
-        length = b.length;
-    }
-    
-    public int read() throws IOException
-    {
-        checkClosed();
-        bitOffset = 0;
-        int val = bais.read();
-        if (val != -1) 
-        {
-            ++streamPos;
-        }
-        return val;
-    }
-    
-    public int read(byte[] b, int off, int len) throws IOException 
-    {
-        checkClosed();
-        bitOffset = 0;
-        int nbytes = bais.read(b, off, len);
-        if (nbytes != -1) {
-            streamPos += nbytes;
-        }
-        return nbytes;
-    }
-
-    public long length() 
-    {
-        return length;
-    }
-
-    public void seek(long pos) throws IOException 
-    {
-        checkClosed();
-        if (pos < flushedPos) {
-            throw new IndexOutOfBoundsException("pos < flushedPos!");
-        }
-        bitOffset = 0;
-        bais.reset();
-        bais.skip(pos);
-        streamPos = pos;
+        super(new FileOutputStream(fileName));
     }
 }

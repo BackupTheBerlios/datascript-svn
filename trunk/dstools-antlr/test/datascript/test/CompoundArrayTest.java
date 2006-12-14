@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 import bits.CompoundArray;
 import bits.ItemA;
 import bits.ItemB;
-import datascript.runtime.ObjectArray;
+import datascript.runtime.array.ObjectArray;
 
 /**
  * @author HWellmann
