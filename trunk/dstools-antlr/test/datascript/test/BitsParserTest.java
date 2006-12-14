@@ -12,8 +12,10 @@ import junit.framework.TestCase;
 import bits.BitStruct;
 import datascript.runtime.io.ByteArrayBitStreamReader;
 import datascript.runtime.io.ByteArrayBitStreamWriter;
+import datascript.runtime.io.FileBitStreamWriter;
 
 /**
+ * Test cases using the BitStruct sequence type from bits.ds.
  * @author HWellmann
  *
  */
@@ -23,10 +25,6 @@ public class BitsParserTest extends TestCase
     private String fileName = "bitparsertest.bin";
     private File file = new File(fileName);
 
-    public BitsParserTest(String name)
-    {
-        super(name);
-    }
 
     /*
      * @see TestCase#tearDown()
@@ -36,6 +34,10 @@ public class BitsParserTest extends TestCase
         file.delete();
     }
 
+    /**
+     * Test read() methods by encoding a BitStruct manually and decoding it
+     * with the DataScript decoder
+     */
     private void writeAndReadBitStruct(int a, int b, int c) throws IOException
     {
         os = new FileImageOutputStream(file);
@@ -51,13 +53,16 @@ public class BitsParserTest extends TestCase
         assertEquals(2, bits.sizeof());
     }
 
+    /**
+     * Test read() and write() methods, by creating a BitStruct in a file
+     * using write() methods of generated code and then decoding the file
+     * using the read() methods.
+     */
     private void encodeAndDecode(int a, int b, int c) throws IOException
     {
         BitStruct bs = new BitStruct((byte)a, (short)b, (byte)c);
-        os = new FileImageOutputStream(file);
-        os.writeBits(a, 4);
-        os.writeBits(b, 8);
-        os.writeBits(c, 4);
+        FileBitStreamWriter os = new FileBitStreamWriter(fileName);
+        bs.write(os);
         os.close();
 
         bits.BitStruct bits = new bits.BitStruct(fileName);
@@ -67,6 +72,10 @@ public class BitsParserTest extends TestCase
         assertEquals(2, bits.sizeof());
     }
 
+    /**
+     * Test read() and write() methods as above, but using by ByteArray in
+     * memory rather than a file.
+     */
     private void encodeAndDecodeInMemory(int a, int b, int c) throws IOException
     {
         BitStruct bs = new BitStruct((byte)a, (short)b, (byte)c);
