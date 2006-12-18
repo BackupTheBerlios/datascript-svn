@@ -71,13 +71,13 @@
     public void read(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws IOException 
     {
 <%
-        for (Parameter param : s.getParameters())
-        {
-            String pName = param.getName();
+	for (Parameter param : s.getParameters())
+	{
+		String pName = param.getName();
 %>
         this.<%=pName%> = <%=pName%>;
-<%        
-        }
+<%
+	}
 %>    
         try 
         {
@@ -96,35 +96,35 @@
                 {
                     throw new IOException("wrong offset for field '<%=field.getName()%>'");
                 } 
-<%	    
+<%
 	    }
 	    String optional = e.getOptionalClause(field);
 	    if (optional != null)
-	    {	    
+	    {
 %>
                 if (<%=optional%>)
                 {
                     <%=e.readField(field)%>
                 }
 <%
-            }
-            else
-            {
+        }
+        else
+        {
 %>                            
                 <%=e.readField(field)%>
 <%
-            }
-            String constraint = e.getConstraint(field);
-            if (constraint != null)
-            {
+        }
+        String constraint = e.getConstraint(field);
+        if (constraint != null)
+        {
 %>
                 if (!(<%=constraint%>))
                 {
                     throw new IOException("constraint violated");
                 }
-<%            
-            }
-	}
+<%
+        }
+	}	// end of for (Field field : s.getFields())
 %>                
             } 
             catch (IOException __e1) 

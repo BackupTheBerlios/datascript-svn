@@ -1,3 +1,4 @@
+<%
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -35,66 +36,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.emit.java;
+%> 
+<%@ jet package="datascript.jet.java" 
+        imports="datascript.ast.* datascript.emit.java.*" 
+        class="ArrayWrite" 
+%><%
+    ArrayEmitter e = (ArrayEmitter) argument;
+    ArrayType array = e.getArrayType();
+    String elType = e.getElementTypeName();
+    String actPar = e.getActualParameterList();
 
-import datascript.ast.CompoundType;
-import datascript.ast.Field;
-import datascript.ast.UnionType;
-import datascript.jet.java.SequenceEnd;
-import datascript.jet.java.UnionBegin;
-import datascript.jet.java.UnionRead;
-import datascript.jet.java.UnionWrite;
+    AccessorNameEmitter ane = new AccessorNameEmitter();
+    Field field  = e.getField();
+    String setter = ane.getSetterName(field);
+    //System.out.println("elType = " + elType + ", param = " + actPar);
 
-public class UnionEmitter extends CompoundEmitter
-{
-    private UnionType union;
-    private UnionFieldEmitter fieldEmitter;
-    private UnionBegin beginTmpl = new UnionBegin();
-    private SequenceEnd endTmpl = new SequenceEnd();
-    private UnionRead readReadTmpl = new UnionRead();
-    private UnionWrite readWriteTmpl = new UnionWrite();
-    
-    public UnionEmitter(JavaDefaultEmitter j, UnionType union)
-    {
-        super(j);
-        this.union = union;
-        fieldEmitter = new UnionFieldEmitter(this);
-    }
-   
-    public UnionType getUnionType()
-    {
-        return union;
-    }
-    
-    public CompoundType getCompoundType()
-    {
-        return union;
-    }        
-
-    public FieldEmitter getFieldEmitter()
-    {
-        return fieldEmitter;
-    }
-    
-    public void begin()
-    {
-        //reset();        
-        String result = beginTmpl.generate(this);
-        out.print(result);
-        
-        for (Field field : union.getFields())
-        {
-            fieldEmitter.emit(field);
-        }
-        result = readReadTmpl.generate(this);
-        out.print(result);
-        result = readWriteTmpl.generate(this);
-        out.print(result);
-    }
-    
-    public void end()
-    {
-        String result = endTmpl.generate(this);
-        out.print(result);
-    }
-}
+	if (array.isVariable())
+	{
+%>
+		{
+			// TODO write variable length arrays
+			notImplemented();
+		}
+<%
+	}
+	else
+	{
+		String length = e.getLengthExpr();
+%>
+		{
+			// TODO write fix length arrays
+			notImplemented();
+		}
+<%
+	}
+%>

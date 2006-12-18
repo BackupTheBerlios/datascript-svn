@@ -41,6 +41,7 @@ import java.io.PrintStream;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
+
 import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
@@ -54,39 +55,47 @@ import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.Value;
+
 import datascript.jet.java.ArrayRead;
+import datascript.jet.java.ArrayWrite;
 
 abstract public class CompoundEmitter
 {
     private JavaDefaultEmitter global;
     private TypeNameEmitter typeNameEmitter;
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
-    private ArrayRead arrayTmpl = new ArrayRead();
+    private ArrayRead arrayReadTmpl = new ArrayRead();
+    private ArrayWrite arrayWriteTmpl = new ArrayWrite();
     private AccessorNameEmitter ane = new AccessorNameEmitter();
     private StringBuilder buffer;
     private String formalParams;
     private String actualParams;
     protected PrintStream out;
-    
+
+
     public CompoundEmitter(JavaDefaultEmitter j)
     {
         this.global = j;
         this.typeNameEmitter = new TypeNameEmitter();
     }
-   
+
+
     abstract public CompoundType getCompoundType();
     abstract public FieldEmitter getFieldEmitter();
+
 
     public JavaDefaultEmitter getGlobal()
     {
         return global;
     }
-    
+
+
     protected void reset()
     {
         formalParams = null;
         actualParams = null;
     }
+
 
     public void setOutputStream(PrintStream out)
     {
@@ -94,7 +103,8 @@ abstract public class CompoundEmitter
         getFieldEmitter().setOutputStream(out);
     }
     
-    
+
+
     public void readFields()
     {
         for (Field field : getCompoundType().getFields())
@@ -102,7 +112,8 @@ abstract public class CompoundEmitter
             readField(field);
         }
     }
-    
+
+
     public String readField(Field field)
     {
         buffer = new StringBuilder();
@@ -127,8 +138,7 @@ abstract public class CompoundEmitter
         else if (type instanceof TypeInstantiation)
         {
             TypeInstantiation inst = (TypeInstantiation)type;
-            CompoundType compound = inst.getBaseType();
-            readInstantiatedField(field, compound, inst);
+            readInstantiatedField(field, inst);
         }
         else
         {
@@ -136,12 +146,14 @@ abstract public class CompoundEmitter
         }
         return buffer.toString();
     }
-    
+
+
     private void indent()
     {
         buffer.append("                "); // 4*4
     }
-    
+
+
     private void readIntegerField(Field field, IntegerType type)
     {
         buffer.append(ane.getSetterName(field));
@@ -149,7 +161,8 @@ abstract public class CompoundEmitter
         readIntegerValue(field, type);
         buffer.append(");");
     }
-    
+
+
     private void readIntegerValue(Field field, IntegerType type)
     {
         String methodSuffix;
@@ -223,7 +236,8 @@ abstract public class CompoundEmitter
         buffer.append(arg);      
         buffer.append(")");
     }
-    
+
+
     private void readCompoundField(Field field, CompoundType type) 
     {
         buffer.append(ane.getSetterName(field));
@@ -232,12 +246,14 @@ abstract public class CompoundEmitter
         buffer.append("(__in, __cc));");
     }
 
-    private void readInstantiatedField(Field field, CompoundType type,
-                                       TypeInstantiation inst)
+
+    private void readInstantiatedField(Field field, TypeInstantiation inst)
     {
+        CompoundType compound = inst.getBaseType();
+        
         buffer.append(ane.getSetterName(field));
         buffer.append("(new ");
-        buffer.append(type.getName());
+        buffer.append(compound.getName());
         buffer.append("(__in, __cc");
         Iterable<Expression> arguments = inst.getArguments();
         if (arguments != null)
@@ -246,7 +262,7 @@ abstract public class CompoundEmitter
             for (Expression arg : arguments)
             {
                 buffer.append(", ");
-                boolean cast = emitTypeCast(type, arg, argIndex);
+                boolean cast = emitTypeCast(compound, arg, argIndex);
                 String javaArg = exprEmitter.emit(arg);
                 buffer.append(javaArg);
                 if (cast)
@@ -259,8 +275,8 @@ abstract public class CompoundEmitter
         buffer.append("));");
     }
 
-    
-    
+
+
     /**
      * Emits a type cast for passing an argument to a parameterized type.
      * @param type              compound type with parameters
@@ -292,7 +308,8 @@ abstract public class CompoundEmitter
         }
         return cast;
     }
-    
+
+
     private void readArrayField(Field field, ArrayType array)
     {
         String elTypeJavaName = typeNameEmitter.getTypeName(array);
@@ -301,7 +318,7 @@ abstract public class CompoundEmitter
             String elTypeName = typeNameEmitter.getTypeName(array.getElementType());
             ArrayEmitter arrayEmitter = new ArrayEmitter(field, array, 
                     elTypeName);
-            String result = arrayTmpl.generate(arrayEmitter);
+            String result = arrayReadTmpl.generate(arrayEmitter);
             buffer.append(result);            
         }
         else
@@ -324,7 +341,8 @@ abstract public class CompoundEmitter
             buffer.append("));");
         }
     }
-    
+
+
     private void readEnumField(Field field, EnumType type)
     {
         IntegerType baseType = (IntegerType) type.getBaseType();
@@ -335,13 +353,15 @@ abstract public class CompoundEmitter
         readIntegerValue(field, baseType);
         buffer.append("));");        
     }
-    
+
+
     private String getLengthExpression(Expression expr)
     {
         // TODO handle variable length
         return exprEmitter.emit(expr);        
     }
-    
+
+
     public String getConstraint(Field field)
     {
         String result = null;
@@ -360,7 +380,8 @@ abstract public class CompoundEmitter
         }
         return result;
     }
-    
+
+
     public String getOptionalClause(Field field)
     {
         String result = null;
@@ -371,7 +392,8 @@ abstract public class CompoundEmitter
         }
         return result;
     }
-    
+
+
     public void buildParameterLists()
     {
         StringBuilder formal = new StringBuilder();
@@ -394,7 +416,8 @@ abstract public class CompoundEmitter
         formalParams = formal.toString();
         actualParams = actual.toString();
     }
-    
+
+
     public String getFormalParameterList()
     {
         if (formalParams == null)
@@ -404,6 +427,7 @@ abstract public class CompoundEmitter
         return formalParams;
     }
 
+
     public String getActualParameterList()
     {
         if (actualParams == null)
@@ -412,7 +436,8 @@ abstract public class CompoundEmitter
         }
         return actualParams;
     }
-    
+
+
     public String getLabelExpression(Field field)
     {
         String result = null;
@@ -438,6 +463,7 @@ abstract public class CompoundEmitter
         return result;
     }
 
+
     public String writeField(Field field)
     {
         buffer = new StringBuilder();
@@ -449,25 +475,20 @@ abstract public class CompoundEmitter
         }
         else if (type instanceof CompoundType)
         {
-            writeNotImplemented();
-            //writeCompoundField(field, (CompoundType)type);
+            writeCompoundField(field, (CompoundType)type);
         }
         else if (type instanceof ArrayType)
         {
-            writeNotImplemented();
-            //writeArrayField(field, (ArrayType)type);
+            writeArrayField(field, (ArrayType)type);
         }
         else if (type instanceof EnumType)
         {
-            writeNotImplemented();
-            //writeEnumField(field, (EnumType)type);
+            writeEnumField(field, (EnumType)type);
         }
         else if (type instanceof TypeInstantiation)
         {
             TypeInstantiation inst = (TypeInstantiation)type;
-            CompoundType compound = inst.getBaseType();
-            writeNotImplemented();
-            //writeInstantiatedField(field, compound, inst);
+            writeInstantiatedField(field, inst);
         }
         else
         {
@@ -475,13 +496,15 @@ abstract public class CompoundEmitter
         }
         return buffer.toString();
     }
-    
+
+
     private void writeIntegerField(Field field, IntegerType type)
     {
-        writeIntegerValue(field, type);
+        writeIntegerValue(AccessorNameEmitter.getGetterName(field)+"()", type);
     }
-    
-    private void writeIntegerValue(Field field, IntegerType type)
+
+
+    private void writeIntegerValue(String value, IntegerType type)
     {
         String methodSuffix;
         String cast = "";
@@ -552,8 +575,7 @@ abstract public class CompoundEmitter
         buffer.append(methodSuffix);
         buffer.append("(");
         buffer.append(cast);
-        buffer.append(AccessorNameEmitter.getGetterName(field));
-        buffer.append("()");
+        buffer.append(value);
         if (arg.length() != 0)
         {
             buffer.append(", ");
@@ -561,39 +583,29 @@ abstract public class CompoundEmitter
         }
         buffer.append(");");
     }
-  
-    
-    private void writeNotImplemented()
-    {
-        buffer.append("notImplemented();");
-    }
-    
+
+
     private void writeCompoundField(Field field, CompoundType type) 
     {
-/*        
-        buffer.append(ane.getSetterName(field));
-        buffer.append("(new ");
-        buffer.append(type.getName());
-        buffer.append("(__out, __cc));");
-*/        
+        buffer.append(AccessorNameEmitter.getGetterName(field));
+        buffer.append("().write(__out, __cc);");
     }
 
-    private void writeInstantiatedField(Field field, CompoundType type,
-                                       TypeInstantiation inst)
+
+    private void writeInstantiatedField(Field field, TypeInstantiation inst)
     {
-/*        
-        buffer.append(ane.getSetterName(field));
-        buffer.append("(new ");
-        buffer.append(type.getName());
-        buffer.append("(__out, __cc");
+        CompoundType compound = inst.getBaseType();
+
+        buffer.append(AccessorNameEmitter.getGetterName(field));
+        buffer.append("().write(__out, __cc");
         Iterable<Expression> arguments = inst.getArguments();
         if (arguments != null)
         {
             int argIndex = 0;
             for (Expression arg : arguments)
             {
-                buffer.append(", ");
-                boolean cast = emitTypeCast(type, arg, argIndex);
+            	buffer.append(", ");
+                boolean cast = emitTypeCast(compound, arg, argIndex);
                 String javaArg = exprEmitter.emit(arg);
                 buffer.append(javaArg);
                 if (cast)
@@ -603,12 +615,11 @@ abstract public class CompoundEmitter
                 argIndex++;
             }
         }
-        buffer.append("));");
-*/        
+        buffer.append(");");
     }
 
-    
-    
+
+
     /**
      * Emits a type cast for passing an argument to a parameterized type.
      * @param type              compound type with parameters
@@ -617,48 +628,30 @@ abstract public class CompoundEmitter
      */
     private void writeArrayField(Field field, ArrayType array)
     {
-/*
+
         String elTypeJavaName = typeNameEmitter.getTypeName(array);
         if (elTypeJavaName.startsWith("ObjectArray"))
         {
             String elTypeName = typeNameEmitter.getTypeName(array.getElementType());
             ArrayEmitter arrayEmitter = new ArrayEmitter(field, array, 
                     elTypeName);
-            String result = arrayTmpl.generate(arrayEmitter);
+            String result = arrayWriteTmpl.generate(arrayEmitter);
             buffer.append(result);            
         }
         else
         {
             Expression length = array.getLengthExpression();
-            buffer.append(ane.getSetterName(field));
-            buffer.append("(new ");
-            buffer.append(elTypeJavaName);
-            buffer.append("(__out, (int)(");
-            buffer.append(getLengthExpression(length));
-            buffer.append(")");
-            TypeInterface elType = array.getElementType();
-            if (elType instanceof BitFieldType)
-            {
-                BitFieldType bitField = (BitFieldType) elType;
-                Expression numBits = bitField.getLengthExpression();
-                buffer.append(", ");
-                buffer.append(getLengthExpression(numBits));
-            }
-            buffer.append("));");
+            buffer.append(AccessorNameEmitter.getGetterName(field));
+            buffer.append("().write(__out, __cc);");
         }
-*/        
+
     }
-    
+
+
     private void writeEnumField(Field field, EnumType type)
     {
-/*        
         IntegerType baseType = (IntegerType) type.getBaseType();
-        buffer.append(ane.getSetterName(field));
-        buffer.append("(");
-        buffer.append(type.getName());
-        buffer.append(".toEnum(");
-        writeIntegerValue(field, baseType);
-        buffer.append("));");
-*/
+        writeIntegerValue(AccessorNameEmitter.getGetterName(field)+"().getValue()", 
+        		baseType);
     }
 }

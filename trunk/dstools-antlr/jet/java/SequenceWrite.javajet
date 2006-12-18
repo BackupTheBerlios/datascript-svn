@@ -60,19 +60,19 @@
     	String sep = (fieldCount == numFields-1) ? "" : ", ";
 %>
         <%=fieldType%> <%=fieldName%><%=sep%> 
-<%    	
+<%
         fieldCount++;
     }
 %>
         )
     {
-<%    
+<%
     for (Field field : s.getFields())    
     {
     	String fieldName = field.getName();
 %>
         this.<%=fieldName%> = <%=fieldName%>;
-<%    	
+<%
     }
 %>
     }    
@@ -109,33 +109,33 @@
 <%
 	for (Field field : s.getFields())
 	{
-	    String label = e.getLabelExpression(field);
-	    if (label != null)
-	    {
+		String label = e.getLabelExpression(field);
+		if (label != null)
+		{
 %>
                 if (__out.getBitPosition() != <%=label%>)
                 {
                     throw new IOException("wrong offset for field '<%=field.getName()%>'");
                 } 
-<%	    
-	    }
-	    String optional = e.getOptionalClause(field);
-	    if (optional != null)
-	    {	    
+<%
+		}
+		String optional = e.getOptionalClause(field);
+		if (optional != null)
+		{
 %>
                 if (<%=optional%>)
                 {
                     <%=e.writeField(field)%>
                 }
 <%
-            }
-            else
-            {
-%>                            
+		}
+		else
+		{
+%>
                 <%=e.writeField(field)%>
 <%
-            }
-	}
+		}
+	}	// end of for (Field field : s.getFields())
 %>                
             } 
             catch (IOException __e1) 
