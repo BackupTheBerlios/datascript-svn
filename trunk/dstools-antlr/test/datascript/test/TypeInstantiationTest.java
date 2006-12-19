@@ -15,6 +15,7 @@ import bits.BlockHeader;
 import bits.BlockType;
 import bits.Blocks;
 import datascript.runtime.array.ByteArray;
+import datascript.runtime.array.ObjectArray;
 
 /**
  * @author HWellmann
@@ -58,6 +59,21 @@ public class TypeInstantiationTest extends TestCase
         }
     }
 
+    public void testInstantiation2() throws IOException
+    {
+    	int size = 0;
+    	BlockType type = bits.BlockType.SORTED;
+        int magic = 0x0EADBEEF;
+        ByteArray bytes = new ByteArray(new byte[] {11,12,13,14}, 0, 4);
+
+    	BlockHeader header = new BlockHeader(type, size);
+    	BlockData data = new BlockData(magic, bytes);
+    	Block block = new Block(header, data);
+    	ObjectArray<Block> blockArray = new ObjectArray<Block>(3);
+    	Blocks blocks = new Blocks(3, blockArray);
+    }
+    
+    
     public void testInstantiation() throws IOException
     {
         short[] sizes = new short[] { 1, 3, 4 };
@@ -66,6 +82,8 @@ public class TypeInstantiationTest extends TestCase
         byte sorted = 9;
         int magic = 0x0EADBEEF;
         os = new FileImageOutputStream(file);
+        
+        // header
         os.writeShort(numBlocks);
 
         // block 0

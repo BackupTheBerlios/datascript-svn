@@ -43,6 +43,7 @@ import java.math.BigInteger;
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamReader;
+import datascript.runtime.io.BitStreamWriter;
 
 public class BitFieldArray implements Array, SizeOf
 {
@@ -128,7 +129,7 @@ public class BitFieldArray implements Array, SizeOf
     /**
      * @TODO this is incorrect. Only works up to 64 bits.
      */
-    public void write(java.io.DataOutput out, CallChain cc) throws IOException
+    public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
         for (int i = offset; i < offset + length; i++)
         {

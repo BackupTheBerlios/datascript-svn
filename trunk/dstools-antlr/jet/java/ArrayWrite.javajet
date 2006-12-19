@@ -48,26 +48,25 @@
 
     AccessorNameEmitter ane = new AccessorNameEmitter();
     Field field  = e.getField();
-    String setter = ane.getSetterName(field);
+    String getter = AccessorNameEmitter.getGetterName(field);
     //System.out.println("elType = " + elType + ", param = " + actPar);
 
 	if (array.isVariable())
 	{
 %>
-		{
-			// TODO write variable length arrays
-			notImplemented();
-		}
+				{
+					// TODO write variable length arrays
+					notImplemented();
+				}
 <%
 	}
 	else
 	{
 		String length = e.getLengthExpr();
 %>
-		{
-			// TODO write fix length arrays
-			notImplemented();
-		}
+				{
+					<%=getter%>().write(__out, __cc);
+				}
 <%
 	}
 %>

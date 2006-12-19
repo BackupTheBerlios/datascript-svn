@@ -49,6 +49,8 @@
     String actualPar = e.getActualParameterList();
     TypeNameEmitter tne = new TypeNameEmitter();
 %>
+
+	// Contructor for <%=name%> 
     public <%=name%>(
 <%
     int fieldCount = 0;
@@ -77,19 +79,19 @@
 %>
     }    
     	
-    public void write(String __filename<%=formalPar%>) throws IOException 
+    public void write(String __filename) throws IOException 
     {
         FileBitStreamWriter __out = new FileBitStreamWriter(__filename);
-        write(__out, new CallChain()<%=actualPar%>);
+        write(__out, new CallChain());
         __out.close();
     }
 
-    public void write(BitStreamWriter __out<%=formalPar%>) throws IOException 
+    public void write(BitStreamWriter __out) throws IOException 
     {
-    	write(__out, new CallChain()<%=actualPar%>);
+    	write(__out, new CallChain());
     }
 
-    public void write(BitStreamWriter __out, CallChain __cc<%=formalPar%>) throws IOException 
+    public void write(BitStreamWriter __out, CallChain __cc) throws IOException 
     {
 <%
         for (Parameter param : s.getParameters())

@@ -47,7 +47,7 @@
     String name = u.getName(); 
 %>
 <%@include file="FileHeader.inc"%>
-public class <%=name%> implements __Visitor.Acceptor
+public class <%=name%> implements __Visitor.Acceptor, Writer
 {
     long __fpos;
     Object __objectChoice;

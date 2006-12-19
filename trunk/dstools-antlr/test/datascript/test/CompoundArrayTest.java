@@ -86,6 +86,8 @@ public class CompoundArrayTest extends TestCase
             assertEquals(valueB+i, itemB.getValue());
         }
         assertEquals(size, array.sizeof());
+        
+        array.write("d:\\CompoundArryWriteTest.data");
     }
 
     public void testArray1() throws IOException

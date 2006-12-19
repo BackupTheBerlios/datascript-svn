@@ -226,6 +226,7 @@ abstract public class CompoundEmitter
                 }
                 arg = exprEmitter.emit(lengthExpr);
                 break;
+
             default:
                 throw new InternalError("unhandled type = " + type.getType());
         }
@@ -487,8 +488,7 @@ abstract public class CompoundEmitter
         }
         else if (type instanceof TypeInstantiation)
         {
-            TypeInstantiation inst = (TypeInstantiation)type;
-            writeInstantiatedField(field, inst);
+            writeInstantiatedField(field, (TypeInstantiation)type);
         }
         else
         {
@@ -599,6 +599,7 @@ abstract public class CompoundEmitter
         buffer.append(AccessorNameEmitter.getGetterName(field));
         buffer.append("().write(__out, __cc");
         Iterable<Expression> arguments = inst.getArguments();
+        /*
         if (arguments != null)
         {
             int argIndex = 0;
@@ -615,6 +616,7 @@ abstract public class CompoundEmitter
                 argIndex++;
             }
         }
+        */
         buffer.append(");");
     }
 

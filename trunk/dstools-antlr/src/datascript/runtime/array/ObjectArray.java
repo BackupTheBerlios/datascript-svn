@@ -44,6 +44,7 @@ import java.io.IOException;
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.Writer;
+import datascript.runtime.io.BitStreamWriter;
 
 public class ObjectArray<E> implements Array, SizeOf
 {
@@ -91,7 +92,7 @@ public class ObjectArray<E> implements Array, SizeOf
         return data.size();
     }
 
-    public void write(java.io.DataOutput out, CallChain cc) throws IOException
+    public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
         for (int i = 0; i < data.size(); i++)
         {

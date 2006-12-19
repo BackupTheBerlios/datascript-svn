@@ -42,6 +42,7 @@ import java.io.IOException;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
+import datascript.runtime.io.BitStreamWriter;
 
 public class UnsignedIntArray implements Array, SizeOf
 {
@@ -113,7 +114,7 @@ public class UnsignedIntArray implements Array, SizeOf
         return new UnsignedIntArray(data, offset + begin, length);
     }
 
-    public void write(java.io.DataOutput out, CallChain cc) throws IOException
+    public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
         for (int i = offset; i < offset + length; i++)
         {

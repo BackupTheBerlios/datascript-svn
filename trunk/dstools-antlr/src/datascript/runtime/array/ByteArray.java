@@ -43,6 +43,7 @@ import java.io.PrintStream;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
+import datascript.runtime.io.BitStreamWriter;
 
 public class ByteArray implements Array, SizeOf
 {
@@ -52,7 +53,7 @@ public class ByteArray implements Array, SizeOf
 
     public ByteArray(DataInput in, int length) throws IOException
     {
-        if (length == -1)
+        if (length < 0)
         {
             throw new RuntimeException("variable length " + getClass()
                     + " not implemented");
@@ -96,7 +97,7 @@ public class ByteArray implements Array, SizeOf
         return new ByteArray(data, offset + begin, length);
     }
 
-    public void write(java.io.DataOutput out, CallChain cc) throws IOException
+    public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
         out.write(data, offset, length);
     }

@@ -41,6 +41,7 @@ import datascript.runtime.CallChain;
 
 public interface Writer
 {
-    public void write(java.io.DataOutput out, CallChain cc)
+    //public void write(java.io.DataOutput out, CallChain cc)
+	public void write(datascript.runtime.io.BitStreamWriter out, CallChain cc)
             throws java.io.IOException;
 }
