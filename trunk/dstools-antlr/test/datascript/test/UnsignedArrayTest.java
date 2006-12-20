@@ -24,6 +24,7 @@ import datascript.runtime.array.UnsignedShortArray;
 public class UnsignedArrayTest extends TestCase
 {
     private FileImageOutputStream os;
+    private String wFileName = "d:\\CompoundArryWriteTest.data";
     private String fileName = "unsignedarraytest.bin";
     private File file = new File(fileName);
 
@@ -50,47 +51,13 @@ public class UnsignedArrayTest extends TestCase
     {
         file.delete();
     }
-
-    /*
-     * Test method for 'datascript.library.BitStreamReader.readByte()'
-     */
-    private void writeArray(int numElems, 
+    
+    private void checkArray(IntegerArray array, int size, 
+    		int numElems, 
             int startInt8, int startUInt8,
             int startInt16, int startUInt16,
-            int startInt32, int startUInt32) throws IOException
+            int startInt32, int startUInt32)
     {
-        file.delete();
-        os = new FileImageOutputStream(file);
-        os.writeShort(numElems);
-
-        for (int i = startInt8; i < startInt8+numElems; i++)
-        {
-            os.writeByte(i);
-        }
-        for (int i = startUInt8; i < startUInt8+numElems; i++)
-        {
-            os.writeByte(i);
-        }
-        for (int i = startInt16; i < startInt16+numElems; i++)
-        {
-            os.writeShort(i);
-        }
-        for (int i = startUInt16; i < startUInt16+numElems; i++)
-        {
-            os.writeShort(i);
-        }
-        for (int i = startInt32; i < startInt32+numElems; i++)
-        {
-            os.writeInt(i);
-        }
-        for (int i = startUInt32; i < startUInt32+numElems; i++)
-        {
-            os.writeInt(i);
-        }
-        int size = (int) os.getStreamPosition();
-        os.close();
-
-        IntegerArray array = new IntegerArray(fileName);
         assertEquals(numElems, array.getNumElems());
 
         ByteArray signed = array.getInt8List();
@@ -128,24 +95,94 @@ public class UnsignedArrayTest extends TestCase
         assertEquals(size, array.sizeof());
     }
 
+    /*
+     * Test method for 'datascript.library.BitStreamReader.readByte()'
+     */
+    private int writeArray(int numElems, 
+            int startInt8, int startUInt8,
+            int startInt16, int startUInt16,
+            int startInt32, int startUInt32) throws IOException
+    {
+        file.delete();
+        os = new FileImageOutputStream(file);
+        os.writeShort(numElems);
+
+        for (int i = startInt8; i < startInt8+numElems; i++)
+        {
+            os.writeByte(i);
+        }
+        for (int i = startUInt8; i < startUInt8+numElems; i++)
+        {
+            os.writeByte(i);
+        }
+        for (int i = startInt16; i < startInt16+numElems; i++)
+        {
+            os.writeShort(i);
+        }
+        for (int i = startUInt16; i < startUInt16+numElems; i++)
+        {
+            os.writeShort(i);
+        }
+        for (int i = startInt32; i < startInt32+numElems; i++)
+        {
+            os.writeInt(i);
+        }
+        for (int i = startUInt32; i < startUInt32+numElems; i++)
+        {
+            os.writeInt(i);
+        }
+        int size = (int) os.getStreamPosition();
+        os.close();
+        
+        return size;
+    }
+
     public void testArray1() throws IOException
     {
-        writeArray(5, 2, 3, 2000, 3000, 200000, 300000);
+        int size = writeArray(5, 2, 3, 2000, 3000, 200000, 300000);
+        IntegerArray array = new IntegerArray(fileName);
+        checkArray(array, size, 5, 2, 3, 2000, 3000, 200000, 300000);
+
+        array.write(wFileName);
+
+        IntegerArray array2 = new IntegerArray(wFileName);
+        checkArray(array2, size, 5, 2, 3, 2000, 3000, 200000, 300000);
     }
 
     public void testArray2() throws IOException
     {
-        writeArray(5, -120, 120, -120, 120, -120, 120);
+        int size = writeArray(5, -120, 120, -120, 120, -120, 120);
+        IntegerArray array = new IntegerArray(fileName);
+        checkArray(array, size, 5, -120, 120, -120, 120, -120, 120);
+
+        array.write(wFileName);
+
+        IntegerArray array2 = new IntegerArray(wFileName);
+        checkArray(array2, size, 5, -120, 120, -120, 120, -120, 120);
     }
 
     public void testArray3() throws IOException
     {
-        writeArray(5, -120, 120, -32000, 32000, -32000, 32000);
+    	int size = writeArray(5, -120, 120, -32000, 32000, -32000, 32000);
+        IntegerArray array = new IntegerArray(fileName);
+        checkArray(array, size, 5, -120, 120, -32000, 32000, -32000, 32000);
+
+        array.write(wFileName);
+
+        IntegerArray array2 = new IntegerArray(wFileName);
+        checkArray(array2, size, 5, -120, 120, -32000, 32000, -32000, 32000);
     }
 
     public void testArray4() throws IOException
     {
-        writeArray(5, -120, 120, -32000, 32000, 0xF0000000, 0x88008800);
+        int size = writeArray(5, -120, 120, -32000, 32000, 0xF0000000, 0x88008800);
+        IntegerArray array = new IntegerArray(fileName);
+        checkArray(array, size, 5, -120, 120, -32000, 32000, 0xF0000000, 0x88008800);
+
+        array.write(wFileName);
+
+        IntegerArray array2 = new IntegerArray(wFileName);
+        checkArray(array2, size, 5, -120, 120, -32000, 32000, 0xF0000000, 0x88008800);
     }
 
 }

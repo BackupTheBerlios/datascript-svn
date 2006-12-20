@@ -23,6 +23,7 @@ import datascript.runtime.array.ObjectArray;
 public class VarArrayTest extends TestCase
 {
     private FileImageOutputStream os;
+    private String wFileName = "d:\\CompoundArryWriteTest.data";
     private String fileName = "vararraytest.bin";
     private File file = new File(fileName);
 
@@ -49,12 +50,27 @@ public class VarArrayTest extends TestCase
     {
         file.delete();
     }
+    
+    private void checkArray(VarArray array, int size, int numElems, int startValue)
+    {
+        ObjectArray<ItemA> aa = array.getA();
+        for (int i = 0; i < aa.length(); i++)
+        {
+            ItemA a = aa.elementAt(i);
+            assertEquals(startValue+i, a.getValue());
+        }
+        ItemB b = array.getB();
+        assertEquals(startValue, b.getValue());
+        assertEquals(numElems, array.getLen());
+        assertEquals(size, array.sizeof());
+    }
 
     /*
      * Test method for 'datascript.library.BitStreamReader.readByte()'
      */
-    private void writeArray(int numElems, int startValue) throws IOException
+    private int writeArray(int numElems, int startValue) throws IOException
     {
+    	file.delete();
         os = new FileImageOutputStream(file);
 
         for (int i = 0; i < numElems; i++)
@@ -68,31 +84,42 @@ public class VarArrayTest extends TestCase
         int size = (int)os.getStreamPosition();
         os.close();
 
-        VarArray array = new VarArray(fileName);
-        ObjectArray<ItemA> aa = array.getA();
-        for (int i = 0; i < aa.length(); i++)
-        {
-            ItemA a = aa.elementAt(i);
-            assertEquals(startValue+i, a.getValue());
-        }
-        ItemB b = array.getB();
-        assertEquals(startValue, b.getValue());
-        assertEquals(numElems, array.getLen());
-        assertEquals(size, array.sizeof());
+        return size;
     }
 
     public void testArray1() throws IOException
     {
-        writeArray(2, 20);
+        int size = writeArray(2, 20);
+        VarArray array = new VarArray(fileName);
+        checkArray(array, size, 2, 20);
+
+        array.write(wFileName);
+
+        VarArray array2 = new VarArray(wFileName);
+        checkArray(array2, size, 2, 20);
     }
 
     public void testArray2() throws IOException
     {
-        writeArray(10, 2000);
+        int size = writeArray(10, 2000);
+        VarArray array = new VarArray(fileName);
+        checkArray(array, size, 10, 2000);
+
+        array.write(wFileName);
+
+        VarArray array2 = new VarArray(wFileName);
+        checkArray(array2, size, 10, 2000);
     }
 
     public void testArray3() throws IOException
     {
-        writeArray(100, 20000);
+        int size = writeArray(100, 20000);
+        VarArray array = new VarArray(fileName);
+        checkArray(array, size, 100, 20000);
+
+        array.write(wFileName);
+
+        VarArray array2 = new VarArray(wFileName);
+        checkArray(array2, size, 100, 20000);
     }
 }

@@ -22,6 +22,7 @@ import bits.MixedArray;
 public class MixedArrayTest extends TestCase
 {
     private FileImageOutputStream os;
+    private String wFileName = "d:\\CompoundArryWriteTest.data";
     private String fileName = "mixedarraytest.bin";
     private File file = new File(fileName);
 
@@ -48,40 +49,10 @@ public class MixedArrayTest extends TestCase
     {
         file.delete();
     }
-
-    /*
-     * Test method for 'datascript.library.BitStreamReader.readByte()'
-     */
-    private void writeArray(int numElems, int startValue) throws IOException
+    
+    private void checkArray(MixedArray array, int size, 
+    		int numElems, int startValue) throws IOException
     {
-        file.delete();
-        os = new FileImageOutputStream(file);
-        os.writeShort(numElems);
-        int value = startValue;
-        
-
-        for (int i = 0; i < numElems; i++)
-        {
-            switch (i % 3)
-            {
-                case 0:
-                    os.writeByte(1);
-                    os.writeShort(startValue+i);
-                    break;
-                case 1:
-                    os.writeByte(2);
-                    os.writeInt(startValue+i);
-                    break;
-                case 2:
-                    os.writeByte(3);
-                    os.writeLong(startValue+i);
-                    break;
-            }
-        }
-        int size = (int) os.getStreamPosition();
-        os.close();
-
-        MixedArray array = new MixedArray(fileName);
         assertEquals(numElems, array.getNumItems());
 
         for (int i = 0; i < numElems; i++)
@@ -109,18 +80,74 @@ public class MixedArrayTest extends TestCase
         assertEquals(size, array.sizeof());
     }
 
+    /*
+     * Test method for 'datascript.library.BitStreamReader.readByte()'
+     * return	size of the file
+     */
+    private int writeArray(int numElems, int startValue) throws IOException
+    {
+        file.delete();
+        os = new FileImageOutputStream(file);
+        os.writeShort(numElems);
+        int value = startValue;
+
+        for (int i = 0; i < numElems; i++)
+        {
+            switch (i % 3)
+            {
+                case 0:
+                    os.writeByte(1);
+                    os.writeShort(startValue+i);
+                    break;
+                case 1:
+                    os.writeByte(2);
+                    os.writeInt(startValue+i);
+                    break;
+                case 2:
+                    os.writeByte(3);
+                    os.writeLong(startValue+i);
+                    break;
+            }
+        }
+        int size = (int) os.getStreamPosition();
+        os.close();
+        
+        return size;
+    }
+
     public void testArray1() throws IOException
     {
-        writeArray(10, 20);
+        int size = writeArray(10, 20);
+        MixedArray array = new MixedArray(fileName);
+        checkArray(array, size, 10, 20);
+
+        array.write(wFileName);
+
+        MixedArray array2 = new MixedArray(fileName);
+        checkArray(array2, size, 10, 20);
     }
 
     public void testArray2() throws IOException
     {
-        writeArray(100, 2000);
+    	int size = writeArray(10, 20);
+        MixedArray array = new MixedArray(fileName);
+        checkArray(array, size, 10, 20);
+
+        array.write(wFileName);
+
+        MixedArray array2 = new MixedArray(fileName);
+        checkArray(array2, size, 10, 20);
     }
 
     public void testArray3() throws IOException
     {
-        writeArray(1000, 20000);
+    	int size = writeArray(1000, 20000);
+        MixedArray array = new MixedArray(fileName);
+        checkArray(array, size, 1000, 20000);
+
+        array.write(wFileName);
+
+        MixedArray array2 = new MixedArray(fileName);
+        checkArray(array2, size, 1000, 20000);
     }
 }

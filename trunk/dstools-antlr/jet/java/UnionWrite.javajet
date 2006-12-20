@@ -52,7 +52,7 @@
     {
 		String fname = field.getName();
 %>
-        if (__choiceTag != CHOICE_<%=fname%>) 
+        if (__choiceTag == CHOICE_<%=fname%>) 
         {
         	<%=e.writeField(field)%>
 		}
