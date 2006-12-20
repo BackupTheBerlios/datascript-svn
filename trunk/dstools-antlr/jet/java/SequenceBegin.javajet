@@ -55,9 +55,8 @@ public class <%=name%> implements __Visitor.Acceptor, Writer
     {
         visitor.visit(this, arg);
     }
-    
+
     public int sizeof() 
     {
         return __SizeOf.sizeof(this);
     }
-    

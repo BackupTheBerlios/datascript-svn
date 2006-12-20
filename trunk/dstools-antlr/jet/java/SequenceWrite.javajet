@@ -99,9 +99,9 @@
             String pName = param.getName();
 %>
         this.<%=pName%> = <%=pName%>;
-<%        
+<%
         }
-%>    
+%>
         try 
         {
             __cc.push("<%=name%>", this);
@@ -118,7 +118,7 @@
                 if (__out.getBitPosition() != <%=label%>)
                 {
                     throw new IOException("wrong offset for field '<%=field.getName()%>'");
-                } 
+                }
 <%
 		}
 		String optional = e.getOptionalClause(field);
@@ -138,7 +138,7 @@
 <%
 		}
 	}	// end of for (Field field : s.getFields())
-%>                
+%>
             } 
             catch (IOException __e1) 
             {
@@ -150,9 +150,4 @@
         { 
             __cc.pop(); 
         }
-    }
-    
-    private void notImplemented() throws IOException
-    {
-        throw new IOException("not yet implemented");
     }

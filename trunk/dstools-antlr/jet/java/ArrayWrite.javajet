@@ -43,30 +43,9 @@
 %><%
     ArrayEmitter e = (ArrayEmitter) argument;
     ArrayType array = e.getArrayType();
-    String elType = e.getElementTypeName();
-    String actPar = e.getActualParameterList();
 
     AccessorNameEmitter ane = new AccessorNameEmitter();
     Field field  = e.getField();
     String getter = AccessorNameEmitter.getGetterName(field);
-    //System.out.println("elType = " + elType + ", param = " + actPar);
-
-	if (array.isVariable())
-	{
 %>
-				{
-					// TODO write variable length arrays
-					notImplemented();
-				}
-<%
-	}
-	else
-	{
-		String length = e.getLengthExpr();
-%>
-				{
-					<%=getter%>().write(__out, __cc);
-				}
-<%
-	}
-%>
+				<%=getter%>().write(__out, __cc);

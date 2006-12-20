@@ -42,20 +42,22 @@
         class="UnionWrite" %>
 <% 
     UnionEmitter e = (UnionEmitter) argument;
-    UnionType s = e.getUnionType();
-    String name = s.getName();
-    String formalPar = e.getFormalParameterList();
-    String actualPar = e.getActualParameterList();
+    UnionType u = e.getUnionType();
 %>
 
-    public void write(BitStreamWriter __out, CallChain __cc<%=formalPar%>) throws IOException 
+    public void write(BitStreamWriter __out, CallChain __cc) throws IOException 
     {
-		// TODO write variable length arrays
-        notImplemented();
+<%
+    for (Field field : u.getFields())
+    {
+		String fname = field.getName();
+%>
+        if (__choiceTag != CHOICE_<%=fname%>) 
+        {
+        	<%=e.writeField(field)%>
+		}
+<%
     }
-    
-    private void notImplemented() throws IOException
-    {
-        throw new IOException("not yet implemented");
+%>
     }
 
