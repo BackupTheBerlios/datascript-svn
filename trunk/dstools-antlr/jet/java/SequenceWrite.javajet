@@ -122,17 +122,38 @@
 <%
 		}
 		String optional = e.getOptionalClause(field);
+        String constraint = e.getConstraint(field);
 		if (optional != null)
 		{
 %>
                 if (<%=optional%>)
                 {
+<%
+        	if (constraint != null)
+        	{
+%>
+                	if (!(<%=constraint%>))
+                	{
+                    	throw new IOException("constraint violated");
+                	}
+<%
+        	}
+%>
                     <%=e.writeField(field)%>
                 }
 <%
 		}
 		else
 		{
+        	if (constraint != null)
+        	{
+%>
+                if (!(<%=constraint%>))
+                {
+                   	throw new IOException("constraint violated");
+                }
+<%
+        	}
 %>
                 <%=e.writeField(field)%>
 <%

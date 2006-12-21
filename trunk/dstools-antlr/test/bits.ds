@@ -158,7 +158,7 @@ Optional
 {
     uint8       tag;
     uint16      a;
-    uint32      b if tag == 99;
+    uint32      b if tag == 99 : b > a;
     ItemA       ia if tag == 98;
     uint16      c;
 };

@@ -99,12 +99,24 @@
 <%
 	    }
 	    String optional = e.getOptionalClause(field);
+        String constraint = e.getConstraint(field);
 	    if (optional != null)
 	    {
 %>
                 if (<%=optional%>)
                 {
                     <%=e.readField(field)%>
+<%
+        	if (constraint != null)
+        	{
+%>
+                	if (!(<%=constraint%>))
+                	{
+                    	throw new IOException("constraint violated");
+                	}
+<%
+        	}
+%>
                 }
 <%
         }
@@ -113,16 +125,15 @@
 %>                            
                 <%=e.readField(field)%>
 <%
-        }
-        String constraint = e.getConstraint(field);
-        if (constraint != null)
-        {
+        	if (constraint != null)
+        	{
 %>
-                if (!(<%=constraint%>))
-                {
-                    throw new IOException("constraint violated");
-                }
+               	if (!(<%=constraint%>))
+               	{
+                   	throw new IOException("constraint violated");
+               	}
 <%
+        	}
         }
 	}	// end of for (Field field : s.getFields())
 %>                
