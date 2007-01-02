@@ -126,18 +126,11 @@ public class BitFieldArray implements Array, SizeOf
         return new BitFieldArray(data, offset + begin, length, numBits);
     }
 
-    /**
-     * @TODO this is incorrect. Only works up to 64 bits.
-     */
     public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
         for (int i = offset; i < offset + length; i++)
         {
-            //out.writeLong(data[i].longValue());
-            /**
-             * @DONE this could be correct to work up to 64 bits.
-             */
-            out.write(data[i].toByteArray());
+            out.writeBigInteger(data[i], numBits);
         }
     }
 }

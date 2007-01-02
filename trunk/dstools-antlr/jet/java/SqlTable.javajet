@@ -101,7 +101,7 @@ public class <%=name%>
     
     public void write(BitStreamWriter __out) throws SQLException, IOException
     {
-        
+        java.lang.Error("Memberfunktion write is jet not implemented");
     }
     
 }

@@ -568,6 +568,7 @@ abstract public class CompoundEmitter
                 }
                 arg = exprEmitter.emit(lengthExpr);
                 break;
+
             default:
                 throw new InternalError("unhandled type = " + type.getType());
         }
@@ -594,12 +595,12 @@ abstract public class CompoundEmitter
 
     private void writeInstantiatedField(Field field, TypeInstantiation inst)
     {
-        CompoundType compound = inst.getBaseType();
-
         buffer.append(AccessorNameEmitter.getGetterName(field));
         buffer.append("().write(__out, __cc");
-        Iterable<Expression> arguments = inst.getArguments();
         /*
+        CompoundType compound = inst.getBaseType();
+        Iterable<Expression> arguments = inst.getArguments();
+
         if (arguments != null)
         {
             int argIndex = 0;

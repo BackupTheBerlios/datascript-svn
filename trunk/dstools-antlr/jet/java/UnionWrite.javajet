@@ -47,17 +47,19 @@
 
     public void write(BitStreamWriter __out, CallChain __cc) throws IOException 
     {
+    	switch (__choiceTag)
+    	{
 <%
     for (Field field : u.getFields())
     {
 		String fname = field.getName();
 %>
-        if (__choiceTag == CHOICE_<%=fname%>) 
-        {
-        	<%=e.writeField(field)%>
-		}
+	        case CHOICE_<%=fname%>:
+	        	<%=e.writeField(field)%>
+				break;
 <%
     }
 %>
+		}
     }
 

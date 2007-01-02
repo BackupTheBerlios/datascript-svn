@@ -137,36 +137,41 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
         }
     }
     
+    private void writeBitfield(BigInteger value, int numBits) throws IOException
+    {    	
+    	if (numBits >= 64)
+    	{
+        	long val = value.longValue();
+        	writeBitfield(value.shiftRight(64), numBits - 64);
+        	writeLong(val);
+    	}
+    	else if (numBits >= 32)
+    	{
+        	int val = value.intValue();
+        	writeBitfield(value.shiftRight(32), numBits - 32);
+        	writeInt(val);
+    	}
+    	else if (numBits >= 16)
+    	{
+        	int val = value.shortValue();
+        	writeBitfield(value.shiftRight(16), numBits - 16);
+        	writeShort(val);
+    	}
+    	else if (numBits >= 8)
+    	{
+        	int val = value.byteValue();
+        	writeBitfield(value.shiftRight(8), numBits - 8);
+        	writeByte(val);
+    	}
+    	else
+    	{
+        	int val = value.byteValue();
+        	writeBits(val, numBits);
+    	}
+    }
+
     public void writeBigInteger(BigInteger value, int numBits) throws IOException
     {
-/*
-        BigInteger result = BigInteger.ZERO;
-        int toBeRead = numBits;
-        if (toBeRead > 8)
-        {
-            if (bitOffset != 0)
-            {
-                int prefixLength = 8-bitOffset;
-                long mostSignificantBits = writeBits(prefixLength);
-                result = BigInteger.valueOf(mostSignificantBits);
-                toBeRead -= prefixLength;
-            }
-
-            int numBytes = toBeRead / 8;
-            byte[] b = new byte[numBytes];
-            writeFully(b);
-            BigInteger i = new BigInteger(1, b);
-            result = result.shiftLeft(8*numBytes);
-            result = result.or(i);
-            toBeRead %= 8;
-        }
-        if (toBeRead > 0)
-        {
-            long value = writeBits(toBeRead);
-            result = result.shiftLeft(toBeRead);
-            result = result.or(BigInteger.valueOf(value));
-        }        
-        return result;
-*/
+    	writeBitfield(value, numBits);
     }
 }

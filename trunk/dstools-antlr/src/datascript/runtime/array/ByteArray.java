@@ -99,7 +99,10 @@ public class ByteArray implements Array, SizeOf
 
     public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
-        out.write(data, offset, length);
+        for (int i = offset; i < offset + length; i++)
+        {
+            out.writeByte(data[i]);
+        }
     }
 
     public byte elementAt(int i)
