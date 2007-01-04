@@ -358,7 +358,11 @@ abstract public class CompoundEmitter
 
     private String getLengthExpression(Expression expr)
     {
-        // TODO handle variable length
+        if (expr == null)
+        {
+            // TODO handle variable length
+            throw new InternalError("Variable length arrays are not implemented now!");
+        }
         return exprEmitter.emit(expr);        
     }
 
