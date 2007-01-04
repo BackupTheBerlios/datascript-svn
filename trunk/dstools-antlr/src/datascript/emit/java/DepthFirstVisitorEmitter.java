@@ -177,6 +177,13 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
             }
             buffer.append(", arg)");
         }
+        else if (type instanceof datascript.ast.ArrayType)
+        {
+            buffer.append("//TODO: Visitor for arrays" + 
+                    System.getProperty("line.separator"));
+
+            buffer.append("throw new InternalError(\"Visitors for arrays are not implemented now!\")");
+        }
         else
         {
             /*

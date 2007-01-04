@@ -131,6 +131,13 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
             buffer.append(fieldName);
             buffer.append("\")");
         }
+        else if (type instanceof datascript.ast.ArrayType)
+        {
+            buffer.append("//TODO: Visitor for arrays" + 
+                    System.getProperty("line.separator"));
+
+            buffer.append("throw new InternalError(\"Visitors for arrays are not implemented now!\")");
+        }
         else
         {
             buffer.append(nodeName);
