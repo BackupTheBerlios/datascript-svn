@@ -101,12 +101,12 @@ public class BitFieldArray implements Array, SizeOf
         return length;
     }
 
-    /**
-     * @TODO This may not be the exact size in bytes!
-     */
     public int sizeof()
     {
-        return numBits * length / 8;
+        if ((numBits * length) % 8 != 0)
+            return ((numBits * length) / 8) + 1;
+        
+        return (numBits * length) / 8;
     }
 
     public Array map(Mapping m)
