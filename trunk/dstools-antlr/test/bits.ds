@@ -179,7 +179,7 @@ VarArrayWithSize
 ParamArray
 {
     uint16                          numItems;
-    uint16		            size[numItems];
+    uint16		                    size[numItems];
     ParamBlock(size[block$index])   block[numItems];
 };
 
@@ -199,8 +199,8 @@ GlobalLabelSeq
 LabelledType
 {
     uint16	numItems;
-    uint16      dataOffset;
-    uint16      globalOffset;
+    uint16  dataOffset;
+    uint16  globalOffset;
     Header	headers[numItems];
 dataOffset:    
     ItemA	a[numItems];
@@ -241,4 +241,17 @@ BaseTypes
         int16 v16 : tag == 16;
         int32 v32 : tag == 32;
     } value;    
+};
+
+OptionalArray
+{
+	uint16	count;
+	int16	a[count]    if count > 0;
+	int16	b[1]        if count == 0;
+};
+
+RecursiveStructure
+{
+	uint8	elementTag;
+	RecursiveStructure nextElement	if elementTag > 0; 
 };
