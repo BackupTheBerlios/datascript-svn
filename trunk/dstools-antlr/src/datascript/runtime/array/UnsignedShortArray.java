@@ -43,6 +43,7 @@ import java.io.IOException;
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamWriter;
+import datascript.runtime.io.BitStreamReader;
 
 public class UnsignedShortArray implements Array, SizeOf
 {
@@ -50,20 +51,39 @@ public class UnsignedShortArray implements Array, SizeOf
     int offset;
     int length;
 
-    public UnsignedShortArray(DataInput in, int length) throws IOException
+    public UnsignedShortArray(BitStreamReader in, int length) throws IOException
     {
         if (length == -1)
         {
-            throw new RuntimeException("variable length " + getClass()
-                    + " not implemented");
+            //throw new RuntimeException("variable length " + getClass() + " not implemented");
+
+            java.util.Vector<Integer> v = new java.util.Vector<Integer>();
+            long __afpos = 0;
+            try 
+            {
+                while (true) 
+                {
+                    __afpos = in.getBitPosition();
+                    v.add(in.readUnsignedShort());
+                }
+            } 
+            catch (IOException __e) 
+            {
+                in.setBitPosition(__afpos);
+            }
+            data = new int[v.size()];
+            for (int i = 0; i < data.length; ++i)
+            {
+                data[i] = v.get(i).intValue();
+            }
         }
         else
         {
             this.length = length;
-            data = new int[length];
+            this.data = new int[length];
             for (int i = 0; i < length; i++)
             {
-                data[i] = in.readUnsignedShort();
+                this.data[i] = in.readUnsignedShort();
             }
             this.offset = 0;
         }
