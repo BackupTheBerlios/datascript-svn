@@ -361,9 +361,10 @@ abstract public class CompoundEmitter
         if (expr == null)
         {
             // TODO handle variable length
-            throw new InternalError("Variable length arrays are not implemented now!");
+            //throw new InternalError("Variable length arrays are not implemented now!");
+            return "-1";
         }
-        return exprEmitter.emit(expr);        
+        return exprEmitter.emit(expr);
     }
 
 
@@ -600,39 +601,10 @@ abstract public class CompoundEmitter
     private void writeInstantiatedField(Field field, TypeInstantiation inst)
     {
         buffer.append(AccessorNameEmitter.getGetterName(field));
-        buffer.append("().write(__out, __cc");
-        /*
-        CompoundType compound = inst.getBaseType();
-        Iterable<Expression> arguments = inst.getArguments();
-
-        if (arguments != null)
-        {
-            int argIndex = 0;
-            for (Expression arg : arguments)
-            {
-            	buffer.append(", ");
-                boolean cast = emitTypeCast(compound, arg, argIndex);
-                String javaArg = exprEmitter.emit(arg);
-                buffer.append(javaArg);
-                if (cast)
-                {
-                    buffer.append(")");
-                }
-                argIndex++;
-            }
-        }
-        */
-        buffer.append(");");
+        buffer.append("().write(__out, __cc);");
     }
 
 
-
-    /**
-     * Emits a type cast for passing an argument to a parameterized type.
-     * @param type              compound type with parameters
-     * @param expr              argument expression in type instantiation
-     * @param paramIndex        index of argument in argument list
-     */
     private void writeArrayField(Field field, ArrayType array)
     {
 
@@ -640,14 +612,12 @@ abstract public class CompoundEmitter
         if (elTypeJavaName.startsWith("ObjectArray"))
         {
             String elTypeName = typeNameEmitter.getTypeName(array.getElementType());
-            ArrayEmitter arrayEmitter = new ArrayEmitter(field, array, 
-                    elTypeName);
+            ArrayEmitter arrayEmitter = new ArrayEmitter(field, array, elTypeName);
             String result = arrayWriteTmpl.generate(arrayEmitter);
             buffer.append(result);            
         }
         else
         {
-            Expression length = array.getLengthExpression();
             buffer.append(AccessorNameEmitter.getGetterName(field));
             buffer.append("().write(__out, __cc);");
         }

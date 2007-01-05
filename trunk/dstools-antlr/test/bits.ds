@@ -243,8 +243,10 @@ BaseTypes
     } value;    
 };
 
-OptionalArray
+OptionalArraySequence
 {
+	int8	kleinesArray[3];
+	uint16	varArray[];
 	uint16	count;
 	int16	a[count]    if count > 0;
 	int16	b[1]        if count == 0;

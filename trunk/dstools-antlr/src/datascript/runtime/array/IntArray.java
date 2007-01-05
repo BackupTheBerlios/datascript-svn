@@ -52,6 +52,7 @@ public class IntArray implements Array, SizeOf
 
     public IntArray(DataInput in, int length) throws IOException
     {
+        // TODO handle variable length
         if (length == -1)
         {
             throw new RuntimeException("variable length " + getClass()

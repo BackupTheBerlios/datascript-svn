@@ -51,15 +51,100 @@ public class __DepthFirstVisitor implements __Visitor
     public void visitInt16(short n, Object arg) {};
     public void visitInt32(int n, Object arg) {};
     public void visitInt64(long n, Object arg) {};
+    
     public void visitUInt8(short n, Object arg) {};
     public void visitUInt16(int n, Object arg) {};
     public void visitUInt32(long n, Object arg) {};
     public void visitUInt64(BigInteger n, Object arg) {};
+    
     public void visitBitField(byte n, int length, Object arg) {};
     public void visitBitField(short n, int length, Object arg) {};
     public void visitBitField(int n, int length, Object arg) {};
     public void visitBitField(long n, int length, Object arg) {};
     public void visitBitField(BigInteger n, int length, Object arg) {};
+    
     public void visitString(String n, Object arg) {};
+
+
+    public void visitArray(ObjectArray n, Object arg)
+    {
+    	int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+      	    ((__Visitor.Acceptor)(n.elementAt(i))).accept(this, arg);
+      	}
+    }
+
+    public void visitArray(ByteArray n, Object arg)
+    {
+    	int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitInt8(n.elementAt(i), arg);	
+      	}
+    }
+
+    public void visitArray(UnsignedByteArray n, Object arg)
+    {
+    	int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitUInt8(n.elementAt(i), arg);	
+      	}
+    }
+
+    public void visitArray(ShortArray n, Object arg)
+    {
+    	int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitInt16(n.elementAt(i), arg);	
+      	}
+    }
+
+    public void visitArray(UnsignedShortArray n, Object arg)
+    {
+    	int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitUInt16(n.elementAt(i), arg);	
+      	}
+    }
+
+    public void visitArray(IntArray n, Object arg)
+    {
+    	int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitInt32(n.elementAt(i), arg);	
+      	}
+    }
+
+    public void visitArray(UnsignedIntArray n, Object arg)
+    {
+    	int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitUInt32(n.elementAt(i), arg);	
+      	}
+    }
+
+    public void visitArray(LongArray n, Object arg)
+    {
+    	int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitInt64(n.elementAt(i), arg);	
+      	}
+    }
+
+    public void visitArray(BitFieldArray n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitUInt64(n.elementAt(i), arg);	
+      	}
+    }
 
 

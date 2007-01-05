@@ -113,6 +113,13 @@ public class __SizeOf extends __DepthFirstVisitor
     {
     	__size += length;
     }
+
+    public void visitString(String n, Object arg)
+    {
+        // do not use n.length()! the result contains only 
+        // the count auf characters, not the count of bytes
+        __size += n.getBytes().length;
+    }
     
     public static int sizeof(__Visitor.Acceptor a) 
     {

@@ -51,6 +51,7 @@ import datascript.emit.java.AccessorNameEmitter;
 import datascript.emit.java.DepthFirstVisitorEmitter;
 import datascript.jet.java.XmlDumper;
 import datascript.jet.java.XmlDumperEnumeration;
+import datascript.runtime.array.ObjectArray;
 
 public class XmlDumperEmitter extends DepthFirstVisitorEmitter
 {
@@ -131,12 +132,9 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
             buffer.append(fieldName);
             buffer.append("\")");
         }
-        else if (type instanceof datascript.ast.ArrayType)
+        else if (type instanceof ArrayType)
         {
-            buffer.append("//TODO: Visitor for arrays" + 
-                    System.getProperty("line.separator"));
-
-            buffer.append("throw new InternalError(\"Visitors for arrays are not implemented now!\")");
+            buffer.append("visitArray(" + nodeName + ", arg)");
         }
         else
         {

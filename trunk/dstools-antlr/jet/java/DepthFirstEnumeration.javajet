@@ -47,4 +47,5 @@
 %>
     public void visit(<%=tname%> node, Object arg)
     {
+        // this ist an ENUM, so nothing more to visit
     }

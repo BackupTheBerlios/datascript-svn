@@ -52,7 +52,7 @@
 	if (start != null)
 	{
 %>
-	<%=start%>
+		<%=start%>
 <%	
 	}
 %>	
@@ -67,31 +67,14 @@
                 case <%=tname%>.CHOICE_<%=field.getName()%>:
 <%      
             String visitor = e.getVisitor(field);
-            String fname   = AccessorNameEmitter.getGetterName(field);
-            String elType = e.getElementType(field);
-            if (elType != null)
-            {
-                    String elemVisitor = e.getElementVisitor(field);
-%>
-                    {
-                        int __length = node.<%=fname%>().length();
-                        for (int __index = 0; __index < __length; __index++)
-                        {
-                            <%=elType%> __elem = node.<%=fname%>().elementAt(__index);
-                            <%=elemVisitor%>;
-                        }
-                    }            
-<%
-            }
-            else
             {
 %>
                     <%=visitor%>;
-<%                
+<%
             }
 %>
                     break;
-<%                
+<%
         }
 %>
             }
@@ -106,7 +89,7 @@
 	{
 %>
 	<%=end%>
-<%	
+<%
 	}
 %>	
     }

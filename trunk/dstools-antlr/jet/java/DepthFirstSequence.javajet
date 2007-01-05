@@ -40,7 +40,7 @@
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
         class="DepthFirstSequence" %>
-<% 
+<%
     DepthFirstVisitorEmitter e = (DepthFirstVisitorEmitter) argument;
     SequenceType s = e.getSequenceType();
     String name = s.getName();
@@ -52,54 +52,35 @@
 	if (start != null)
 	{
 %>
-	<%=start%>
-<%	
-	}	
+		<%=start%>
+<%
+	}
 	for (Field field : s.getFields())
 	{
-            String visitor = e.getVisitor(field);
-            String fname   = AccessorNameEmitter.getGetterName(field);
+        String visitor = e.getVisitor(field);
 	    String optional = e.getOptionalClause(field);
 	    if (optional != null)
-	    {	    
+	    {
 %>
         if (node.<%=optional%>)
         {
             <%=visitor%>;
         }
 <%
-            }
-            else
-            {
-                String elType = e.getElementType(field);
-                if (elType != null)
-                {
-                    String elemVisitor = e.getElementVisitor(field);
-%>
+        }
+        else
         {
-	    int __length = node.<%=fname%>().length();
-            for (int __index = 0; __index < __length; __index++)
-            {
-                <%=elType%> __elem = node.<%=fname%>().elementAt(__index);
-                <%=elemVisitor%>;
-            }
-        }            
-<%
-                }
-                else
-                {
 %>
         <%=visitor%>;
-<%                
-                }
-            }
-        }    
-        String end = e.endType();
-        if (end != null)
-        {
+<%
+        }
+    }
+    String end = e.endType();
+    if (end != null)
+    {
 %>
         <%=end%>
-<%        
-        }
+<%
+    }
 %>
     }
