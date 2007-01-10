@@ -19,9 +19,8 @@ import bits.Enums;
 public class EnumerationTest extends TestCase
 {
     private FileImageOutputStream os;
-
+    private String wFileName = "d:\\EnumerationTest.data";
     private String fileName = "enumerationtest.bin";
-
     private File file = new File(fileName);
 
     /**
@@ -51,7 +50,7 @@ public class EnumerationTest extends TestCase
     /*
      * Test method for 'datascript.library.BitStreamReader.readByte()'
      */
-    private void writeEnums(Colour c1, Colour c2, Dimension d1, Dimension d2)
+    private int writeEnums(Colour c1, Colour c2, Dimension d1, Dimension d2)
             throws IOException
     {
 
@@ -61,28 +60,54 @@ public class EnumerationTest extends TestCase
         os.writeBits(c2.getValue(), 16);
         os.writeBits(d1.getValue(), 8);
         os.writeBits(d2.getValue(), 8);
+        int size = (int) os.getStreamPosition();
         os.close();
-
-        Enums e = new Enums(fileName);
+        
+        return size;
+    }
+    
+    private void checkEnums(Enums e, int size, Colour c1, Colour c2, Dimension d1, Dimension d2)
+    {
         assertEquals(c1, e.getColour1());
         assertEquals(c2, e.getColour2());
         assertEquals(d1, e.getDim1());
         assertEquals(d2, e.getDim2());
-        assertEquals(6, e.sizeof());
+        assertEquals(size, e.sizeof());
     }
 
     public void testUnsigned1() throws IOException
     {
-        writeEnums(Colour.RED, Colour.BLUE, Dimension.HEIGHT, Dimension.LENGTH);
+        int size = writeEnums(Colour.RED, Colour.BLUE, Dimension.HEIGHT, Dimension.LENGTH);
+        Enums e = new Enums(fileName);
+        checkEnums(e, size, Colour.RED, Colour.BLUE, Dimension.HEIGHT, Dimension.LENGTH);
+
+        e.write(wFileName);
+        
+        Enums e2 = new Enums(wFileName);
+        checkEnums(e2, size, Colour.RED, Colour.BLUE, Dimension.HEIGHT, Dimension.LENGTH);
     }
 
     public void testUnsigned2() throws IOException
     {
-        writeEnums(Colour.GREEN, Colour.YELLOW, Dimension.WIDTH, Dimension.HEIGHT);
+        int size = writeEnums(Colour.GREEN, Colour.YELLOW, Dimension.WIDTH, Dimension.HEIGHT);
+        Enums e = new Enums(fileName);
+        checkEnums(e, size, Colour.GREEN, Colour.YELLOW, Dimension.WIDTH, Dimension.HEIGHT);
+
+        e.write(wFileName);
+        
+        Enums e2 = new Enums(wFileName);
+        checkEnums(e2, size, Colour.GREEN, Colour.YELLOW, Dimension.WIDTH, Dimension.HEIGHT);
     }
 
     public void testUnsigned3() throws IOException
     {
-        writeEnums(Colour.YELLOW, Colour.BLUE, Dimension.HEIGHT, Dimension.WIDTH);
+        int size = writeEnums(Colour.YELLOW, Colour.BLUE, Dimension.HEIGHT, Dimension.WIDTH);
+        Enums e = new Enums(fileName);
+        checkEnums(e, size, Colour.YELLOW, Colour.BLUE, Dimension.HEIGHT, Dimension.WIDTH);
+
+        e.write(wFileName);
+        
+        Enums e2 = new Enums(wFileName);
+        checkEnums(e2, size, Colour.YELLOW, Colour.BLUE, Dimension.HEIGHT, Dimension.WIDTH);
     }
 }

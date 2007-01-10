@@ -23,7 +23,7 @@ import datascript.runtime.array.ObjectArray;
 public class VarArrayTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\CompoundArryWriteTest.data";
+    private String wFileName = "d:\\VarArryWriteTest.data";
     private String fileName = "vararraytest.bin";
     private File file = new File(fileName);
 

@@ -21,6 +21,7 @@ import datascript.runtime.array.UnsignedShortArray;
 public class ExpressionTest extends TestCase
 {
     private FileImageOutputStream os;
+    private String wFileName = "d:\\EnumerationTest.data";
     private String fileName = "expressiontest.bin";
     private File file = new File(fileName);
 
@@ -47,28 +48,40 @@ public class ExpressionTest extends TestCase
     {
         file.delete();
     }
-
-    /*
-     * Test method for 'datascript.library.BitStreamReader.readByte()'
-     */
-    private void writeSequence(int tag) throws IOException
+    
+    private void checkSequence(CondExpr ce, int size, int tag, int value)
     {
-        os = new FileImageOutputStream(file);
-        os.writeByte(tag);
-        int value = (tag % 2 == 0) ? 47 : 11;
-        os.writeInt(value);
-        int size = (int) os.getStreamPosition();
-        os.close();
-
-        CondExpr ce = new CondExpr(fileName);
         assertEquals(tag, ce.getTag());
         CondBlock cb = ce.getBlock();
         assertEquals(value, cb.getValue());
         assertEquals(size, ce.sizeof());
     }
+
+    /*
+     * Test method for 'datascript.library.BitStreamReader.readByte()'
+     */
+    private int writeSequence(int tag, int value) throws IOException
+    {
+        os = new FileImageOutputStream(file);
+        os.writeByte(tag);
+        os.writeInt(value);
+        int size = (int) os.getStreamPosition();
+        os.close();
+        
+        return size;
+    }
     
     public void testCondExpr1() throws IOException
     {
-        writeSequence(37);
+        int tag = 37;
+        int size = writeSequence(tag, (tag % 2 == 0) ? 47 : 11);
+
+        CondExpr ce = new CondExpr(fileName);
+        checkSequence(ce, size, tag, (tag % 2 == 0) ? 47 : 11);
+        
+        ce.write(wFileName);
+
+        CondExpr ce2 = new CondExpr(wFileName);
+        checkSequence(ce2, size, tag, (tag % 2 == 0) ? 47 : 11);
     }
 }

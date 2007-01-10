@@ -22,6 +22,7 @@ import datascript.runtime.io.FileBitStreamWriter;
 public class BitsParserTest extends TestCase
 {
     private FileImageOutputStream os;
+    private String wFileName = "d:\\BitsParserTest.data";
     private String fileName = "bitparsertest.bin";
     private File file = new File(fileName);
 
@@ -51,6 +52,14 @@ public class BitsParserTest extends TestCase
         assertEquals(b, bits.getB());
         assertEquals(c, bits.getC());
         assertEquals(2, bits.sizeof());
+        
+        bits.write(wFileName);
+
+        BitStruct bits2 = new BitStruct(wFileName);
+        assertEquals(a, bits2.getA());
+        assertEquals(b, bits2.getB());
+        assertEquals(c, bits2.getC());
+        assertEquals(2, bits2.sizeof());
     }
 
     /**
@@ -70,6 +79,14 @@ public class BitsParserTest extends TestCase
         assertEquals(b, bits.getB());
         assertEquals(c, bits.getC());
         assertEquals(2, bits.sizeof());
+        
+        bits.write(wFileName);
+
+        BitStruct bits2 = new BitStruct(wFileName);
+        assertEquals(a, bits2.getA());
+        assertEquals(b, bits2.getB());
+        assertEquals(c, bits2.getC());
+        assertEquals(2, bits2.sizeof());
     }
 
     /**
@@ -88,6 +105,14 @@ public class BitsParserTest extends TestCase
         assertEquals(b, bits.getB());
         assertEquals(c, bits.getC());
         assertEquals(2, bits.sizeof());
+        
+        bits.write(wFileName);
+
+        BitStruct bits2 = new BitStruct(wFileName);
+        assertEquals(a, bits2.getA());
+        assertEquals(b, bits2.getB());
+        assertEquals(c, bits2.getC());
+        assertEquals(2, bits2.sizeof());
     }
 
     public void testBitStruct1() throws IOException

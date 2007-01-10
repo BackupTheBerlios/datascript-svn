@@ -23,6 +23,7 @@ import bits.ItemC;
 public class UnionTest extends TestCase
 {
     private FileImageOutputStream os;
+    private String wFileName = "d:\\UnionTest.data";
     private String fileName = "uniontest.bin";
     private File file = new File(fileName);
 
@@ -53,7 +54,7 @@ public class UnionTest extends TestCase
     /*
      * Test method for 'datascript.library.BitStreamReader.readByte()'
      */
-    private void writeUnion(int tag, int value) throws IOException
+    private int writeUnion(int tag, int value) throws IOException
     {
         file.delete();
         os = new FileImageOutputStream(file);
@@ -72,8 +73,12 @@ public class UnionTest extends TestCase
         }
         int size = (int)os.getStreamPosition();
         os.close();
-
-        BaseTypes b = new BaseTypes(fileName);
+        
+        return size;
+    }
+    
+    private void checkUnion(BaseTypes b, int size, int tag, int value) throws IOException
+    {
         assertEquals(tag, b.getTag());
         BaseTypeUnion u = b.getValue();
         switch (tag)
@@ -93,16 +98,37 @@ public class UnionTest extends TestCase
 
     public void testUnion1() throws IOException
     {
-        writeUnion(8, 65);
+        int size = writeUnion(8, 65);
+        BaseTypes b = new BaseTypes(fileName);
+        checkUnion(b, size, 8, 65);
+        
+        b.write(wFileName);
+
+        BaseTypes b2 = new BaseTypes(wFileName);
+        checkUnion(b2, size, 8, 65);
     }
 
     public void testUnion2() throws IOException
     {
-        writeUnion(16, 2000);
+        int size = writeUnion(16, 2000);
+        BaseTypes b = new BaseTypes(fileName);
+        checkUnion(b, size, 16, 2000);
+        
+        b.write(wFileName);
+
+        BaseTypes b2 = new BaseTypes(wFileName);
+        checkUnion(b2, size, 16, 2000);
     }
 
     public void testUnion3() throws IOException
     {
-        writeUnion(32, 123123);
+        int size = writeUnion(32, 123123);
+        BaseTypes b = new BaseTypes(fileName);
+        checkUnion(b, size, 32, 123123);
+        
+        b.write(wFileName);
+
+        BaseTypes b2 = new BaseTypes(wFileName);
+        checkUnion(b2, size, 32, 123123);
     }
 }
