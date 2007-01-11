@@ -13,12 +13,7 @@ import gif.*;
 
 public class GifTest extends TestCase
 {
-    //private String fileName = "1pix.gif";
-    private String fileName = "D:\\Documents and Settings\\hwedekind\\My Documents\\1pix.gif";
-    //private String fileName = "D:\\Documents and Settings\\hwedekind\\My Documents\\My Pictures\\Heidbergring\\COPYRIGHT_WARNING_blk.gif";
-    //private String fileName = "D:\\Documents and Settings\\hwedekind\\My Documents\\My Pictures\\ich\\portrait.gif";
-    //private String fileName = "D:\\Documents and Settings\\hwedekind\\My Documents\\My Pictures\\Niekohle\\nicoleparis.gif";
-    //private String fileName = "D:\\Documents and Settings\\hwedekind\\My Documents\\My Pictures\\Niekohle\\nicole.gif";
+    private String fileName = "d:\\eclipse\\workspace\\datascript_w_antlr\\examples\\1pix.gif";
 
     private String ident;
 
@@ -181,7 +176,7 @@ public class GifTest extends TestCase
     }
     
     public void testGif() throws IOException
-    {
+    {        
         ident = "";
         gifFile gif = new gifFile(fileName);
 
