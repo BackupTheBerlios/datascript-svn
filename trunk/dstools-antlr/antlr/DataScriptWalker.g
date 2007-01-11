@@ -83,6 +83,7 @@ declaration
     :   fieldDefinition 
     //|   conditionDefinition
     |   constDeclaration 
+    |   subtypeDeclaration
     |   sqlDatabaseDefinition
     |   sqlTableDeclaration
     |   sqlIntegerDeclaration
@@ -208,6 +209,11 @@ definedType
     :  #(TYPEREF ID (DOT ID)*) 
     |   builtinType
     ;
+
+subtypeDeclaration
+    : #(SUBTYPE definedType ID (expression)?)
+    ;
+
 
 builtinType
     :   (byteOrderModifier)? builtinTypeDefaultOrder

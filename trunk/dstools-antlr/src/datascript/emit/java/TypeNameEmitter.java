@@ -44,10 +44,10 @@ import datascript.ast.CompoundType;
 import datascript.ast.EnumType;
 import datascript.ast.IntegerType;
 import datascript.ast.StdIntegerType;
+import datascript.ast.Subtype;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
-import datascript.emit.StringUtil;
 
 /**
  * @author HWellmann
@@ -86,12 +86,17 @@ public class TypeNameEmitter
         }
         else if (t instanceof ArrayType)
         {
-            result = getTypeName((ArrayType) t);
-            
+            result = getTypeName((ArrayType) t);            
+        }
+        else if (t instanceof Subtype)
+        {
+            TypeInterface base = ((Subtype)t).getBaseType();
+            base = TypeReference.resolveType(base);
+            result = getTypeName(base);            
         }
         else
         {
-            result = "/* " + t.toString() + "*/";
+            throw new InternalError("unhandled type = " + t.toString());
         }
         return result;
     }

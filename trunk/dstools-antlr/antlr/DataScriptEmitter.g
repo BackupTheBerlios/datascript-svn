@@ -85,6 +85,7 @@ declaration
     :   fieldDefinition 
     //|   conditionDefinition
     |   constDeclaration 
+    |   subtypeDeclaration
     |   sqlDatabaseDefinition
     |   sqlTableDeclaration
     |   sqlIntegerDeclaration
@@ -228,6 +229,10 @@ memberList
 definedType
     :  #(TYPEREF ID (DOT ID)*) 
     |   builtinType
+    ;
+
+subtypeDeclaration
+    : #(SUBTYPE definedType ID (expression)?)
     ;
 
 builtinType

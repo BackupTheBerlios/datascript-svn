@@ -109,6 +109,7 @@ declaration
     :   fieldDefinition 
     //|   conditionDefinition
     |   constDeclaration 
+    |   subtypeDeclaration
     |   sqlDatabaseDefinition
     |   sqlTableDeclaration
     |   sqlIntegerDeclaration
@@ -268,6 +269,14 @@ definedType
     :  #(t:TYPEREF ID (DOT ID)*) 	{ ((TypeReference)t).resolve(scope()); }
     |   builtinType
     ;
+
+subtypeDeclaration
+    : #(s:SUBTYPE definedType i:ID (expression)?)
+                                { scope().setSymbol(i, s); 
+                                  //((TypeReference)s).resolve(scope()); 
+                                }
+    ;
+
 
 builtinType
     :   (byteOrderModifier)? builtinTypeDefaultOrder

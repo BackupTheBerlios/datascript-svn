@@ -1,6 +1,5 @@
 package bits;
 
-
 /**
  * Comment for Unsigned.
  */
@@ -263,4 +262,13 @@ RecursiveData(uint8 byteCount)
 	uint8	blockTerminator;
 
 	RecursiveData(blockTerminator)	nextData	if blockTerminator > 0;
+};
+
+subtype uint16  TileId;
+subtype uint32  TileData;
+
+Tile
+{
+    TileId    tileId;
+    TileData  tileData;
 };

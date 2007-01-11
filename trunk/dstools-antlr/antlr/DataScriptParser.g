@@ -69,6 +69,7 @@ tokens
     PACKAGE;
     IMPORT;
     TYPEREF<AST=datascript.ast.TypeReference>;
+    SUBTYPE<AST=datascript.ast.Subtype>;
     UPLUS<AST=datascript.ast.IntegerExpression>;
     UMINUS<AST=datascript.ast.IntegerExpression>;
     ITEM<AST=datascript.ast.EnumItem>;
@@ -153,6 +154,7 @@ declaration
     :   fieldDefinition SEMICOLON!
     |   conditionDefinition
     |   constDeclaration  SEMICOLON!
+    |   subtypeDeclaration SEMICOLON!
     |   sqlDatabaseDefinition  SEMICOLON!
     |   sqlTableDeclaration  SEMICOLON!
 //    |   sqlIntegerDeclaration  SEMICOLON!
@@ -320,8 +322,17 @@ definedType
     |   builtinType
     ;
 
+
 typeSymbol
     :   ID (dotOperand)*
+    ;
+
+// TODO: definedType includes typeSymbols with dotOperands
+// Is this really what we want?
+
+subtypeDeclaration
+    :   "subtype"! definedType ID (COLON! expression)?
+        { #subtypeDeclaration = #([SUBTYPE], #subtypeDeclaration); }
     ;
 
 builtinType
