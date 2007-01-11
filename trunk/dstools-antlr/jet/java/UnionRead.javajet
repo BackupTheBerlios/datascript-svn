@@ -70,19 +70,17 @@
     {
         try 
         {
-            __cc.push("<%=name%>", this);
+        	__cc.push("<%=name%>", this);
             __fpos = __in.getBitPosition();
-            
             while (true)
             {
 <%
 	    for (Field field : s.getFields())
 	    {
-%>	
+%>
                 try 
                 {
-                    <%=e.readField(field)%>
-<%                    
+<%
                 String constraint = e.getConstraint(field);
                 if (constraint != null)
                 {
@@ -91,15 +89,17 @@
                     {
                         throw new IOException("constraint violated");
                     }
-<%            
+<%
                 }
-%>                    
+%>
+                    <%=e.readField(field)%>
                     break;
                 } 
                 catch (IOException __exc) 
                 {
-        	    __in.setBitPosition(__fpos);
+        	    	__in.setBitPosition(__fpos);
        	        }
+
 <%
 	    }
 %>
