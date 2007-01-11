@@ -47,6 +47,16 @@
           <para>Added section on Packages and Imports.</para>
         </revdescription>
       </revision>
+
+      <revision>
+        <revnumber>0.4</revnumber>
+
+        <date>11 January 2007</date>
+
+        <revdescription>
+          <para>Added section on Subtypes.</para>
+        </revdescription>
+      </revision>
     </revhistory>
   </articleinfo>
 
@@ -869,6 +879,35 @@ Database::header.offset:
     the i-th element of the <literal>blocks</literal> array is of type
     <literal>Block</literal> instantiated with the i-th header
     <literal>headers[i]</literal>.</para>
+  </section>
+
+  <section>
+    <title>Subtypes</title>
+
+    <para>A subtype definition defines a new name for a given type, optionally
+    in combination with a constraint. When the constraint is omitted, this is
+    rather like a <literal>typedef</literal> in C:</para>
+
+    <programlisting>subtype uint16  BlockIndex;
+
+
+Block
+{
+    BlockIndex    index;
+    BlockData     data;
+};</programlisting>
+
+    <para>A constraint in the subtype definition is, as usual, a boolean
+    expression introduced by a colon which may contain the keyword
+    <literal>this</literal> to refer to the current type:</para>
+
+    <programlisting>subtype uint16 BlockIndex : 1 &lt;= this &amp;&amp; this &lt; 1024;</programlisting>
+
+    <para>Subtype constraints will be checked by the decoder for every
+    occurrence of the given subtype in a field definition.</para>
+
+    <remark>Implementation note: Subtypes were introduced in version rds 0.7.
+    Subtype constraints are not yet implemented.</remark>
   </section>
 
   <section>
