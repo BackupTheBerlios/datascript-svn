@@ -4,6 +4,7 @@
   <property name="src" value="${basedir}/src"/>
   <property name="lib" value="${basedir}/lib"/>
   <property name="test" value="${basedir}/test"/>
+  <property name="examples" value="${basedir}/examples"/>
   <property name="gen" value="${build}/gen"/>
   <property name="jar" value="${build}/jar"/>
   <property name="jet.timestamp" value="${gen}/jet.ts"/>
@@ -32,7 +33,7 @@
     <delete dir="${build}"/>
   </target>
 	
-	<target name="cleanall" depends="clean, test.clean" description="removes all generated Java sources and classes" />
+	<target name="cleanall" depends="clean, test.clean, examples.clean" description="removes all generated Java sources and classes" />
 
   <target name="init">
     <uptodate 
@@ -52,6 +53,8 @@
     <mkdir dir="${build}" />
     <mkdir dir="${build}/test/classes" />
     <mkdir dir="${build}/test/gen" />
+    <mkdir dir="${build}/examples/classes" />
+    <mkdir dir="${build}/examples/gen" />
     <mkdir dir="${gen}" />
     <mkdir dir="${jar}" />
     <mkdir dir="${classes}" />
@@ -178,5 +181,46 @@
 	<target name="test.clean" description="removes all generated test Java sources and classes">
 		<delete dir="${test}/bits" />
 	</target>
+
+	<target name="examples.clean" description="removes all generated test Java sources and classes">
+		<delete dir="${examples}/gif/gif" />
+		<delete dir="${build}/examples/classes" />
+	</target>
+	  
+	  
+    <target name="example.gif.gen" depends="jar" description="Generates parser for examples"  unless="gif.uptodate">
+        <java jar="${jar}/datascript.jar" dir="${examples}" failonerror="true" fork="yes">
+            <classpath>
+              <pathelement path="${gen}"/>
+              <pathelement path="${lib}/antlr.jar"/>
+            </classpath>
+          <arg line="-pkg gif gif.ds"/>
+        </java>
+    </target>
+    
+    <target name="examples.compile" depends="example.gif.gen, jar, check.junit" description="Builds the examples">
+        <javac destdir="${build}/examples/classes" debug="on">
+          <classpath>
+            <pathelement path="${jar}/datascript.jar"/>
+          </classpath>
+          <src path="${build}/examples/gen" />
+          <src path="${examples}" />
+        </javac>
+    </target>
+
+    <target name="example.gif.run" depends="examples.compile" description="Runs the gif-example">
+        <junit printsummary="no">
+            <classpath>
+              <pathelement path="${build}/examples/classes"/>
+              <pathelement path="${jar}/datascript.jar"/>
+            </classpath>
+           <batchtest>
+             <fileset dir="${examples}">
+               <include name="**/GifTest.java"/>
+             </fileset>       
+             <formatter type="plain" usefile="false"/>
+           </batchtest> 
+        </junit>     
+    </target>
 
 </project>
