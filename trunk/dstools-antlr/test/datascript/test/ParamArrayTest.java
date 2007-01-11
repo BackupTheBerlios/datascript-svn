@@ -20,7 +20,7 @@ import datascript.runtime.array.UnsignedShortArray;
 public class ParamArrayTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\ParamArryWriteTest.data";
+    private String wFileName = "ParamArryWriteTest.data";
     private String fileName = "paramarraytest.bin";
     private File file = new File(fileName);
 

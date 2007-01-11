@@ -16,8 +16,8 @@ import bits.RecursiveData;
 public class RecursiveStructureTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\RecursiveStructureTest.data";
-    private String fileName = "d:\\recursivestructur.bin";
+    private String wFileName = "RecursiveStructureTest.data";
+    private String fileName = "recursivestructur.bin";
     private File file = new File(fileName);
 
 

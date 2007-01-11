@@ -30,7 +30,7 @@ import bits.Unsigned;
 public class UnsignedTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\UnsignedTest.data";
+    private String wFileName = "UnsignedTest.data";
     private String fileName = "bitparsertest.bin";
     private File file = new File(fileName);
 

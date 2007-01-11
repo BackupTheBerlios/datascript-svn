@@ -16,7 +16,7 @@ import bits.OptionalArraySequence;
 public class OptionalArrayTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\OptionalArrayTest.data";
+    private String wFileName = "OptionalArrayTest.data";
     private String fileName = "optionalarraytest.bin";
     private File file = new File(fileName);
 

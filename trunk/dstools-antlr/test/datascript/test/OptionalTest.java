@@ -19,7 +19,7 @@ import bits.Optional;
 public class OptionalTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\OptionalTest.data";
+    private String wFileName = "OptionalTest.data";
     private String fileName = "containment.bin";
     private File file = new File(fileName);
 

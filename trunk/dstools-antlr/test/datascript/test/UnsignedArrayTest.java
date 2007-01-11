@@ -24,7 +24,7 @@ import datascript.runtime.array.UnsignedShortArray;
 public class UnsignedArrayTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\UnsignedArrayTest.data";
+    private String wFileName = "UnsignedArrayTest.data";
     private String fileName = "unsignedarraytest.bin";
     private File file = new File(fileName);
 

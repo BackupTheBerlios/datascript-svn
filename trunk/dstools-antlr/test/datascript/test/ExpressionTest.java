@@ -21,7 +21,7 @@ import datascript.runtime.array.UnsignedShortArray;
 public class ExpressionTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\EnumerationTest.data";
+    private String wFileName = "EnumerationTest.data";
     private String fileName = "expressiontest.bin";
     private File file = new File(fileName);
 

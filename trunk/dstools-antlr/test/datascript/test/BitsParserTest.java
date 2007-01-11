@@ -22,7 +22,7 @@ import datascript.runtime.io.FileBitStreamWriter;
 public class BitsParserTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\BitsParserTest.data";
+    private String wFileName = "BitsParserTest.data";
     private String fileName = "bitparsertest.bin";
     private File file = new File(fileName);
 

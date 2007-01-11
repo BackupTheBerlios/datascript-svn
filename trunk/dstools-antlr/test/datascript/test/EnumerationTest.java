@@ -19,7 +19,7 @@ import bits.Enums;
 public class EnumerationTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\EnumerationTest.data";
+    private String wFileName = "EnumerationTest.data";
     private String fileName = "enumerationtest.bin";
     private File file = new File(fileName);
 

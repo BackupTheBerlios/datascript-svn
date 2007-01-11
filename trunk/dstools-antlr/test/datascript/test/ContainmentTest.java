@@ -25,7 +25,7 @@ import datascript.runtime.array.ShortArray;
 public class ContainmentTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\ContainmentTest.data";
+    private String wFileName = "ContainmentTest.data";
     private String fileName = "containment.bin";
     private File file = new File(fileName);
 

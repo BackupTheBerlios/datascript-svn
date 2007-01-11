@@ -22,7 +22,7 @@ import datascript.runtime.array.ObjectArray;
 public class SizeOfTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\SizeOfTest.data";
+    private String wFileName = "SizeOfTest.data";
     private String fileName = "sizeoftest.bin";
     private File file = new File(fileName);
 

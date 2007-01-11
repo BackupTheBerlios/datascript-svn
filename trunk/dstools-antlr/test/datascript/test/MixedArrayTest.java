@@ -22,7 +22,7 @@ import bits.MixedArray;
 public class MixedArrayTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\CompoundArryWriteTest.data";
+    private String wFileName = "CompoundArryWriteTest.data";
     private String fileName = "mixedarraytest.bin";
     private File file = new File(fileName);
 

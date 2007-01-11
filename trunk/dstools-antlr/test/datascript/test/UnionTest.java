@@ -23,7 +23,7 @@ import bits.ItemC;
 public class UnionTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\UnionTest.data";
+    private String wFileName = "UnionTest.data";
     private String fileName = "uniontest.bin";
     private File file = new File(fileName);
 

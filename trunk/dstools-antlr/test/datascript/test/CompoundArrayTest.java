@@ -21,7 +21,7 @@ import datascript.runtime.array.ObjectArray;
 public class CompoundArrayTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\CompoundArryWriteTest.data";
+    private String wFileName = "CompoundArryWriteTest.data";
     private String fileName = "arrayparsertest.bin";
     private File file = new File(fileName);
 

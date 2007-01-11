@@ -20,7 +20,7 @@ import datascript.runtime.array.BitFieldArray;
 public class ParamBitFieldTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "d:\\ParamBitFieldTest2.data";
+    private String wFileName = "ParamBitFieldTest2.data";
     private String fileName = "parambitfieldtest.bin";
     private File file = new File(fileName);
 
