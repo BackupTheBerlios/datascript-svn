@@ -13,7 +13,7 @@ import gif.*;
 
 public class GifTest extends TestCase
 {
-    private String fileName = "d:\\eclipse\\workspace\\datascript_w_antlr\\examples\\1pix.gif";
+    private String fileName = "1pix.gif";
 
     private String ident;
 
@@ -176,7 +176,7 @@ public class GifTest extends TestCase
     }
     
     public void testGif() throws IOException
-    {        
+    {            
         ident = "";
         gifFile gif = new gifFile(fileName);
 

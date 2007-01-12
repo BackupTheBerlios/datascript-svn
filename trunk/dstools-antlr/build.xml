@@ -209,17 +209,17 @@
     </target>
 
     <target name="example.gif.run" depends="examples.compile" description="Runs the gif-example">
-        <junit printsummary="no">
+        <junit printsummary="no" fork="on" dir="${examples}">
             <classpath>
               <pathelement path="${build}/examples/classes"/>
               <pathelement path="${jar}/datascript.jar"/>
             </classpath>
-           <batchtest>
-             <fileset dir="${examples}">
-               <include name="**/GifTest.java"/>
-             </fileset>       
-             <formatter type="plain" usefile="false"/>
-           </batchtest> 
+            <batchtest>
+              <fileset dir="${examples}">
+                <include name="**/GifTest.java"/>
+              </fileset>       
+              <formatter type="plain" usefile="false"/>
+            </batchtest>
         </junit>     
     </target>
 
