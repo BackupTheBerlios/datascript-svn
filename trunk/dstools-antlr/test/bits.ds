@@ -272,3 +272,10 @@ Tile
     TileId    tileId;
     TileData  tileData;
 };
+
+StringArraySequence
+{
+	string	name;
+	uint8	byteCount;
+//	string	text[byteCount];
+};

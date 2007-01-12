@@ -183,7 +183,7 @@
 	</target>
 
 	<target name="examples.clean" description="removes all generated test Java sources and classes">
-		<delete dir="${examples}/gif/gif" />
+		<delete dir="${examples}/gif" />
 		<delete dir="${build}/examples/classes" />
 	</target>
 	  
