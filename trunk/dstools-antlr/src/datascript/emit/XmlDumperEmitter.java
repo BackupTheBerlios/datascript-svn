@@ -45,6 +45,7 @@ import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
+import datascript.ast.StringType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.emit.java.AccessorNameEmitter;
@@ -131,6 +132,10 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
             buffer.append(", \"");
             buffer.append(fieldName);
             buffer.append("\")");
+        }
+        else if (type instanceof StringType)
+        {
+            buffer.append("visitString(" + nodeName + ", arg)");
         }
         else if (type instanceof ArrayType)
         {

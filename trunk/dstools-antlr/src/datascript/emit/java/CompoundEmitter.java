@@ -49,6 +49,7 @@ import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
+import datascript.ast.StringType;
 import datascript.ast.Parameter;
 import datascript.ast.StdIntegerType;
 import datascript.ast.TypeInstantiation;
@@ -139,6 +140,11 @@ abstract public class CompoundEmitter
         {
             TypeInstantiation inst = (TypeInstantiation)type;
             readInstantiatedField(field, inst);
+        }
+        else if (type instanceof StringType)
+        {
+            StringType inst = (StringType)type;
+            readStringField(field, inst);
         }
         else
         {
@@ -236,6 +242,13 @@ abstract public class CompoundEmitter
         buffer.append("(");      
         buffer.append(arg);      
         buffer.append(")");
+    }
+
+
+    private void readStringField(Field field, StringType type)
+    {
+        buffer.append(ane.getSetterName(field));
+        buffer.append("(__in.readString());");
     }
 
 
@@ -495,6 +508,10 @@ abstract public class CompoundEmitter
         {
             writeInstantiatedField(field, (TypeInstantiation)type);
         }
+        else if (type instanceof StringType)
+        {
+            writeStringType(field, (StringType)type);
+        }
         else
         {
             throw new InternalError("unhandled type: " + type.getClass().getName());
@@ -588,6 +605,14 @@ abstract public class CompoundEmitter
             buffer.append(arg);
         }
         buffer.append(");");
+    }
+    
+    
+    private void writeStringType(Field field, StringType type)
+    {
+        buffer.append("__out.writeString(");
+        buffer.append(AccessorNameEmitter.getGetterName(field));
+        buffer.append("());");
     }
 
 

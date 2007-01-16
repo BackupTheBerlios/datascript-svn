@@ -82,8 +82,21 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
         }
         else
         {
-            writeBits((long) value, 8);            
+            writeBits((long) value, 8);
         }
+    }
+    
+    public void writeBytes(String value) throws IOException
+    {
+        if (bitOffset == 0)
+        {
+            super.writeBytes(value);
+        }
+        else
+        {
+            for (int i = 0; i < value.length(); i++)
+                writeBits(value.charAt(i), 8);
+        }   
     }
 
 
@@ -173,5 +186,11 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
     public void writeBigInteger(BigInteger value, int numBits) throws IOException
     {
     	writeBitfield(value, numBits);
+    }
+    
+    public void writeString(String value) throws IOException
+    {
+        this.writeBytes(value);
+        this.writeByte(0);
     }
 }

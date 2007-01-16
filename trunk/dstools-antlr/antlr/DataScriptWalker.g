@@ -219,9 +219,13 @@ builtinType
     :   (byteOrderModifier)? builtinTypeDefaultOrder
     ;
 
+stringType
+	:	STRING
+	;
+
 builtinTypeDefaultOrder
     :   integerType
-    |   "string"
+    |   stringType		/*"string"*/
     |   bitField
     ;
 

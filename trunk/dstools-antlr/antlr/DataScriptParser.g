@@ -68,6 +68,7 @@ tokens
     MEMBERS;
     PACKAGE;
     IMPORT;
+	STRING<AST=datascript.ast.StringType>;
     TYPEREF<AST=datascript.ast.TypeReference>;
     SUBTYPE<AST=datascript.ast.Subtype>;
     UPLUS<AST=datascript.ast.IntegerExpression>;
@@ -350,9 +351,13 @@ integerType!
     |   "int64"      {#integerType = #[INT64];}
     ;
 
+stringType!
+	:	"string"     {#stringType = #[STRING];}
+	;
+
 builtinTypeDefaultOrder
     :   integerType
-    |   "string"     
+    |   stringType
     |   bitField
     ;
 

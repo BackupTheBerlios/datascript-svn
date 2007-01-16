@@ -349,3 +349,12 @@ public class __XmlDumper extends XMLFilterImpl implements __Visitor
             visitUInt64(n.elementAt(i), arg);	
       	}
     }
+
+    public void visitArray(StringArray n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitString(n.elementAt(i), arg);	
+      	}
+    }

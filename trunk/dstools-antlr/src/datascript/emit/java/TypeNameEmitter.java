@@ -44,6 +44,7 @@ import datascript.ast.CompoundType;
 import datascript.ast.EnumType;
 import datascript.ast.IntegerType;
 import datascript.ast.StdIntegerType;
+import datascript.ast.StringType;
 import datascript.ast.Subtype;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
@@ -93,6 +94,10 @@ public class TypeNameEmitter
             TypeInterface base = ((Subtype)t).getBaseType();
             base = TypeReference.resolveType(base);
             result = getTypeName(base);            
+        }
+        else if (t instanceof StringType)
+        {
+            result = "String";            
         }
         else
         {
@@ -192,6 +197,10 @@ public class TypeNameEmitter
                 default:
                     throw new UnsupportedOperationException();
             }
+        }
+        else if (elType instanceof StringType)
+        {
+            return "StringArray";
         }
         return "ObjectArray<" + elTypeName +  ">";        
     }

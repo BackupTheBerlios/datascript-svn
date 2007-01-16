@@ -147,4 +147,13 @@ public class __DepthFirstVisitor implements __Visitor
       	}
     }
 
+    public void visitArray(StringArray n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitString(n.elementAt(i), arg);	
+      	}
+    }
+
 

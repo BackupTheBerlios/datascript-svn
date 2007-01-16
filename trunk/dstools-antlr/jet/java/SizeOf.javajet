@@ -118,7 +118,7 @@ public class __SizeOf extends __DepthFirstVisitor
     {
         // do not use n.length()! the result contains only 
         // the count auf characters, not the count of bytes
-        __size += n.getBytes().length;
+        __size += (n.getBytes().length + 1) << 3;
     }
     
     public static int sizeof(__Visitor.Acceptor a) 

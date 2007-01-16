@@ -264,7 +264,7 @@ builtinType
 
 builtinTypeDefaultOrder
     :   integerType
-    |   "string"
+    |   stringType
     |   bitField
     ;
 
@@ -278,6 +278,10 @@ integerType
     |   INT32
     |   INT64
     ;
+
+stringType
+	:	STRING
+	;
 
 bitField
     :   #(BIT expression)

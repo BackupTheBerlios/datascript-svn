@@ -181,6 +181,10 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         {
             buffer.append("visitArray(" + nodeName + ", arg)");
         }
+        else if (type instanceof datascript.ast.StringType)
+        {
+            buffer.append("visitString(" + nodeName + ", arg)");
+        }
         else
         {
             /*

@@ -193,4 +193,17 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
         }        
         return result;        
     }
+    
+    public String readString() throws IOException
+    {
+        String result = "";
+        while (true)
+        {
+            byte characterByte = this.readByte();
+            if (characterByte == 0)
+                break;
+            result += (char)characterByte;
+        }
+        return result;
+    }
 }
