@@ -75,12 +75,12 @@ public class DataScriptTool
     private VisitorEmitter visitorEmitter;
     private DepthFirstVisitorEmitter dfVisitorEmitter;
     private SizeOfEmitter sizeOfEmitter;
-    
-    private String packageName;
-    private String fileName;
+
+    private String packageName = null;
+    private String fileName = null;
     private boolean generateDocs = false;
     
-    public void parseArguments(String[] args)
+    public void parseArguments(String[] args) throws DataScriptException
     {
     	for (int i = 0; i < args.length; i++)
         {
@@ -96,6 +96,21 @@ public class DataScriptTool
             {
                 fileName = args[i];
             }
+        }
+
+        if (fileName == null || packageName == null)
+        {
+            final String NL = System.getProperties().getProperty("line.separator");
+            final java.lang.StringBuffer buffer = new java.lang.StringBuffer();
+
+            buffer.append("parameter missing." + NL + NL);
+            buffer.append("DataScriptTool [-doc] -pkg \"packagename\" \"path to DataScript.ds\"" + NL);
+            buffer.append("useage: " + NL);
+            buffer.append(" -doc\tgenerates a javadoc like documentation" + NL);
+            buffer.append(" -pkg \"packagename\"\tdefines the packagename" + NL);
+            buffer.append(" \"path to DataScript.ds\"\tdefines the datascrpit file to read from" + NL);
+
+            throw new DataScriptException(buffer.toString());
         }
     }
     
