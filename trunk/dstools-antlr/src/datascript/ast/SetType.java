@@ -41,6 +41,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import datascript.antlr.DataScriptParserTokenTypes;
+
 import antlr.collections.AST;
 
 public class SetType extends TokenAST implements TypeInterface
@@ -58,6 +60,7 @@ public class SetType extends TokenAST implements TypeInterface
     {
         
     }
+
     public String getName()
     {
         if (name == null)
@@ -68,11 +71,21 @@ public class SetType extends TokenAST implements TypeInterface
         return name;
     }
 
+    public String getDocumentation()
+    {
+        String result = "";
+        AST n = getNextSibling();
+        if (n != null && n.getType() == DataScriptParserTokenTypes.DOC)
+        {
+            result = n.getText();
+        }
+        return result;
+    }
+
     public TypeInterface getBaseType()
     {
         return (TypeInterface)getFirstChild();
     }
-    
 
 
     Value[] getValues()

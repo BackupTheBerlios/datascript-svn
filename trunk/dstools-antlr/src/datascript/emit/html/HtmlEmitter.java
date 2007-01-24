@@ -52,7 +52,9 @@ import datascript.antlr.DocCommentLexer;
 import datascript.antlr.DocCommentParser;
 import datascript.antlr.DocCommentParserTokenTypes;
 import datascript.ast.CompoundType;
+import datascript.ast.SetType;
 import datascript.ast.EnumType;
+import datascript.ast.EnumItem;
 import datascript.ast.Field;
 import datascript.ast.SequenceType;
 import datascript.ast.TypeInterface;
@@ -60,15 +62,20 @@ import datascript.ast.UnionType;
 import datascript.emit.DefaultEmitter;
 import datascript.jet.html.Overview;
 import datascript.jet.html.Sequence;
+import datascript.jet.html.Union;
+import datascript.jet.html.Enum;
 
 public class HtmlEmitter extends DefaultEmitter
 {
     private File directory = new File("html");
     private static String HTML_EXT = ".html";
     private String packageName;
+
     private Overview overviewTmpl = new Overview();
     private Sequence sequenceTmpl = new Sequence();
-    protected PrintStream out;
+    private Union unionTmpl = new Union();
+    private Enum enumTmpl = new Enum();
+
     private SequenceType sequence;
     private UnionType union;
     private EnumType enumeration;
@@ -90,6 +97,16 @@ public class HtmlEmitter extends DefaultEmitter
     {
         return sequence;
     }
+
+    public UnionType getUnion()
+    {
+        return union;
+    }
+
+    public EnumType getEnum()
+    {
+        return enumeration;
+    }
 /*    
     public String getTypeName(TypeInterface type)
     {
@@ -105,7 +122,7 @@ public class HtmlEmitter extends DefaultEmitter
     
     public void endTranslationUnit()
     {
-        openOutputFile(directory, "index.html");
+        openOutputFile(directory, "index" + HTML_EXT);
         String result = overviewTmpl.generate(this);
         out.print(result);
         
@@ -130,19 +147,52 @@ public class HtmlEmitter extends DefaultEmitter
     private void emitSequence(SequenceType seq)
     {
         sequence = seq;
-        String result = sequenceTmpl.generate(this);
-        out.print(result);
-        
+        PrintStream indexOut = out;
+        try
+        {
+            openOutputFile(directory, seq.getName() + HTML_EXT);
+            String result = sequenceTmpl.generate(this);
+            out.print(result);
+            out.close();
+        }
+        finally
+        {
+            out = indexOut;
+        }
     }
 
     private void emitUnion(UnionType u)
     {
-        
+        union = u;
+        PrintStream indexOut = out;
+        try
+        {
+            openOutputFile(directory, u.getName() + HTML_EXT);
+            String result = unionTmpl.generate(this);
+            out.print(result);
+            out.close();
+        }
+        finally
+        {
+            out = indexOut;
+        }
     }
 
     private void emitEnumeration(EnumType e)
     {
-        
+        enumeration = e;
+        PrintStream indexOut = out;
+        try
+        {
+            openOutputFile(directory, e.getName() + HTML_EXT);
+            String result = enumTmpl.generate(this);
+            out.print(result);
+            out.close();
+        }
+        finally
+        {
+            out = indexOut;
+        }
     }
 
     public void beginField(AST f)
@@ -155,25 +205,6 @@ public class HtmlEmitter extends DefaultEmitter
     {
         // TODO Auto-generated method stub
 
-    }
-
-    protected void openOutputFile(File directory, String fileName)
-    {
-        if (! directory.exists())
-        {
-            directory.mkdirs();
-        }
-        File outputFile = new File(directory, fileName);
-        outputFile.delete();
-        try
-        {
-            outputFile.createNewFile();
-            out = new PrintStream(outputFile);
-        }
-        catch (IOException exc)
-        {
-            exc.printStackTrace();
-        }
     }
     
     public void beginSequence(AST s)
@@ -199,6 +230,16 @@ public class HtmlEmitter extends DefaultEmitter
         return getDocumentation(compound.getDocumentation());
     }
     
+    public String getDocumentation(SetType settype)
+    {
+        return getDocumentation(settype.getDocumentation());
+    }
+    
+    public String getDocumentation(EnumItem item)
+    {
+        return getDocumentation(item.getDocumentation());
+    }
+    
     public String getDocumentation(Field field)
     {
         String doc = field.getDocumentation();
@@ -216,30 +257,39 @@ public class HtmlEmitter extends DefaultEmitter
         {
             parser.comment();
             AST docNode = parser.getAST();
-            for (AST child = docNode.getFirstChild(); child != null; 
-                child = child.getNextSibling())
+            if (docNode == null)
+                return buffer.toString();
+
+            AST child = docNode.getFirstChild();
+            for (; child != null; child = child.getNextSibling())
             {
-                if (child.getType() == DocCommentParserTokenTypes.TEXT)
+                switch (child.getType())
                 {
-                    buffer.append("<p>");
-                    buffer.append(child.getText());
-                    for (AST text = child.getFirstChild(); text != null; text = text
-                            .getNextSibling())
+                    case DocCommentParserTokenTypes.TEXT:
                     {
-                        buffer.append(text.getText());
+                        buffer.append("<p>");
+                        buffer.append(child.getText());
+                        AST text = child.getFirstChild();
+                        for (; text != null; text = text.getNextSibling())
+                        {
+                            buffer.append(text.getText());
+                        }
+                        buffer.append("</p>");
+                        break;
                     }
-                    buffer.append("</p>");
-                }
-                else if (child.getType() == DocCommentParserTokenTypes.AT)
-                {
-                    String tag = child.getText().toUpperCase();
-                    buffer.append("<b>@");
-                    buffer.append(tag);
-                    buffer.append("</b> ");
-                    for (AST text = child.getFirstChild(); text != null; text = text
-                            .getNextSibling())
+                    
+                    case DocCommentParserTokenTypes.AT:
                     {
-                        buffer.append(text.getText());
+                        String tag = child.getText().toUpperCase();
+                        buffer.append("<b>@");
+                        buffer.append(tag);
+                        buffer.append("</b> ");
+                        AST text = child.getFirstChild();
+                        for (; text != null; text = text.getNextSibling())
+                        {
+                            buffer.append(text.getText());
+                        }
+                        break;
                     }
                 }
             }

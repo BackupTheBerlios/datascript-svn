@@ -118,9 +118,9 @@ public class TypeNameEmitter
         }
         else
         {
-            StringBuilder buffer = new StringBuilder("<a href=\"#");
+            StringBuilder buffer = new StringBuilder("<a href=\"");
             buffer.append(name);
-            buffer.append("\">");
+            buffer.append(".html\">");
             buffer.append(name);
             buffer.append("</a>");
             return buffer.toString();

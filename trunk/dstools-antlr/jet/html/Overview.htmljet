@@ -45,20 +45,36 @@
     String pkg = e.getPackageName(); 
 %>
 <html>
+  <head>
+    <title>DataScript Package <%=pkg%></title>
+<%@include file="css.inc"%>
+  </head>
+  
   <body>
     <h1>DataScript Package <%=pkg%></h1>
-    
-    <h2>Type Synopsis</h2>
 
-    <ul>
+	<table width="100%">
+	<tr>
+      <th>Type Synopsis</th>
+      <th width="80%">Detailed Documentation</th>
+	</tr>
+	<tr><td class="typelistMenu">
+      <ul class="typelist">
 <%
     for (String type : e.getTypes())
     {
 %>
-      <li><a href="#<%=type%>"><%=type%></a></li>
+        <li><a href="<%=type%>.html" target="detailedDocu"><%=type%></a></li>
 <%
     }
 %>
-    </ul>
-      
-    <h2>Detailed Documentation</h2>
+      </ul>
+    </td><td>
+      <iframe src="" width="100%" height="100%" name="detailedDocu" scrolling="auto" align="right" frameborder="0">
+        <p>Ihr Browser kann leider keine eingebetteten Frames anzeigen!</p>
+      </iframe>
+    </td></tr>
+    </table>
+    
+  </body>
+</html>

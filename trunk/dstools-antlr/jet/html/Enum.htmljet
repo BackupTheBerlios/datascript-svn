@@ -1,6 +1,7 @@
+<%
 /* BSD License
  *
- * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
+ * Copyright (c) 2007, Henrik Wedekind, Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -35,68 +36,71 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.ast;
+%>
+<%@ jet package="datascript.jet.html" 
+        imports="datascript.ast.* datascript.emit.html.*" 
+        class="Enum" %>
+<% 
+    HtmlEmitter e = (HtmlEmitter) argument;
+    String pkg = e.getPackageName();
+    EnumType s = e.getEnum();
+    String typeName = s.getName();
+    TypeNameEmitter tne = new TypeNameEmitter(); 
+%>
+<html>
+  <head>
+    <title>enum <%=typeName%></title>
+<%@include file="css.inc"%>
+  </head>
+  <body>
 
-import antlr.collections.AST;
-import datascript.antlr.DataScriptParserTokenTypes;
+    <div class="msgdetail"><i>enum</i> <%=typeName%></div>
+    
+    <p><%=e.getDocumentation(s)%></p>
 
-/**
- * @author HWellmann
- *
- */
-public class EnumItem extends TokenAST
-{
-    private EnumType enumType;
-    private IntegerValue value;
-    private String name;
-    
-    public EnumItem()
+    <table class="docuCode" id="tabIdent">
+<%
+	// show the structure of this type
+%>
+	<tr>
+		<td colspan=3>enum <%=s.getBaseType().toString()%> <%=typeName%>
+{</td></tr>
+<%
+    for (EnumItem i : s.getItems())
     {
-        
-    }
-    
-    public String getName()
-    {
-        if (name == null)
-        {
-            AST n = getFirstChild();
-            if (n.getType() != DataScriptParserTokenTypes.ID)
-            {
-                n = n.getNextSibling();
-            }
-            name = n.getText();
-        }
-        return name;
-    }
+    	String iName = i.getName();
+        IntegerValue iValue = i.getValue();
+%>
+        <tr>
+        	<td id="tabIdent"><a href="#<%=iName%>"><%=iName%></a></td>
+        	<td> = <%=iValue%>,</td>
+	    </tr>
+<%
+    }    
+%>
+	<tr>
+		<td colspan=3>};</td></tr>
+    </table>
 
-    public String getDocumentation()
-    {
-        String result = "";
-        AST n = getNextSibling();
-        if (n != null && n.getType() == DataScriptParserTokenTypes.DOC)
-        {
-            result = n.getText();
-        }
-        return result;
-    }
-    
-    public EnumType getEnumType()
-    {
-        return enumType;
-    }
-    
-    public void setEnumType(EnumType enumType)
-    {
-        this.enumType = enumType;
-    }
 
-    public void setValue(IntegerValue value)
-    {
-        this.value = value;
-    }   
+    <h2>Item Details</h2>
     
-    public IntegerValue getValue()
+    <dl>
+<%
+	// show information for each item
+    for (EnumItem i : s.getItems())
     {
-        return value;
-    }
-}
+    	String iName = i.getName();
+    	String doc = e.getDocumentation(i);
+%>
+      <dt class="memberItem"><a name="<%=iName%>"><b><%=iName%>:</b></a></dt>  
+      <dd class="memberDetail">
+        <%=doc.equals("")? "&lt;<i>no documentation found</i>&gt;" : doc %>
+      </dd>
+<%
+    }    
+%>    
+    </dl>
+
+  </body>
+</html>

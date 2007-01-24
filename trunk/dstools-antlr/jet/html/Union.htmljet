@@ -1,6 +1,7 @@
+<%
 /* BSD License
  *
- * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
+ * Copyright (c) 2007, Henrik Wedekind, Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -35,68 +36,72 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.ast;
+%>
+<%@ jet package="datascript.jet.html" 
+        imports="datascript.ast.* datascript.emit.html.*" 
+        class="Union" %>
+<% 
+    HtmlEmitter e = (HtmlEmitter) argument;
+    String pkg = e.getPackageName();
+    UnionType s = e.getUnion();
+    String typeName = s.getName();
+    TypeNameEmitter tne = new TypeNameEmitter(); 
+%>
+<html>
+  <head>
+    <title>union <%=typeName%></title>
+<%@include file="css.inc"%>
+  </head>
+  <body>
 
-import antlr.collections.AST;
-import datascript.antlr.DataScriptParserTokenTypes;
+    <div class="msgdetail"><i>union</i> <%=typeName%></div>
+    
+    <p><%=e.getDocumentation(s)%></p>
 
-/**
- * @author HWellmann
- *
- */
-public class EnumItem extends TokenAST
-{
-    private EnumType enumType;
-    private IntegerValue value;
-    private String name;
-    
-    public EnumItem()
+    <table class="docuCode" id="tabIdent">
+<%
+	// show the structure of this type
+%>
+	<tr>
+    <td colspan=3><%=typeName%>
+{</td></tr>
+<%
+    for (Field f : s.getFields())
     {
-        
-    }
-    
-    public String getName()
-    {
-        if (name == null)
-        {
-            AST n = getFirstChild();
-            if (n.getType() != DataScriptParserTokenTypes.ID)
-            {
-                n = n.getNextSibling();
-            }
-            name = n.getText();
-        }
-        return name;
-    }
+    	String fname = f.getName();
+        TypeInterface type = f.getFieldType();
+    	String hname = tne.getHyperlinkedTypeName(type);
+%>
+        <tr>
+        	<td id="tabIdent"><%=hname%></td>
+        	<td><a href="#<%=fname%>"><%=fname%></a>;</td>
+        </tr>
+<%
+    }    
+%>
+	<tr>
+		<td colspan=3>};</td></tr>
+    </table>
 
-    public String getDocumentation()
-    {
-        String result = "";
-        AST n = getNextSibling();
-        if (n != null && n.getType() == DataScriptParserTokenTypes.DOC)
-        {
-            result = n.getText();
-        }
-        return result;
-    }
-    
-    public EnumType getEnumType()
-    {
-        return enumType;
-    }
-    
-    public void setEnumType(EnumType enumType)
-    {
-        this.enumType = enumType;
-    }
 
-    public void setValue(IntegerValue value)
-    {
-        this.value = value;
-    }   
+    <h2>Member Details</h2>
     
-    public IntegerValue getValue()
+    <dl>
+<%
+	// show information for each field
+    for (Field f : s.getFields())
     {
-        return value;
-    }
-}
+    	String fname = f.getName();
+    	String doc = e.getDocumentation(f);
+%>
+      <dt class="memberItem"><a name="<%=fname%>"><b><%=fname%>:</b></a></dt>  
+      <dd class="memberDetail">
+        <%=doc.equals("")? "&lt;<i>no documentation found</i>&gt;" : doc %>
+      </dd>
+<%
+    }    
+%>    
+    </dl>
+
+  </body>
+</html>

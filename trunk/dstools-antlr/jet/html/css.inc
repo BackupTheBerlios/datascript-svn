@@ -1,3 +1,4 @@
+<%
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -35,68 +36,65 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.ast;
+%>
+    <style type="text/css">
+<!--
+	body
+	{
+		font-family:Arial, Helvetica;
+	}
 
-import antlr.collections.AST;
-import datascript.antlr.DataScriptParserTokenTypes;
+	.msgdetail
+	{
+		width:100%;
+		padding:1ex;	// 60% 1ex 1ex;
+		font-weight:bold;
+		color:blue;
+		background-color:#f2f2ff
+	}
 
-/**
- * @author HWellmann
- *
- */
-public class EnumItem extends TokenAST
-{
-    private EnumType enumType;
-    private IntegerValue value;
-    private String name;
-    
-    public EnumItem()
-    {
-        
-    }
-    
-    public String getName()
-    {
-        if (name == null)
-        {
-            AST n = getFirstChild();
-            if (n.getType() != DataScriptParserTokenTypes.ID)
-            {
-                n = n.getNextSibling();
-            }
-            name = n.getText();
-        }
-        return name;
-    }
+	.memberItem
+	{
+		padding-left:1em;
+	}
 
-    public String getDocumentation()
-    {
-        String result = "";
-        AST n = getNextSibling();
-        if (n != null && n.getType() == DataScriptParserTokenTypes.DOC)
-        {
-            result = n.getText();
-        }
-        return result;
-    }
-    
-    public EnumType getEnumType()
-    {
-        return enumType;
-    }
-    
-    public void setEnumType(EnumType enumType)
-    {
-        this.enumType = enumType;
-    }
+	.memberDetail
+	{
+		padding-bottom:1em;
+	}
 
-    public void setValue(IntegerValue value)
-    {
-        this.value = value;
-    }   
-    
-    public IntegerValue getValue()
-    {
-        return value;
-    }
-}
+	th
+	{
+		font-size:1.5em;
+	}
+
+	h2
+	{
+		padding-top:1em;
+	}
+
+	.docuCode
+	{
+		empty-cells:show;
+		border-width:0;
+		padding:0;
+		white-space:pre;
+		font-family:monospace;
+	}
+
+	#tabIdent
+	{
+		padding-left:5.5ex;
+	}
+
+
+	.typelistMenu
+	{
+	}
+
+	.typelist
+	{
+	}
+
+-->
+    </style>

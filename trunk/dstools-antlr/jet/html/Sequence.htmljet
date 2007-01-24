@@ -47,43 +47,45 @@
     String typeName = s.getName();
     TypeNameEmitter tne = new TypeNameEmitter(); 
 %>
-    <span style="font-weight:bold; color:blue; background-color:#f2f2ff">
-      <table width="100%" style="background-color:#f2f2ff">
-        <tr>
-          <td>
-            <table cellpadding="3" cellspacing="0" border="0" >
-              <tr>
-	        <td class="msgdetail">
-	          <a name="<%=typeName%>"><i>sequence</i> <%=typeName%></a>
-	        </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </span>
+<html>
+  <head>
+    <title>sequence <%=typeName%></title>
+<%@include file="css.inc"%>
+  </head>
+  <body>
+
+    <div class="msgdetail"><i>sequence</i> <%=typeName%></div>
     
     <p><%=e.getDocumentation(s)%></p>
 
-    <pre>
-    <%=typeName%>
-    {
+    <table class="docuCode" id="tabIdent">
 <%
+	// show the structure of this type
+%>
+	<tr>
+		<td colspan=3><%=typeName%>
+{</td></tr>
+<%
+	// show the structure of this type
     for (Field f : s.getFields())
     {
     	String fname = f.getName();
         TypeInterface type = f.getFieldType();
     	String hname = tne.getHyperlinkedTypeName(type);
 %>
-        <%=hname%>    <a href="#<%=typeName%>_<%=fname%>"><%=fname%></a>;
+        <tr>
+        	<td id="tabIdent"><%=hname%></td>
+        	<td><a href="#<%=fname%>"><%=fname%></a>;</td>
+        </tr>
 <%
     }    
-%>    
-    };
-    </pre>
+%>
+	<tr>
+		<td colspan=3>};</td></tr>
+    </table>
 
 
-    <h3>Member Details</h3>
+    <h2>Member Details</h2>
     
     <dl>
 <%
@@ -92,9 +94,14 @@
     	String fname = f.getName();
     	String doc = e.getDocumentation(f);
 %>
-      <dt><a name="<%=typeName%>_<%=fname%>"><b><%=fname%>:</b></a></dt>  
-      <dd><%=doc%></dd>
+      <dt class="memberItem"><a name="<%=fname%>"><b><%=fname%>:</b></a></dt>  
+      <dd class="memberDetail">
+        <%=doc.equals("")? "&lt;<i>no documentation found</i>&gt;" : doc %>
+      </dd>
 <%
     }    
 %>    
     </dl>
+
+  </body>
+</html>
