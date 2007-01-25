@@ -64,6 +64,7 @@ import datascript.jet.html.Overview;
 import datascript.jet.html.Sequence;
 import datascript.jet.html.Union;
 import datascript.jet.html.Enum;
+import datascript.jet.html.CSS;
 
 public class HtmlEmitter extends DefaultEmitter
 {
@@ -75,6 +76,7 @@ public class HtmlEmitter extends DefaultEmitter
     private Sequence sequenceTmpl = new Sequence();
     private Union unionTmpl = new Union();
     private Enum enumTmpl = new Enum();
+    private CSS cssTmpl = new CSS();
 
     private SequenceType sequence;
     private UnionType union;
@@ -122,6 +124,10 @@ public class HtmlEmitter extends DefaultEmitter
     
     public void endTranslationUnit()
     {
+        openOutputFile(directory, "webStyles.css");
+        out.print(cssTmpl.generate(this));
+        out.close();
+
         openOutputFile(directory, "index" + HTML_EXT);
         String result = overviewTmpl.generate(this);
         out.print(result);

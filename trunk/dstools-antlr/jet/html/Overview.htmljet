@@ -47,7 +47,7 @@
 <html>
   <head>
     <title>DataScript Package <%=pkg%></title>
-<%@include file="css.inc"%>
+    <link rel="stylesheet" type="text/css" href="formate.css">
   </head>
   
   <body>

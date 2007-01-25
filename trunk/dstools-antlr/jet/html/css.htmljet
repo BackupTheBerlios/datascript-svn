@@ -37,65 +37,63 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 %>
-    <style type="text/css">
-<!--
-	body
-	{
-		font-family:Arial, Helvetica;
-	}
+<%@ jet package="datascript.jet.html" 
+        imports="" 
+        class="CSS" %>
+body
+{
+	font-family:Arial, Helvetica;
+}
 
-	.msgdetail
-	{
-		width:100%;
-		padding:1ex;
-		font-weight:bold;
-		color:blue;
-		background-color:#f2f2ff
-	}
+.msgdetail
+{
+	width:100%;
+	padding:1ex;
+	font-weight:bold;
+	color:blue;
+	background-color:#f2f2ff
+}
 
-	.memberItem
-	{
-		height:1ex;
-		padding-left:1em;
-	}
+.memberItem
+{
+	height:1ex;
+	padding-left:1em;
+}
 
-	.memberDetail
-	{
-		padding-bottom:1ex;
-	}
+.memberDetail
+{
+	padding-bottom:1ex;
+}
 
-	th
-	{
-		font-size:1.5em;
-	}
+th
+{
+	font-size:1.5em;
+}
 
-	h2
-	{
-		padding-top:1em;
-	}
+h2
+{
+	padding-top:1em;
+}
 
-	.docuCode
-	{
-		empty-cells:show;
-		border-width:0;
-		padding:0;
-		white-space:pre;
-		font-family:monospace;
-	}
+.docuCode
+{
+	empty-cells:show;
+	border-width:0;
+	padding:0;
+	white-space:pre;
+	font-family:monospace;
+}
 
-	#tabIdent
-	{
-		padding-left:5.5ex;
-	}
+#tabIdent
+{
+	padding-left:5.5ex;
+}
 
 
-	.typelistMenu
-	{
-	}
+.typelistMenu
+{
+}
 
-	.typelist
-	{
-	}
-
--->
-    </style>
+.typelist
+{
+}

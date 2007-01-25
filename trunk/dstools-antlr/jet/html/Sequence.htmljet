@@ -50,7 +50,7 @@
 <html>
   <head>
     <title>sequence <%=typeName%></title>
-<%@include file="css.inc"%>
+    <link rel="stylesheet" type="text/css" href="webStyles.css">
   </head>
   <body>
 
@@ -67,10 +67,10 @@
     for (Field f : s.getFields())
     {
     	String fname = f.getName();
-      	String fnamePostfix = tne.getFieldPostfix(f);
+      	String fnameSuffix = tne.getFieldSuffix(f);
         TypeInterface type = f.getFieldType();
       	String hname = tne.getTypeName(type);
-      	String hnamePostfix = tne.getTypePostfix(type);
+      	String hnameSuffix = tne.getTypeSuffix(type);
 %>
         <tr>
 			<td id="tabIdent"><%
@@ -82,8 +82,8 @@
 		{
         	%><a href="<%=hname%>.html"><%=hname%></a><%
         }
-%><%=hnamePostfix%></td>
-        	<td> <a href="#<%=fname%>"><%=fname%></a><%=fnamePostfix%>;</td>
+%><%=hnameSuffix%></td>
+        	<td> <a href="#<%=fname%>"><%=fname%></a><%=fnameSuffix%>;</td>
         </tr>
 <%
     }    
