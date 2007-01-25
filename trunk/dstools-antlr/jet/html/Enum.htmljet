@@ -45,11 +45,13 @@
     String pkg = e.getPackageName();
     EnumType s = e.getEnum();
     String typeName = s.getName();
+
 %>
 <html>
   <head>
     <title>enum <%=typeName%></title>
     <link rel="stylesheet" type="text/css" href="webStyles.css">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   </head>
   <body>
 
@@ -60,9 +62,9 @@
     <table class="docuCode" id="tabIdent">
 <%
 	// show the structure of this type
+
 %>
-	<tr>
-		<td colspan=3>enum <%=s.getBaseType().toString()%> <%=typeName%>
+	<tr><td colspan=3>enum <%=s.getBaseType().toString()%> <%=typeName%>
 {</td></tr>
 <%
     java.util.Iterator<EnumItem> enumItems = s.getItems().iterator();
@@ -79,8 +81,7 @@
 <%
     }    
 %>
-	<tr>
-		<td colspan=3>};</td></tr>
+	<tr><td colspan=3>};</td></tr>
     </table>
 
 

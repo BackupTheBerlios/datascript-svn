@@ -56,13 +56,13 @@ body
 
 .memberItem
 {
-	height:1ex;
+	height:1.4em;
 	padding-left:1em;
 }
 
 .memberDetail
 {
-	padding-bottom:1ex;
+	padding-bottom:1em;
 }
 
 th

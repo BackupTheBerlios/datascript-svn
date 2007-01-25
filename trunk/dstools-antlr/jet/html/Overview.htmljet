@@ -48,6 +48,7 @@
   <head>
     <title>DataScript Package <%=pkg%></title>
     <link rel="stylesheet" type="text/css" href="formate.css">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   </head>
   
   <body>
