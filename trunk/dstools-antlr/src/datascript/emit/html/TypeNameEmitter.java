@@ -42,12 +42,14 @@ import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
 import datascript.ast.EnumType;
-import datascript.ast.IntegerType;
 import datascript.ast.StdIntegerType;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
-import datascript.emit.StringUtil;
+import datascript.ast.Expression;
+import datascript.ast.Field;
+import datascript.ast.Parameter;
+import datascript.emit.java.ExpressionEmitter;
 
 /**
  * @author HWellmann
@@ -55,24 +57,109 @@ import datascript.emit.StringUtil;
  */
 public class TypeNameEmitter
 {
+    ExpressionEmitter exprEmitter = new ExpressionEmitter();
+    
     public TypeNameEmitter()
     {
+    }    
+
+    public String getFieldPostfix(Field f)
+    {
+        Expression expr;
+        StringBuffer postfixBuffer = new StringBuffer();
+        TypeInterface type = f.getFieldType();
+
+        type = TypeReference.resolveType(type);
+        if (type instanceof ArrayType)
+        {
+            postfixBuffer.append("[");
+            expr = ((ArrayType)type).getLengthExpression();
+            if (expr != null)
+            {
+                postfixBuffer.append(exprEmitter.emit(expr) /*expr.getText()*/);
+            }
+            postfixBuffer.append("]");
+        }
+
+        expr = f.getOptionalClause();
+        if (expr != null)
+        {
+            postfixBuffer.append(exprEmitter.emit(expr));
+        }
+
+        expr = f.getCondition();
+        if (expr != null)
+        {
+            postfixBuffer.append(" : ");
+            postfixBuffer.append(exprEmitter.emit(expr));
+        }
+        else
+        {
+            expr = f.getInitializer();
+            if (expr != null)
+            {
+                postfixBuffer.append(f.getName());
+                postfixBuffer.append(" == ");
+                postfixBuffer.append(exprEmitter.emit(expr));
+            }
+        }
+        
+        return postfixBuffer.toString();
     }
 
-    public String getHyperlinkedTypeName(TypeInterface t)
+
+    public boolean isBuildinType(TypeInterface t)
     {
-        return getTypeName(t, true);
+        if (t instanceof StdIntegerType)
+        {
+            return true;
+        }
+        else if (t instanceof ArrayType)
+        {
+            return isBuildinType(((ArrayType)t).getElementType());
+        }
+        
+        return false;
     }
-    
+
+
+    public String getTypePostfix(TypeInterface type)
+    {
+        if (type instanceof ArrayType)
+        {
+            return getTypePostfix(((ArrayType)type).getElementType());
+        }
+        else if (!(type instanceof CompoundType))
+        {
+            return "";
+        }
+
+        java.util.Iterator<Parameter> paramItems = 
+            ((CompoundType)type).getParameters().iterator();
+        if (!paramItems.hasNext())
+            return "";
+
+        StringBuffer postfixBuffer = new StringBuffer("(");
+        while (paramItems.hasNext())
+        {
+            Parameter param = paramItems.next();
+            //postfixBuffer.append(param.getType());
+            postfixBuffer.append(param.getName());
+            if (paramItems.hasNext())
+            {
+                postfixBuffer.append(",");
+            }
+        }
+        postfixBuffer.append(")");
+        
+        return postfixBuffer.toString();
+    }
+
+
     public String getTypeName(TypeInterface t)
     {
-        return getTypeName(t, false);
-    }
-    
-    
-    public String getTypeName(TypeInterface t, boolean hyperlinked)
-    {
         String result = null;
+
         t = TypeReference.resolveType(t);
         if (t instanceof StdIntegerType)
         {
@@ -85,49 +172,33 @@ public class TypeNameEmitter
         else if (t instanceof CompoundType)
         {
             CompoundType compound = (CompoundType) t;
-            result = wrap(compound.getName(), hyperlinked);
+            result = compound.getName();
         }
         else if (t instanceof EnumType)
         {
             EnumType enumeration = (EnumType) t;
-            result = wrap(enumeration.getName(), hyperlinked);
+            result = enumeration.getName();
         }
         else if (t instanceof TypeInstantiation)
         {
             TypeInstantiation inst = (TypeInstantiation)t;
             CompoundType compound = (CompoundType)inst.getBaseType();
-            result = wrap(compound.getName(), hyperlinked);
+            result = compound.getName();
         }
         else if (t instanceof ArrayType)
         {
-            result = getTypeName((ArrayType) t);
-            
+            result = getTypeName(((ArrayType)t).getElementType());
         }
         else
         {
             result = "/* " + t.toString() + "*/";
         }
+
         return result;
     }
-    
-    private String wrap(String name, boolean hyperlinked)
-    {
-        if (!hyperlinked)
-        {
-            return name;
-        }
-        else
-        {
-            StringBuilder buffer = new StringBuilder("<a href=\"");
-            buffer.append(name);
-            buffer.append(".html\">");
-            buffer.append(name);
-            buffer.append("</a>");
-            return buffer.toString();
-        }
-    }
-    
-    private String getTypeName(StdIntegerType t)
+
+
+    private static String getTypeName(StdIntegerType t)
     {
         switch (t.getType())
         {
@@ -157,20 +228,14 @@ public class TypeNameEmitter
         }
     }
 
-    private String getTypeName(BitFieldType t)
+
+    private static String getTypeName(BitFieldType t)
     {
         int length = t.getLength();
         if (length == 0)
             return "bit<?>";
         else
             return "bit<" + length + ">";
-    }
-    
-    private String getTypeName(ArrayType array)
-    {
-        TypeInterface elType = array.getElementType();
-        String elTypeName = getTypeName(elType);
-        return elTypeName;
     }
 
 }

@@ -63,8 +63,9 @@
 <%
     for (String type : e.getTypes())
     {
+    	String style = pkg.equals(type)? " style=\"font-weight:bold\"" : "";
 %>
-        <li><a href="<%=type%>.html" target="detailedDocu"><%=type%></a></li>
+        <li><a href="<%=type%>.html" target="detailedDocu"<%=style%>><%=type%></a></li>
 <%
     }
 %>

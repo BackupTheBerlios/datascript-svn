@@ -45,7 +45,6 @@
     String pkg = e.getPackageName();
     EnumType s = e.getEnum();
     String typeName = s.getName();
-    TypeNameEmitter tne = new TypeNameEmitter(); 
 %>
 <html>
   <head>
@@ -66,14 +65,16 @@
 		<td colspan=3>enum <%=s.getBaseType().toString()%> <%=typeName%>
 {</td></tr>
 <%
-    for (EnumItem i : s.getItems())
+    java.util.Iterator<EnumItem> enumItems = s.getItems().iterator();
+    while (enumItems.hasNext())
     {
+        EnumItem i = enumItems.next();
     	String iName = i.getName();
         IntegerValue iValue = i.getValue();
 %>
         <tr>
         	<td id="tabIdent"><a href="#<%=iName%>"><%=iName%></a></td>
-        	<td> = <%=iValue%>,</td>
+        	<td> = <%=iValue%><%=enumItems.hasNext()? "," : ""%></td>
 	    </tr>
 <%
     }    

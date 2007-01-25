@@ -62,20 +62,28 @@
 <%
 	// show the structure of this type
 %>
-	<tr>
-		<td colspan=3><%=typeName%>
-{</td></tr>
+	<tr><td colspan=3><%=typeName%><br>{</td></tr>
 <%
-	// show the structure of this type
     for (Field f : s.getFields())
     {
     	String fname = f.getName();
+      	String fnamePostfix = tne.getFieldPostfix(f);
         TypeInterface type = f.getFieldType();
-    	String hname = tne.getHyperlinkedTypeName(type);
+      	String hname = tne.getTypeName(type);
+      	String hnamePostfix = tne.getTypePostfix(type);
 %>
         <tr>
-        	<td id="tabIdent"><%=hname%></td>
-        	<td><a href="#<%=fname%>"><%=fname%></a>;</td>
+			<td id="tabIdent"><%
+		if (tne.isBuildinType(type))
+        {
+        	%><%=hname%><%
+        }
+        else
+		{
+        	%><a href="<%=hname%>.html"><%=hname%></a><%
+        }
+%><%=hnamePostfix%></td>
+        	<td> <a href="#<%=fname%>"><%=fname%></a><%=fnamePostfix%>;</td>
         </tr>
 <%
     }    

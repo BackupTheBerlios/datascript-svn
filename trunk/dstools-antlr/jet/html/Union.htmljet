@@ -62,19 +62,18 @@
 <%
 	// show the structure of this type
 %>
-	<tr>
-    <td colspan=3><%=typeName%>
-{</td></tr>
+	<tr><td colspan=3><%=typeName%><br>{</td></tr>
 <%
     for (Field f : s.getFields())
     {
     	String fname = f.getName();
         TypeInterface type = f.getFieldType();
-    	String hname = tne.getHyperlinkedTypeName(type);
+    	String hname = tne.getTypeName(type);
+      	String postfix = tne.getFieldPostfix(f);
 %>
         <tr>
-        	<td id="tabIdent"><%=hname%></td>
-        	<td><a href="#<%=fname%>"><%=fname%></a>;</td>
+        	<td id="tabIdent"><a href="<%=hname%>.html"><%=hname%></a></td>
+        	<td> <a href="#<%=fname%>"><%=fname%></a><%=postfix%>;</td>
         </tr>
 <%
     }    

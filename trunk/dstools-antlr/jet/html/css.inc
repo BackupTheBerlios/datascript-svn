@@ -47,7 +47,7 @@
 	.msgdetail
 	{
 		width:100%;
-		padding:1ex;	// 60% 1ex 1ex;
+		padding:1ex;
 		font-weight:bold;
 		color:blue;
 		background-color:#f2f2ff
@@ -55,12 +55,13 @@
 
 	.memberItem
 	{
+		height:1ex;
 		padding-left:1em;
 	}
 
 	.memberDetail
 	{
-		padding-bottom:1em;
+		padding-bottom:1ex;
 	}
 
 	th
