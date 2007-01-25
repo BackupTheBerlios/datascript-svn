@@ -38,17 +38,7 @@
 package datascript.emit.html;
 
 import datascript.antlr.DataScriptParserTokenTypes;
-import datascript.ast.ArrayType;
-import datascript.ast.BitFieldType;
-import datascript.ast.CompoundType;
-import datascript.ast.EnumType;
-import datascript.ast.StdIntegerType;
-import datascript.ast.TypeInstantiation;
-import datascript.ast.TypeInterface;
-import datascript.ast.TypeReference;
-import datascript.ast.Expression;
-import datascript.ast.Field;
-import datascript.ast.Parameter;
+import datascript.ast.*;
 import datascript.emit.java.ExpressionEmitter;
 
 /**
@@ -63,7 +53,7 @@ public class TypeNameEmitter
     {
     }    
 
-    public String getFieldPostfix(Field f)
+    public String getFieldSuffix(Field f)
     {
         Expression expr;
         StringBuffer postfixBuffer = new StringBuffer();
@@ -123,19 +113,54 @@ public class TypeNameEmitter
     }
 
 
-    public String getTypePostfix(TypeInterface type)
+    public String getParameterList(TypeInterface type, boolean parameterized)
     {
         if (type instanceof ArrayType)
         {
-            return getTypePostfix(((ArrayType)type).getElementType());
+            return getParameterList(((ArrayType)type).getElementType(), parameterized);
         }
-        else if (!(type instanceof CompoundType))
+        else if (type instanceof CompoundType)
         {
+            return getParameterList(((CompoundType)type).getParameters().iterator(), parameterized);
+        }
+        else if (type instanceof TypeInstantiation)
+        {
+            return getParameterList(((TypeInstantiation)type).getBaseType().getParameters().iterator(), parameterized);
+        }
+        /*
+        else if (type instanceof SqlDatabaseType)
+        {
+            // TODO: don't know how to implement this
             return "";
         }
+        else if (type instanceof SqlIntegerType)
+        {
+            // TODO: don't know how to implement this
+            return "";
+        }
+        else if (type instanceof SqlMetadataType)
+        {
+            // TODO: don't know how to implement this
+            return "";
+        }
+        else if (type instanceof SqlPragmaType)
+        {
+            // TODO: don't know how to implement this
+            return "";
+        }
+        else if (type instanceof SqlTableType)
+        {
+            // TODO: don't know how to implement this
+            return "";
+        }
+        */
+        // no suffix exists for this type 
+        return "";
+    }
 
-        java.util.Iterator<Parameter> paramItems = 
-            ((CompoundType)type).getParameters().iterator();
+
+    private String getParameterList(java.util.Iterator<Parameter> paramItems, boolean parameterized)
+    {
         if (!paramItems.hasNext())
             return "";
 
@@ -143,7 +168,11 @@ public class TypeNameEmitter
         while (paramItems.hasNext())
         {
             Parameter param = paramItems.next();
-            //postfixBuffer.append(param.getType());
+            if (parameterized)
+            {
+                postfixBuffer.append(getTypeName(param.getType()));
+                postfixBuffer.append(" ");
+            }
             postfixBuffer.append(param.getName());
             if (paramItems.hasNext())
             {
