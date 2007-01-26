@@ -74,6 +74,7 @@ public class TypeNameEmitter
         expr = f.getOptionalClause();
         if (expr != null)
         {
+            postfixBuffer.append(" if ");
             postfixBuffer.append(exprEmitter.emit(expr));
         }
 
@@ -98,7 +99,7 @@ public class TypeNameEmitter
     }
 
 
-    public boolean isBuildinType(TypeInterface t)
+    public static boolean isBuildinType(TypeInterface t)
     {
         if (t instanceof StdIntegerType)
         {
@@ -127,33 +128,6 @@ public class TypeNameEmitter
         {
             return getParameterList(((TypeInstantiation)type).getBaseType().getParameters().iterator(), parameterized);
         }
-        /*
-        else if (type instanceof SqlDatabaseType)
-        {
-            // TODO: don't know how to implement this
-            return "";
-        }
-        else if (type instanceof SqlIntegerType)
-        {
-            // TODO: don't know how to implement this
-            return "";
-        }
-        else if (type instanceof SqlMetadataType)
-        {
-            // TODO: don't know how to implement this
-            return "";
-        }
-        else if (type instanceof SqlPragmaType)
-        {
-            // TODO: don't know how to implement this
-            return "";
-        }
-        else if (type instanceof SqlTableType)
-        {
-            // TODO: don't know how to implement this
-            return "";
-        }
-        */
         // no suffix exists for this type 
         return "";
     }
@@ -176,7 +150,7 @@ public class TypeNameEmitter
             postfixBuffer.append(param.getName());
             if (paramItems.hasNext())
             {
-                postfixBuffer.append(",");
+                postfixBuffer.append(", ");
             }
         }
         postfixBuffer.append(")");

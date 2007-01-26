@@ -254,6 +254,9 @@ public class HtmlEmitter extends DefaultEmitter
     
     private String getDocumentation(String doc)
     {
+        if (doc.equals(""))
+            return doc;
+
         StringBuilder buffer = new StringBuilder();
         StringReader is = new StringReader(doc);
         DocCommentLexer lexer = new DocCommentLexer(is);
@@ -263,9 +266,6 @@ public class HtmlEmitter extends DefaultEmitter
         {
             parser.comment();
             AST docNode = parser.getAST();
-            if (docNode == null)
-                return buffer.toString();
-
             AST child = docNode.getFirstChild();
             for (; child != null; child = child.getNextSibling())
             {
@@ -273,21 +273,19 @@ public class HtmlEmitter extends DefaultEmitter
                 {
                     case DocCommentParserTokenTypes.TEXT:
                     {
-                        buffer.append("<p>");
                         buffer.append(child.getText());
                         AST text = child.getFirstChild();
                         for (; text != null; text = text.getNextSibling())
                         {
                             buffer.append(text.getText());
                         }
-                        buffer.append("</p>");
                         break;
                     }
                     
                     case DocCommentParserTokenTypes.AT:
                     {
                         String tag = child.getText().toUpperCase();
-                        buffer.append("<b>@");
+                        buffer.append(" <b>@");
                         buffer.append(tag);
                         buffer.append("</b> ");
                         AST text = child.getFirstChild();
