@@ -122,24 +122,32 @@ public class TypeNameEmitter
     }
 
 
-    public String getParameterList(TypeInterface type, boolean parameterized)
+    public java.util.Iterator<Parameter> getParameterList(TypeInterface type)
     {
         if (type instanceof ArrayType)
         {
-            return getParameterList(((ArrayType)type).getElementType(), parameterized);
+            return getParameterList(((ArrayType)type).getElementType());
         }
         else if (type instanceof CompoundType)
         {
             Iterable<Parameter> it = ((CompoundType)type).getParameters(); 
-            return getParameterList(it.iterator(), parameterized);
+            return it.iterator();
         }
         else if (type instanceof TypeInstantiation)
         {
             Iterable<Parameter> it = ((TypeInstantiation)type).getBaseType().getParameters();
-            return getParameterList(it.iterator(), parameterized);
+            return it.iterator();
         }
         // no parameterlist exists for this type 
-        return "";
+        return null;
+    }
+
+    public String getParameterList(TypeInterface type, boolean parameterized)
+    {
+        java.util.Iterator<Parameter> paramIt = getParameterList(type);
+        if (paramIt == null)
+            return "";
+        return getParameterList(paramIt, parameterized);
     }
 
 

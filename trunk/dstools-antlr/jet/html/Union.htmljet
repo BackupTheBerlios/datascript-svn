@@ -62,12 +62,14 @@
     <table class="docuCode">
 <%
 	// show the structure of this type
-   	String parameterlist = tne.getParameterList(s, true);
+	ParameterList pl = new ParameterList();
+	String parameterlist = pl.generate(s);
 %>
 	<tbody id="tabIdent">
 		<tr><td colspan=3><%=typeName%><%=parameterlist%></td></tr>
 		<tr><td colspan=3>{</td></tr>
 <%
+	LinkedType typeNameGenerator = new LinkedType();
     for (Field f : s.getFields())
     {
         TypeInterface type = f.getFieldType();
@@ -77,69 +79,7 @@
       	parameterlist = tne.getParameterList(type, false);
 %>
         <tr>
-        	<td id="tabIdent"><%
-		if (tne.isBuildinType(type))
-        {
-        	%><%=hname%><%
-        }
-        else
-		{
-	        // generate styles depends on the fiel type
-	        String ankerClass = "";
-	        String titleText = "";
-	        if (type instanceof SequenceType)
-	        {
-	            ankerClass = "sequenceLink";
-	            titleText = "Type: Sequence";
-	        }
-	        else if (type instanceof UnionType)
-	        {
-	            ankerClass = "unionLink";
-	            titleText = "Type: Union";
-	        }
-	        else if (type instanceof ArrayType)
-	        {
-		        ankerClass = "arrayLink";
-		        titleText = "Type: Array";
-	        }
-	        else if (type instanceof EnumType)
-	        {
-		        ankerClass = "enumLink";
-		        titleText = "Type: Enum";
-	        }
-	        else if (type instanceof Subtype)
-	        {
-	            ankerClass = "subtypeLink";
-	            titleText = "Type: Subtype";
-	        }
-	        else if (type instanceof SqlMetadataType)
-	        {
-	            ankerClass = "sqlMetaLink";
-	            titleText = "Type: SQL Metadata";
-	        }
-	        else if (type instanceof SqlPragmaType)
-	        {
-	            ankerClass = "sqlPragmaLink";
-	            titleText = "Type: SQL Pragma";
-	        }
-	        else if (type instanceof SqlTableType)
-	        {
-	            ankerClass = "sqlTableLink";
-	            titleText = "Type: SQL Table";
-	        }
-	        else if (type instanceof SqlDatabaseType)
-	        {
-	            ankerClass = "sqlDBLink";
-	            titleText = "Type: SQL Database";
-	        }
-	        else if (type instanceof TypeInstantiation)
-	        {
-	            ankerClass = "instantLink";
-	            titleText = "Type: TypeInstantiation";
-	        }
-        	%><a class="<%=ankerClass%>" href="<%=hname%>.html" title="<%=titleText%>"><%=hname%></a><%
-        }
-%><%=parameterlist%></td>
+			<td id="tabIdent"><%=typeNameGenerator.generate(type)%><%=parameterlist%></td>
 <%
     	String fname = f.getName();
 %>
