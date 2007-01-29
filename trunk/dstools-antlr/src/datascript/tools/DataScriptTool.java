@@ -298,5 +298,6 @@ public class DataScriptTool
         {
             exc.printStackTrace();
         }
+        System.out.println("parsing finished");
     }
 }

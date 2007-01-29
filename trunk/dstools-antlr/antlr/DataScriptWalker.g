@@ -192,7 +192,7 @@ arrayType
     ;
 
 paramTypeInstantiation
-    : #(INST definedType typeArgumentList)
+    :  #(INST definedType typeArgumentList)
     ;
     
 sequenceDeclaration
@@ -213,7 +213,7 @@ definedType
     ;
 
 subtypeDeclaration
-    : #(SUBTYPE definedType ID (expression)?)
+    :  #(SUBTYPE definedType ID (expression)?)
     ;
 
 

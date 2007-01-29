@@ -110,6 +110,9 @@ tokens
     QUESTIONMARK<AST=datascript.ast.Expression>;
     DOT<AST=datascript.ast.Expression>;
     LPAREN<AST=datascript.ast.Expression>;
+    BIG;
+    LITTLE;
+	ZIP;
     
     SQL;
     SQL_DATABASE<AST=datascript.ast.SqlDatabaseType>;
@@ -248,13 +251,14 @@ typeValueList
 fieldDefinition!
     :   (d:DOC)?
         ( (label) => l:label )?
+        ( (zipModifier typeReference ID arrayRange) => z:zipModifier )?
         t:typeReference
         (f:ID)? 
         (a:arrayRange {#t = #([ARRAY, "ARRAY"], t, a); } )?
         (i:fieldInitializer)? 
         (o:fieldOptionalClause)?
         (c:fieldCondition)?
-        { #fieldDefinition = #([FIELD, "field"], t, f, i, o, c, d, l); }
+        { #fieldDefinition = #([FIELD, "field"], t, f, i, o, c, d, l, z); }
     ;
 
 typeArgumentList
@@ -275,7 +279,7 @@ fieldCondition
     ;
 
 typeDeclaration
-    :   ( (byteOrderModifier)? ("union")? (ID)? (LPAREN parameterDefinition | LCURLY)) =>
+    :   ( (modifier)* ("union")? (ID)? (LPAREN parameterDefinition | LCURLY)) =>
         sequenceDeclaration
     |   definedType
     |   enumDeclaration
@@ -285,7 +289,7 @@ typeDeclaration
     ;
 
 typeReference
-    :   ( (byteOrderModifier)? ("union")? (ID)? (LPAREN parameterDefinition | LCURLY)) =>
+    :   ( (modifier)* ("union")? (ID)? (LPAREN parameterDefinition | LCURLY)) =>
         sequenceDeclaration
     |   (ID LPAREN) => paramTypeInstantiation
     |   definedType
@@ -297,11 +301,13 @@ paramTypeInstantiation
     :   definedType typeArgumentList
         { #paramTypeInstantiation = #([INST, "INST"], paramTypeInstantiation); }
     ;
+
 sequenceDeclaration!
-    :   (byteOrderModifier)? 
+    :   (modifier)* 
         (u:"union")? 
         (n:ID)?
-        (p:parameterList)? m:memberList
+        (p:parameterList)? 
+        m:memberList
         { if (u == null)
           {
               #sequenceDeclaration = #([SEQUENCE, "sequence"], n, p, m); 
@@ -351,8 +357,8 @@ integerType!
     |   "int64"      {#integerType = #[INT64];}
     ;
 
-stringType!
-	:	"string"     {#stringType = #[STRING];}
+stringType
+	:	"string"!     {#stringType = #[STRING];}
 	;
 
 builtinTypeDefaultOrder
@@ -368,10 +374,20 @@ bitField
         { #bitField = #([BIT], #bitField); }       
     ;
 
+modifier
+	:	byteOrderModifier
+	|	zipModifier
+	;
+
+zipModifier
+	:	"zip"! { #zipModifier = #([ZIP], #zipModifier); }
+	;
 
 byteOrderModifier
-    :   "big"
-    |   "little"
+    :   "big"!
+        { #byteOrderModifier = #([BIG], #byteOrderModifier); }
+    |   "little"!
+        { #byteOrderModifier = #([LITTLE], #byteOrderModifier); }
     ;
 
 arrayRange

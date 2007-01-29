@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.util.Set;
+import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -115,11 +116,21 @@ public class HtmlEmitter extends DefaultEmitter
         return typeEmitter.getTypeName(type);
     }
  
-*/    
-
-    public Set<String> getTypes()
+*/
+    
+    public Set<String> getTypeNames()
     {
         return typeMap.keySet();
+    }
+
+    public Collection<TypeInterface> getTypes()
+    {
+        return typeMap.values();
+    }
+
+    public TypeInterface getType(String typeName)
+    {
+        return typeMap.get(typeName);
     }
     
     public void endTranslationUnit()

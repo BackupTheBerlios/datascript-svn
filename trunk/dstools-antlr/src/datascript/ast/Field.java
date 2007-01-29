@@ -113,7 +113,10 @@ public class Field extends TokenAST
         return compound;
     }
 
-
+    void setCompound(CompoundType compound)
+    {
+        this.compound = compound;
+    }
 
     public Expression getCondition()
     {
@@ -166,19 +169,14 @@ public class Field extends TokenAST
         this.fieldInitializer = (TokenAST)fieldInitializer;
     }
 
-    void setCompound(CompoundType compound)
+    public String getDocumentation()
     {
-        this.compound = compound;
+        return (documentation == null) ? null : documentation.getText();
     }
     
     public void setDocumentation(AST doc)
     {
         documentation = (TokenAST)doc;
-    }
-
-    public String getDocumentation()
-    {
-        return (documentation == null) ? null : documentation.getText();
     }
     
     public String toString()

@@ -128,8 +128,9 @@ parameterDefinition
 enumDeclaration
     : #(e:"enum" 		{ em.beginEnumeration(e); } 
         builtinType (ID)? 
-        enumMemberList)
-        			{ em.endEnumeration(e); }
+        enumMemberList
+       )
+       { em.endEnumeration(e); }
     ;
 
 enumMemberList
@@ -139,8 +140,9 @@ enumMemberList
 enumItem
     : #(i:ITEM 			{ em.beginEnumItem(i); }
         (DOC)? ID 
-        (expression)?)
-        			{ em.endEnumItem(i); }
+        (expression)?
+       )
+       { em.endEnumItem(i); }
     ;
 
 bitmaskDeclaration
@@ -152,15 +154,15 @@ constDeclaration
     ;
 
 fieldDefinition
-    :   #(f:FIELD typeReference 
-    	  (i:ID					{ em.beginField(f); }
-    	  )? 
-          (fieldInitializer)?
-          (fieldOptionalClause)?
-          (fieldCondition)? (DOC)? (label)?
-          ) 
-          
-          { if (i != null) em.endField(f); }
+    :   #(f:FIELD 
+           ((zipModifier typeReference ID) => zipModifier)?
+    	   typeReference 
+    	   (i:ID					{ em.beginField(f); })? 
+           (fieldInitializer)?
+           (fieldOptionalClause)?
+           (fieldCondition)? (DOC)? (label)?
+         )
+         { if (i != null) em.endField(f); }
     ;
 
 typeArgumentList
@@ -208,31 +210,33 @@ paramTypeInstantiation
     
 sequenceDeclaration
     :   #(s:SEQUENCE 		{ em.beginSequence(s); }
-         (ID)? 
-         (parameterList)? 
-         memberList)
-         			{ em.endSequence(s); }
+           (ID)? 
+           (parameterList)? 
+           memberList
+         )
+         { em.endSequence(s); }
     ;
 
 unionDeclaration
     :   #(u:UNION 		{ em.beginUnion(u); }
-          (ID)? 
-          (parameterList)? 
-          memberList)
-          			{ em.endUnion(u); }
+           (ID)? 
+           (parameterList)? 
+           memberList
+         )
+         { em.endUnion(u); }
     ;
 
 memberList
-    :    #(MEMBERS (declaration)*)
+    :   #(MEMBERS (declaration)*)
     ;
 
 definedType
-    :  #(TYPEREF ID (DOT ID)*) 
+    :	#(TYPEREF ID (DOT ID)*) 
     |   builtinType
     ;
 
 subtypeDeclaration
-    : #(SUBTYPE definedType ID (expression)?)
+    :	#(SUBTYPE definedType ID (expression)?)
     ;
 
 builtinType
@@ -264,6 +268,15 @@ bitField
     :   #(BIT expression)
     ;
 
+
+modifier
+	:	byteOrderModifier
+	|	zipModifier
+	;
+
+zipModifier
+	:	#(ZIP "zip")
+	;
 
 byteOrderModifier
     :   "big"

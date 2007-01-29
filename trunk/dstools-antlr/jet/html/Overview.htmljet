@@ -62,11 +62,67 @@
 	<tr><td class="typelistMenu">
       <ul class="typelist">
 <%
-    for (String type : e.getTypes())
+    for (String typeName : e.getTypeNames())
     {
-    	String style = pkg.equals(type)? " style=\"font-weight:bold\"" : "";
+        TypeInterface type = e.getType(typeName);
+        type = TypeReference.resolveType(type);
+    	String style = pkg.equals(typeName)? " style=\"font-weight:bold\"" : "";
+
+        // generate styles depends on the fiel type
+        String ankerClass = "";
+        String titleText = "";
+        if (type instanceof SequenceType)
+        {
+            ankerClass = "sequenceLink";
+            titleText = "Type: Sequence";
+        }
+        else if (type instanceof UnionType)
+        {
+            ankerClass = "unionLink";
+            titleText = "Type: Union";
+        }
+        else if (type instanceof ArrayType)
+        {
+	        ankerClass = "arrayLink";
+	        titleText = "Type: Array";
+        }
+        else if (type instanceof EnumType)
+        {
+	        ankerClass = "enumLink";
+	        titleText = "Type: Enum";
+        }
+        else if (type instanceof Subtype)
+        {
+            ankerClass = "subtypeLink";
+            titleText = "Type: Subtype";
+        }
+        else if (type instanceof SqlMetadataType)
+        {
+            ankerClass = "sqlMetaLink";
+            titleText = "Type: SQL Metadata";
+        }
+        else if (type instanceof SqlPragmaType)
+        {
+            ankerClass = "sqlPragmaLink";
+            titleText = "Type: SQL Pragma";
+        }
+        else if (type instanceof SqlTableType)
+        {
+            ankerClass = "sqlTableLink";
+            titleText = "Type: SQL Table";
+        }
+        else if (type instanceof SqlDatabaseType)
+        {
+            ankerClass = "sqlDBLink";
+            titleText = "Type: SQL Database";
+        }
+        else if (type instanceof TypeInstantiation)
+        {
+            ankerClass = "instantLink";
+            titleText = "Type: TypeInstantiation";
+        }
 %>
-        <li><a href="<%=type%>.html" target="detailedDocu"<%=style%>><%=type%></a></li>
+        <li><a class="<%=ankerClass%>" href="<%=typeName%>.html" title="<%=titleText%>" target="detailedDocu"<%=style%>><%=typeName%></a></li>
 <%
     }
 %>

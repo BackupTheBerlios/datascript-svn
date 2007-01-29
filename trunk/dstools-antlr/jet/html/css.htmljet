@@ -45,6 +45,29 @@ body
 	font-family:Arial, Helvetica;
 }
 
+a
+{
+	color:#222222;
+}
+
+a.enumLink
+{
+	color:green;
+}
+
+a.arrayLink,
+a.unionLink,
+a.sequenceLink,
+a.subtypeLink,
+a.sqlMetaLink,
+a.sqlPragmaLink,
+a.sqlTableLink,
+a.sqlDBLink,
+a.instantLink
+{
+	color:#222222;
+}
+
 .detailedDocu
 {
 	width:100%;
@@ -52,6 +75,7 @@ body
 	scrolling:auto;
 	text-align:right;
 	border:0px;
+	border-style:hidden;
 }
 
 .msgdetail
@@ -88,6 +112,7 @@ h2
 {
 	empty-cells:show;
 	border-width:0;
+	border-spacing:0px;
 	padding:0;
 	white-space:pre;
 	font-family:monospace;

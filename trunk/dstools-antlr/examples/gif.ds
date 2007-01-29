@@ -149,12 +149,26 @@ BlockData
 	SubBlock(byteCount)	dataBytes if byteCount > 0;
 };
 
+ZippedBlockData
+{
+	uint8	byteCount;
+	ZippedSubBlock(byteCount) dataBytes if byteCount > 0;
+};
+
 SubBlock(uint8 byteCount)
 {
 	uint8	dataBytes[byteCount]	: byteCount > 0;
 	uint8	blockTerminator;
 
 	SubBlock(blockTerminator)	nextData	if blockTerminator > 0;
+};
+
+ZippedSubBlock(uint8 byteCount)
+{
+	zip uint8	dataBytes[byteCount]	: byteCount > 0;
+	uint8	blockTerminator;
+
+	ZippedSubBlock(blockTerminator)	nextData	if blockTerminator > 0;
 };
 
 ScreenDescriptor(GIFVersion version)
@@ -196,7 +210,7 @@ ImageDescriptor(GIFVersion version)
 RasterData
 {
 	uint8		codeSize;
-	BlockData	data;
+	ZippedBlockData	data;
 };
 
 RGBColor

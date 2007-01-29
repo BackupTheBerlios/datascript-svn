@@ -66,8 +66,8 @@ public class TypeReference extends TokenAST implements TypeInterface,
         {
             // compute name, only used for printing right now
             StringBuffer b = new StringBuffer();
-            for (AST node = getFirstChild(); node != null; node = node
-                    .getNextSibling())
+            AST node = getFirstChild();
+            for (; node != null; node = node.getNextSibling())
             {
                 String name = node.getText();
                 b.append(name);

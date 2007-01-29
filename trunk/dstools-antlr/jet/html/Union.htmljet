@@ -59,18 +59,20 @@
     
     <p><%=e.getDocumentation(s)%></p>
 
-    <table class="docuCode" id="tabIdent">
+    <table class="docuCode">
 <%
 	// show the structure of this type
    	String parameterlist = tne.getParameterList(s, true);
 %>
-	<tr><td colspan=3><%=typeName%><%=parameterlist%><br>{</td></tr>
+	<tbody id="tabIdent">
+		<tr><td colspan=3><%=typeName%><%=parameterlist%></td></tr>
+		<tr><td colspan=3>{</td></tr>
 <%
     for (Field f : s.getFields())
     {
-    	String fname = f.getName();
-      	String fnameSuffix = tne.getFieldSuffix(f);
         TypeInterface type = f.getFieldType();
+        type = TypeReference.resolveType(type);
+
     	String hname = tne.getTypeName(type);
       	parameterlist = tne.getParameterList(type, false);
 %>
@@ -82,15 +84,89 @@
         }
         else
 		{
-        	%><a href="<%=hname%>.html"><%=hname%></a><%
+	        // generate styles depends on the fiel type
+	        String ankerClass = "";
+	        String titleText = "";
+	        if (type instanceof SequenceType)
+	        {
+	            ankerClass = "sequenceLink";
+	            titleText = "Type: Sequence";
+	        }
+	        else if (type instanceof UnionType)
+	        {
+	            ankerClass = "unionLink";
+	            titleText = "Type: Union";
+	        }
+	        else if (type instanceof ArrayType)
+	        {
+		        ankerClass = "arrayLink";
+		        titleText = "Type: Array";
+	        }
+	        else if (type instanceof EnumType)
+	        {
+		        ankerClass = "enumLink";
+		        titleText = "Type: Enum";
+	        }
+	        else if (type instanceof Subtype)
+	        {
+	            ankerClass = "subtypeLink";
+	            titleText = "Type: Subtype";
+	        }
+	        else if (type instanceof SqlMetadataType)
+	        {
+	            ankerClass = "sqlMetaLink";
+	            titleText = "Type: SQL Metadata";
+	        }
+	        else if (type instanceof SqlPragmaType)
+	        {
+	            ankerClass = "sqlPragmaLink";
+	            titleText = "Type: SQL Pragma";
+	        }
+	        else if (type instanceof SqlTableType)
+	        {
+	            ankerClass = "sqlTableLink";
+	            titleText = "Type: SQL Table";
+	        }
+	        else if (type instanceof SqlDatabaseType)
+	        {
+	            ankerClass = "sqlDBLink";
+	            titleText = "Type: SQL Database";
+	        }
+	        else if (type instanceof TypeInstantiation)
+	        {
+	            ankerClass = "instantLink";
+	            titleText = "Type: TypeInstantiation";
+	        }
+        	%><a class="<%=ankerClass%>" href="<%=hname%>.html" title="<%=titleText%>"><%=hname%></a><%
         }
 %><%=parameterlist%></td>
-        	<td> <a href="#<%=fname%>"><%=fname%></a><%=parameterlist%>;</td>
+<%
+    	String fname = f.getName();
+%>
+        	<td> <a href="#<%=fname%>"><%=fname%></a>
+<%
+      	String arrayRange = tne.getArrayRange(f);
+      	if (arrayRange != null)
+      	{
+        	%><%=arrayRange%><%
+        }
+      	String optional = tne.getOptionalClause(f);
+      	if (optional != null)
+      	{
+        	%><%=optional%><%
+        }
+      	String constraint = tne.getConstraint(f);
+      	if (constraint != null)
+      	{
+        	%><%=constraint%><%
+        }
+%>;</td>
         </tr>
 <%
     }    
 %>
-	<tr><td colspan=3>};</td></tr>
+		<tr><td colspan=3>};</td></tr>
+	</tbody>
     </table>
 
 

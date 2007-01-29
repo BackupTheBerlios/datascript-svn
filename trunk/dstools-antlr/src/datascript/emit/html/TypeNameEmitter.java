@@ -39,7 +39,7 @@ package datascript.emit.html;
 
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.*;
-import datascript.emit.java.ExpressionEmitter;
+import datascript.emit.html.ExpressionEmitter;
 
 /**
  * @author HWellmann
@@ -53,55 +53,63 @@ public class TypeNameEmitter
     {
     }    
 
-    public String getFieldSuffix(Field f)
+    public String getArrayRange(Field f)
     {
-        Expression expr;
-        StringBuffer postfixBuffer = new StringBuffer();
+        String result = null;
         TypeInterface type = f.getFieldType();
 
         type = TypeReference.resolveType(type);
         if (type instanceof ArrayType)
         {
-            postfixBuffer.append("[");
-            expr = ((ArrayType)type).getLengthExpression();
+            result = "[";
+            Expression expr = ((ArrayType)type).getLengthExpression();
             if (expr != null)
             {
-                postfixBuffer.append(exprEmitter.emit(expr) /*expr.getText()*/);
+                result += exprEmitter.emit(expr);
             }
-            postfixBuffer.append("]");
+            result += "]";
         }
+        
+        return result;
+    }
 
-        expr = f.getOptionalClause();
+    public String getOptionalClause(Field field)
+    {
+        String result = null;
+        Expression expr = field.getOptionalClause();
         if (expr != null)
         {
-            postfixBuffer.append(" if ");
-            postfixBuffer.append(exprEmitter.emit(expr));
+            result = " if " + exprEmitter.emit(expr);
         }
+        return result;
+    }
 
-        expr = f.getCondition();
+    public String getConstraint(Field field)
+    {
+        String result = null;
+        Expression expr = field.getCondition();
         if (expr != null)
         {
-            postfixBuffer.append(" : ");
-            postfixBuffer.append(exprEmitter.emit(expr));
+            result = " : " + exprEmitter.emit(expr);
         }
         else
         {
-            expr = f.getInitializer();
+            expr = field.getInitializer();
             if (expr != null)
             {
-                postfixBuffer.append(f.getName());
-                postfixBuffer.append(" == ");
-                postfixBuffer.append(exprEmitter.emit(expr));
+                result = field.getName() + " == " + exprEmitter.emit(expr);
             }
         }
-        
-        return postfixBuffer.toString();
+
+        return result;
     }
 
 
     public static boolean isBuildinType(TypeInterface t)
     {
-        if (t instanceof StdIntegerType)
+        if (t instanceof StdIntegerType ||
+            t instanceof BitFieldType ||
+            t instanceof StringType)
         {
             return true;
         }
@@ -122,13 +130,15 @@ public class TypeNameEmitter
         }
         else if (type instanceof CompoundType)
         {
-            return getParameterList(((CompoundType)type).getParameters().iterator(), parameterized);
+            Iterable<Parameter> it = ((CompoundType)type).getParameters(); 
+            return getParameterList(it.iterator(), parameterized);
         }
         else if (type instanceof TypeInstantiation)
         {
-            return getParameterList(((TypeInstantiation)type).getBaseType().getParameters().iterator(), parameterized);
+            Iterable<Parameter> it = ((TypeInstantiation)type).getBaseType().getParameters();
+            return getParameterList(it.iterator(), parameterized);
         }
-        // no suffix exists for this type 
+        // no parameterlist exists for this type 
         return "";
     }
 
@@ -144,7 +154,9 @@ public class TypeNameEmitter
             Parameter param = paramItems.next();
             if (parameterized)
             {
-                postfixBuffer.append(getTypeName(param.getType()));
+                //TypeInterface paramType = TypeReference.resolveType(param.getType());
+                TypeInterface paramType = param.getType();
+                postfixBuffer.append(getTypeName(paramType));
                 postfixBuffer.append(" ");
             }
             postfixBuffer.append(param.getName());

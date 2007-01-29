@@ -64,6 +64,14 @@ public class GifTest extends TestCase
         return calcBlockSize(blockData.getNextData()) + byteCount; 
     }
 
+    private int calcBlockSize(ZippedSubBlock blockData)
+    {
+        int byteCount = blockData.getBlockTerminator();
+        if (byteCount == 0)
+            return 0;
+        return calcBlockSize(blockData.getNextData()) + byteCount; 
+    }
+
     private void printExtensionBlock(ExtensionBlock extensionBlock) throws IOException
     {
         switch(extensionBlock.getExtensionFunctionCode())

@@ -213,6 +213,7 @@ fieldCondition
     :   #(COLON expression)
     ;
 
+/*
 typeDeclaration
     :   sequenceDeclaration
     |   unionDeclaration
@@ -220,6 +221,7 @@ typeDeclaration
     |   bitmaskDeclaration
     |   arrayType
     ;
+*/
 
 typeReference
     :   sequenceDeclaration
