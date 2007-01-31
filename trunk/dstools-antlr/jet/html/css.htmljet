@@ -78,6 +78,30 @@ a.referenceLink
 	border-style:hidden;
 }
 
+.docuTag
+{
+	font-style:italic;
+	font-weight:bold;
+}
+
+.docuTag#todo
+{
+	text-decoration:blink;
+	color:#CC2222;
+}
+
+.docuTag#see
+{
+	text-decoration:none;
+	color:#222222;
+}
+
+.docuTag#param
+{
+	text-decoration:none;
+	color:#2222CC;
+}
+
 .msgdetail
 {
 	width:100%;

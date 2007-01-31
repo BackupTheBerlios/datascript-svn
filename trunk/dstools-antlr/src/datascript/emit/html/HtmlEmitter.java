@@ -296,10 +296,28 @@ public class HtmlEmitter extends DefaultEmitter
                     case DocCommentParserTokenTypes.AT:
                     {
                         String tag = child.getText().toUpperCase();
-                        buffer.append(" <b>@");
+                        buffer.append("<br/><span class=\"docuTag\" id=\"" + tag + "\">@");
                         buffer.append(tag);
-                        buffer.append("</b> ");
                         AST text = child.getFirstChild();
+                        if (text == null)
+                        {
+                            buffer.append("</span> ");
+                            break;
+                        }
+                        if (tag.equals("SEE"))
+                        {
+                            buffer.append(" <a href=\"");
+                            buffer.append(text.getText()+".html");
+                            buffer.append("\" >");
+                            buffer.append(text.getText());
+                            buffer.append("</a>");
+                        }
+                        else
+                        {
+                            buffer.append(" " + text.getText());
+                        }
+                        buffer.append("</span> ");
+                        text = text.getNextSibling();
                         for (; text != null; text = text.getNextSibling())
                         {
                             buffer.append(text.getText());
