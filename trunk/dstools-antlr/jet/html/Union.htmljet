@@ -53,6 +53,7 @@
     <link rel="stylesheet" type="text/css" href="webStyles.css">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   </head>
+
   <body>
 
     <div class="msgdetail"><i>union</i> <%=typeName%></div>
@@ -65,9 +66,9 @@
 	ParameterList pl = new ParameterList();
 	String parameterlist = pl.generate(s);
 %>
-	<tbody id="tabIdent">
-		<tr><td colspan=3><%=typeName%><%=parameterlist%></td></tr>
-		<tr><td colspan=3>{</td></tr>
+      <tbody id="tabIdent">
+        <tr><td colspan=3><%=typeName%><%=parameterlist%></td></tr>
+        <tr><td colspan=3>{</td></tr>
 <%
 	LinkedType typeNameGenerator = new LinkedType();
     for (Field f : s.getFields())
@@ -76,14 +77,15 @@
         type = TypeReference.resolveType(type);
 
     	String hname = tne.getTypeName(type);
-      	parameterlist = tne.getParameterList(type, false);
+      	//parameterlist = tne.getParameterList(type, false);
+		parameterlist = pl.generate(type);
 %>
-        <tr>
-			<td id="tabIdent"><%=typeNameGenerator.generate(type)%><%=parameterlist%></td>
+        <tr align="bottom">
+          <td id="tabIdent"><%=typeNameGenerator.generate(type)%><%=parameterlist%></td>
 <%
     	String fname = f.getName();
 %>
-        	<td> <a href="#<%=fname%>"><%=fname%></a>
+          <td> <a href="#<%=fname%>"><%=fname%></a>
 <%
       	String arrayRange = tne.getArrayRange(f);
       	if (arrayRange != null)
@@ -105,8 +107,8 @@
 <%
     }    
 %>
-		<tr><td colspan=3>};</td></tr>
-	</tbody>
+        <tr><td colspan=3>};</td></tr>
+      </tbody>
     </table>
 
 

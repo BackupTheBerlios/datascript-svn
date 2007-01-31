@@ -50,7 +50,7 @@
     <link rel="stylesheet" type="text/css" href="webStyles.css">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   </head>
-  
+
   <body>
     <h1>DataScript Package <%=pkg%></h1>
 
@@ -73,8 +73,9 @@
 %>
       </ul>
     </td><td>
-      <iframe src="" class="detailedDocu" name="detailedDocu">
-        <p>Ihr Browser kann leider keine eingebetteten Frames anzeigen!</p>
+      <iframe src="" class="detailedDocu" name="detailedDocu" scrolling="auto">
+        <p>Ihr Browser kann leider keine eingebetteten Frames anzeigen!<br>
+        Your browser sofftware can not handle embedded frames!</p>
       </iframe>
     </td></tr>
     </table>

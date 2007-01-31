@@ -122,64 +122,7 @@ public class TypeNameEmitter
     }
 
 
-    public java.util.Iterator<Parameter> getParameterList(TypeInterface type)
-    {
-        if (type instanceof ArrayType)
-        {
-            return getParameterList(((ArrayType)type).getElementType());
-        }
-        else if (type instanceof CompoundType)
-        {
-            Iterable<Parameter> it = ((CompoundType)type).getParameters(); 
-            return it.iterator();
-        }
-        else if (type instanceof TypeInstantiation)
-        {
-            Iterable<Parameter> it = ((TypeInstantiation)type).getBaseType().getParameters();
-            return it.iterator();
-        }
-        // no parameterlist exists for this type 
-        return null;
-    }
-
-    public String getParameterList(TypeInterface type, boolean parameterized)
-    {
-        java.util.Iterator<Parameter> paramIt = getParameterList(type);
-        if (paramIt == null)
-            return "";
-        return getParameterList(paramIt, parameterized);
-    }
-
-
-    private String getParameterList(java.util.Iterator<Parameter> paramItems, boolean parameterized)
-    {
-        if (!paramItems.hasNext())
-            return "";
-
-        StringBuffer postfixBuffer = new StringBuffer("(");
-        while (paramItems.hasNext())
-        {
-            Parameter param = paramItems.next();
-            if (parameterized)
-            {
-                //TypeInterface paramType = TypeReference.resolveType(param.getType());
-                TypeInterface paramType = param.getType();
-                postfixBuffer.append(getTypeName(paramType));
-                postfixBuffer.append(" ");
-            }
-            postfixBuffer.append(param.getName());
-            if (paramItems.hasNext())
-            {
-                postfixBuffer.append(", ");
-            }
-        }
-        postfixBuffer.append(")");
-        
-        return postfixBuffer.toString();
-    }
-
-
-    public String getTypeName(TypeInterface t)
+    public static String getTypeName(TypeInterface t)
     {
         String result = null;
 

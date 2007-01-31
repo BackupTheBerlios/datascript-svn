@@ -43,66 +43,82 @@
 <%
     TypeInterface paramType = (TypeInterface) argument;
     TypeNameEmitter tne = new TypeNameEmitter(); 
-%>
-<%
-	String style = "";
+
+	String styleStr = "";
+    String ankerClass = "";
+    String titleText = "Type: ";
     String paramTypeName = tne.getTypeName(paramType);
+
+    while (paramType instanceof ArrayType)
+    {
+        paramType = ((ArrayType)paramType).getElementType();
+        ankerClass = "arrayLink";
+        titleText += "array of ";
+    }
+
 	if (!tne.isBuildinType(paramType))
 	{
         // generate styles depends on the fiel type
-        String ankerClass = "";
-        String titleText = "";
+
         if (paramType instanceof SequenceType)
         {
             ankerClass = "sequenceLink";
-            titleText = "Type: Sequence";
+            titleText += "Sequence";
         }
         else if (paramType instanceof UnionType)
         {
             ankerClass = "unionLink";
-            titleText = "Type: Union";
-        }
-        else if (paramType instanceof ArrayType)
-        {
-	        ankerClass = "arrayLink";
-	        titleText = "Type: Array";
+            titleText += "Union";
         }
         else if (paramType instanceof EnumType)
         {
 	        ankerClass = "enumLink";
-	        titleText = "Type: Enum";
+	        titleText += "Enum";
         }
         else if (paramType instanceof Subtype)
         {
             ankerClass = "subtypeLink";
-            titleText = "Type: Subtype";
+            titleText += "Subtype";
         }
         else if (paramType instanceof SqlMetadataType)
         {
             ankerClass = "sqlMetaLink";
-            titleText = "Type: SQL Metadata";
+            titleText += "SQL Metadata";
         }
         else if (paramType instanceof SqlPragmaType)
         {
             ankerClass = "sqlPragmaLink";
-            titleText = "Type: SQL Pragma";
+            titleText += "SQL Pragma";
         }
         else if (paramType instanceof SqlTableType)
         {
             ankerClass = "sqlTableLink";
-            titleText = "Type: SQL Table";
+            titleText += "SQL Table";
         }
         else if (paramType instanceof SqlDatabaseType)
         {
             ankerClass = "sqlDBLink";
-            titleText = "Type: SQL Database";
+            titleText += "SQL Database";
         }
         else if (paramType instanceof TypeInstantiation)
         {
             ankerClass = "instantLink";
-            titleText = "Type: TypeInstantiation";
+            titleText += "TypeInstantiation";
         }
-		%><a class="<%=ankerClass%>" href="<%=paramTypeName%>.html" title="<%=titleText%>" target="detailedDocu"<%=style%>><%=paramTypeName%></a><%
+        else if (paramType instanceof TypeReference)
+        {
+            ankerClass = "referenceLink";
+            titleText += "TypeReference";
+        }
+        else
+        {
+        	%><span title="Type: <%=paramType.getClass().getName()%>"><%=paramTypeName%></span><%
+	        //System.out.println(tne.getTypeName(paramType) + " is unknown.");
+		    return stringBuffer.toString();
+        }
+
+		%><a class="<%=ankerClass%>" href="<%=paramTypeName%>.html" title="<%=titleText%>" target="detailedDocu" <%=styleStr%>><%=paramTypeName%></a><%
+
 	}
 	else
 	{

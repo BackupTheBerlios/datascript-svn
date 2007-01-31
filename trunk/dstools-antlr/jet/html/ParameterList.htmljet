@@ -41,20 +41,46 @@
         imports="datascript.ast.* datascript.emit.html.*" 
         class="ParameterList" %>
 <%
-    CompoundType s = (CompoundType) argument;
-    TypeNameEmitter tne = new TypeNameEmitter(); 
-%>
-<%
-	java.util.Iterator<Parameter> paramIt = tne.getParameterList(s);
-	if (paramIt.hasNext())
+    java.util.Iterator paramIt = null;
+    while (argument instanceof ArrayType)
+    {
+        argument = ((ArrayType)argument).getElementType();
+    }
+
+    if (argument instanceof CompoundType)
+    {
+        Iterable<Parameter> it = ((CompoundType)argument).getParameters(); 
+        paramIt = it.iterator();
+    }
+    else if (argument instanceof TypeInstantiation)
+    {
+        //Iterable<Parameter> it = ((TypeInstantiation)argument).getBaseType().getParameters();
+        Iterable<Expression> it = ((TypeInstantiation)argument).getArguments();
+        paramIt = it.iterator();
+    }
+
+	if (paramIt != null && paramIt.hasNext())
 	{
 	%>(<%
+		String paramName;
 		LinkedType typeName = new LinkedType();
 		while (paramIt.hasNext())
 		{
-            Parameter param = paramIt.next();
-            TypeInterface paramType = param.getType();
-            %><%=typeName.generate(paramType)%> <%=param.getName()%><%
+            if (argument instanceof TypeInstantiation)
+            {
+            	ExpressionEmitter exprEmitter = new ExpressionEmitter();
+	            Expression expr = (Expression)paramIt.next();
+    	        paramName = exprEmitter.emit(expr);
+            }
+            else
+            {
+	            Parameter param = (Parameter)paramIt.next();
+	            TypeInterface paramType = param.getType();
+    	        paramName = param.getName();
+
+            	%><%=typeName.generate(paramType)%> <%
+            }
+            %><%=paramName%><%
             if (paramIt.hasNext())
             {
                 %>, <%
