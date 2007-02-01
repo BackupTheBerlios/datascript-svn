@@ -68,7 +68,7 @@
 %>
       <tbody id="tabIdent">
         <tr><td colspan=3><%=typeName%><%=parameterlist%></td></tr>
-        <tr><td colspan=3>{</td></tr>
+        <tr><td>{</td><td rowspan=<%=s.getNumFields()+1%>>&nbsp;</td><td></td></tr>
 <%
 	LinkedType typeNameGenerator = new LinkedType();
     for (Field f : s.getFields())
@@ -80,12 +80,12 @@
       	//parameterlist = tne.getParameterList(type, false);
 		parameterlist = pl.generate(type);
 %>
-        <tr align="bottom">
-          <td id="tabIdent"><%=typeNameGenerator.generate(type)%><%=parameterlist%></td>
+        <tr>
+          <td valign="top" id="tabIdent"><%=typeNameGenerator.generate(type)%><%=parameterlist%></td>
 <%
     	String fname = f.getName();
 %>
-          <td> <a href="#<%=fname%>"><%=fname%></a>
+          <td valign="bottom"><a href="#<%=fname%>"><%=fname%></a>
 <%
       	String arrayRange = tne.getArrayRange(f);
       	if (arrayRange != null)

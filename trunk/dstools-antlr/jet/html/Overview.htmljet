@@ -73,7 +73,7 @@
 %>
       </ul>
     </td><td>
-      <iframe src="" class="detailedDocu" name="detailedDocu" scrolling="auto">
+      <iframe src="" class="detailedDocu" name="detailedDocu" scrolling="auto" frameborder="0">
         <p>Ihr Browser kann leider keine eingebetteten Frames anzeigen!<br>
         Your browser sofftware can not handle embedded frames!</p>
       </iframe>

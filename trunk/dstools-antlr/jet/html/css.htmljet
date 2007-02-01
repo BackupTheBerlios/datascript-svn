@@ -55,18 +55,10 @@ a.enumLink
 	color:green;
 }
 
-a.arrayLink,
-a.unionLink,
-a.sequenceLink,
-a.subtypeLink,
-a.sqlMetaLink,
-a.sqlPragmaLink,
-a.sqlTableLink,
-a.sqlDBLink,
-a.instantLink,
-a.referenceLink
+a.subtypeLink
 {
 	color:#222222;
+	font-style:italic;
 }
 
 .detailedDocu
@@ -74,20 +66,36 @@ a.referenceLink
 	width:100%;
 	height:100%;
 	text-align:right;
-	border:0px;
-	border-style:hidden;
+	border-width:0;
+	border-style:none;
+	border-spacing:0px;
+	border-collapse:collapse;
+}
+
+a.unionLink,
+a.sequenceLink,
+a.sqlMetaLink,
+a.sqlPragmaLink,
+a.sqlTableLink,
+a.sqlDBLink,
+a.instantLink,
+a.arrayLink,
+a.referenceLink
+{
+	color:#222222;
 }
 
 .docuTag
 {
 	font-style:italic;
 	font-weight:bold;
+	background-color:#FFFFFF;
 }
 
 .docuTag#todo
 {
 	text-decoration:blink;
-	color:#CC2222;
+	color:#DD2222;
 }
 
 .docuTag#see
@@ -99,7 +107,7 @@ a.referenceLink
 .docuTag#param
 {
 	text-decoration:none;
-	color:#2222CC;
+	color:#2222DD;
 }
 
 .msgdetail
@@ -108,7 +116,7 @@ a.referenceLink
 	padding:1ex;
 	font-weight:bold;
 	color:blue;
-	background-color:#f2f2ff
+	background-color:#f2f2ff;
 }
 
 .memberItem
@@ -135,10 +143,20 @@ h2
 .docuCode
 {
 	empty-cells:show;
-	border-width:0;
+	border-width:1;
+	border-style:dotted;
 	border-spacing:0px;
+	border-collapse:collapse;
 	padding:0;
 	font-family:monospace;
+}
+
+.docuCode tr td
+{
+	border-width:0;
+	border-style:none;
+	border-spacing:0px;
+	border-collapse:collapse;
 }
 
 #tabIdent
