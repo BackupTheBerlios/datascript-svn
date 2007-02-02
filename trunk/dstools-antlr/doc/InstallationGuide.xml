@@ -38,6 +38,17 @@
           Source section.</para>
         </revdescription>
       </revision>
+
+      <revision>
+        <revnumber>0.3</revnumber>
+
+        <date>2 February 2007</date>
+
+        <revdescription>
+          <para>Corrected Jar files for Ant build. Additions for Windows XP.
+          Corrected SVN repository URL.</para>
+        </revdescription>
+      </revision>
     </revhistory>
   </articleinfo>
 
@@ -164,13 +175,28 @@
           <listitem>
             <para>Goto <emphasis>Help | Software Updates | Find and
             Install</emphasis> to install the Eclipse Modelling Framework
-            (EMF).</para>
+            (EMF). This is required to compile the Java Emitter Templates
+            (JET) used by <literal>rds</literal>.</para>
           </listitem>
 
           <listitem>
             <para>Select <emphasis>Callisto Discovery Site</emphasis>. EMF is
             in the category <emphasis>Models and Model
             Development</emphasis>.</para>
+          </listitem>
+
+          <listitem>
+            <para>Select <emphasis>Window</emphasis> |
+            <emphasis>Preferences</emphasis> | <emphasis>Java</emphasis> |
+            <emphasis>Installed JREs</emphasis> and make sure that your JDK
+            1.5.0 VM is listed there.</para>
+          </listitem>
+
+          <listitem>
+            <para>Select <emphasis>Window</emphasis> |
+            <emphasis>Preferences</emphasis> | <emphasis>Java</emphasis> |
+            <emphasis>Compiler</emphasis> and set the compiler compliance
+            level to 5.0.</para>
           </listitem>
         </itemizedlist></para>
     </section>
@@ -218,6 +244,12 @@
         </listitem>
 
         <listitem>
+          <para>Select <emphasis>Window | Preferences | Team | SVN</emphasis>
+          and activate <emphasis>SVN Interface SVNKit (Pure
+          Java)</emphasis>.</para>
+        </listitem>
+
+        <listitem>
           <para>Select <emphasis>Window | Open Perspective | Other... | SVN
           Repository Exploring</emphasis>.</para>
         </listitem>
@@ -230,8 +262,8 @@
         <listitem>
           <para>If you are forced to use a proxy for HTTP and HTTPS, you have
           to edit a configuration file so that Subversion will use your proxy.
-          Using any text editor, open the file servers in the folder
-          <literal>%APPDATA%\Subversion</literal>.
+          Using any text editor, open the file <literal>servers</literal> in
+          the folder <literal>%APPDATA%\Subversion</literal>.
           (<literal>%APPDATA%</literal> is a Windows environment variable
           referring to a folder with user-dependent application settings,
           which translates to something like <literal>C:\Dokumente und
@@ -266,7 +298,7 @@
 
         <listitem>
           <para>Fill in the URL
-          <literal>https://svn.sourceforge.net/svnroot/dstools-antlr</literal>.
+          <literal>https://dstools.svn.sourceforge.net/svnroot/dstools</literal>.
           Click <emphasis>Finish</emphasis>.</para>
         </listitem>
 
@@ -358,8 +390,9 @@
 
         <listitem>
           <para>Select the <emphasis>Refresh</emphasis> tab and activate the
-          checkbox <emphasis>Refresh resources upon
-          completion</emphasis>.</para>
+          checkbox <emphasis>Refresh resources upon completion</emphasis> and
+          select <emphasis>The project containing the selected
+          resource</emphasis>.</para>
         </listitem>
 
         <listitem>
@@ -368,9 +401,11 @@
         </listitem>
 
         <listitem>
-          <para>Select the <emphasis>Classpath</emphasis> tab and click
-          <emphasis>Add External JARs...</emphasis> Add
-          <literal>%ECLIPSE_HOME%\plugins\org.junit_3.8.1\junit.jar</literal>.</para>
+          <para>Select the <emphasis>Classpath</emphasis> tab and the
+          <emphasis>User Entries</emphasis> tree root. and click <emphasis>Add
+          JARs...</emphasis> Add <literal>lib/junit.jar</literal> and
+          <literal>lib/antlr.jar</literal> from your project
+          <literal>rds-trunk</literal>.</para>
         </listitem>
 
         <listitem>
