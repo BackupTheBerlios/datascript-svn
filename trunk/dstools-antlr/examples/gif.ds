@@ -165,7 +165,7 @@ SubBlock(uint8 byteCount)
 
 ZippedSubBlock(uint8 byteCount)
 {
-	zip uint8	dataBytes[byteCount]	: byteCount > 0;
+	/*zip*/ uint8	dataBytes[byteCount]	: byteCount > 0;
 	uint8	blockTerminator;
 
 	ZippedSubBlock(blockTerminator)	nextData	if blockTerminator > 0;

@@ -47,7 +47,18 @@ public class EnumType extends SetType
     {
         
     }
-    
+
+    public int size()
+    {
+        int count = 0;
+        Iterator<EnumItem> items = getItems().iterator();
+        while (items.hasNext())
+        {
+            items.next();
+            count++;
+        }
+        return count;
+    }
     
     public Iterable<EnumItem> getItems()
     {

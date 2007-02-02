@@ -64,8 +64,8 @@
 	// show the structure of this type
 
 %>
-	<tr><td colspan=3>enum <%=s.getBaseType().toString()%> <%=typeName%>
-{</td></tr>
+	<tr><td colspan=3>enum <%=s.getBaseType().toString()%> <%=typeName%></td></tr>
+	<tr><td>{</td><td rowspan="<%=s.size()+1%>">&nbsp;</td><td></td></tr>
 <%
     java.util.Iterator<EnumItem> enumItems = s.getItems().iterator();
     while (enumItems.hasNext())
@@ -76,7 +76,7 @@
 %>
         <tr>
         	<td id="tabIdent"><a href="#<%=iName%>"><%=iName%></a></td>
-        	<td> = <%=iValue%><%=enumItems.hasNext()? "," : ""%></td>
+        	<td>= <%=iValue%><%=enumItems.hasNext()? "," : ""%></td>
 	    </tr>
 <%
     }    
