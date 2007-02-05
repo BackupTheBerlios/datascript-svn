@@ -3,13 +3,9 @@ package datascript.test;
 import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.stream.FileImageOutputStream;
-
-import datascript.runtime.io.FileBitStreamWriter;
-
-import bits.StringArraySequence;
-
 import junit.framework.TestCase;
+import bits.StringArraySequence;
+import datascript.runtime.io.FileBitStreamWriter;
 
 public class StringArraySequenceTest extends TestCase
 {
@@ -48,7 +44,9 @@ public class StringArraySequenceTest extends TestCase
         }
         catch(RuntimeException e)
         {
-            System.out.println(e.toString());
+        	// here we expect an exception 
+        	// java.lang.RuntimeException: sizeof not integer: 148
+            //System.out.println(e.toString());
         }
 
         assertEquals(name, sa.getName());

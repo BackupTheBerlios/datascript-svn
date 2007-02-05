@@ -9,10 +9,8 @@ import java.io.IOException;
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
-import bits.AnyItem;
 import bits.ItemA;
 import bits.ItemB;
-import bits.ItemC;
 import bits.VarArray;
 import datascript.runtime.array.ObjectArray;
 

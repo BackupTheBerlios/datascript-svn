@@ -5,13 +5,10 @@ import java.io.IOException;
 
 import javax.imageio.stream.FileImageOutputStream;
 
+import junit.framework.TestCase;
+import bits.OptionalArraySequence;
 import datascript.runtime.array.ByteArray;
 import datascript.runtime.array.ShortArray;
-import datascript.runtime.array.UnsignedShortArray;
-
-import junit.framework.TestCase;
-
-import bits.OptionalArraySequence;
 
 public class OptionalArrayTest extends TestCase
 {

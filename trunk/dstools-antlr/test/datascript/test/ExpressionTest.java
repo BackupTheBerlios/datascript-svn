@@ -11,8 +11,6 @@ import javax.imageio.stream.FileImageOutputStream;
 import junit.framework.TestCase;
 import bits.CondBlock;
 import bits.CondExpr;
-import bits.ParamBlock;
-import datascript.runtime.array.UnsignedShortArray;
 
 /**
  * @author HWellmann

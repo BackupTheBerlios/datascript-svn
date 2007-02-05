@@ -89,7 +89,6 @@ public class MixedArrayTest extends TestCase
         file.delete();
         os = new FileImageOutputStream(file);
         os.writeShort(numElems);
-        int value = startValue;
 
         for (int i = 0; i < numElems; i++)
         {

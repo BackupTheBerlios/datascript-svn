@@ -9,12 +9,8 @@ import java.io.IOException;
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
-import bits.AnyItem;
 import bits.BaseTypeUnion;
 import bits.BaseTypes;
-import bits.ItemA;
-import bits.ItemB;
-import bits.ItemC;
 
 /**
  * @author HWellmann

@@ -5,23 +5,11 @@ package datascript.test;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 
 import javax.imageio.stream.FileImageOutputStream;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamResult;
 
 import junit.framework.TestCase;
-
-import org.xml.sax.InputSource;
-
-import bits.Unsigned;
 
 /**
  * @author HWellmann

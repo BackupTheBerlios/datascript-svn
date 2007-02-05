@@ -68,9 +68,9 @@ public class TypeInstantiationTest extends TestCase
 
     	BlockHeader header = new BlockHeader(type, size);
     	BlockData data = new BlockData(magic, bytes);
-    	Block block = new Block(header, data);
+    	new Block(header, data);
     	ObjectArray<Block> blockArray = new ObjectArray<Block>(3);
-    	Blocks blocks = new Blocks(3, blockArray);
+    	new Blocks(3, blockArray);
     }
     
     
