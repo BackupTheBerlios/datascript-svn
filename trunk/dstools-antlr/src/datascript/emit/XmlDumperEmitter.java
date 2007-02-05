@@ -52,7 +52,6 @@ import datascript.emit.java.AccessorNameEmitter;
 import datascript.emit.java.DepthFirstVisitorEmitter;
 import datascript.jet.java.XmlDumper;
 import datascript.jet.java.XmlDumperEnumeration;
-import datascript.runtime.array.ObjectArray;
 
 public class XmlDumperEmitter extends DepthFirstVisitorEmitter
 {

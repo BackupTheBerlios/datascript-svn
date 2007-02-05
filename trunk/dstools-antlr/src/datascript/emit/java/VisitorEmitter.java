@@ -40,7 +40,6 @@ package datascript.emit.java;
 import antlr.collections.AST;
 import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
-import datascript.ast.SqlDatabaseType;
 import datascript.ast.UnionType;
 import datascript.jet.java.SequenceEnd;
 import datascript.jet.java.Visitor;

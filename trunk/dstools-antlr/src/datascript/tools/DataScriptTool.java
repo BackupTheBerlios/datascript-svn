@@ -64,7 +64,6 @@ public class DataScriptTool
 {
     private static final String VERSION = "rds 0.7 (11 Jan 2007)";
     private ToolContext context;
-    private DataScriptParser parser;
     private DataScriptWalker walker;
     private TypeEvaluator typeEval;
     private ExpressionEvaluator exprEval;

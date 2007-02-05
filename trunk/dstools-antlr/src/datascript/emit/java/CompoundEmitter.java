@@ -154,12 +154,6 @@ abstract public class CompoundEmitter
     }
 
 
-    private void indent()
-    {
-        buffer.append("                "); // 4*4
-    }
-
-
     private void readIntegerField(Field field, IntegerType type)
     {
         buffer.append(ane.getSetterName(field));

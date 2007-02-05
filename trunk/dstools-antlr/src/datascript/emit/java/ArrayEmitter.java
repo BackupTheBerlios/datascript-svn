@@ -38,13 +38,10 @@
 package datascript.emit.java;
 
 import datascript.ast.ArrayType;
-import datascript.ast.CompoundType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
-import datascript.ast.SequenceType;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
-import datascript.ast.UnionType;
 
 /**
  * @author HWellmann

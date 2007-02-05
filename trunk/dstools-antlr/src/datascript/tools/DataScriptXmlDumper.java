@@ -56,7 +56,6 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLFilterImpl;
 
 import antlr.ANTLRException;
-import antlr.CommonAST;
 import antlr.TokenBuffer;
 import antlr.collections.AST;
 import antlr.debug.misc.ASTFrame;

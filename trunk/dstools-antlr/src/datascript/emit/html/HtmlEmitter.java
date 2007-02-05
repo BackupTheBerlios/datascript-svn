@@ -77,10 +77,7 @@ public class HtmlEmitter extends DefaultEmitter
     private Enum enumTmpl = new Enum();
     private CSS cssTmpl = new CSS();
 
-    private SequenceType sequence;
-    private UnionType union;
     private EnumType enumeration;
-    private SqlDatabaseType sqlDb;
     
     private TypeInterface currentType;
     

@@ -40,8 +40,6 @@ package datascript.emit.java;
 import java.io.PrintStream;
 
 import datascript.ast.Field;
-import datascript.ast.TypeInterface;
-import datascript.ast.TypeReference;
 
 abstract public class FieldEmitter
 {
