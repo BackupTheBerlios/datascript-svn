@@ -38,11 +38,10 @@
 package datascript.emit.html;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringReader;
-import java.util.Set;
 import java.util.Collection;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -53,19 +52,19 @@ import datascript.antlr.DocCommentLexer;
 import datascript.antlr.DocCommentParser;
 import datascript.antlr.DocCommentParserTokenTypes;
 import datascript.ast.CompoundType;
-import datascript.ast.SetType;
-import datascript.ast.EnumType;
 import datascript.ast.EnumItem;
+import datascript.ast.EnumType;
 import datascript.ast.Field;
 import datascript.ast.SequenceType;
+import datascript.ast.SetType;
+import datascript.ast.SqlDatabaseType;
 import datascript.ast.TypeInterface;
 import datascript.ast.UnionType;
 import datascript.emit.DefaultEmitter;
-import datascript.jet.html.Overview;
-import datascript.jet.html.Sequence;
-import datascript.jet.html.Union;
-import datascript.jet.html.Enum;
 import datascript.jet.html.CSS;
+import datascript.jet.html.Compound;
+import datascript.jet.html.Enum;
+import datascript.jet.html.Overview;
 
 public class HtmlEmitter extends DefaultEmitter
 {
@@ -74,14 +73,16 @@ public class HtmlEmitter extends DefaultEmitter
     private String packageName;
 
     private Overview overviewTmpl = new Overview();
-    private Sequence sequenceTmpl = new Sequence();
-    private Union unionTmpl = new Union();
+    private Compound compoundTmpl = new Compound();
     private Enum enumTmpl = new Enum();
     private CSS cssTmpl = new CSS();
 
     private SequenceType sequence;
     private UnionType union;
     private EnumType enumeration;
+    private SqlDatabaseType sqlDb;
+    
+    private TypeInterface currentType;
     
     private SortedMap<String, TypeInterface> typeMap;
     
@@ -95,20 +96,51 @@ public class HtmlEmitter extends DefaultEmitter
     {
         return packageName;
     }
-
-    public SequenceType getSequence()
+    
+    public String getCategoryPlainText()
     {
-        return sequence;
+        if (currentType instanceof SequenceType)
+        {
+            return "Sequence";
+        }
+        else if (currentType instanceof UnionType)
+        {
+            return "Union";
+        }
+        else if (currentType instanceof SqlDatabaseType)
+        {
+            return "SQL Database";
+        }
+        throw new RuntimeException("unknown category " 
+                  + currentType.getClass().getName());
     }
 
-    public UnionType getUnion()
+    public String getCategoryKeyword()
     {
-        return union;
+        if (currentType instanceof SequenceType)
+        {
+            return "";
+        }
+        else if (currentType instanceof UnionType)
+        {
+            return "union ";
+        }
+        else if (currentType instanceof SqlDatabaseType)
+        {
+            return "sql_database ";
+        }
+        throw new RuntimeException("unknown category " 
+                  + currentType.getClass().getName());
     }
 
     public EnumType getEnum()
     {
         return enumeration;
+    }
+    
+    public CompoundType getCompound()
+    {
+        return (CompoundType)currentType;
     }
 /*    
     public String getTypeName(TypeInterface type)
@@ -145,13 +177,10 @@ public class HtmlEmitter extends DefaultEmitter
         
         for (TypeInterface type : typeMap.values())
         {
-            if (type instanceof SequenceType)
+            currentType = type;
+            if (type instanceof CompoundType)
             {
-                emitSequence((SequenceType) type);
-            }
-            else if (type instanceof UnionType)
-            {
-                emitUnion((UnionType) type);
+                emitCompound((CompoundType) type);
             }
             else if (type instanceof EnumType)
             {
@@ -161,31 +190,13 @@ public class HtmlEmitter extends DefaultEmitter
         out.close();
     }
     
-    private void emitSequence(SequenceType seq)
+    private void emitCompound(CompoundType seq)
     {
-        sequence = seq;
         PrintStream indexOut = out;
         try
         {
-            openOutputFile(directory, seq.getName() + HTML_EXT);
-            String result = sequenceTmpl.generate(this);
-            out.print(result);
-            out.close();
-        }
-        finally
-        {
-            out = indexOut;
-        }
-    }
-
-    private void emitUnion(UnionType u)
-    {
-        union = u;
-        PrintStream indexOut = out;
-        try
-        {
-            openOutputFile(directory, u.getName() + HTML_EXT);
-            String result = unionTmpl.generate(this);
+            openOutputFile(directory, getCompound().getName() + HTML_EXT);
+            String result = compoundTmpl.generate(this);
             out.print(result);
             out.close();
         }
@@ -240,6 +251,12 @@ public class HtmlEmitter extends DefaultEmitter
     {
         EnumType et = (EnumType)e;
         typeMap.put(et.getName(), et);
+    }
+    
+    public void beginSqlDatabase(AST s)
+    {
+        SqlDatabaseType sqlDb = (SqlDatabaseType)s;
+        typeMap.put(sqlDb.getName(), sqlDb);
     }
     
     public String getDocumentation(CompoundType compound)

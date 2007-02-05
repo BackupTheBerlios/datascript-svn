@@ -273,7 +273,7 @@ definedType
     ;
 
 subtypeDeclaration
-    : #(s:SUBTYPE definedType i:ID (expression)?)
+    : #(s:SUBTYPE definedType i:ID (expression)? (DOC)?)
                                 { scope().setSymbol(i, s); 
                                   //((TypeReference)s).resolve(scope()); 
                                 }
@@ -333,6 +333,7 @@ sqlDatabaseDefinition
         (sqlMetadataBlock)? 
         (sqlTableField)+ 
         (sqlConstraint)?                 { popScope(); }
+        (DOC)? 
        )
     ;
     

@@ -63,18 +63,18 @@ public class <%=name%>
     private String tableName;
     private PreparedStatement insertRow;
     
-    public <%=name%>(SqlDatabase db, String tableName)
+    public <%=name%>(SqlDatabase db) throws SQLException
     {
         this.db = db;
-        this.tableName = tableName;
         Connection dbc = db.getConnection();
-        insertRow = dbc.prepareStatement(
-            "INSERT OR REPLACE INTO <%=tableName%> values(<%=q%>)");
     }
     
     public void createTable(String __tableName) throws SQLException
     {
         Connection dbc = db.getConnection();
+        this.tableName = __tableName;
+        insertRow = dbc.prepareStatement(
+            "INSERT OR REPLACE INTO " + __tableName + " values(<%=q%>)");
         Statement st = dbc.createStatement();
         StringBuilder query = new StringBuilder("CREATE TABLE ");
         query.append(__tableName);
@@ -101,7 +101,7 @@ public class <%=name%>
     
     public void write(BitStreamWriter __out) throws SQLException, IOException
     {
-        java.lang.Error("Memberfunktion write is jet not implemented");
+        throw new RuntimeException("write() method is not yet implemented");
     }
     
 }

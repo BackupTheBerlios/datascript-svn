@@ -97,7 +97,5 @@ public class Subtype extends TokenAST implements TypeInterface
     public Value castFrom(Value val)
     {
         return baseType.castFrom(val);
-    }
-
-    
+    }    
 }

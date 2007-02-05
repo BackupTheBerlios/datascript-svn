@@ -39,7 +39,7 @@
 %>
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="SqlTable" %>
+        class="SqlTableRow" %>
 <% 
     SqlTableEmitter e = (SqlTableEmitter) argument;
     String pkg = e.getGlobal().getPackageName();

@@ -213,7 +213,7 @@ definedType
     ;
 
 subtypeDeclaration
-    :  #(SUBTYPE definedType ID (expression)?)
+    :  #(SUBTYPE definedType ID (expression)? (DOC)?)
     ;
 
 
@@ -270,6 +270,7 @@ sqlDatabaseDefinition
         (sqlMetadataBlock)? 
         (sqlTableField)+ 
         (sqlConstraint)?
+        (DOC)? 
        )
     ;
     

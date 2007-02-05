@@ -53,4 +53,16 @@ public class SqlDatabaseType extends CompoundType
         }
         return null;
     }    
+
+    public String getDocumentation()
+    {
+        String result = "";
+        AST n = findFirstChildOfType(DataScriptParserTokenTypes.DOC);
+        if (n != null)
+        {
+            result = n.getText();
+        }
+        return result;
+    }
+
 }

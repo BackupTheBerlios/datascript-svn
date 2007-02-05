@@ -39,24 +39,25 @@
 %>
 <%@ jet package="datascript.jet.html" 
         imports="datascript.ast.* datascript.emit.html.*" 
-        class="Sequence" %>
+        class="Compound" %>
 <% 
     HtmlEmitter e = (HtmlEmitter) argument;
     String pkg = e.getPackageName();
-    SequenceType s = e.getSequence();
+    CompoundType s = e.getCompound();
     String typeName = s.getName();
-    TypeNameEmitter tne = new TypeNameEmitter(); 
+    TypeNameEmitter tne = new TypeNameEmitter();
+    String category = e.getCategoryPlainText(); 
+    String categoryKey = e.getCategoryKeyword(); 
 %>
 <html>
   <head>
-    <title>sequence <%=typeName%></title>
+    <title><%=category%> <%=typeName%></title>
     <link rel="stylesheet" type="text/css" href="webStyles.css">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   </head>
-
   <body>
 
-    <div class="msgdetail"><i>sequence</i> <%=typeName%></div>
+    <div class="msgdetail"><i><%=category%></i> <%=typeName%></div>
     
     <p><%=e.getDocumentation(s)%></p>
 
@@ -67,7 +68,7 @@
 	String parameterlist = pl.generate(s);
 %>
       <tbody id="tabIdent">
-        <tr><td colspan=3><%=typeName%><%=parameterlist%></td></tr>
+        <tr><td colspan=3><%=categoryKey%><%=typeName%><%=parameterlist%></td></tr>
         <tr><td>{</td><td rowspan=<%=s.getNumFields()+1%>>&nbsp;</td><td></td></tr>
 <%
 	LinkedType typeNameGenerator = new LinkedType();
@@ -81,7 +82,7 @@
 		parameterlist = pl.generate(type);
 %>
         <tr>
-          <td valign="top" id="tabIdent"><%=typeNameGenerator.generate(type)%><%=parameterlist%></td>
+			<td valign="top" id="tabIdent"><%=typeNameGenerator.generate(type)%><%=parameterlist%></td>
 <%
     	String fname = f.getName();
 %>

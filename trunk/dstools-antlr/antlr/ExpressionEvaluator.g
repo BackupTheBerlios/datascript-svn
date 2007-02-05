@@ -255,7 +255,7 @@ definedType
     ;
 
 subtypeDeclaration
-    : #(SUBTYPE definedType ID (expression)?)
+    : #(SUBTYPE definedType ID (expression)? (DOC)?)
     ;
 
 builtinType
@@ -313,6 +313,7 @@ sqlDatabaseDefinition
         (sqlMetadataBlock)?   
         (sqlTableField)+ 
         (sqlConstraint)?
+        (DOC)? 
        )                                { popScope(); }   
     ;
     

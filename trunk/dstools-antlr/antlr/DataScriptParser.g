@@ -68,7 +68,7 @@ tokens
     MEMBERS;
     PACKAGE;
     IMPORT;
-	STRING<AST=datascript.ast.StringType>;
+    STRING<AST=datascript.ast.StringType>;
     TYPEREF<AST=datascript.ast.TypeReference>;
     SUBTYPE<AST=datascript.ast.Subtype>;
     UPLUS<AST=datascript.ast.IntegerExpression>;
@@ -149,17 +149,17 @@ importDeclaration
     ;   
 
 declarationList
-    :   (declaration)*
+    :   ((d:DOC!)? declaration[#d])*
         { #declarationList = #([MEMBERS], declarationList); }
     ;
 
 
-declaration
-    :   fieldDefinition SEMICOLON!
+declaration[AST doc]
+    :   fieldDefinition[doc] SEMICOLON!
     |   conditionDefinition
     |   constDeclaration  SEMICOLON!
-    |   subtypeDeclaration SEMICOLON!
-    |   sqlDatabaseDefinition  SEMICOLON!
+    |   subtypeDeclaration[doc] SEMICOLON!
+    |   sqlDatabaseDefinition[doc]  SEMICOLON!
     |   sqlTableDeclaration  SEMICOLON!
 //    |   sqlIntegerDeclaration  SEMICOLON!
     ;
@@ -248,8 +248,8 @@ typeValueList
 
 /****************************************************************/
 
-fieldDefinition!
-    :   (d:DOC)?
+fieldDefinition![AST d]
+    :   
         ( (label) => l:label )?
         ( (zipModifier typeReference ID arrayRange) => z:zipModifier )?
         t:typeReference
@@ -320,8 +320,8 @@ sequenceDeclaration!
     ;
 
 memberList
-    :   LCURLY! (declaration)* RCURLY!
-        { #memberList = #([MEMBERS], #memberList); }
+    :   LCURLY! declarationList RCURLY!
+        // { #memberList = #([MEMBERS], #memberList); }
     ;
 
 definedType
@@ -337,9 +337,9 @@ typeSymbol
 // TODO: definedType includes typeSymbols with dotOperands
 // Is this really what we want?
 
-subtypeDeclaration
+subtypeDeclaration[AST doc]
     :   "subtype"! definedType ID (COLON! expression)?
-        { #subtypeDeclaration = #([SUBTYPE], #subtypeDeclaration); }
+        { #subtypeDeclaration = #([SUBTYPE], #subtypeDeclaration, doc); }
     ;
 
 builtinType
@@ -396,14 +396,14 @@ arrayRange
 
 /*********************************************************************/
 
-sqlDatabaseDefinition
+sqlDatabaseDefinition[AST doc]
     : "sql_database"! ID LCURLY! 
       (sqlPragmaBlock)? 
       (sqlMetadataBlock)? 
       (sqlTableField)+ 
       (sqlConstraint SEMICOLON! )?
       RCURLY!
-      { #sqlDatabaseDefinition = #([SQL_DATABASE], sqlDatabaseDefinition); }
+      { #sqlDatabaseDefinition = #([SQL_DATABASE], sqlDatabaseDefinition, doc); }
     ;
     
 sqlPragmaBlock
