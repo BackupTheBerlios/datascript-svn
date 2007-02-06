@@ -47,18 +47,39 @@ body
 
 a
 {
-	color:#222222;
+	text-decoration:none;
+	color:#333333;
+}
+
+a:hover,
+a:focus
+{
+	text-decoration:underline;
 }
 
 a.enumLink
 {
+	text-decoration:underline;
 	color:green;
 }
 
 a.subtypeLink
 {
-	color:#222222;
+	text-decoration:underline;
 	font-style:italic;
+}
+
+a.unionLink,
+a.sequenceLink,
+a.sqlMetaLink,
+a.sqlPragmaLink,
+a.sqlTableLink,
+a.sqlDBLink,
+a.instantLink,
+a.arrayLink,
+a.referenceLink
+{
+	text-decoration:underline;
 }
 
 .detailedDocu
@@ -72,24 +93,16 @@ a.subtypeLink
 	border-collapse:collapse;
 }
 
-a.unionLink,
-a.sequenceLink,
-a.sqlMetaLink,
-a.sqlPragmaLink,
-a.sqlTableLink,
-a.sqlDBLink,
-a.instantLink,
-a.arrayLink,
-a.referenceLink
-{
-	color:#222222;
-}
-
 .docuTag
 {
-	font-style:italic;
-	font-weight:bold;
+	width:98%;
 	background-color:#FFFFFF;
+	padding-bottom:1em;
+}
+
+.docuTag h2
+{
+	padding:0;
 }
 
 .docuTag#todo
@@ -110,13 +123,17 @@ a.referenceLink
 	color:#2222DD;
 }
 
-.msgdetail
+div.msgdetail
 {
 	width:98%;
 	padding:1ex;
 	font-weight:bold;
 	color:blue;
 	background-color:#f2f2ff;
+}
+
+h2.msgdetail
+{
 }
 
 .memberItem
@@ -127,7 +144,7 @@ a.referenceLink
 
 .memberDetail
 {
-	padding-bottom:1em;
+	padding-bottom:0em;
 }
 
 th
@@ -135,27 +152,22 @@ th
 	font-size:1.5em;
 }
 
-h2
-{
-	padding-top:1em;
-}
-
 .docuCode
 {
+	background-color:#FFFFFF;
 	empty-cells:show;
-	border-width:1;
+	border-width:1px;
 	border-style:dotted;
 	border-spacing:0px;
 	border-collapse:collapse;
-	padding:0;
+	padding:0px;
 	font-family:monospace;
 }
 
 .docuCode tr td
 {
-	border-width:0;
+	border-width:0px;
 	border-style:none;
-	border-spacing:0px;
 	border-collapse:collapse;
 }
 

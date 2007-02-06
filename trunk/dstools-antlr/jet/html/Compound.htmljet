@@ -46,8 +46,8 @@
     CompoundType s = e.getCompound();
     String typeName = s.getName();
     TypeNameEmitter tne = new TypeNameEmitter();
-    String category = e.getCategoryPlainText(); 
-    String categoryKey = e.getCategoryKeyword(); 
+    String category = e.getCategoryPlainText();
+    String categoryKey = e.getCategoryKeyword();
 %>
 <html>
   <head>
@@ -59,7 +59,7 @@
 
     <div class="msgdetail"><i><%=category%></i> <%=typeName%></div>
     
-    <p><%=e.getDocumentation(s)%></p>
+    <%=e.getDocumentation(s)%>
 
     <table class="docuCode">
 <%
@@ -113,7 +113,7 @@
     </table>
 
 
-    <h2>Member Details</h2>
+    <h2 class="msgdetail">Member Details</h2>
     
     <dl>
 <%

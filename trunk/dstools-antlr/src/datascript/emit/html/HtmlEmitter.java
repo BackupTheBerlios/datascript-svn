@@ -39,18 +39,12 @@ package datascript.emit.html;
 
 import java.io.File;
 import java.io.PrintStream;
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import antlr.ANTLRException;
-import antlr.TokenBuffer;
 import antlr.collections.AST;
-import datascript.antlr.DocCommentLexer;
-import datascript.antlr.DocCommentParser;
-import datascript.antlr.DocCommentParserTokenTypes;
 import datascript.ast.CompoundType;
 import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
@@ -65,6 +59,7 @@ import datascript.jet.html.CSS;
 import datascript.jet.html.Compound;
 import datascript.jet.html.Enum;
 import datascript.jet.html.Overview;
+import datascript.jet.html.Comment;
 
 public class HtmlEmitter extends DefaultEmitter
 {
@@ -282,69 +277,7 @@ public class HtmlEmitter extends DefaultEmitter
         if (doc.equals(""))
             return doc;
 
-        StringBuilder buffer = new StringBuilder();
-        StringReader is = new StringReader(doc);
-        DocCommentLexer lexer = new DocCommentLexer(is);
-        TokenBuffer tBuffer = new TokenBuffer(lexer);
-        DocCommentParser parser = new DocCommentParser(tBuffer);
-        try
-        {
-            parser.comment();
-            AST docNode = parser.getAST();
-            AST child = docNode.getFirstChild();
-            for (; child != null; child = child.getNextSibling())
-            {
-                switch (child.getType())
-                {
-                    case DocCommentParserTokenTypes.TEXT:
-                    {
-                        buffer.append(child.getText());
-                        AST text = child.getFirstChild();
-                        for (; text != null; text = text.getNextSibling())
-                        {
-                            buffer.append(text.getText());
-                        }
-                        break;
-                    }
-                    
-                    case DocCommentParserTokenTypes.AT:
-                    {
-                        String tag = child.getText().toUpperCase();
-                        buffer.append("<br/><span class=\"docuTag\" id=\"" + tag + "\">@");
-                        buffer.append(tag);
-                        AST text = child.getFirstChild();
-                        if (text == null)
-                        {
-                            buffer.append("</span> ");
-                            break;
-                        }
-                        if (tag.equals("SEE"))
-                        {
-                            buffer.append(" <a href=\"");
-                            buffer.append(text.getText()+".html");
-                            buffer.append("\" >");
-                            buffer.append(text.getText());
-                            buffer.append("</a>");
-                        }
-                        else
-                        {
-                            buffer.append(" " + text.getText());
-                        }
-                        buffer.append("</span> ");
-                        text = text.getNextSibling();
-                        for (; text != null; text = text.getNextSibling())
-                        {
-                            buffer.append(text.getText());
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        catch (ANTLRException exc)
-        {
-            exc.printStackTrace();
-        }
-        return buffer.toString();
+        Comment commentGenerator = new Comment();
+        return commentGenerator.generate(doc);
     }
 }
