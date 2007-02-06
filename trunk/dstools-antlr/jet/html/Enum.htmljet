@@ -64,7 +64,7 @@
 	// show the structure of this type
 
 %>
-	<tr><td colspan=3>enum <%=s.getBaseType().toString()%> <%=typeName%></td></tr>
+	<tr><td colspan=3>enum <%=s.getBaseType().toString().toLowerCase()%> <%=typeName%></td></tr>
 	<tr><td>{</td><td rowspan="<%=s.size()+1%>">&nbsp;</td><td></td></tr>
 <%
     java.util.Iterator<EnumItem> enumItems = s.getItems().iterator();

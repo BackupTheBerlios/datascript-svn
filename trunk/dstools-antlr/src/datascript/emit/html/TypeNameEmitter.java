@@ -157,7 +157,7 @@ public class TypeNameEmitter
         }
         else
         {
-            result = "/* " + t.toString() + "*/";
+            result = t.toString();
         }
 
         return result;

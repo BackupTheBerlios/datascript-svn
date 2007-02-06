@@ -68,6 +68,8 @@ public interface TypeInterface
     public Scope getScope();
 
     public int getLength();
+    
+    //public String getName();
 
     public Expression getLengthExpression();
 
