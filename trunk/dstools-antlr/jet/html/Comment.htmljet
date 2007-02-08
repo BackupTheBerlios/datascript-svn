@@ -107,8 +107,9 @@
 <%
         }	// end of for
     }
-    catch (antlr.ANTLRException exc)
+    catch (Exception exc)
     {
+    	System.err.println("Error in comment:\n" + argument);
         exc.printStackTrace();
     }
 %>

@@ -38,11 +38,13 @@
 package datascript.emit.html;
 
 import datascript.antlr.DataScriptParserTokenTypes;
+import datascript.ast.CompoundType;
 import datascript.ast.EnumItem;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.Parameter;
 import datascript.ast.Scope;
+import datascript.ast.TypeInterface;
 import datascript.ast.Value;
 
 /**
@@ -52,7 +54,7 @@ import datascript.ast.Value;
 public class ExpressionEmitter
 {
     private StringBuilder buffer;
-    //private String compoundName;
+    private String compoundName;
 
 
     public ExpressionEmitter()
@@ -61,7 +63,7 @@ public class ExpressionEmitter
     
     public String emit(Expression expr)
     {
-        //this.compoundName = null;
+        this.compoundName = null;
         buffer = new StringBuilder();
         append(expr);
         return buffer.toString();
@@ -69,7 +71,7 @@ public class ExpressionEmitter
     
     public String emit(Expression expr, String compoundName)
     {
-        //this.compoundName = compoundName;
+        this.compoundName = compoundName;
         buffer = new StringBuilder();
         append(expr);
         return buffer.toString();
@@ -295,7 +297,7 @@ public class ExpressionEmitter
         String symbol = expr.getText();
         Scope scope = expr.getScope();
         Object obj = scope.getSymbol(symbol);
-        /*
+
         if (obj instanceof TypeInterface)
         {
             buffer.append("<i>Type</i>");
@@ -307,6 +309,7 @@ public class ExpressionEmitter
             }
             else
             {
+            	/*
                 buffer.append("((");
                 buffer.append(symbol);
                 buffer.append(")");
@@ -314,10 +317,10 @@ public class ExpressionEmitter
                 buffer.append("__cc.find(\"");
                 buffer.append(symbol);
                 buffer.append("\"))");
+                */
             }
         }
         else 
-        */
         if (obj instanceof Parameter)
         {
             Parameter param = (Parameter)obj;
@@ -345,7 +348,6 @@ public class ExpressionEmitter
         }
     }
 
-/*    
     private void emitCompoundPrefix()
     {
         if (compoundName != null)
@@ -354,5 +356,4 @@ public class ExpressionEmitter
             buffer.append(".");
         }
     }
-*/    
 }
