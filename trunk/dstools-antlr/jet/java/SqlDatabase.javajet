@@ -80,16 +80,19 @@ public class <%=name%> extends SqlDatabase
         
         // create pragmata
 <%
-    for (Field f : p.getFields())
+    if (p != null)
     {
-        String fname = f.getName();
-        Expression init = f.getInitializer();
-        if (init != null)
+        for (Field f : p.getFields())
         {
-            String value = exprEm.emit(init);
+            String fname = f.getName();
+            Expression init = f.getInitializer();
+            if (init != null)
+            {
+                String value = exprEm.emit(init);
 %>    
         st.executeUpdate("PRAGMA <%=fname%> = <%=value%>");
 <%
+            }
         }
     }
 %>    
@@ -99,18 +102,21 @@ public class <%=name%> extends SqlDatabase
         PreparedStatement pst = 
             dbc.prepareStatement("INSERT INTO __metadata VALUES (?,?)");
 <%
-    for (Field f : m.getFields())
+    if (m != null)
     {
-        String fname = f.getName();
-        Expression init = f.getInitializer();
-        if (init != null)
+        for (Field f : m.getFields())
         {
-            String value = exprEm.emit(init);
+            String fname = f.getName();
+            Expression init = f.getInitializer();
+            if (init != null)
+            {
+                String value = exprEm.emit(init);
 %>    
         pst.setString(1, "<%=fname%>");
         pst.setObject(2, <%=value%>);
         pst.executeUpdate();
 <%
+            }
         }
     }
 %>    
