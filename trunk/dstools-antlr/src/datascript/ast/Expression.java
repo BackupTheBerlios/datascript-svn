@@ -226,7 +226,7 @@ public class Expression extends TokenAST
             type = TypeReference.resolveType(ref);
             if (type instanceof CompoundType)
             {
-                CompoundType compound = (CompoundType)type;
+                //CompoundType compound = (CompoundType)type;
                 // ??? scope = compound.getScope();
             }
         }

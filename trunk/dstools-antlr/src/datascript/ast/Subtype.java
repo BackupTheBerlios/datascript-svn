@@ -102,8 +102,7 @@ public class Subtype extends TokenAST implements TypeInterface
 
     private AST findFirstChildOfType(int type)
     {
-        //AST node = getFirstChild();
-        AST node = getNextSibling();
+        AST node = getFirstChild();
         for (; node != null; node = node.getNextSibling())
         {
             if (node.getType() == type)

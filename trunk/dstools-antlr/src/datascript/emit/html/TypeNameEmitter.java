@@ -147,8 +147,8 @@ public class TypeNameEmitter
         }
         else if (t instanceof Subtype)
         {
-            Subtype enumeration = (Subtype) t;
-            result = enumeration.getName();
+            Subtype subtype = (Subtype) t;
+            result = subtype.getName();
         }
         else if (t instanceof TypeInstantiation)
         {
@@ -160,8 +160,14 @@ public class TypeNameEmitter
         {
             result = getTypeName(((ArrayType)t).getElementType());
         }
+        else if (t instanceof TypeReference)
+        {
+            TypeReference reference = (TypeReference) t;
+            result = reference.getName();
+        }
         else
         {
+            t = TypeReference.resolveType(t);
             result = t.toString();
         }
 

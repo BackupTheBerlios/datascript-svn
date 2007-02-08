@@ -65,7 +65,7 @@ public class Field extends TokenAST
     }
     
 
-    IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Context ctxt)
     {
         if (fieldOptionalClause != null)
         {

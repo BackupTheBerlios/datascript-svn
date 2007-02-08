@@ -185,6 +185,7 @@ public class DataScriptTool
 
         if (generateDocs)
         {
+            System.out.println("Generating html documentation");
             // emit HTML documentation
             HtmlEmitter htmlEmitter = new HtmlEmitter();
             htmlEmitter.setPackageName(packageName);

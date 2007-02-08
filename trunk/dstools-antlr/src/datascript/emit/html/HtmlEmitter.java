@@ -313,9 +313,9 @@ public class HtmlEmitter extends DefaultEmitter
         return getDocumentation(item.getDocumentation());
     }
     
-    public String getDocumentation(Subtype item)
+    public String getDocumentation(Subtype subtype)
     {
-        return getDocumentation(item.getDocumentation());
+        return getDocumentation(subtype.getDocumentation());
     }
     
     public String getDocumentation(Field field)

@@ -64,26 +64,18 @@
 	// show the structure of this type
 	ParameterList pl = new ParameterList();
 	String parameterlist = pl.generate(s);
+	
+	LinkedType typeNameGenerator = new LinkedType();
 %>
       <tr>
-        <td colspan=3>subtype <%=s.getBaseType().toString().toLowerCase()%> <%=typeName%>
+        <td colspan=3>subtype <%=typeNameGenerator.generate(s.getBaseType())%><%=parameterlist%> <%=typeName%>
 <%
 /*
-      	String arrayRange = tne.getArrayRange(f);
-      	if (arrayRange != null)
-      	{
-        	%><%=arrayRange%><%
-        }
-      	String optional = tne.getOptionalClause(f);
-      	if (optional != null)
-      	{
-        	%><%=optional%><%
-        }
-      	String constraint = tne.getConstraint(f);
-      	if (constraint != null)
-      	{
-        	%><%=constraint%><%
-        }
+  	String constraint = tne.getConstraint(f);
+  	if (constraint != null)
+  	{
+    	%><%=constraint%><%
+    }
 */
 %>;</td>
       </tr>
