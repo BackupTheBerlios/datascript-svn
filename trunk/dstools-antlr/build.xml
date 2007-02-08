@@ -1,4 +1,4 @@
-<project name="ds-antlr" default="jar" basedir=".">
+<project name="rds" default="jar" basedir=".">
 
   <property name="build" value="${basedir}/build"/>
   <property name="src" value="${basedir}/src"/>
@@ -124,7 +124,7 @@
   
   
   <target name="compile" depends="prepare, antlr, jet" description="Compiles all project files">
-    <javac destdir="${classes}" debug="on">
+    <javac destdir="${classes}" debug="on" target="1.5">
       <classpath>
         <pathelement path="${classes}"/>
         <pathelement path="lib"/>
@@ -135,7 +135,7 @@
   </target>
 
   <target name="jar" depends="compile" description="Builds the distribution jar file (default)">
-    <jar destfile="${jar}/datascript.jar"
+    <jar destfile="${jar}/rds.jar"
       basedir="${classes}"
       manifest="${src}/Manifest.txt"
       includes="**" />
@@ -143,7 +143,7 @@
   
   
   <target name="test.gen" depends="jar" description="Generates parser for test cases"  unless="bits.uptodate">
-    <java jar="${jar}/datascript.jar" dir="${test}" failonerror="true" fork="yes">
+    <java jar="${jar}/rds.jar" dir="${test}" failonerror="true" fork="yes">
         <classpath>
           <pathelement path="${gen}"/>
           <pathelement path="${lib}/antlr.jar"/>
@@ -153,9 +153,9 @@
   </target>
           
   <target name="test.compile" depends="test.gen, jar, check.junit" description="Builds the test cases">
-    <javac destdir="${build}/test/classes" debug="on">
+    <javac destdir="${build}/test/classes" debug="on" target="1.5">
       <classpath>
-        <pathelement path="${jar}/datascript.jar"/>
+        <pathelement path="${jar}/rds.jar"/>
       </classpath>
         <src path="${build}/test/gen" />
         <src path="${test}" />
@@ -166,7 +166,7 @@
     <junit printsummary="no">
         <classpath>
           <pathelement path="${build}/test/classes"/>
-          <pathelement path="${jar}/datascript.jar"/>
+          <pathelement path="${jar}/rds.jar"/>
         </classpath>
        <batchtest>
          <fileset dir="${test}">
@@ -188,7 +188,7 @@
 	  
 	  
     <target name="example.gif.gen" depends="jar" description="Generates parser for examples"  unless="gif.uptodate">
-        <java jar="${jar}/datascript.jar" dir="${examples}" failonerror="true" fork="yes">
+        <java jar="${jar}/rds.jar" dir="${examples}" failonerror="true" fork="yes">
             <classpath>
               <pathelement path="${gen}"/>
               <pathelement path="${lib}/antlr.jar"/>
@@ -198,9 +198,9 @@
     </target>
     
     <target name="examples.compile" depends="example.gif.gen, jar, check.junit" description="Builds the examples">
-        <javac destdir="${build}/examples/classes" debug="on">
+        <javac destdir="${build}/examples/classes" debug="on"  target="1.5">
           <classpath>
-            <pathelement path="${jar}/datascript.jar"/>
+            <pathelement path="${jar}/rds.jar"/>
           </classpath>
           <src path="${build}/examples/gen" />
           <src path="${examples}" />
@@ -211,7 +211,7 @@
         <junit printsummary="no" fork="on" dir="${examples}">
             <classpath>
               <pathelement path="${build}/examples/classes"/>
-              <pathelement path="${jar}/datascript.jar"/>
+              <pathelement path="${jar}/rds.jar"/>
             </classpath>
             <batchtest>
               <fileset dir="${examples}">

@@ -72,7 +72,7 @@ public class EnumItem extends TokenAST
     public String getDocumentation()
     {
         String result = "";
-        AST n = getNextSibling();
+        AST n = getFirstChild();
         if (n != null && n.getType() == DataScriptParserTokenTypes.DOC)
         {
             result = n.getText();

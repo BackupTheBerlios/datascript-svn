@@ -49,6 +49,16 @@
           Corrected SVN repository URL.</para>
         </revdescription>
       </revision>
+
+      <revision>
+        <revnumber>0.4</revnumber>
+
+        <date>8 February 2007</date>
+
+        <revdescription>
+          <para>Changes for Java 1.6.0. Added -doc option.</para>
+        </revdescription>
+      </revision>
     </revhistory>
   </articleinfo>
 
@@ -76,7 +86,7 @@
           <para><literal>dstools-bin</literal>: Binary distribution of a
           DataScript parser and code generator, directly derived from the
           reference implementation of Godmar Back. This was the starting point
-          of the dstools project, which is due to be superseded by a
+          of the dstools project, which has now been superseded by a
           reimplementation called rds (Relational DataScript).</para>
         </listitem>
 
@@ -87,9 +97,8 @@
 
         <listitem>
           <para><literal>rds-bin</literal>: Binary distribution of Relational
-          DataScript, our current baseline version for a DataScript parser.
-          The parser is complete, the code generator is still lacking support
-          for relational extensions and for write() methods.</para>
+          DataScript, our current baseline version for a DataScript parser,
+          including relational extensions and HTML generation.</para>
         </listitem>
 
         <listitem>
@@ -102,8 +111,8 @@
     <section>
       <title>Platform Support</title>
 
-      <para>The development platform for DataScript is Windows 2000, but the
-      packages should run on all platforms supporting a Java SE 1.5.0. To use
+      <para>The development platform for DataScript is Windows XP, but the
+      packages should run on all platforms supporting a Java SE 1.6.0. To use
       the relational extensions, you need a JDBC driver for SQLite which
       depends on a platform-specific native library. <literal>rds</literal>
       itself, however, does not use native code.</para>
@@ -111,6 +120,12 @@
       <para>This guide uses Windows syntax for command lines and path names,
       trusting in the ability of Unix users to silently make the necessary
       changes.</para>
+
+      <para><literal>rds</literal> also runs on Java SE 1.5.0. Versions 1.4.x
+      or earlier are not compatible due to the use of generics in the
+      <literal>rds</literal> implementation. The JAR files provided in the
+      <literal>rds-bin</literal> package are compiled to be compatible with
+      Java SE 1.5.0.</para>
     </section>
   </section>
 
@@ -125,13 +140,17 @@
     <para><literal>rds.jar</literal> is an executable Java Archive which can
     be run by</para>
 
-    <programlisting>java -jar %RDS_HOME%\rds.jar -pkg <emphasis>&lt;output package&gt;</emphasis> <emphasis>&lt;input file&gt;</emphasis></programlisting>
+    <programlisting>java -jar %RDS_HOME%\rds.jar [-doc] -pkg <emphasis>&lt;output package&gt;</emphasis> <emphasis>&lt;input file&gt;</emphasis></programlisting>
 
     <para>The output package option specifies the package name for the
     generated Java files. The files will be created in a subdirectory
     <emphasis>&lt;output package&gt;</emphasis> of the current working
     directory. Nested output package names (e.g.
     <literal>foo.bar.bla</literal>) are not yet supported.</para>
+
+    <para>If the <literal>-doc</literal> option is present, HTML documentation
+    will be generated into a subdirectory <literal>html</literal> of the
+    current working directory.</para>
 
     <para><emphasis>&lt;input file&gt;</emphasis> is an absolute or relative
     file name for the top-level DataScript package to be parsed. If this
@@ -150,15 +169,16 @@
     environments, but Eclipse is the only one that the authors will document
     and support.</para>
 
-    <para>The following instructions refer to the rds-src package. For the
-    dstools-src package, some path and target names need to be adapted.</para>
+    <para>The following instructions refer to the <literal>rds-src</literal>
+    package. For the <literal>dstools-src</literal> package, some path and
+    target names need to be adapted.</para>
 
     <section>
       <title>Installing Eclipse</title>
 
       <para><itemizedlist>
           <listitem>
-            <para>Install JDK 1.5.0 from
+            <para>Install JDK 1.6.0 from
             <literal>http://java.sun.com</literal>.</para>
           </listitem>
 
@@ -189,7 +209,7 @@
             <para>Select <emphasis>Window</emphasis> |
             <emphasis>Preferences</emphasis> | <emphasis>Java</emphasis> |
             <emphasis>Installed JREs</emphasis> and make sure that your JDK
-            1.5.0 VM is listed there.</para>
+            1.6.0 VM is listed there.</para>
           </listitem>
 
           <listitem>
@@ -282,8 +302,7 @@
     </section>
 
     <section>
-      <title>Creating a local dstools project from the Subversion
-      repository</title>
+      <title>Creating a local project from the Subversion repository</title>
 
       <itemizedlist>
         <listitem>
@@ -354,13 +373,14 @@
 
       <itemizedlist>
         <listitem>
-          <para><literal>dstools</literal>: Sources for the dstools-src
-          package.</para>
+          <para><literal>dstools</literal>: Sources for the
+          <literal>dstools-src</literal> package.</para>
         </listitem>
 
         <listitem>
-          <para><literal>dstools-antlr</literal>: Sources for the rds-src
-          package. The name is obsolete and will be changed to rds.</para>
+          <para><literal>dstools-antlr</literal>: Sources for the
+          <literal>rds-src</literal> package. The name is obsolete and will be
+          changed to <literal>rds</literal>.</para>
         </listitem>
 
         <listitem>
@@ -438,7 +458,7 @@
     <section>
       <title>Building the dstools project</title>
 
-      <para>Go to the Ant view, open the <literal>ds-antlr</literal> node and
+      <para>Go to the Ant view, open the <literal>rds</literal> node and
       double-click on the <literal>compile</literal> target. This will run an
       Ant build that writes diagnostic messages to a console tab of the
       Eclipse workbench.</para>

@@ -62,7 +62,7 @@ import datascript.emit.java.VisitorEmitter;
 
 public class DataScriptTool 
 {
-    private static final String VERSION = "rds 0.7 (11 Jan 2007)";
+    private static final String VERSION = "rds 0.7 (8 Feb 2007)";
     private ToolContext context;
     private DataScriptWalker walker;
     private TypeEvaluator typeEval;
@@ -100,14 +100,14 @@ public class DataScriptTool
         if (fileName == null || packageName == null)
         {
             final String NL = System.getProperties().getProperty("line.separator");
-            final java.lang.StringBuffer buffer = new java.lang.StringBuffer();
+            final StringBuilder buffer = new StringBuilder();
 
             buffer.append("parameter missing." + NL + NL);
-            buffer.append("DataScriptTool [-doc] -pkg \"packagename\" \"path to DataScript.ds\"" + NL);
-            buffer.append("useage: " + NL);
-            buffer.append(" -doc\tgenerates a javadoc like documentation" + NL);
+            buffer.append("rds [-doc] -pkg \"packagename\" \"path to DataScript.ds\"" + NL);
+            buffer.append("usage: " + NL);
+            buffer.append(" -doc\tgenerates Javadoc-style documentation" + NL);
             buffer.append(" -pkg \"packagename\"\tdefines the packagename" + NL);
-            buffer.append(" \"path to DataScript.ds\"\tdefines the datascrpit file to read from" + NL);
+            buffer.append(" \"path to DataScript.ds\"\tdefines the DataScript input file" + NL);
 
             throw new DataScriptException(buffer.toString());
         }
