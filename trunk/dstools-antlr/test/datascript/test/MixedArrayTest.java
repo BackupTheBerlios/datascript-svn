@@ -140,7 +140,7 @@ public class MixedArrayTest extends TestCase
 
     public void testArray3() throws IOException
     {
-    	int size = writeArray(1000, 20000);
+        int size = writeArray(1000, 20000);
         MixedArray array = new MixedArray(fileName);
         checkArray(array, size, 1000, 20000);
 
@@ -148,5 +148,17 @@ public class MixedArrayTest extends TestCase
 
         MixedArray array2 = new MixedArray(fileName);
         checkArray(array2, size, 1000, 20000);
+    }
+
+    public void testEmptyArray() throws IOException
+    {
+        int size = writeArray(0, 0);
+        MixedArray array = new MixedArray(fileName);
+        checkArray(array, size, 0, 0);
+
+        array.write(wFileName);
+
+        MixedArray array2 = new MixedArray(fileName);
+        checkArray(array2, size, 0, 0);
     }
 }

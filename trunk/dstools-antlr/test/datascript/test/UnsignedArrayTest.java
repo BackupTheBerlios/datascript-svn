@@ -185,4 +185,15 @@ public class UnsignedArrayTest extends TestCase
         checkArray(array2, size, 5, -120, 120, -32000, 32000, 0xF0000000, 0x88008800);
     }
 
+    public void testEmptyArray() throws IOException
+    {
+        int size = writeArray(0, 0, 0, 0, 0, 0, 0);
+        IntegerArray array = new IntegerArray(fileName);
+        checkArray(array, size, 0, 0, 0, 0, 0, 0, 0);
+
+        array.write(wFileName);
+
+        IntegerArray array2 = new IntegerArray(wFileName);
+        checkArray(array2, size, 0, 0, 0, 0, 0, 0, 0);        
+    }
 }
