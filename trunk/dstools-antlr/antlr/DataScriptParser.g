@@ -338,8 +338,8 @@ typeSymbol
 // Is this really what we want?
 
 subtypeDeclaration[AST doc]
-    :   "subtype"! definedType ID (COLON! expression)?
-        { #subtypeDeclaration = #([SUBTYPE], #subtypeDeclaration, doc); }
+    :   "subtype"! definedType ID (c:fieldCondition)?
+        { #subtypeDeclaration = #([SUBTYPE], #subtypeDeclaration, doc, c); }
     ;
 
 builtinType

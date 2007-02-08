@@ -42,7 +42,6 @@
         class="Compound" %>
 <% 
     HtmlEmitter e = (HtmlEmitter) argument;
-    String pkg = e.getPackageName();
     CompoundType s = e.getCompound();
     String typeName = s.getName();
     TypeNameEmitter tne = new TypeNameEmitter();
@@ -77,12 +76,12 @@
         TypeInterface type = f.getFieldType();
         type = TypeReference.resolveType(type);
 
-      	String hname = tne.getTypeName(type);
+      	//String hname = TypeNameEmitter.getTypeName(type);
       	//parameterlist = tne.getParameterList(type, false);
 		parameterlist = pl.generate(type);
 %>
         <tr>
-			<td valign="top" id="tabIdent"><%=typeNameGenerator.generate(type)%><%=parameterlist%></td>
+          <td valign="top" id="tabIdent"><%=typeNameGenerator.generate(type)%><%=parameterlist%></td>
 <%
     	String fname = f.getName();
 %>

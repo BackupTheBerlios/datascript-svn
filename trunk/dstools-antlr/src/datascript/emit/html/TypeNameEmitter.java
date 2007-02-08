@@ -126,7 +126,7 @@ public class TypeNameEmitter
     {
         String result = null;
 
-        t = TypeReference.resolveType(t);
+        //t = TypeReference.resolveType(t);
         if (t instanceof StdIntegerType)
         {
             result = getTypeName((StdIntegerType) t);
@@ -143,6 +143,11 @@ public class TypeNameEmitter
         else if (t instanceof EnumType)
         {
             EnumType enumeration = (EnumType) t;
+            result = enumeration.getName();
+        }
+        else if (t instanceof Subtype)
+        {
+            Subtype enumeration = (Subtype) t;
             result = enumeration.getName();
         }
         else if (t instanceof TypeInstantiation)

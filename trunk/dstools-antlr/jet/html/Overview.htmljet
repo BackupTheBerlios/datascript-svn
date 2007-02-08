@@ -46,39 +46,28 @@
 %>
 <html>
   <head>
-    <title>DataScript Package <%=pkg%></title>
+    <title>DataScript Package: <%=pkg%></title>
     <link rel="stylesheet" type="text/css" href="webStyles.css">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   </head>
 
   <body>
-    <h1>DataScript Package <%=pkg%></h1>
+    <h1>DataScript Package: <%=pkg%></h1>
 
-	<table width="100%">
-	<tr>
-      <th>Type Synopsis</th>
-      <th width="80%">Detailed Documentation</th>
-	</tr>
-	<tr><td class="typelistMenu">
+      <h2>Type Synopsis</h2>
+      <h2 width="80%">Detailed Documentation</h2>
+      <!-- td class="typelistMenu" -->
       <ul class="typelist">
 <%
 	LinkedType typeNameGenerator = new LinkedType();
     for (TypeInterface type : e.getTypes())
     {
-        type = TypeReference.resolveType(type);
 %>
         <li><%=typeNameGenerator.generate(type)%></li>
 <%
     }
 %>
       </ul>
-    </td><td>
-      <iframe src="" class="detailedDocu" name="detailedDocu" scrolling="auto" frameborder="0">
-        <p>Ihr Browser kann leider keine eingebetteten Frames anzeigen!<br>
-        Your browser sofftware can not handle embedded frames!</p>
-      </iframe>
-    </td></tr>
-    </table>
     
   </body>
 </html>

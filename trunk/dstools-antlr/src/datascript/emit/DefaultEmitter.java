@@ -101,6 +101,14 @@ public class DefaultEmitter implements Emitter
     {
     }
 
+    public void beginSubtype(AST s)
+    {
+    }
+
+    public void endSubtype(AST s)
+    {
+    }
+
     public void beginSqlDatabase(AST s)
     {        
     }

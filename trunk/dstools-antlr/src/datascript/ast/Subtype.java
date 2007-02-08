@@ -39,6 +39,7 @@ package datascript.ast;
 
 import antlr.Token;
 import antlr.collections.AST;
+import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.tools.ToolContext;
 
 public class Subtype extends TokenAST implements TypeInterface
@@ -97,5 +98,30 @@ public class Subtype extends TokenAST implements TypeInterface
     public Value castFrom(Value val)
     {
         return baseType.castFrom(val);
-    }    
+    }
+
+    private AST findFirstChildOfType(int type)
+    {
+        //AST node = getFirstChild();
+        AST node = getNextSibling();
+        for (; node != null; node = node.getNextSibling())
+        {
+            if (node.getType() == type)
+            {
+                return node;
+            }
+        }
+        return null;
+    }   
+
+    public String getDocumentation()
+    {
+        String result = "";
+        AST n = findFirstChildOfType(DataScriptParserTokenTypes.DOC);
+        if (n != null)
+        {
+            result = n.getText();
+        }
+        return result;
+    }
 }

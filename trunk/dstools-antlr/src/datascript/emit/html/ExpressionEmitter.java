@@ -300,7 +300,6 @@ public class ExpressionEmitter
 
         if (obj instanceof TypeInterface)
         {
-            buffer.append("<i>Type</i>");
             CompoundType compound = scope.getOwner();
             if (compound != null && compound.isParameter(symbol))
             {
@@ -309,19 +308,11 @@ public class ExpressionEmitter
             }
             else
             {
-            	/*
-                buffer.append("((");
                 buffer.append(symbol);
-                buffer.append(")");
                 emitCompoundPrefix();
-                buffer.append("__cc.find(\"");
-                buffer.append(symbol);
-                buffer.append("\"))");
-                */
             }
         }
-        else 
-        if (obj instanceof Parameter)
+        else if (obj instanceof Parameter)
         {
             Parameter param = (Parameter)obj;
             String pName = param.getName();
@@ -355,5 +346,5 @@ public class ExpressionEmitter
             buffer.append(compoundName);
             buffer.append(".");
         }
-    }
+    } 
 }

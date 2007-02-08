@@ -69,7 +69,7 @@
                 {
                     String tag = child.getText().toUpperCase();
     				%> id="<%=tag%>">
-        @<%=tag%><%
+        <%=tag%>: <%
                     if (textAst == null)
                     {
                     	%><br/><b>null</b><br/><%

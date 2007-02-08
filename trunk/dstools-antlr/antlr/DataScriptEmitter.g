@@ -236,7 +236,13 @@ definedType
     ;
 
 subtypeDeclaration
-    :	#(SUBTYPE definedType ID (expression)? (DOC)?)
+    :	#(s:SUBTYPE     { em.beginSubtype(s); } 
+           definedType 
+           ID 
+           (expression)? 
+           (DOC)?
+         )
+         { em.endSubtype(s); }
     ;
 
 builtinType

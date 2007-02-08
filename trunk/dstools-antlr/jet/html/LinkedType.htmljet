@@ -42,12 +42,11 @@
         class="LinkedType" %>
 <%
     TypeInterface paramType = (TypeInterface) argument;
-    TypeNameEmitter tne = new TypeNameEmitter(); 
 
 	String styleStr = "";
     String ankerClass = "";
     String titleText = "Type: ";
-    String paramTypeName = tne.getTypeName(paramType);
+    String paramTypeName = TypeNameEmitter.getTypeName(paramType);
 
     while (paramType instanceof ArrayType)
     {
@@ -56,7 +55,7 @@
         titleText += "array of ";
     }
 
-	if (!tne.isBuildinType(paramType))
+	if (!TypeNameEmitter.isBuildinType(paramType))
 	{
         // generate styles depends on the fiel type
 
@@ -75,7 +74,7 @@
 	        ankerClass = "enumLink";
 	        titleText += "Enum";
         }
-        else if (paramType instanceof Subtype)
+        else if (paramType instanceof datascript.ast.Subtype)
         {
             ankerClass = "subtypeLink";
             titleText += "Subtype";

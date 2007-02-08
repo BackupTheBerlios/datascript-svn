@@ -51,10 +51,12 @@ import datascript.ast.EnumType;
 import datascript.ast.Field;
 import datascript.ast.SequenceType;
 import datascript.ast.SetType;
+import datascript.ast.Subtype;
 import datascript.ast.SqlDatabaseType;
 import datascript.ast.TypeInterface;
 import datascript.ast.UnionType;
 import datascript.emit.DefaultEmitter;
+import datascript.jet.html.Index;
 import datascript.jet.html.CSS;
 import datascript.jet.html.Compound;
 import datascript.jet.html.Enum;
@@ -70,14 +72,17 @@ public class HtmlEmitter extends DefaultEmitter
     private Overview overviewTmpl = new Overview();
     private Compound compoundTmpl = new Compound();
     private Enum enumTmpl = new Enum();
+    private datascript.jet.html.Subtype subtypeTmpl = new datascript.jet.html.Subtype();
     private CSS cssTmpl = new CSS();
+    private Index indexTmpl = new Index();
 
     private EnumType enumeration;
-    
+    private Subtype subtype;
     private TypeInterface currentType;
     
     private SortedMap<String, TypeInterface> typeMap;
-    
+
+
     public void setPackageName(String packageName)
     {
         this.packageName = packageName;
@@ -129,6 +134,11 @@ public class HtmlEmitter extends DefaultEmitter
     {
         return enumeration;
     }
+
+    public Subtype getSubtype()
+    {
+        return subtype;
+    }
     
     public CompoundType getCompound()
     {
@@ -164,6 +174,10 @@ public class HtmlEmitter extends DefaultEmitter
         out.close();
 
         openOutputFile(directory, "index" + HTML_EXT);
+        out.print(indexTmpl.generate(this));
+        out.close();
+        
+        openOutputFile(directory, "overview" + HTML_EXT);
         String result = overviewTmpl.generate(this);
         out.print(result);
         
@@ -177,6 +191,10 @@ public class HtmlEmitter extends DefaultEmitter
             else if (type instanceof EnumType)
             {
                 emitEnumeration((EnumType) type);
+            }
+            else if (type instanceof Subtype)
+            {
+                emitSubtype((Subtype) type);
             }
         }
         out.close();
@@ -215,6 +233,23 @@ public class HtmlEmitter extends DefaultEmitter
         }
     }
 
+    private void emitSubtype(Subtype s)
+    {
+        subtype = s;
+        PrintStream indexOut = out;
+        try
+        {
+            openOutputFile(directory, s.getName() + HTML_EXT);
+            String result = subtypeTmpl.generate(this);
+            out.print(result);
+            out.close();
+        }
+        finally
+        {
+            out = indexOut;
+        }
+    }
+
     public void beginField(AST f)
     {
         // TODO Auto-generated method stub
@@ -244,7 +279,13 @@ public class HtmlEmitter extends DefaultEmitter
         EnumType et = (EnumType)e;
         typeMap.put(et.getName(), et);
     }
-    
+
+    public void beginSubtype(AST s)
+    {
+        Subtype st = (Subtype)s;
+        typeMap.put(st.getName(), st);
+    }
+
     public void beginSqlDatabase(AST s)
     {
         SqlDatabaseType sqlDb = (SqlDatabaseType)s;
@@ -262,6 +303,11 @@ public class HtmlEmitter extends DefaultEmitter
     }
     
     public String getDocumentation(EnumItem item)
+    {
+        return getDocumentation(item.getDocumentation());
+    }
+    
+    public String getDocumentation(Subtype item)
     {
         return getDocumentation(item.getDocumentation());
     }

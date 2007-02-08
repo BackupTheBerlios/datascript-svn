@@ -72,7 +72,10 @@ public interface Emitter
     public void endEnumeration(AST e);
     public void beginEnumItem(AST e);
     public void endEnumItem(AST e);
-    
+
+    public void beginSubtype(AST s);
+    public void endSubtype(AST s);
+
     public void beginSqlDatabase(AST s);
     public void endSqlDatabase(AST s);
     public void beginSqlMetadata(AST s);
