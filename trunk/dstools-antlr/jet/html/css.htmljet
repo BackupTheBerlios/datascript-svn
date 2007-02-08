@@ -178,4 +178,5 @@ th
 
 .typelist
 {
+	padding-left:1em;
 }

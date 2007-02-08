@@ -95,6 +95,7 @@
 						%> <i>unknown tag "<%=tag%>"</i><%
 	                    //throw new RuntimeException("unknown tag \"" + tag + "\" for type " + child.getType());
 	                }
+	                textAst = textAst.getNextSibling();
 	                break;
                 }
             }	// end of switch
