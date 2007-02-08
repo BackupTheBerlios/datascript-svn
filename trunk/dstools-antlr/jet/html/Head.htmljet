@@ -39,7 +39,7 @@
 %>
 <%@ jet package="datascript.jet.html" 
         imports="datascript.ast.* datascript.emit.html.*" 
-        class="Index" %>
+        class="Head" %>
 <% 
     HtmlEmitter e = (HtmlEmitter) argument;
     String pkg = e.getPackageName(); 
@@ -51,18 +51,14 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   </head>
 
-  <frameset rows="16%,*">
-    <frame src="head.html" scrolling="no" noresize frameborder="0" />
-    <frameset cols="30%,70%">
-      <frame src="overview.html" scrolling="auto" frameborder="1" />
-      <frame src="" class="detailedDocu" name="detailedDocu" scrolling="auto" frameborder="0" />
-    </frameset>
-    <noframes>
-      <body>
-        <p>Ihr Browser kann leider keine eingebetteten Frames anzeigen!<br>
-        Your browser sofftware can not handle embedded frames!</p>
-      </body>
-    </noframes>
-  </frameset>
+  <body>
+    <h1>DataScript Package: <%=pkg%></h1>
 
+    <table cellpadding=0 cellspacing=0 border=0 width="100%">
+    <tr align="center">
+      <td width="30%"><h2>Type Synopsis</h2></td>
+      <td width="70%"><h2>Detailed Documentation</h2></td>
+    </tr>
+    </table>
+  </body>
 </html>

@@ -57,6 +57,7 @@ import datascript.ast.TypeInterface;
 import datascript.ast.UnionType;
 import datascript.emit.DefaultEmitter;
 import datascript.jet.html.Index;
+import datascript.jet.html.Head;
 import datascript.jet.html.CSS;
 import datascript.jet.html.Compound;
 import datascript.jet.html.Enum;
@@ -75,6 +76,7 @@ public class HtmlEmitter extends DefaultEmitter
     private datascript.jet.html.Subtype subtypeTmpl = new datascript.jet.html.Subtype();
     private CSS cssTmpl = new CSS();
     private Index indexTmpl = new Index();
+    private Head headTmpl = new Head();
 
     private EnumType enumeration;
     private Subtype subtype;
@@ -176,7 +178,11 @@ public class HtmlEmitter extends DefaultEmitter
         openOutputFile(directory, "index" + HTML_EXT);
         out.print(indexTmpl.generate(this));
         out.close();
-        
+
+        openOutputFile(directory, "head" + HTML_EXT);
+        out.print(headTmpl.generate(this));
+        out.close();
+
         openOutputFile(directory, "overview" + HTML_EXT);
         String result = overviewTmpl.generate(this);
         out.print(result);

@@ -52,22 +52,16 @@
   </head>
 
   <body>
-    <h1>DataScript Package: <%=pkg%></h1>
-
-      <h2>Type Synopsis</h2>
-      <h2 width="80%">Detailed Documentation</h2>
-      <!-- td class="typelistMenu" -->
-      <ul class="typelist">
+    <ul class="typelist">
 <%
 	LinkedType typeNameGenerator = new LinkedType();
     for (TypeInterface type : e.getTypes())
     {
 %>
-        <li><%=typeNameGenerator.generate(type)%></li>
+      <li><%=typeNameGenerator.generate(type)%></li>
 <%
     }
 %>
-      </ul>
-    
+    </ul>    
   </body>
 </html>
