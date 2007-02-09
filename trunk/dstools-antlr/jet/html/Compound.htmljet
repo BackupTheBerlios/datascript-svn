@@ -57,10 +57,12 @@
   <body>
 
     <div class="msgdetail"><i><%=category%></i> <%=typeName%></div>
-    
+    <p/>
     <%=e.getDocumentation(s)%>
 
-    <table class="docuCode">
+    <table>
+    <tr><td class="docuCode">
+      <table>
 <%
 	// show the structure of this type
 	ParameterList pl = new ParameterList();
@@ -85,7 +87,7 @@
 <%
     	String fname = f.getName();
 %>
-          <td valign="bottom"><a href="#<%=fname%>"><%=fname%></a>
+          <td valign="bottom"><a href="#<%=fname%>" class="fieldLink"><%=fname%></a>
 <%
       	String arrayRange = tne.getArrayRange(f);
       	if (arrayRange != null)
@@ -109,6 +111,8 @@
 %>
         <tr><td colspan=3>};</td></tr>
       </tbody>
+      </table>
+    </td></tr>
     </table>
 
 
@@ -122,7 +126,7 @@
     	String fname = f.getName();
     	String doc = e.getDocumentation(f);
 %>
-      <dt class="memberItem"><a name="<%=fname%>"><b><%=fname%>:</b></a></dt>  
+      <dt class="memberItem"><a name="<%=fname%>"><%=fname%>:</a></dt>  
       <dd class="memberDetail">
         <%=doc.equals("")? "&lt;<i>no documentation found</i>&gt;" : doc %>
       </dd>

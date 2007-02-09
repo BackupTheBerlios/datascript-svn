@@ -44,7 +44,6 @@
     HtmlEmitter e = (HtmlEmitter) argument;
     datascript.ast.Subtype s = e.getSubtype();
     String typeName = s.getName();
-    TypeNameEmitter tne = new TypeNameEmitter();
 
 %>
 <html>
@@ -56,10 +55,12 @@
   <body>
 
     <div class="msgdetail"><i>Subtype</i> <%=typeName%></div>
-    
-    <p><%=e.getDocumentation(s)%></p>
+    <p/>
+    <%=e.getDocumentation(s)%>
 
-    <table class="docuCode" id="tabIdent">
+    <table>
+    <tr><td class="docuCode">
+      <table>
 <%
 	// show the structure of this type
 	ParameterList pl = new ParameterList();
@@ -71,6 +72,7 @@
         <td colspan=3>subtype <%=typeNameGenerator.generate(s.getBaseType())%><%=parameterlist%> <%=typeName%>
 <%
 /*
+    TypeNameEmitter tne = new TypeNameEmitter();
   	String constraint = tne.getConstraint(f);
   	if (constraint != null)
   	{
@@ -79,6 +81,8 @@
 */
 %>;</td>
       </tr>
+	  </table>
+	</td></tr>
 	</table>
 
   </body>

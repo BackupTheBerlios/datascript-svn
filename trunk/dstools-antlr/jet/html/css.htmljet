@@ -47,12 +47,17 @@ body
 
 a
 {
+	color:#333333;
+}
+
+a.fieldLink
+{
 	text-decoration:none;
 	color:#333333;
 }
 
-a:hover,
-a:focus
+a.fieldLink:hover,
+a.fieldLink:focus
 {
 	text-decoration:underline;
 }
@@ -142,6 +147,11 @@ h2.msgdetail
 	padding-left:1em;
 }
 
+.memberItem a
+{
+	font-weight:bold;
+}
+
 .memberDetail
 {
 	padding-bottom:0em;
@@ -160,8 +170,14 @@ th
 	border-style:dotted;
 	border-spacing:0px;
 	border-collapse:collapse;
-	padding:0px;
+	padding:0.5em;
 	font-family:monospace;
+}
+
+.docuTag span:first-child 
+{
+	font-weight:bold;
+	text-transform:capitalize;
 }
 
 .docuCode tr td
@@ -169,6 +185,7 @@ th
 	border-width:0px;
 	border-style:none;
 	border-collapse:collapse;
+	padding:0px;
 }
 
 #tabIdent
