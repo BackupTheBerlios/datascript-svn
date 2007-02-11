@@ -1,0 +1,39 @@
+package sqltest;
+
+
+
+sql_database SqlTestDb
+{
+    sql_pragma
+    {
+        uint16 page_size = 2048;
+    };
+    
+    sql_metadata
+    {
+        uint16 version = 1;
+    };
+    
+    sql_table TileTable
+    {
+        uint8    level : level < 16;
+        uint16   tileId;
+        Tile     tile;
+        sql "primary key (level, tileId)";
+    } tiles;
+    
+    sql "CREATE INDEX tilesIndex (level, tileId) ON tiles;";
+};
+
+
+
+Tile
+{
+    uint16       numFeatures;
+    Feature      features[numFeatures];
+};
+
+Feature
+{
+    int32 dummy;
+};

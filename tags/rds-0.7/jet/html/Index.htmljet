@@ -1,0 +1,82 @@
+<%
+/* BSD License
+ *
+ * Copyright (c) 2007, Henrik Wedekind, Harman/Becker Automotive Systems
+ * All rights reserved.
+ * 
+ * This software is derived from previous work
+ * Copyright (c) 2003, Godmar Back.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ * 
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ * 
+ *     * Neither the name of Harman/Becker Automotive Systems or
+ *       Godmar Back nor the names of their contributors may be used to
+ *       endorse or promote products derived from this software without
+ *       specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+%>
+<%@ jet package="datascript.jet.html" 
+        imports="datascript.ast.* datascript.emit.html.*" 
+        class="Index" %>
+<% 
+    HtmlEmitter e = (HtmlEmitter) argument;
+    String pkg = e.getPackageName(); 
+%>
+<html>
+  <head>
+    <title>DataScript Package: <%=pkg%></title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+
+  <!-- body>
+    <h1>DataScript Package: <%=pkg%></h1>
+
+    <table cellpadding=0 cellspacing=0 border=0 width="100%" height="90%">
+    <tr align="center">
+      <td width="30%"><h2>Type Synopsis</h2></td>
+      <td width="70%"><h2>Detailed Documentation</h2></td>
+    </tr>
+    <tr height="100%">
+      <td><iframe src="overview.html" scrolling="auto" frameborder="0" width="100%" height="100%"></iframe></td>
+      <td><iframe src="" class="detailedDocu" name="detailedDocu" scrolling="auto" frameborder="0" width="100%" height="100%"></iframe></td>
+    </tr>
+    </table>
+  </body -->
+
+  <frameset rows="16%,*">
+    <frame src="head.html" scrolling="no" noresize frameborder="0" />
+    <frameset cols="30%,70%">
+      <frame src="overview.html" scrolling="auto" frameborder="1" />
+      <frame src="" class="detailedDocu" name="detailedDocu" scrolling="auto" frameborder="0" />
+    </frameset>
+    <noframes>
+      <body>
+        <p>Ihr Browser kann leider keine Frames anzeigen!<br>
+        Your browser software can not handle framesets!</p>
+      </body>
+    </noframes>
+  </frameset>
+
+</html>
