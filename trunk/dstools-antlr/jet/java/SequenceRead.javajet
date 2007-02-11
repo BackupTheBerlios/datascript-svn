@@ -49,8 +49,10 @@
     String formalPar = e.getFormalParameterList();
     String actualPar = e.getActualParameterList();
 %>
-    // TODO: Emit constructor from member values.
-    	
+    public <%=name%>()
+    {
+    }
+        	
     public <%=name%>(String __filename<%=formalPar%>) throws IOException 
     {
         FileBitStreamReader __in = new FileBitStreamReader(__filename);
@@ -99,8 +101,8 @@
 <%
 	    }
 	    String optional = e.getOptionalClause(field);
-        String constraint = e.getConstraint(field);
-	    if (optional != null)
+            String constraint = e.getConstraint(field);
+            if (optional != null)
 	    {
 %>
                 if (<%=optional%>)

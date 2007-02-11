@@ -91,8 +91,7 @@ public class SequenceEmitter extends CompoundEmitter
         
         for (Parameter param : seq.getParameters())
         {
-            String typeName = tne.getTypeName(param.getType());
-            out.println("    " + typeName + " " + param.getName() + ";");
+            paramEmitter.emit(param);
         }
         result = readTmpl.generate(this);
         out.print(result);

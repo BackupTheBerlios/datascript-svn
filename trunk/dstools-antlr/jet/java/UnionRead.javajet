@@ -47,8 +47,10 @@
     String formalPar = e.getFormalParameterList();
     String actualPar = e.getActualParameterList();
 %>
-    // TODO: Emit constructor from member values.
-    	
+    public <%=name%>()
+    {
+    }
+        	
     public <%=name%>(String __filename<%=formalPar%>) throws IOException 
     {
         FileBitStreamReader __in = new FileBitStreamReader(__filename);

@@ -1,3 +1,4 @@
+<%
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -35,63 +36,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.emit.java;
-
-import datascript.ast.Field;
-import datascript.ast.Parameter;
-
-public class AccessorNameEmitter
-{
-    // TODO: make all methods static
-    public AccessorNameEmitter()
-    {
-    }
-   
-    public String getCheckerName(Field field)
-    {
-        StringBuffer result = new StringBuffer("is");
-        return appendAccessorTail(result, field);
-    }
-
-    public String getIndicatorName(Field field)
-    {
-        StringBuffer result = new StringBuffer("has");
-        return appendAccessorTail(result, field);
-    }
-
-    public static String getGetterName(Field field)
-    {
-        StringBuffer result = new StringBuffer("get");
-        return appendAccessorTail(result, field);
-    }
-
-    public String getSetterName(Field field)
-    {
-        StringBuffer result = new StringBuffer("set");
-        return appendAccessorTail(result, field);
-    }
+%> 
+<%@ jet package="datascript.jet.java" 
+        imports="datascript.ast.* datascript.emit.java.*" 
+        class="ParameterAccessor" %>
+<% 
+    ParameterEmitter e = (ParameterEmitter) argument;
+    Parameter param = e.getParameter();
+    TypeNameEmitter tne = new TypeNameEmitter();
+    String type =  tne.getTypeName(param.getType());    
+    String pname = param.getName();
+    AccessorNameEmitter ane = new AccessorNameEmitter();
+    String setter = ane.getSetterName(param);
+%>
+    <%=type%> <%=pname%>;
     
-    public static String getSetterName(Parameter param)
-    {
-        StringBuffer result = new StringBuffer("set");
-        return appendAccessorTail(result, param.getName());
-    }
-    
-    public static String getVisitorName(Field field)
-    {
-        StringBuffer result = new StringBuffer("visit");
-        return appendAccessorTail(result, field);        
+    public void <%=setter%>(<%=type%> <%=pname%>) 
+    { 
+        this.<%=pname%> = <%=pname%>; 
     }
 
-    private static String appendAccessorTail(StringBuffer buffer, Field field)
-    {
-        return appendAccessorTail(buffer, field.getName());
-    }
-
-    private static String appendAccessorTail(StringBuffer buffer, String name)
-    {
-        buffer.append(name.substring(0, 1).toUpperCase());
-        buffer.append(name.substring(1, name.length()));
-        return buffer.toString();
-    }
-}

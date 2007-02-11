@@ -73,8 +73,8 @@ public class <%=name%>
     {
         Connection dbc = db.getConnection();
         this.tableName = __tableName;
-        insertRow = dbc.prepareStatement(
-            "INSERT OR REPLACE INTO " + __tableName + " values(<%=q%>)");
+        //insertRow = dbc.prepareStatement(
+        //    "INSERT OR REPLACE INTO " + __tableName + " values(<%=q%>)");
         Statement st = dbc.createStatement();
         StringBuilder query = new StringBuilder("CREATE TABLE ");
         query.append(__tableName);

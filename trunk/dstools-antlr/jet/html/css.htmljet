@@ -112,7 +112,7 @@ a.referenceLink
 
 .docuTag#todo
 {
-	text-decoration:blink;
+	text-decoration:none;
 	color:#DD2222;
 }
 

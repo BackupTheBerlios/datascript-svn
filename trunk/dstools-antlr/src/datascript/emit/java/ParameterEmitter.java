@@ -37,61 +37,42 @@
  */
 package datascript.emit.java;
 
-import datascript.ast.Field;
-import datascript.ast.Parameter;
+import java.io.PrintStream;
 
-public class AccessorNameEmitter
+import datascript.ast.Parameter;
+import datascript.jet.java.ParameterAccessor;
+
+public class ParameterEmitter
 {
-    // TODO: make all methods static
-    public AccessorNameEmitter()
+    private CompoundEmitter global;
+    protected Parameter parameter;
+    protected PrintStream out;
+    
+    public ParameterEmitter(CompoundEmitter j)
     {
+        this.global = j;
     }
    
-    public String getCheckerName(Field field)
+    public CompoundEmitter getCompoundEmitter()
     {
-        StringBuffer result = new StringBuffer("is");
-        return appendAccessorTail(result, field);
-    }
-
-    public String getIndicatorName(Field field)
-    {
-        StringBuffer result = new StringBuffer("has");
-        return appendAccessorTail(result, field);
-    }
-
-    public static String getGetterName(Field field)
-    {
-        StringBuffer result = new StringBuffer("get");
-        return appendAccessorTail(result, field);
-    }
-
-    public String getSetterName(Field field)
-    {
-        StringBuffer result = new StringBuffer("set");
-        return appendAccessorTail(result, field);
+        return global;
     }
     
-    public static String getSetterName(Parameter param)
+    public void setOutputStream(PrintStream out)
     {
-        StringBuffer result = new StringBuffer("set");
-        return appendAccessorTail(result, param.getName());
+        this.out = out;
     }
     
-    public static String getVisitorName(Field field)
+    public void emit(Parameter p)
     {
-        StringBuffer result = new StringBuffer("visit");
-        return appendAccessorTail(result, field);        
+        parameter = p;
+        ParameterAccessor template = new ParameterAccessor();
+        String result = template.generate(this);
+        out.print(result);
     }
 
-    private static String appendAccessorTail(StringBuffer buffer, Field field)
+    public Parameter getParameter()
     {
-        return appendAccessorTail(buffer, field.getName());
-    }
-
-    private static String appendAccessorTail(StringBuffer buffer, String name)
-    {
-        buffer.append(name.substring(0, 1).toUpperCase());
-        buffer.append(name.substring(1, name.length()));
-        return buffer.toString();
+        return parameter;
     }
 }

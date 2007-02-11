@@ -39,6 +39,7 @@ package datascript.emit.java;
 
 import datascript.ast.CompoundType;
 import datascript.ast.Field;
+import datascript.ast.Parameter;
 import datascript.ast.UnionType;
 import datascript.jet.java.SequenceEnd;
 import datascript.jet.java.UnionBegin;
@@ -85,6 +86,10 @@ public class UnionEmitter extends CompoundEmitter
         for (Field field : union.getFields())
         {
             fieldEmitter.emit(field);
+        }
+        for (Parameter param : union.getParameters())
+        {
+            paramEmitter.emit(param);
         }
         result = readReadTmpl.generate(this);
         out.print(result);

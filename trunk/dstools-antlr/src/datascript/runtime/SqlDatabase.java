@@ -56,11 +56,6 @@ public abstract class SqlDatabase
     {
         Class.forName("org.sqlite.JDBC");
         dbc = DriverManager.getConnection("jdbc:sqlite:" + fileName);
-        dbc.setAutoCommit(false);
-        if (mode == Mode.CREATE)
-        {
-            createSchema();
-        }
     }
     
     public void close() throws SQLException

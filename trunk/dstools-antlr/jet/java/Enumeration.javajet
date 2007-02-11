@@ -49,7 +49,7 @@
     String cast = baseType.equals("int") ? "" : ("(" + baseType + ")");
 %>
 <%@include file="FileHeader.inc"%>
-public enum <%=name%>
+public enum <%=name%> implements SizeOf
 {
     <% 
        for (EnumItem item : en.getItems()) 

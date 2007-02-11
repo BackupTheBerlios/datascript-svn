@@ -72,12 +72,14 @@ abstract public class CompoundEmitter
     private String formalParams;
     private String actualParams;
     protected PrintStream out;
+    protected ParameterEmitter paramEmitter;
 
 
     public CompoundEmitter(JavaDefaultEmitter j)
     {
         this.global = j;
         this.typeNameEmitter = new TypeNameEmitter();
+        paramEmitter = new ParameterEmitter(this);
     }
 
 
@@ -102,6 +104,7 @@ abstract public class CompoundEmitter
     {
         this.out = out;
         getFieldEmitter().setOutputStream(out);
+        paramEmitter.setOutputStream(out);
     }
     
 
@@ -263,6 +266,13 @@ abstract public class CompoundEmitter
         buffer.append("(new ");
         buffer.append(compound.getName());
         buffer.append("(__in, __cc");
+        appendArguments(inst);
+        buffer.append("));");
+    }
+
+    private void appendArguments(TypeInstantiation inst)
+    {
+        CompoundType compound = inst.getBaseType();
         Iterable<Expression> arguments = inst.getArguments();
         if (arguments != null)
         {
@@ -280,10 +290,7 @@ abstract public class CompoundEmitter
                 argIndex++;
             }
         }
-        buffer.append("));");
     }
-
-
 
     /**
      * Emits a type cast for passing an argument to a parameterized type.
@@ -619,10 +626,39 @@ abstract public class CompoundEmitter
 
     private void writeInstantiatedField(Field field, TypeInstantiation inst)
     {
-        buffer.append(AccessorNameEmitter.getGetterName(field));
+        String getter = AccessorNameEmitter.getGetterName(field); 
+        setParameters(getter + "()", inst);
+        buffer.append(getter);
         buffer.append("().write(__out, __cc);");
     }
 
+    private void setParameters(String lhs, TypeInstantiation inst)
+    {
+        CompoundType compound = inst.getBaseType();
+        Iterable<Expression> arguments = inst.getArguments();
+        if (arguments != null)
+        {
+            int argIndex = 0;
+            for (Expression arg : arguments)
+            {
+                Parameter param = compound.getParameterAt(argIndex);
+                String setter = AccessorNameEmitter.getSetterName(param);
+                buffer.append(lhs);
+                buffer.append(".");
+                buffer.append(setter);
+                buffer.append("(");
+                boolean cast = emitTypeCast(compound, arg, argIndex);
+                String javaArg = exprEmitter.emit(arg);
+                buffer.append(javaArg);
+                if (cast)
+                {
+                    buffer.append(")");
+                }
+                buffer.append(");\n                ");
+                argIndex++;
+            }
+        }
+    }
 
     private void writeArrayField(Field field, ArrayType array)
     {

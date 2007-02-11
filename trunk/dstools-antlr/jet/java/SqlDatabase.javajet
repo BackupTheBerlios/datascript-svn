@@ -71,6 +71,10 @@ public class <%=name%> extends SqlDatabase
     public <%=name%>(String fileName, Mode mode) throws SQLException, ClassNotFoundException
     {
         super(fileName, mode);
+        if (mode == Mode.CREATE)
+        {
+            createSchema();
+        }
     }
     
     public void createSchema() throws SQLException
