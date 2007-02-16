@@ -96,6 +96,12 @@ div#Inhalt h4
     margin-bottom: 0pt;
 }
 
+div#Inhalt li
+{
+    margin-top: 3pt;
+    margin-bottom: 3pt;
+}
+
 div#Inhalt p.text 
 {
     color: rgb(80,64,40);
@@ -143,19 +149,9 @@ div#Inhalt span.name
 
 div#Inhalt a 
 {
-    color: #6666ff;
-//    display: block;
-//    padding: 2;
+    color:#6666FF;
     font-weight: bold;
     text-decoration:none;
-}
-div#Inhalt a:link 
-{
-//    color: black; 
-}
-div#Inhalt a:visited 
-{
-//    color: black; 
 }
 
 div#Inhalt a:hover 
@@ -163,10 +159,6 @@ div#Inhalt a:hover
     color: black; 
 }
 
-div#Inhalt a:active 
-{
-//    color: yellow; 
-}
 
 
 

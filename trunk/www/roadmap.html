@@ -24,23 +24,34 @@
      <li>We are defining a DataScript dialect supported by our
        implementation, documented in a <a href="DataScriptLanguageOverview.html">DataScript Language Overview</a>.
      </li>
-     <li><b>Relational DataScript</b> will be a language extension that allows storing
+
+     <li><b>Relational DataScript</b> is a language extension that allows storing
         data in an SQL database, either in base type columns or in blobs. 
-        For the time being, we will support 
-        <a href="http://www.sqlite.org">SQLite</a> only.
-     </li>
-     <li>We are working on an XML exchange format for DataScript modules and an XSL 
-       stylesheet that produces Javadoc style documentation.
+        For the time being, we only support 
+        <a href="http://www.sqlite.org">SQLite</a> via JDBC. An 
+        <a href="http://www.zentus.com/sqlitejdbc/">SQLite JDBC driver</a>
+        with a native DLL for Windows is included in the binary release
+        packages.
      </li>
 
-     <li>A simpler and more robust parser and code generator has been developed based on
-       <a href="http://www.antlr.org">antlr</a>. The parser is complete, the code generator currently 
-       supports read() and write() methods for plain DataScript. Relational extensions are partially implemented and not yet functional.
-       This reimplementation can be downloaded as rds-bin or rds-src package. 
-        
+     <li>There is an XML exchange format for DataScript modules.
      </li>
-     <li>A C++ code generator will be developed.
+
+     <li>We can generate HTML documentation à la Javadoc from documentation
+     comments embedded into a DataScript module.
      </li>
+
+     <li>A simpler and more robust parser and code generator has been developed 
+       based on
+       <a href="http://www.antlr.org">antlr</a>. The parser is complete, the 
+       code generator currently supports read() and write() methods for both 
+       for plain DataScript and for the relational extensions.
+       This reimplementation can be downloaded as rds-bin or rds-src package.       
+     </li>
+
+     <li>There are plans to develop a C or C++ code generator.
+     </li>
+
     </ul>
     </div>
   </body></html>
