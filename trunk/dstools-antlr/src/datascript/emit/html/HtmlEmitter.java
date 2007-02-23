@@ -51,6 +51,10 @@ import datascript.ast.EnumType;
 import datascript.ast.Field;
 import datascript.ast.SequenceType;
 import datascript.ast.SetType;
+import datascript.ast.SqlIntegerType;
+import datascript.ast.SqlMetadataType;
+import datascript.ast.SqlPragmaType;
+import datascript.ast.SqlTableType;
 import datascript.ast.Subtype;
 import datascript.ast.SqlDatabaseType;
 import datascript.ast.TypeInterface;
@@ -110,6 +114,22 @@ public class HtmlEmitter extends DefaultEmitter
         {
             return "SQL Database";
         }
+        else if (currentType instanceof SqlMetadataType)
+        {
+            return "SQL Matadata";
+        }
+        else if (currentType instanceof SqlTableType)
+        {
+            return "SQL Table";
+        }
+        else if (currentType instanceof SqlPragmaType)
+        {
+            return "SQL Pragma";
+        }
+        else if (currentType instanceof SqlIntegerType)
+        {
+            return "SQL Integer";
+        }
         throw new RuntimeException("unknown category " 
                   + currentType.getClass().getName());
     }
@@ -127,6 +147,22 @@ public class HtmlEmitter extends DefaultEmitter
         else if (currentType instanceof SqlDatabaseType)
         {
             return "sql_database ";
+        }
+        else if (currentType instanceof SqlMetadataType)
+        {
+            return "sql_metadata ";
+        }
+        else if (currentType instanceof SqlTableType)
+        {
+            return "sql_table ";
+        }
+        else if (currentType instanceof SqlPragmaType)
+        {
+            return "sql_pragma ";
+        }
+        else if (currentType instanceof SqlIntegerType)
+        {
+            return "sql_integer ";
         }
         throw new RuntimeException("unknown category " 
                   + currentType.getClass().getName());
@@ -296,6 +332,30 @@ public class HtmlEmitter extends DefaultEmitter
     {
         SqlDatabaseType sqlDb = (SqlDatabaseType)s;
         typeMap.put(sqlDb.getName(), sqlDb);
+    }
+
+    public void beginSqlTable(AST s)
+    {
+        SqlTableType sqlTab = (SqlTableType)s;
+        typeMap.put(sqlTab.getName(), sqlTab);
+    }
+
+    public void beginSqlPragma(AST s)
+    {
+        SqlPragmaType sqlPragma = (SqlPragmaType)s;
+        typeMap.put(sqlPragma.getName(), sqlPragma);
+    }
+
+    public void beginSqlMetadata(AST s)
+    {
+        SqlMetadataType sqlMeta = (SqlMetadataType)s;
+        typeMap.put(sqlMeta.getName(), sqlMeta);
+    }
+
+    public void beginSqlInteger(AST s)
+    {
+        SqlIntegerType sqlInt = (SqlIntegerType)s;
+        typeMap.put(sqlInt.getName(), sqlInt);
     }
     
     public String getDocumentation(CompoundType compound)
