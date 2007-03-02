@@ -208,11 +208,15 @@ public class TypeNameEmitter
 
     private static String getTypeName(BitFieldType t)
     {
-        int length = t.getLength();
+        Expression e = t.getLengthExpression();
+        if (e != null)
+            return "bit&lt;" + e.getText() + "&gt;";
+        
+        int length = t.getLength();        
         if (length == 0)
-            return "bit<?>";
+            return "bit&lt;?&gt;";
         else
-            return "bit<" + length + ">";
+            return "bit&lt;" + length + "&gt;";
     }
 
 }
