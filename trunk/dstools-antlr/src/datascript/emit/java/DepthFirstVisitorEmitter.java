@@ -121,6 +121,11 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         return e.getOptionalClause(field);
     }
     
+    public String getIndicatorName(Field field)
+    {
+        return AccessorNameEmitter.getIndicatorName(field) + "()";
+    }
+    
     public String getVisitor(Field field)
     {
         TypeInterface type = field.getFieldType();
