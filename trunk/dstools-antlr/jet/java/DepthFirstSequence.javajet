@@ -62,7 +62,7 @@
 	    if (optional != null)
 	    {
 %>
-        if (node.<%=optional%>)
+        if (node.<%=e.getIndicatorName(field) /*optional*/%>)
         {
             <%=visitor%>;
         }
