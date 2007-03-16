@@ -60,3 +60,38 @@ public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
     {
         return __SizeOf.sizeof(this);
     }
+
+
+    public boolean equals(Object obj)
+    {
+    	if (obj instanceof <%=name%>)
+    	{
+    		<%=name%> that = (<%=name%>) obj;
+    		return 
+<%
+    for (Field field : s.getFields())    
+    {
+		String optional = e.getOptionalClause(field);
+
+    	String fieldName = field.getName();
+        TypeInterface type = field.getFieldType();
+        if (type instanceof StdIntegerType ||
+            type instanceof BitFieldType ||
+            type instanceof StringType)
+    	{
+%>
+        		<%=(optional != null)? "(!("+optional+"))? true : " : ""%>(this.<%=fieldName%> == that.<%=fieldName%>) &&
+<%
+		}
+		else
+		{
+%>
+        		<%=(optional != null)? "(!("+optional+"))? true : " : ""%>(this.<%=fieldName%>.equals(that.<%=fieldName%>) &&
+<%
+		}
+    }
+%> 
+				true;
+		}
+		return super.equals(obj);
+    }

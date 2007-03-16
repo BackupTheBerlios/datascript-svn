@@ -67,6 +67,7 @@ public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
     {
         return __choiceTag;
     }
+
 <%
     int i = 0;
     for (Field field : u.getFields())
@@ -77,6 +78,17 @@ public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
 <%
         i++;
     }
-%>                
-    
+%>
+
+
+    public boolean equals(Object obj)
+    {
+    	if (obj instanceof <%=name%>)
+    	{
+    		<%=name%> that = (<%=name%>) obj;
+    		return this.__choiceTag == that.__choiceTag && 
+    			this.__objectChoice == that.__objectChoice;
+		}
+		return super.equals(obj);
+    }
 

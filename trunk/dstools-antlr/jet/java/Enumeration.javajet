@@ -74,7 +74,17 @@ public enum <%=name%> implements SizeOf
     {
         return value;
     }
-    
+
+	public boolean equals(Object obj)
+	{
+    	if (obj instanceof <%=name%>)
+    	{
+    		<%=name%> that = (<%=name%>) obj;
+			return this.value == that.value;
+		}
+		return super.equals(obj);
+	}
+
     public static <%=name%> toEnum(<%=baseType%> v)
     {
         switch (v)

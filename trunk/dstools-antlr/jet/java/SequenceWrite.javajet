@@ -77,7 +77,7 @@
 <%
     }
 %>
-    }    
+    }
     	
     public void write(String __filename) throws IOException 
     {
