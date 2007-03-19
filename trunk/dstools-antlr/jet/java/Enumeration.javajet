@@ -51,7 +51,7 @@
 <%@include file="FileHeader.inc"%>
 public enum <%=name%> implements SizeOf
 {
-    <% 
+    <%
        for (EnumItem item : en.getItems()) 
        {
            String iname = item.getName();
@@ -64,32 +64,22 @@ public enum <%=name%> implements SizeOf
     __INVALID(<%=cast%>-1);
 
     private <%=baseType%> value;
-    
+
     <%=name%>(<%=baseType%> value)
     {
         this.value = value;
     }
-    
+
     public <%=baseType%> getValue()
     {
         return value;
     }
 
-	public boolean equals(Object obj)
-	{
-    	if (obj instanceof <%=name%>)
-    	{
-    		<%=name%> that = (<%=name%>) obj;
-			return this.value == that.value;
-		}
-		return super.equals(obj);
-	}
-
     public static <%=name%> toEnum(<%=baseType%> v)
     {
         switch (v)
         {
-        <% 
+        <%
            for (EnumItem item : en.getItems()) 
            {
                String iname = item.getName();

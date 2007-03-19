@@ -75,18 +75,25 @@ public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
 
     	String fieldName = field.getName();
         TypeInterface type = field.getFieldType();
-        if (type instanceof StdIntegerType ||
+        type = TypeReference.resolveType(type);
+        if (type instanceof EnumType)
+		{
+%>
+        		(<%=(optional != null)? "(!("+optional+"))? true : " : ""%>this.<%=fieldName%>.getValue() == that.<%=fieldName%>.getValue()) &&
+<%
+		}
+		else if (type instanceof StdIntegerType ||
             type instanceof BitFieldType ||
             type instanceof StringType)
     	{
 %>
-        		<%=(optional != null)? "(!("+optional+"))? true : " : ""%>(this.<%=fieldName%> == that.<%=fieldName%>) &&
+        		(<%=(optional != null)? "(!("+optional+"))? true : " : ""%>this.<%=fieldName%> == that.<%=fieldName%>) &&
 <%
 		}
-		else
+		else 
 		{
 %>
-        		<%=(optional != null)? "(!("+optional+"))? true : " : ""%>(this.<%=fieldName%>.equals(that.<%=fieldName%>) &&
+        		(<%=(optional != null)? "(!("+optional+"))? true : " : ""%>this.<%=fieldName%>.equals(that.<%=fieldName%>)) &&
 <%
 		}
     }

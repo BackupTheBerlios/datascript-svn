@@ -86,8 +86,8 @@ public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
     	if (obj instanceof <%=name%>)
     	{
     		<%=name%> that = (<%=name%>) obj;
-    		return this.__choiceTag == that.__choiceTag && 
-    			this.__objectChoice == that.__objectChoice;
+    		return (this.__choiceTag == that.__choiceTag) && 
+    			this.__objectChoice.equals(that.__objectChoice);
 		}
 		return super.equals(obj);
     }
