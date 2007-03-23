@@ -72,6 +72,18 @@ public class ObjectArray<E> implements Array, SizeOf
         return new ObjectArray<E>(result);
     }
 
+
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof ObjectArray)
+        {
+            ObjectArray<E> that = (ObjectArray<E>) obj;
+            return (this.data.equals(that.data));
+        }
+        return super.equals(obj);
+    }
+
+
     public Array map(Mapping m)
     {
         Vector result = new Vector(data.size());
@@ -120,7 +132,7 @@ public class ObjectArray<E> implements Array, SizeOf
         data.remove(obj);
     }
 
-    public List getData()
+    public List<E> getData()
     {
         return data;
     }

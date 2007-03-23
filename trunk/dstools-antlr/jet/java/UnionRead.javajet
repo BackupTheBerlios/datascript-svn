@@ -70,6 +70,15 @@
 
     public void read(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws IOException 
     {
+<%
+	for (Parameter param : s.getParameters())
+	{
+		String pName = param.getName();
+%>
+        this.<%=pName%> = <%=pName%>;
+<%
+	}
+%>
         try 
         {
         	__cc.push("<%=name%>", this);

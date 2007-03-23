@@ -40,7 +40,7 @@
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
         class="ArrayRead" 
-%><% 
+%><%
     ArrayEmitter e = (ArrayEmitter) argument;
     ArrayType array = e.getArrayType();
     AccessorNameEmitter ane = new AccessorNameEmitter();
@@ -49,22 +49,22 @@
     String setter = ane.getSetterName(field);
     String actPar = e.getActualParameterList();
     //System.out.println("elType = " + elType + ", param = " + actPar);
-    
+
     if (array.isVariable())
-    { 
+    {
 %>
                 {
                     Vector<<%=elType%>> v = new Vector<<%=elType%>>();
                     long __afpos = 0;
-                    try 
+                    try
                     {
-                        while (true) 
+                        while (true)
                         {
                             __afpos = __in.getBitPosition();
                             v.add(new <%=elType%>(__in, __cc<%=actPar%>));
                         }
-                    } 
-                    catch (IOException __e) 
+                    }
+                    catch (IOException __e)
                     {
                         __in.setBitPosition(__afpos);
                     }
@@ -77,8 +77,9 @@
         String length = e.getLengthExpr();
 %>
                 {
-                    Vector<<%=elType%>> v = new Vector<<%=elType%>>((int)(<%=length%>));
-                    for (int __index = 0; __index < (<%=length%>); __index++) 
+                    int __maxIndex = <%=length%>;
+                    Vector<<%=elType%>> v = new Vector<<%=elType%>>(__maxIndex);
+                    for (int __index = 0; __index < __maxIndex; __index++) 
                     {
                         v.add(new <%=elType%>(__in, __cc<%=actPar%>));
                     }

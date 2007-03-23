@@ -93,15 +93,6 @@
 
     public void write(BitStreamWriter __out, CallChain __cc) throws IOException 
     {
-<%
-        for (Parameter param : s.getParameters())
-        {
-            String pName = param.getName();
-%>
-        this.<%=pName%> = <%=pName%>;
-<%
-        }
-%>
         try 
         {
             __cc.push("<%=name%>", this);

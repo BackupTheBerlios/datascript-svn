@@ -91,6 +91,22 @@ public class BitFieldArray implements Array, SizeOf
         this.numBits = numBits;
     }
 
+
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof BitFieldArray)
+        {
+            BitFieldArray that = (BitFieldArray) obj;
+            return 
+                (this.offset == offset) && 
+                (this.length == length) && 
+                (this.numBits == numBits) && 
+                java.util.Arrays.equals(this.data, that.data);
+        }
+        return super.equals(obj);
+    }
+
+
     public BigInteger elementAt(int i)
     {
         return data[offset + i];

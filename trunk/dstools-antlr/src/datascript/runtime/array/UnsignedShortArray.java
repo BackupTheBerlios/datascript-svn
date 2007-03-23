@@ -101,6 +101,21 @@ public class UnsignedShortArray implements Array, SizeOf
         this.length = length;
     }
 
+
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof UnsignedShortArray)
+        {
+            UnsignedShortArray that = (UnsignedShortArray) obj;
+            return 
+                (this.offset == offset) && 
+                (this.length == length) && 
+                java.util.Arrays.equals(this.data, that.data);
+        }
+        return super.equals(obj);
+    }
+
+
     public int elementAt(int i)
     {
         return data[offset + i];

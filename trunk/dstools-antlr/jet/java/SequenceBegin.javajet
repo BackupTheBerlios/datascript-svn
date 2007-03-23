@@ -72,30 +72,32 @@ public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
     for (Field field : s.getFields())    
     {
 		String optional = e.getOptionalClause(field);
+%>
+				(<%=(optional != null)? "(!("+optional+"))? true : " : ""%>(<%
 
     	String fieldName = field.getName();
         TypeInterface type = field.getFieldType();
         type = TypeReference.resolveType(type);
         if (type instanceof EnumType)
 		{
-%>
-        		(<%=(optional != null)? "(!("+optional+"))? true : " : ""%>this.<%=fieldName%>.getValue() == that.<%=fieldName%>.getValue()) &&
-<%
+			%>this.<%=fieldName%>.getValue() == that.<%=fieldName%>.getValue()<%
 		}
-		else if (type instanceof StdIntegerType ||
-            type instanceof BitFieldType ||
-            type instanceof StringType)
-    	{
-%>
-        		(<%=(optional != null)? "(!("+optional+"))? true : " : ""%>this.<%=fieldName%> == that.<%=fieldName%>) &&
-<%
-		}
-		else 
+		else if (type instanceof BitFieldType && ((BitFieldType)type).getLength() == 0)
 		{
-%>
-        		(<%=(optional != null)? "(!("+optional+"))? true : " : ""%>this.<%=fieldName%>.equals(that.<%=fieldName%>)) &&
-<%
+			%>this.<%=fieldName%>.compareTo(that.<%=fieldName%>) == 0<%
 		}
+		else if (type instanceof SequenceType ||
+				 type instanceof UnionType ||
+				 type instanceof ArrayType ||
+				 type instanceof TypeInstantiation)
+    	{
+			%>this.<%=fieldName%>.equals(that.<%=fieldName%>)<%
+		}
+		else
+		{
+			%>this.<%=fieldName%> == that.<%=fieldName%><%
+		}
+		%>)) && /* <%=type.getClass().getCanonicalName()%>*/<%
     }
 %> 
 				true;

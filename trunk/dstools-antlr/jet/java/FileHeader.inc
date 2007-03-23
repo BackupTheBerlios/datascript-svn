@@ -39,8 +39,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-<% if (pkg != null)
-   {%>
+<%
+    if (pkg != null)
+    {%>
 package <%=pkg%>;
 
 import datascript.runtime.*;
@@ -50,4 +51,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Vector;
 
-<% } %>
+<%
+    }
+%>

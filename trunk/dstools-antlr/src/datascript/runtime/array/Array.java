@@ -42,6 +42,8 @@ import datascript.runtime.io.Writer;
 
 public interface Array extends Writer
 {
+    public boolean equals(Object obj);
+
     public Array map(Mapping m);
 
     public Array subRange(int begin, int length);

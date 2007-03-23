@@ -79,6 +79,21 @@ public class ByteArray implements Array, SizeOf
         this.length = length;
     }
 
+
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof ByteArray)
+        {
+            ByteArray that = (ByteArray) obj;
+            return 
+                (this.offset == offset) && 
+                (this.length == length) && 
+                java.util.Arrays.equals(this.data, that.data);
+        }
+        return super.equals(obj);
+    }
+
+
     public Array map(Mapping m)
     {
         ByteArray result = new ByteArray(length);

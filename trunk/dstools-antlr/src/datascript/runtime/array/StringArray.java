@@ -83,6 +83,21 @@ public class StringArray implements Array, SizeOf
         }
     }
 
+
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof StringArray)
+        {
+            StringArray that = (StringArray) obj;
+            return 
+                (this.offset == offset) && 
+                (this.length == length) && 
+                java.util.Arrays.equals(this.data, that.data);
+        }
+        return super.equals(obj);
+    }
+
+
     public String elementAt(int i)
     {
         return data[offset + i];

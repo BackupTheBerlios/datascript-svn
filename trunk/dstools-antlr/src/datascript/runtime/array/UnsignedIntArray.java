@@ -81,6 +81,21 @@ public class UnsignedIntArray implements Array, SizeOf
         this.length = length;
     }
 
+
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof UnsignedIntArray)
+        {
+            UnsignedIntArray that = (UnsignedIntArray) obj;
+            return 
+                (this.offset == offset) && 
+                (this.length == length) && 
+                java.util.Arrays.equals(this.data, that.data);
+        }
+        return super.equals(obj);
+    }
+
+
     public long elementAt(int i)
     {
         return data[offset + i];

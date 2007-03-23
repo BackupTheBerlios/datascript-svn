@@ -80,12 +80,12 @@
         this.<%=pName%> = <%=pName%>;
 <%
 	}
-%>    
-        try 
+%>
+        try
         {
             __cc.push("<%=name%>", this);
             __fpos = __in.getBitPosition();
-            try 
+            try
             {
 <%
 	for (Field field : s.getFields())
@@ -97,7 +97,7 @@
                 if (__in.getBitPosition() != <%=label%>)
                 {
                     throw new IOException("wrong offset for field '<%=field.getName()%>'");
-                } 
+                }
 <%
 	    }
 	    String optional = e.getOptionalClause(field);
@@ -124,7 +124,7 @@
         }
         else
         {
-%>                            
+%>
                 <%=e.readField(field)%>
 <%
         	if (constraint != null)
@@ -138,16 +138,16 @@
         	}
         }
 	}	// end of for (Field field : s.getFields())
-%>                
-            } 
-            catch (IOException __e1) 
+%>
+            }
+            catch (IOException __e1)
             {
                 __in.setBitPosition(__fpos);
                 throw __e1;
        	    }
         }
-        finally 
-        { 
-            __cc.pop(); 
+        finally
+        {
+            __cc.pop();
         }
     }

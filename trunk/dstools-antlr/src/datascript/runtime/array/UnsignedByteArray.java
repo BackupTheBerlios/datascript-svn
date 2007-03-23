@@ -81,6 +81,21 @@ public class UnsignedByteArray implements Array, SizeOf
         this.length = length;
     }
 
+
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof UnsignedByteArray)
+        {
+            UnsignedByteArray that = (UnsignedByteArray) obj;
+            return 
+                (this.offset == offset) && 
+                (this.length == length) && 
+                java.util.Arrays.equals(this.data, that.data);
+        }
+        return super.equals(obj);
+    }
+
+
     public Array map(Mapping m)
     {
         UnsignedByteArray result = new UnsignedByteArray(length);
