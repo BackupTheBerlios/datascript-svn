@@ -89,7 +89,11 @@ public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
 		else if (type instanceof SequenceType ||
 				 type instanceof UnionType ||
 				 type instanceof ArrayType ||
-				 type instanceof TypeInstantiation)
+				 type instanceof TypeInstantiation ||
+				 type instanceof StringType ||
+				 (type instanceof StdIntegerType && 
+				 	((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
+				 )
     	{
 			%>this.<%=fieldName%>.equals(that.<%=fieldName%>)<%
 		}
