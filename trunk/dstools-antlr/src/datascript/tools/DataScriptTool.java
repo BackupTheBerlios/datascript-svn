@@ -62,7 +62,7 @@ import datascript.emit.java.VisitorEmitter;
 
 public class DataScriptTool 
 {
-    private static final String VERSION = "rds 0.73 (23 Mar 2007)";
+    private static final String VERSION = "rds 0.7.5 (3 Apr 2007)";
     private ToolContext context;
     private DataScriptWalker walker;
     private TypeEvaluator typeEval;

@@ -102,6 +102,7 @@ public class UnionTest extends TestCase
 
         BaseTypes b2 = new BaseTypes(wFileName);
         checkUnion(b2, size, 8, 65);
+        assertTrue(b.equals(b2));
     }
 
     public void testUnion2() throws IOException
@@ -114,6 +115,7 @@ public class UnionTest extends TestCase
 
         BaseTypes b2 = new BaseTypes(wFileName);
         checkUnion(b2, size, 16, 2000);
+        assertTrue(b.equals(b2));
     }
 
     public void testUnion3() throws IOException
@@ -126,5 +128,6 @@ public class UnionTest extends TestCase
 
         BaseTypes b2 = new BaseTypes(wFileName);
         checkUnion(b2, size, 32, 123123);
+        assertTrue(b.equals(b2));
     }
 }

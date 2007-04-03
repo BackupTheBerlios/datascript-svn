@@ -104,6 +104,7 @@ public class OptionalArrayTest extends TestCase
 
         OptionalArraySequence oas2 = new OptionalArraySequence(wFileName);
         checkData(oas2, size, 5);
+        assertTrue(oas.equals(oas2));
     }
     
     public void testOptionalArray2() throws IOException
@@ -116,5 +117,6 @@ public class OptionalArrayTest extends TestCase
 
         OptionalArraySequence oas2 = new OptionalArraySequence(wFileName);
         checkData(oas2, size, 0);
+        assertTrue(oas.equals(oas2));
     }
 }

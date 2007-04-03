@@ -124,6 +124,7 @@ public class MixedArrayTest extends TestCase
 
         MixedArray array2 = new MixedArray(fileName);
         checkArray(array2, size, 10, 20);
+        assertTrue(array.equals(array2));
     }
 
     public void testArray2() throws IOException
@@ -136,6 +137,7 @@ public class MixedArrayTest extends TestCase
 
         MixedArray array2 = new MixedArray(fileName);
         checkArray(array2, size, 10, 20);
+        assertTrue(array.equals(array2));
     }
 
     public void testArray3() throws IOException
@@ -148,6 +150,7 @@ public class MixedArrayTest extends TestCase
 
         MixedArray array2 = new MixedArray(fileName);
         checkArray(array2, size, 1000, 20000);
+        assertTrue(array.equals(array2));
     }
 
     public void testEmptyArray() throws IOException
@@ -160,5 +163,6 @@ public class MixedArrayTest extends TestCase
 
         MixedArray array2 = new MixedArray(fileName);
         checkArray(array2, size, 0, 0);
+        assertTrue(array.equals(array2));
     }
 }

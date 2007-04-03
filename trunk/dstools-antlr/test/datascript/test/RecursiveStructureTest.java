@@ -94,6 +94,7 @@ RecursiveData(uint8 byteCount)
 
         RecursiveStructure rs2 = new RecursiveStructure(wFileName);
         checkData(rs2, size, 0x38, 3);
+        assertTrue(rs.equals(rs2));
     }
 
     public void testRecursiveStructure2() throws IOException
@@ -106,5 +107,6 @@ RecursiveData(uint8 byteCount)
 
         RecursiveStructure rs2 = new RecursiveStructure(wFileName);
         checkData(rs2, size, 255, 5);
+        assertTrue(rs.equals(rs2));
     }
 }

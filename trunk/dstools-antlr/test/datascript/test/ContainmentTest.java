@@ -100,5 +100,6 @@ public class ContainmentTest extends TestCase
 
         Outer outer2 = new Outer(wFileName);
         checkData(outer2, size, a, length, c, d, e);
+        assertTrue(outer.equals(outer2));
     }
 }

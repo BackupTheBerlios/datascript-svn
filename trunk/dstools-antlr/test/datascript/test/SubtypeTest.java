@@ -80,6 +80,7 @@ public class SubtypeTest extends TestCase
 
         Tile u2 = new Tile(wFileName);
         checkSubtype(u2, size, 200, 12);
+        assert(u.equals(u2));
     }
 
     public void testUnsigned2() throws IOException
@@ -92,6 +93,7 @@ public class SubtypeTest extends TestCase
 
         Tile u2 = new Tile(wFileName);
         checkSubtype(u2, size, 40000, 0xCAFECAFEL);
+        assert(u.equals(u2));
     }
 
     public void testUnsigned3() throws IOException
@@ -104,5 +106,6 @@ public class SubtypeTest extends TestCase
 
         Tile u2 = new Tile(wFileName);
         checkSubtype(u2, size, 4, 10000);
+        assert(u.equals(u2));
     }
 }

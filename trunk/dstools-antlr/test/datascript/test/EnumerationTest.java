@@ -85,6 +85,7 @@ public class EnumerationTest extends TestCase
         
         Enums e2 = new Enums(wFileName);
         checkEnums(e2, size, Colour.RED, Colour.BLUE, Dimension.HEIGHT, Dimension.LENGTH);
+        assertTrue(e.equals(e2));
     }
 
     public void testUnsigned2() throws IOException
@@ -97,6 +98,7 @@ public class EnumerationTest extends TestCase
         
         Enums e2 = new Enums(wFileName);
         checkEnums(e2, size, Colour.GREEN, Colour.YELLOW, Dimension.WIDTH, Dimension.HEIGHT);
+        assertTrue(e.equals(e2));
     }
 
     public void testUnsigned3() throws IOException
@@ -109,5 +111,6 @@ public class EnumerationTest extends TestCase
         
         Enums e2 = new Enums(wFileName);
         checkEnums(e2, size, Colour.YELLOW, Colour.BLUE, Dimension.HEIGHT, Dimension.WIDTH);
+        assertTrue(e.equals(e2));
     }
 }

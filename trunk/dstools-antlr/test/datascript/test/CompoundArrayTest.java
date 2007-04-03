@@ -106,6 +106,7 @@ public class CompoundArrayTest extends TestCase
 
         CompoundArray array2 = new CompoundArray(wFileName);
         checkArray(array2, size, 5, 20, 100000);
+        assertTrue(array.equals(array2));
     }
 
     public void testArray2() throws IOException
@@ -119,5 +120,6 @@ public class CompoundArrayTest extends TestCase
 
         CompoundArray array2 = new CompoundArray(wFileName);
         checkArray(array2, size, 5000, 29000, 100000);
+        assertTrue(array.equals(array2));
     }
 }

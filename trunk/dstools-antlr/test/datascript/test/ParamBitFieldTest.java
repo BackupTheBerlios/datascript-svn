@@ -104,6 +104,7 @@ public class ParamBitFieldTest extends TestCase
 
         VarBitField var2 = new VarBitField(wFileName);
         checkBitField(var2, size, 5, 10, 20);
+        assertTrue(var.equals(var2));
     }
 
     public void testBitField2() throws IOException
@@ -116,6 +117,7 @@ public class ParamBitFieldTest extends TestCase
 
         VarBitField var2 = new VarBitField(wFileName);
         checkBitField(var2, size, 5, 15, 27);
+        assertTrue(var.equals(var2));
     }
 
     public void testBitField3() throws IOException
@@ -128,5 +130,6 @@ public class ParamBitFieldTest extends TestCase
 
         VarBitField var2 = new VarBitField(wFileName);
         checkBitField(var2, size, 10, 500, 1000);
+        assertTrue(var.equals(var2));
     }
 }

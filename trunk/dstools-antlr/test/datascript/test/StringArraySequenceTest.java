@@ -69,6 +69,7 @@ public class StringArraySequenceTest extends TestCase
 
         StringArraySequence sa2 = new StringArraySequence(wFileName);
         checkStringSequence(sa2, size, "Test1", testPattern);
+        assertTrue(sa.equals(sa2));
     }
 
 }

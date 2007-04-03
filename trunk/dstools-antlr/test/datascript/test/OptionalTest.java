@@ -99,6 +99,7 @@ Optional
 
         Optional opt2 = new Optional(wFileName);
         checkData(opt2, size, 97, 1000, 0, ia, 2000);
+        assertTrue(opt.equals(opt2));
     }
 
     public void testOptional2() throws IOException
@@ -113,6 +114,7 @@ Optional
 
         Optional opt2 = new Optional(wFileName);
         checkData(opt2, size, 98, 1000, 0, ia, 2000);
+        assertTrue(opt.equals(opt2));
     }
 
     public void testOptional3() throws IOException
@@ -127,5 +129,6 @@ Optional
 
         Optional opt2 = new Optional(wFileName);
         checkData(opt2, size, 99, 1000, 123456, ia, 2000);
+        assertTrue(opt.equals(opt2));
     }
 }

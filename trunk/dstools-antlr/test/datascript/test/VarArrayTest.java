@@ -95,6 +95,7 @@ public class VarArrayTest extends TestCase
 
         VarArray array2 = new VarArray(wFileName);
         checkArray(array2, size, 2, 20);
+        assertTrue(array.equals(array2));
     }
 
     public void testArray2() throws IOException
@@ -107,6 +108,7 @@ public class VarArrayTest extends TestCase
 
         VarArray array2 = new VarArray(wFileName);
         checkArray(array2, size, 10, 2000);
+        assertTrue(array.equals(array2));
     }
 
     public void testArray3() throws IOException
@@ -119,5 +121,6 @@ public class VarArrayTest extends TestCase
 
         VarArray array2 = new VarArray(wFileName);
         checkArray(array2, size, 100, 20000);
+        assertTrue(array.equals(array2));
     }
 }

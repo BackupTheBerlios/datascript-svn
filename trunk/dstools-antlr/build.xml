@@ -11,18 +11,26 @@
   <property name="classes" value="${build}/classes"/>
   <property name="antlr" value="${basedir}/antlr"/>
   <property name="antlr.out" value="${gen}/datascript/antlr"/>
+  
+  <!--property name="eclipse.plugins.dir" value="C:/Programme/Eclipse-3.2/eclipse/plugins"/-->
 
   
   <taskdef name="jetc" classname="ch.paranor.epla.structure.JETCTask">
     <classpath>
       <pathelement location="${basedir}/lib/jetc-task.jar"/>
       <!--fileset dir="${eclipse.plugins.dir}">
-        <include name="org.eclipse.core.boot_2.1.0/boot.jar"/>
-        <include name="org.eclipse.core.resources_2.1.0/resources.jar"/>
-        <include name="org.eclipse.core.runtime_2.1.0/runtime.jar"/>
+        <include name="org.eclipse.core.boot_3.1.100.v20060603.jar"/>
+        <include name="org.eclipse.core.resources_3.2.1.R32x_v20060914.jar"/>
+        <include name="org.eclipse.core.runtime_3.2.0.v20060603.jar"/>
 
-        <include name="org.eclipse.emf.codegen_1.1.0/runtime/codegen.jar"/>
-        <include name="org.eclipse.jdt.core_2.1.0/jdtcore.jar"/>
+        <include name="org.eclipse.emf.codegen_2.2.1.v200609210005.jar"/>
+        <include name="org.eclipse.emf.common_2.2.1.v200609210005.jar"/>
+        <include name="org.eclipse.jdt.core_3.2.1.v_677_R32x.jar"/>
+        <include name="org.eclipse.equinox.common_3.2.0.v20060603.jar"/>
+        <include name="org.eclipse.core.jobs_3.2.0.v20060603.jar"/>
+        <include name="org.eclipse.jface.text_3.2.1.r321_v20060810.jar"/>
+        <include name="org.eclipse.text_3.2.0.v20060605-1400.jar"/>
+        <include name="org.eclipse.equinox.preferences_3.2.1.R32x_v20060717.jar"/>
       </fileset-->
     </classpath>
   </taskdef>

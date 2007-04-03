@@ -84,6 +84,7 @@ public class UnsignedTest extends TestCase
 
         bits.Unsigned u2 = new bits.Unsigned(wFileName);
         checkUnsigned(u2, size, 10, 200, 12, 10000);
+        assertTrue(u.equals(u2));
     }
 
     public void testUnsigned2() throws IOException
@@ -96,6 +97,7 @@ public class UnsignedTest extends TestCase
 
         bits.Unsigned u2 = new bits.Unsigned(wFileName);
         checkUnsigned(u2, size, 200, 40000, 0xCAFECAFEL, 10000);
+        assertTrue(u.equals(u2));
     }
 
     public void testUnsigned3() throws IOException
@@ -108,5 +110,6 @@ public class UnsignedTest extends TestCase
 
         bits.Unsigned u2 = new bits.Unsigned(wFileName);
         checkUnsigned(u2, size, 2, 3, 4, 10000);
+        assertTrue(u.equals(u2));
     }
 }

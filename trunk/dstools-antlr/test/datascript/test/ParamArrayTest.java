@@ -106,5 +106,6 @@ public class ParamArrayTest extends TestCase
 
         ParamArray array2 = new ParamArray(wFileName);
         checkArray(array2, size, (short) 3, (byte) 30, sizes);
+        assertTrue(array.equals(array2));
     }
 }
