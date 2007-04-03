@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="psi/" path="src" kind="src"/>
+	<classpathentry path="test" output="build/test/classes" kind="src"/>
+	<classpathentry path="build/gen" kind="src"/>
+	<classpathentry path="examples" kind="src"/>
+	<classpathentry path="lib/jetc-task.jar" kind="lib"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
+	<classpathentry path="lib/antlr.jar" kind="lib"/>
+	<classpathentry path="lib/junit.jar" kind="lib"/>
+	<classpathentry path="lib/sqlitejdbc.jar" kind="lib"/>
+	<classpathentry path="build/classes" kind="output"/>
+</classpath>
