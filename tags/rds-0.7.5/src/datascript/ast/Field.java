@@ -37,6 +37,7 @@
  */
 package datascript.ast;
 
+import datascript.antlr.DataScriptParserTokenTypes;
 import antlr.collections.AST;
 
 public class Field extends TokenAST
@@ -177,6 +178,20 @@ public class Field extends TokenAST
     public void setDocumentation(AST doc)
     {
         documentation = (TokenAST)doc;
+    }
+    
+    public String getSqlConstraint()
+    {
+    	String result = "";
+        AST node = findFirstChildOfType(DataScriptParserTokenTypes.SQL);
+        if (node != null)
+        {
+        	String text = node.getFirstChild().getText();
+        	if (text.length() > 0)
+        		result = text.substring(1, text.length()-1);
+        }
+        return result;
+    	
     }
     
     public String toString()

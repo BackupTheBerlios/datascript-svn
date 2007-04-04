@@ -100,19 +100,6 @@ public class Subtype extends TokenAST implements TypeInterface
         return baseType.castFrom(val);
     }
 
-    private AST findFirstChildOfType(int type)
-    {
-        AST node = getFirstChild();
-        for (; node != null; node = node.getNextSibling())
-        {
-            if (node.getType() == type)
-            {
-                return node;
-            }
-        }
-        return null;
-    }   
-
     public String getDocumentation()
     {
         String result = "";

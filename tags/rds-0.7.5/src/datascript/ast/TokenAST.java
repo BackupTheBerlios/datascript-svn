@@ -109,6 +109,21 @@ public class TokenAST extends BaseAST
     public void setType(int ttype) {
         token.setType(ttype);
     }
+    
+    public AST findFirstChildOfType(int type)
+    {
+        for (AST node = getFirstChild(); node != null; 
+             node = node.getNextSibling())
+        {
+            if (node.getType() == type)
+            {
+                return node;
+            }
+        }
+        return null;
+    }    
+
+    
 }
 
 

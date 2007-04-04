@@ -66,15 +66,12 @@ public class <%=name%>
     public <%=name%>(SqlDatabase db) throws SQLException
     {
         this.db = db;
-        Connection dbc = db.getConnection();
     }
     
     public void createTable(String __tableName) throws SQLException
     {
         Connection dbc = db.getConnection();
         this.tableName = __tableName;
-        //insertRow = dbc.prepareStatement(
-        //    "INSERT OR REPLACE INTO " + __tableName + " values(<%=q%>)");
         Statement st = dbc.createStatement();
         StringBuilder query = new StringBuilder("CREATE TABLE ");
         query.append(__tableName);
@@ -86,8 +83,9 @@ public class <%=name%>
         String comma = (fieldCount == 0) ? "" : ", ";
         String fname = f.getName();
         String sqlType = ste.getTypeName(f.getFieldType());
+        String sql = f.getSqlConstraint();
 %>    
-        query.append("<%=comma%><%=fname%> <%=sqlType%>  NOT NULL");
+        query.append("<%=comma%><%=fname%> <%=sqlType%>  NOT NULL <%=sql%>");
 <%
         fieldCount++;
     }
