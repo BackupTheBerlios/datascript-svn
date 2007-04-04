@@ -41,19 +41,6 @@ public class SqlDatabaseType extends CompoundType
         return (SqlMetadataType)node;        
     }
 
-    private AST findFirstChildOfType(int type)
-    {
-        for (AST node = getFirstChild(); node != null; 
-             node = node.getNextSibling())
-        {
-            if (node.getType() == type)
-            {
-                return node;
-            }
-        }
-        return null;
-    }    
-
     public String getDocumentation()
     {
         String result = "";
