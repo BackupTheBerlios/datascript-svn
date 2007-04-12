@@ -80,5 +80,8 @@ public class SequenceType extends CompoundType
         throw new ComputeError("isMember not implemented");
     }
 
-
+    public String toString()
+    {
+        return "SEQUENCE";
+    }
 }

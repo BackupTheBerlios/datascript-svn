@@ -83,7 +83,7 @@ public class StringType extends TokenAST implements TypeInterface
 */
     public String toString()
     {
-        return "string";
+        return "STRING";
     }
 
 }

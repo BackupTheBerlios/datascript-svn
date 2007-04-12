@@ -53,6 +53,7 @@ options
 
 tokens
 {
+	ENUM;
     FIELD<AST=datascript.ast.Field>;
     SEQUENCE<AST=datascript.ast.SequenceType>;
     UNION<AST=datascript.ast.UnionType>;
@@ -133,8 +134,7 @@ tokens
 
 
 translationUnit
-    : (packageDeclaration)? (importDeclaration)*
-      declarationList EOF!
+    : (packageDeclaration)? (importDeclaration)* declarationList EOF!
       { #translationUnit = #([ROOT, "ROOT"], translationUnit); }
     ;    
 
@@ -150,7 +150,7 @@ importDeclaration
 
 declarationList
     :   ((d:DOC!)? declaration[#d])*
-        { #declarationList = #([MEMBERS], declarationList); }
+        { #declarationList = #([MEMBERS, "MEMBERS"], declarationList); }
     ;
 
 
@@ -216,7 +216,7 @@ enumDeclaration
 
 enumMemberList
     : LCURLY! enumItem (COMMA! enumItem)* RCURLY!
-      { #enumMemberList = #([MEMBERS], enumMemberList); }
+      { #enumMemberList = #([MEMBERS, "ENUM_MEMBER"], enumMemberList); }
     ;
 
 enumItem
@@ -254,11 +254,11 @@ fieldDefinition![AST d]
         ( (zipModifier typeReference ID arrayRange) => z:zipModifier )?
         t:typeReference
         (f:ID)? 
-        (a:arrayRange {#t = #([ARRAY, "ARRAY"], t, a); } )?
+        (a:arrayRange {#t = #([ARRAY], t, a); } )?
         (i:fieldInitializer)? 
         (o:fieldOptionalClause)?
         (c:fieldCondition)?
-        { #fieldDefinition = #([FIELD, "field"], t, f, i, o, c, d, l, z); }
+        { #fieldDefinition = #([FIELD], t, f, i, o, c, d, l, z); }
     ;
 
 typeArgumentList
@@ -299,7 +299,7 @@ typeReference
 
 paramTypeInstantiation
     :   definedType typeArgumentList
-        { #paramTypeInstantiation = #([INST, "INST"], paramTypeInstantiation); }
+        { #paramTypeInstantiation = #([INST], paramTypeInstantiation); }
     ;
 
 sequenceDeclaration!
@@ -310,11 +310,11 @@ sequenceDeclaration!
         m:memberList
         { if (u == null)
           {
-              #sequenceDeclaration = #([SEQUENCE, "sequence"], n, p, m); 
+              #sequenceDeclaration = #([SEQUENCE], n, p, m);
           }
           else
           {
-              #sequenceDeclaration = #([UNION, "union"], n, p, m); 
+              #sequenceDeclaration = #([UNION], n, p, m); 
           }
         } 
     ;
@@ -380,14 +380,14 @@ modifier
 	;
 
 zipModifier
-	:	"zip"! { #zipModifier = #([ZIP], #zipModifier); }
+	:	"zip"! { #zipModifier = #([ZIP, "ZIP"], #zipModifier); }
 	;
 
 byteOrderModifier
     :   "big"!
-        { #byteOrderModifier = #([BIG], #byteOrderModifier); }
+        { #byteOrderModifier = #([BIG, "BIG_ENDIAN"], #byteOrderModifier); }
     |   "little"!
-        { #byteOrderModifier = #([LITTLE], #byteOrderModifier); }
+        { #byteOrderModifier = #([LITTLE, "LITTLE_ENDIAN"], #byteOrderModifier); }
     ;
 
 arrayRange
@@ -433,12 +433,12 @@ sqlMetadataField!
       (i:fieldInitializer)? 
       (c:fieldCondition)?
       SEMICOLON!
-      { #sqlMetadataField = #([FIELD, "field"], t, f, i, c, d); }
+      { #sqlMetadataField = #([FIELD], t, f, i, c, d); }
     ;    
 
 sqlTableField
     : (DOC)? sqlTableDefinition
-      { #sqlTableField = #([FIELD, "FIELD"], #sqlTableField); }
+      { #sqlTableField = #([FIELD], #sqlTableField); }
     ;
       
 sqlTableDefinition
@@ -461,17 +461,17 @@ sqlTableReference
     
 sqlFieldDefinition!
     : (d:DOC)? t:definedType i:ID (c:fieldCondition)? (k:"sql_key")? (s:sqlConstraint)? SEMICOLON!
-      { #sqlFieldDefinition = #([FIELD, "field"], t, i, c, k, s, d); }
+      { #sqlFieldDefinition = #([FIELD], t, i, c, k, s, d); }
     ;
     
 sqlConstraint
     : "sql"! STRING_LITERAL (COMMA! STRING_LITERAL)*     
-      { #sqlConstraint = #([SQL], #sqlConstraint); }
+      { #sqlConstraint = #([SQL, "SQL_CONSTRAINT"], #sqlConstraint); }
     ;  
     
 sqlIntegerDeclaration!
     : (d:DOC)? "sql_integer"! LCURLY! s:sqlIntegerFields RCURLY! SEMICOLON!
-      { #sqlIntegerDeclaration = #([SQL_INTEGER, "SQL_INTEGER"], d, s); }
+      { #sqlIntegerDeclaration = #([SQL_INTEGER], d, s); }
     ;
     
 sqlIntegerFields
@@ -480,7 +480,7 @@ sqlIntegerFields
     
 sqlIntegerFieldDefinition!
     : (d:DOC)? t:integerType i:ID (c:fieldCondition)? SEMICOLON!
-      { #sqlIntegerFieldDefinition = #([FIELD, "FIELD"], t, i, c, d); }
+      { #sqlIntegerFieldDefinition = #([FIELD], t, i, c, d); }
     ;    
     
 /*********************************************************************/

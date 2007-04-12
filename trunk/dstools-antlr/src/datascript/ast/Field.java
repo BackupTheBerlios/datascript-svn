@@ -196,7 +196,8 @@ public class Field extends TokenAST
     
     public String toString()
     {
-        return getName();
+        //return getName();
+        return (name == null) ? "FIELD" : name.getText(); 
         //return "Field name='" + name + "' type='" + getFieldType() + "' compound='"
         //        + compound + "'";
     }

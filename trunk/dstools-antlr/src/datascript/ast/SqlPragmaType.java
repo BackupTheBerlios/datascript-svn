@@ -26,5 +26,8 @@ public class SqlPragmaType extends CompoundType
         throw new UnsupportedOperationException("isMember not implemented");
     }
 
-
+    public String toString()
+    {
+        return "SQL_PRAGMA";
+    }
 }

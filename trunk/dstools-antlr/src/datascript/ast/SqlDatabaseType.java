@@ -52,4 +52,8 @@ public class SqlDatabaseType extends CompoundType
         return result;
     }
 
+    public String toString()
+    {
+        return "SQL_DATABASE";
+    }
 }

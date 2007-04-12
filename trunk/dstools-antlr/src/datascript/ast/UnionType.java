@@ -65,4 +65,8 @@ public class UnionType extends CompoundType
         throw new ComputeError("isMember not implemented");
     }
 
+    public String toString()
+    {
+        return "UNION";
+    }
 }

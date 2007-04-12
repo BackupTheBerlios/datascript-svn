@@ -99,4 +99,9 @@ public class EnumItem extends TokenAST
     {
         return value;
     }
+
+    public String toString()
+    {
+        return "ENUM_ITEM";
+    }
 }

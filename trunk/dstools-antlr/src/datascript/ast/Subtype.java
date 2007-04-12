@@ -110,4 +110,9 @@ public class Subtype extends TokenAST implements TypeInterface
         }
         return result;
     }
+
+    public String toString()
+    {
+        return "SUBTYPE";
+    }
 }

@@ -74,4 +74,9 @@ public class EnumType extends SetType
             }            
         };
     }
+
+    public String toString()
+    {
+        return "ENUM";
+    }
 }
