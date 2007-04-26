@@ -38,13 +38,18 @@
  */
 %>
 <%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.java.*" 
+        imports="datascript.emit.java.*" 
         class="DepthFirstVisitor" %>
 <% 
     DepthFirstVisitorEmitter global = (DepthFirstVisitorEmitter) argument;
     String pkg = global.getPackageName(); 
 %>
+
 <%@include file="FileHeader.inc"%>
+// DS-Import
+<%=global.getPackageImports()%>
+
+
 public class __DepthFirstVisitor implements __Visitor
 {
     public void visitInt8(byte n, Object arg) {};

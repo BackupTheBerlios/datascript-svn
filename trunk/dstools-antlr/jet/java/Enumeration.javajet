@@ -49,6 +49,10 @@
     String cast = baseType.equals("int") ? "" : ("(" + baseType + ")");
 %>
 <%@include file="FileHeader.inc"%>
+// DS-Import
+<%=e.getGlobal().getPackageImports()%>
+
+
 public enum <%=name%> implements SizeOf
 {
     <%

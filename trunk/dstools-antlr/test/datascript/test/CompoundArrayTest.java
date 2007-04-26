@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
-import bits.CompoundArray;
+import bits.arrays.CompoundArray;
 import bits.ItemA;
 import bits.ItemB;
 import datascript.runtime.array.ObjectArray;

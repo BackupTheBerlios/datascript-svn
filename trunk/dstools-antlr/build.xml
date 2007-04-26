@@ -156,7 +156,7 @@
         <pathelement path="${gen}"/>
         <pathelement path="${lib}/antlr.jar"/>
       </classpath>
-      <arg line="-pkg bits bits.ds"/>
+      <arg line="-c -out ${test} -pkg bits -path scripts bits.ds"/>
     </java>
   </target>
 
@@ -197,7 +197,7 @@
         <pathelement path="${gen}"/>
         <pathelement path="${lib}/antlr.jar"/>
       </classpath>
-      <arg line="-pkg sqltest sqltest.ds"/>
+      <arg line="-c -out ${test} -pkg sqltest -path scripts sqltest.ds"/>
     </java>
   </target>
 
@@ -218,7 +218,7 @@
         <pathelement path="${gen}"/>
         <pathelement path="${lib}/antlr.jar"/>
       </classpath>
-      <arg line="-pkg gif gif.ds"/>
+      <arg line="-c -out ${examples} -pkg gif gif.ds"/>
     </java>
   </target>
 

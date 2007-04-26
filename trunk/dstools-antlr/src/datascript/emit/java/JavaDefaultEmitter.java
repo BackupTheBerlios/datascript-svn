@@ -38,31 +38,115 @@
 package datascript.emit.java;
 
 import java.io.File;
+import java.util.HashSet;
 
+import antlr.collections.AST;
+
+import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.TypeInterface;
 import datascript.emit.DefaultEmitter;
 
-public class JavaDefaultEmitter extends DefaultEmitter
+abstract public class JavaDefaultEmitter extends DefaultEmitter
 {
-    protected static String JAVA_EXT = ".java";
+    protected static final String JAVA_EXT = ".java";
     protected String packageName;
+    protected String packagePath;
     protected File dir;
-    private TypeNameEmitter typeEmitter = new TypeNameEmitter();
-    
+    private final HashSet<String> allPackageNames = new HashSet<String>();
+
+
+
+    public JavaDefaultEmitter(String outPathName, String defaultPackageName, AST rootNode)
+    {
+        findAllPackageNames(rootNode, allPackageNames);
+
+        packagePath = outPathName;
+        packageName = defaultPackageName;
+        dir = new File(packagePath, packageName.replace('.', File.separatorChar));
+    }
+
+
     public void setPackageName(String packageName)
     {
         this.packageName = packageName;
-        dir = new File(packageName);
+        dir = new File(packagePath, packageName.replace('.', File.separatorChar));
     }
+
+
+    public void setPackageName(AST packageNode)
+    {
+        if (packageNode != null && packageNode.getType() == DataScriptParserTokenTypes.PACKAGE)
+        {
+            AST sibling = packageNode.getFirstChild();
+            String fileName = sibling.getText();
+            File file = new File(fileName);
+            while (true)
+            {
+                sibling = sibling.getNextSibling();
+                if (sibling == null)
+                    break;
+                
+                file = new File(file, sibling.getText());
+            }
+            packageName = file.getPath().replace(File.separatorChar, '.');
+            dir = new File(packagePath, file.getPath());
+        }
+    }
+
+
+    public String getPackageImports()
+    {
+        StringBuilder buffer = new StringBuilder();
+        java.util.Set<String> importNames = getImportNameList();
+        for (String importName : importNames)
+        {
+            if (true && !allPackageNames.contains(importName))
+            {
+                System.err.println("WARNING: could not found package " + importName);
+                continue;
+            }
+            buffer.append("import ");
+            buffer.append(importName);
+            buffer.append(".*;");
+            buffer.append(System.getProperties().getProperty("line.separator"));
+        }
+        return buffer.toString();
+    }
+
+
+    private void findAllPackageNames(AST startNode, java.util.Set<String> names)
+    {
+        AST silbling = startNode;
+        while (silbling != null && silbling.getType() != DataScriptParserTokenTypes.ROOT)
+            silbling = silbling.getNextSibling();
+
+        if (silbling != null)
+        {
+            silbling = silbling.getFirstChild();
+            getPackageNameList(silbling, names);
+        }
+        while (silbling != null)
+        {
+            while (silbling != null && silbling.getType() != DataScriptParserTokenTypes.IMPORT)
+                silbling = silbling.getNextSibling();
+            if (silbling != null)
+            {
+                findAllPackageNames(silbling.getFirstChild(), names);
+                silbling = silbling.getNextSibling();
+            }
+        }
+    }
+
 
     public String getPackageName()
     {
         return packageName;
     }
 
+
     public String getTypeName(TypeInterface type)
     {
-        return typeEmitter.getTypeName(type);
+        return TypeNameEmitter.getTypeName(type);
     }
-    
+
 }

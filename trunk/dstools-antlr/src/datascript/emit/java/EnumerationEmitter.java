@@ -54,43 +54,45 @@ public class EnumerationEmitter
     private PrintStream out;
     private Enumeration enumTmpl;
     
+
     public EnumerationEmitter(JavaEmitter j, EnumType e)
     {
         this.global = j;
         this.enumType = e;
         enumTmpl = new Enumeration();
     }
+
+
     public JavaEmitter getGlobal()
     {
         return global;
     }
 
-    
+
     public String getName()
     {
         return enumType.getName();
     }
-    
+
     public EnumType getEnumerationType()
     {
         return enumType;
     }
-    
+
     public void setOutputStream(PrintStream out)
     {
         this.out = out;
     }
-    
+
     public String getBaseType()
     {
         if (javaType == null)
         {
-            TypeNameEmitter te = new TypeNameEmitter();
-            javaType = te.getTypeName(enumType.getBaseType());
+            javaType = TypeNameEmitter.getTypeName(enumType.getBaseType());
         }
         return javaType;
     }
-    
+
     public void emit(EnumType enumType)
     {
         String result = enumTmpl.generate(this);

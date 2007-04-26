@@ -69,7 +69,7 @@ public interface TypeInterface
 
     public int getLength();
     
-    //public String getName();
+    public String getName();
 
     public Expression getLengthExpression();
 

@@ -37,6 +37,8 @@
  */
 package datascript.emit.java;
 
+import java.io.PrintStream;
+
 import datascript.ast.CompoundType;
 import datascript.ast.Field;
 import datascript.ast.Parameter;
@@ -54,30 +56,41 @@ public class SequenceEmitter extends CompoundEmitter
     private SequenceEnd endTmpl = new SequenceEnd();
     private SequenceRead readTmpl = new SequenceRead();
     private SequenceWrite writeTmpl = new SequenceWrite();
-    private TypeNameEmitter tne = new TypeNameEmitter();
-    
+
+
     public SequenceEmitter(JavaDefaultEmitter j, SequenceType sequence)
     {
         super(j);
         seq = sequence;
         fieldEmitter = new SequenceFieldEmitter(this);
     }
-   
+
+
+    public void setOutputStream(PrintStream out)
+    {
+        super.setOutputStream(out);
+        fieldEmitter.setOutputStream(out);
+    }
+
+
     public SequenceType getSequenceType()
     {
         return seq;
     }
-    
+
+
     public CompoundType getCompoundType()
     {
         return seq;
-    }        
+    }
+
 
     public FieldEmitter getFieldEmitter()
     {
         return fieldEmitter;
     }
-    
+
+
     public void begin()
     {
         //reset();
@@ -99,6 +112,7 @@ public class SequenceEmitter extends CompoundEmitter
         result = writeTmpl.generate(this);
         out.print(result);
     }
+
 
     public void end()
     {

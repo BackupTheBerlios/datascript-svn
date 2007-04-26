@@ -44,10 +44,6 @@
     SequenceEmitter e = (SequenceEmitter) argument;
     SequenceType s = e.getSequenceType();
     String name = s.getName();
-    ExpressionEmitter ee = new ExpressionEmitter(); 
-    String formalPar = e.getFormalParameterList();
-    String actualPar = e.getActualParameterList();
-    TypeNameEmitter tne = new TypeNameEmitter();
 %>
 
 	// Contructor for <%=name%> 
@@ -58,7 +54,7 @@
     for (Field field : s.getFields())    
     {
     	String fieldName = field.getName();
-    	String fieldType = tne.getTypeName(field.getFieldType());
+    	String fieldType = TypeNameEmitter.getTypeName(field.getFieldType());
     	String sep = (fieldCount == numFields-1) ? "" : ", ";
 %>
         <%=fieldType%> <%=fieldName%><%=sep%> 

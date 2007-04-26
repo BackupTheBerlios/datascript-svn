@@ -44,7 +44,6 @@
     SqlTableEmitter e = (SqlTableEmitter) argument;
     String pkg = e.getGlobal().getPackageName();
     SqlTableType table = e.getSqlTableType();
-    SqlTypeNameEmitter ste = new SqlTypeNameEmitter();
     String name = table.getName();
     
     String q = "?";
@@ -54,8 +53,11 @@
     }
 %>
 <%@include file="FileHeader.inc"%>
+// DS-Import
+<%=e.getGlobal().getPackageImports()%>
 
 import java.sql.*;
+
 
 public class <%=name%>
 {
@@ -82,7 +84,7 @@ public class <%=name%>
     {
         String comma = (fieldCount == 0) ? "" : ", ";
         String fname = f.getName();
-        String sqlType = ste.getTypeName(f.getFieldType());
+        String sqlType = SqlTypeNameEmitter.getTypeName(f.getFieldType());
         String sql = f.getSqlConstraint();
 %>    
         query.append("<%=comma%><%=fname%> <%=sqlType%>  NOT NULL <%=sql%>");

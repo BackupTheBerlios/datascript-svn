@@ -13,7 +13,7 @@ import bits.AnyItem;
 import bits.ItemA;
 import bits.ItemB;
 import bits.ItemC;
-import bits.MixedArray;
+import bits.arrays.MixedArray;
 
 /**
  * @author HWellmann

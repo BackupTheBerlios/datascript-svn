@@ -43,12 +43,11 @@
 <% 
     UnionFieldEmitter e = (UnionFieldEmitter) argument;
     Field field = e.getField();
-    TypeNameEmitter t = new TypeNameEmitter();
-    String type = t.getTypeName(field.getFieldType());
-    String cls  = t.getClassName(field.getFieldType());
+    String type = TypeNameEmitter.getTypeName(field.getFieldType());
+    String cls  = TypeNameEmitter.getClassName(field.getFieldType());
     String fname = field.getName();
     AccessorNameEmitter ane = new AccessorNameEmitter();
-    String getter = ane.getGetterName(field);
+    String getter = AccessorNameEmitter.getGetterName(field);
     String setter = ane.getSetterName(field);
     String checker = ane.getCheckerName(field);
 %>

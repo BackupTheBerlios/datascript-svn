@@ -40,13 +40,18 @@
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
         class="SequenceBegin" %>
-<% 
+<%
     SequenceEmitter e = (SequenceEmitter) argument;
     SequenceType s = e.getSequenceType();
     String name = s.getName();
     String pkg = e.getGlobal().getPackageName(); 
 %>
+
 <%@include file="FileHeader.inc"%>
+// DS-Import
+<%=e.getGlobal().getPackageImports()%>
+
+
 public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
 {
     long __fpos;

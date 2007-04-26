@@ -44,7 +44,6 @@
     SqlTableEmitter e = (SqlTableEmitter) argument;
     String pkg = e.getGlobal().getPackageName();
     SqlTableType table = e.getSqlTableType();
-    SqlTypeNameEmitter ste = new SqlTypeNameEmitter();
     String name = table.getName(); 
 %>
 <%@include file="FileHeader.inc"%>
@@ -72,7 +71,7 @@ public class <%=name%>Row
     {
         String comma = (fieldCount == 0) ? "" : ", ";
         String fname = f.getName();
-        String sqlType = ste.getTypeName(f.getFieldType());
+        String sqlType = SqlTypeNameEmitter.getTypeName(f.getFieldType());
 %>    
         query.append("<%=comma%><%=fname%> <%=sqlType%>  NOT NULL");
 <%

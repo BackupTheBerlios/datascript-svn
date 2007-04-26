@@ -44,15 +44,17 @@
     SqlDatabaseEmitter e = (SqlDatabaseEmitter) argument;
     String pkg = e.getGlobal().getPackageName();
     SqlDatabaseType s = e.getSqlDatabaseType();
-    TypeNameEmitter tne = new TypeNameEmitter();
     ExpressionEmitter exprEm = new ExpressionEmitter();
     String name = s.getName();
     SqlPragmaType p = s.getPragma(); 
     SqlMetadataType m = s.getMetadata(); 
 %>
 <%@include file="FileHeader.inc"%>
+// DS-Import
+<%=e.getGlobal().getPackageImports()%>
 
 import java.sql.*;
+
 
 public class <%=name%> extends SqlDatabase
 {
@@ -60,7 +62,7 @@ public class <%=name%> extends SqlDatabase
     for (Field f : s.getFields())
     {
         String fname = f.getName();
-        String type =  tne.getTypeName(f.getFieldType());    
+        String type =  TypeNameEmitter.getTypeName(f.getFieldType());    
 %>    
     private <%=type%> <%=fname%> = new <%=type%>(this);
 <%

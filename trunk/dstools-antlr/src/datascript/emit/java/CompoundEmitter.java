@@ -63,7 +63,6 @@ import datascript.jet.java.ArrayWrite;
 abstract public class CompoundEmitter
 {
     private JavaDefaultEmitter global;
-    private TypeNameEmitter typeNameEmitter;
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
     private ArrayRead arrayReadTmpl = new ArrayRead();
     private ArrayWrite arrayWriteTmpl = new ArrayWrite();
@@ -78,13 +77,11 @@ abstract public class CompoundEmitter
     public CompoundEmitter(JavaDefaultEmitter j)
     {
         this.global = j;
-        this.typeNameEmitter = new TypeNameEmitter();
         paramEmitter = new ParameterEmitter(this);
     }
 
 
     abstract public CompoundType getCompoundType();
-    abstract public FieldEmitter getFieldEmitter();
 
 
     public JavaDefaultEmitter getGlobal()
@@ -103,7 +100,6 @@ abstract public class CompoundEmitter
     public void setOutputStream(PrintStream out)
     {
         this.out = out;
-        getFieldEmitter().setOutputStream(out);
         paramEmitter.setOutputStream(out);
     }
     
@@ -220,7 +216,7 @@ abstract public class CompoundEmitter
                     if (length < 64)
                     {
                         methodSuffix = "Bits";
-                        cast = "(" + typeNameEmitter.getTypeName(type) + ") ";
+                        cast = "(" + TypeNameEmitter.getTypeName(type) + ") ";
                     }
                     else
                     {
@@ -327,10 +323,10 @@ abstract public class CompoundEmitter
 
     private void readArrayField(Field field, ArrayType array)
     {
-        String elTypeJavaName = typeNameEmitter.getTypeName(array);
+        String elTypeJavaName = TypeNameEmitter.getTypeName(array);
         if (elTypeJavaName.startsWith("ObjectArray"))
         {
-            String elTypeName = typeNameEmitter.getTypeName(array.getElementType());
+            String elTypeName = TypeNameEmitter.getTypeName(array.getElementType());
             ArrayEmitter arrayEmitter = new ArrayEmitter(field, array, 
                     elTypeName);
             String result = arrayReadTmpl.generate(arrayEmitter);
@@ -424,7 +420,7 @@ abstract public class CompoundEmitter
             String paramName = param.getName();
             TypeInterface paramType = TypeReference.resolveType(param.getType());
             
-            String typeName = typeNameEmitter.getTypeName(paramType);
+            String typeName = TypeNameEmitter.getTypeName(paramType);
             formal.append(", ");
             formal.append(typeName);
             formal.append(" ");
@@ -582,7 +578,7 @@ abstract public class CompoundEmitter
                     if (length < 64)
                     {
                         methodSuffix = "Bits";
-                        cast = "(" + typeNameEmitter.getTypeName(type) + ") ";
+                        cast = "(" + TypeNameEmitter.getTypeName(type) + ") ";
                     }
                     else
                     {
@@ -663,10 +659,10 @@ abstract public class CompoundEmitter
     private void writeArrayField(Field field, ArrayType array)
     {
 
-        String elTypeJavaName = typeNameEmitter.getTypeName(array);
+        String elTypeJavaName = TypeNameEmitter.getTypeName(array);
         if (elTypeJavaName.startsWith("ObjectArray"))
         {
-            String elTypeName = typeNameEmitter.getTypeName(array.getElementType());
+            String elTypeName = TypeNameEmitter.getTypeName(array.getElementType());
             ArrayEmitter arrayEmitter = new ArrayEmitter(field, array, elTypeName);
             String result = arrayWriteTmpl.generate(arrayEmitter);
             buffer.append(result);            

@@ -38,13 +38,18 @@
  */
 %>
 <%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.java.*" 
+        imports="datascript.emit.java.*" 
         class="Visitor" %>
 <% 
     VisitorEmitter global = (VisitorEmitter) argument;
     String pkg = global.getPackageName();
 %>
+
 <%@include file="FileHeader.inc"%>
+// DS-Import
+<%=global.getPackageImports()%>
+
+
 public interface __Visitor
 {
     public void visitInt8(byte n, Object arg);

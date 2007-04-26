@@ -36,42 +36,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-%> 
+%>
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
-        class="SequenceFieldAccessor" %>
+        class="SubtypeTmpl" %>
 <% 
-    SequenceFieldEmitter e = (SequenceFieldEmitter) argument;
-    Field field = e.getField();
-    String type =  TypeNameEmitter.getTypeName(field.getFieldType());
-    AccessorNameEmitter ane = new AccessorNameEmitter();
-    String getter = AccessorNameEmitter.getGetterName(field);
-    String setter = ane.getSetterName(field);
-    String indicator = AccessorNameEmitter.getIndicatorName(field);
-    SequenceEmitter se = (SequenceEmitter)e.getCompoundEmitter();
-    String constraint = se.getOptionalClause(field);
+    SubtypeEmitter se = (SubtypeEmitter) argument;
+    String pkg = se.getGlobal().getPackageName();
+    Subtype s = se.getSubtype();
+    String className = s.getName();
+    String superClassName = TypeNameEmitter.getTypeName(s.getBaseType()); //"Object";
 %>
-    private <%=type%> <%=field%>;
-    
-    public <%=type%> <%=getter%>() 
-    { 
-        return <%=field%>; 
-    }
-    
-    public void <%=setter%>(<%=type%> <%=field%>) 
-    { 
-        this.<%=field%> = <%=field%>; 
-    }
-<%
-    if (constraint != null)
-    {
-%>    
+<%@include file="FileHeader.inc"%>
+// DS-Import
+<%=se.getGlobal().getPackageImports()%>
 
-    public boolean <%=indicator%>()
-    {
-        return <%=constraint%>;
-    }
-<%
-    }
-%>            
-
+/**
+ * TODO: no typedef possible in Java, so we have to substitute every
+ * "<%=className%>" to "<%=superClassName%>"
+ **/
+/*
+class <%=className%> extends <%=superClassName%>
+{
+}
+*/

@@ -42,10 +42,8 @@
         class="SequenceRead" %>
 <% 
     SequenceEmitter e = (SequenceEmitter) argument;
-    String pkg = e.getGlobal().getPackageName();
     SequenceType s = e.getSequenceType();
     String name = s.getName();
-    ExpressionEmitter ee = new ExpressionEmitter(); 
     String formalPar = e.getFormalParameterList();
     String actualPar = e.getActualParameterList();
 %>

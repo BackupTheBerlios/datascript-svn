@@ -55,51 +55,224 @@ import datascript.jet.java.DepthFirstUnion;
 import datascript.jet.java.DepthFirstVisitor;
 import datascript.jet.java.SequenceEnd;
 
+
 public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 {
     private DepthFirstVisitor visitorTmpl = new DepthFirstVisitor();
-    private DepthFirstSequence sequenceTmpl = new DepthFirstSequence();
-    private DepthFirstUnion unionTmpl = new DepthFirstUnion();
     private DepthFirstEnumeration enumerationTmpl = new DepthFirstEnumeration();
     private SequenceEnd endTmpl = new SequenceEnd();
-    private SequenceType sequence;
-    private UnionType union;
+
+    protected DepthFirstUnion unionTmpl = new DepthFirstUnion();
+    protected DepthFirstSequence sequenceTmpl = new DepthFirstSequence();
+    protected SequenceType sequence;
+    protected UnionType union;
+    protected boolean TmplGenerated = false;
     protected EnumType enumeration;
     protected ExpressionEmitter exprEmitter = new ExpressionEmitter();
+
+
+
+    public DepthFirstVisitorEmitter(String outPathName, String defaultPackageName, AST rootNode)
+    {
+        super(outPathName, defaultPackageName, rootNode);
+    }
+
 
     public void beginTranslationUnit()
     {
         openOutputFile(dir, "__DepthFirstVisitor.java");
-        String result = visitorTmpl.generate(this);
-        out.print(result);
     }
+
 
     public void endTranslationUnit()
     {
-        String result = endTmpl.generate(this);
-        out.print(result);
+        if (TmplGenerated)
+        {
+            String result = endTmpl.generate(this);
+            out.print(result);
+        }
         out.close();
     }
+    
+    
+    protected final void beginSuperMembers(AST p, AST i)
+    {
+        super.beginMembers(p, i);   
+    }
+
+
+    public void beginImport(AST r)
+    {
+        rootNode.push(r);
+        if (!TmplGenerated)
+        {
+            String result = visitorTmpl.generate(this);
+            out.print(result);
+            TmplGenerated = true;
+        }
+        rootNode.pop();
+    }
+
+
+    public void endImport()
+    {
+    }
+
+
+    public void beginMembers(AST p, AST r)
+    {
+        super.beginMembers(p, r);
+
+        setPackageName(p);
+    }
+
+
+    public void endMembers()
+    {
+        super.endMembers();
+    }
+
 
     public void beginSequence(AST s)
     {
+        if (!TmplGenerated)
+        {
+            String result = visitorTmpl.generate(this);
+            out.print(result);
+            TmplGenerated = true;
+        }
         sequence = (SequenceType) s;
         String result = sequenceTmpl.generate(this);
         out.print(result);
     }
 
+
+    public void endSequence(AST s)
+    {
+    }
+
+
     public void beginUnion(AST u)
     {
+        if (!TmplGenerated)
+        {
+            String result = visitorTmpl.generate(this);
+            out.print(result);
+            TmplGenerated = true;
+        }
         union = (UnionType) u;
         String result = unionTmpl.generate(this);
         out.print(result);
     }
+
+
+    public void endUnion(AST u)
+    {
+    }
+
+
+    public void beginField(AST f)
+    {
+    }
+
+
+    public void endField(AST f)
+    {
+    }
+
+
     public void beginEnumeration(AST e)
     {
+        if (!TmplGenerated)
+        {
+            String result = visitorTmpl.generate(this);
+            out.print(result);
+            TmplGenerated = true;
+        }
         enumeration = (EnumType) e;
         String result = enumerationTmpl.generate(this);
         out.print(result);
     }
+
+
+    public void endEnumeration(AST e)
+    {
+    }
+
+
+    public void beginEnumItem(AST e)
+    {
+    }
+
+
+    public void endEnumItem(AST e)
+    {
+    }
+
+
+    public void beginSubtype(AST s)
+    {
+    }
+
+
+    public void endSubtype(AST s)
+    {
+    }
+
+
+    public void beginSqlDatabase(AST s)
+    {
+    }
+
+
+    public void endSqlDatabase(AST s)
+    {
+    }
+
+
+    public void beginSqlMetadata(AST s)
+    {
+    }
+
+
+    public void endSqlMetadata(AST s)
+    {
+    }
+
+
+    public void beginSqlPragma(AST s)
+    {
+    }
+
+
+    public void endSqlPragma(AST s)
+    {
+    }
+
+
+    public void beginSqlTable(AST s)
+    {
+    }
+
+
+    public void endSqlTable(AST s)
+    {
+    }
+
+
+    public void beginSqlInteger(AST s)
+    {
+    }
+
+
+    public void endSqlInteger(AST s)
+    {
+    }
+
+
+/********************************************************************/
+
+
     public SequenceType getSequenceType()
     {
         return sequence;

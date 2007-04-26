@@ -53,12 +53,12 @@ public class SqlTypeNameEmitter extends TypeNameEmitter
     {
     }
 
-    protected String getTypeName(StdIntegerType t)
+    protected static String getTypeName(StdIntegerType t)
     {
         return "INT";
     }
 
-    protected String getTypeName(BitFieldType t)
+    protected static String getTypeName(BitFieldType t)
     {
         int length = t.getLength();
         if (length < 64)
@@ -67,17 +67,17 @@ public class SqlTypeNameEmitter extends TypeNameEmitter
             return "BLOB";
     }
     
-    protected String getTypeName(CompoundType compound)
+    protected static String getTypeName(CompoundType compound)
     {
         return "BLOB";        
     }
     
-    protected String getTypeName(TypeInstantiation inst)
+    protected static String getTypeName(TypeInstantiation inst)
     {
         return "BLOB";        
     }
     
-    protected String getTypeName(ArrayType array)
+    protected static String getTypeName(ArrayType array)
     {
         return "BLOB";        
     }

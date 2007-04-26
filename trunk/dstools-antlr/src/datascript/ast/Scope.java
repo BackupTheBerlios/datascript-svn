@@ -45,13 +45,13 @@ import datascript.tools.ToolContext;
 
 public class Scope implements Context, LinkAction
 {
-    private HashMap symbolTable = new HashMap();
+    private HashMap<String, Object> symbolTable = new HashMap<String, Object>();
 
     private Context parentScope;
     private CompoundType owner;
     private Field currentField;
 
-    private Vector<LinkAction> linkActions = new Vector();
+    private Vector<LinkAction> linkActions = new Vector<LinkAction>();
 
     public Scope()
     {

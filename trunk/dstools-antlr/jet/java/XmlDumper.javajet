@@ -38,13 +38,17 @@
  */
 %>
 <%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.*" 
+        imports="datascript.emit.*" 
         class="XmlDumper" %>
 <% 
     XmlDumperEmitter global = (XmlDumperEmitter) argument;
     String pkg = global.getPackageName();
 %>
+
 <%@include file="FileHeader.inc"%>
+// DS-Import
+<%=global.getPackageImports()%>
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

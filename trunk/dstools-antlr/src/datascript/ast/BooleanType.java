@@ -37,6 +37,8 @@
  */
 package datascript.ast;
 
+import antlr.collections.AST;
+
 public class BooleanType extends TokenAST implements TypeInterface
 {
     static BooleanType booleanType = new BooleanType();
@@ -59,6 +61,16 @@ public class BooleanType extends TokenAST implements TypeInterface
     public String toString()
     {
         return "boolean";
+    }
+
+    public String getName()
+    {
+        AST node = getFirstChild();
+        if (node != null)
+        {
+            return node.getText();
+        }
+        return null;
     }
 
     public Scope getScope()

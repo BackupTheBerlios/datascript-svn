@@ -37,6 +37,8 @@
  */
 package datascript.ast;
 
+import antlr.collections.AST;
+
 public class StringType extends TokenAST implements TypeInterface
 {
     private int length;
@@ -68,6 +70,16 @@ public class StringType extends TokenAST implements TypeInterface
     public Scope getScope()
     {
         throw new InternalError("not implemented");
+    }
+
+    public String getName()
+    {
+        AST node = getFirstChild();
+        if (node != null)
+        {
+            return node.getText();
+        }
+        return null;
     }
     
     public Expression getLengthExpression()

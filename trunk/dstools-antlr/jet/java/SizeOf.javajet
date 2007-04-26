@@ -38,13 +38,17 @@
  */
 %>
 <%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.java.*" 
+        imports="datascript.emit.java.*" 
         class="SizeOf" %>
 <% 
     SizeOfEmitter global = (SizeOfEmitter) argument;
     String pkg = global.getPackageName(); 
 %>
 <%@include file="FileHeader.inc"%>
+// DS-Import
+<%=global.getPackageImports()%>
+
+
 public class __SizeOf extends __DepthFirstVisitor
 {
     private int __size = 0;

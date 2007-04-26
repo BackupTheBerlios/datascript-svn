@@ -50,6 +50,17 @@ import datascript.runtime.io.*;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Vector;
+<%
+    	int subStrEnd = pkg.indexOf('.');
+    	if (subStrEnd > 1 && subStrEnd < pkg.length())
+    	{
+        	String parentPkg = pkg.substring(0, subStrEnd);
+%>
+
+import <%=parentPkg%>.*;
+<%
+		}
+%>
 
 <%
     }

@@ -45,28 +45,85 @@ import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
+import datascript.ast.SequenceType;
 import datascript.ast.StringType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
+import datascript.ast.UnionType;
 import datascript.emit.java.AccessorNameEmitter;
 import datascript.emit.java.DepthFirstVisitorEmitter;
 import datascript.jet.java.XmlDumper;
 import datascript.jet.java.XmlDumperEnumeration;
 
+
 public class XmlDumperEmitter extends DepthFirstVisitorEmitter
 {
     private XmlDumper dumperTmpl = new XmlDumper();
     private XmlDumperEnumeration enumerationTmpl = new XmlDumperEnumeration();
-    
+
+
+
+    public XmlDumperEmitter(String outPathName, String defaultPackageName, AST rootNode)
+    {
+        super(outPathName, defaultPackageName, rootNode);
+    }
+
+
     public void beginTranslationUnit()
     {
         openOutputFile(dir, "__XmlDumper.java");
-        String result = dumperTmpl.generate(this);
+    }
+
+
+    public void beginImport(AST r)
+    {
+        rootNode.push(r);
+        if (!TmplGenerated)
+        {
+            String result = dumperTmpl.generate(this);
+            out.print(result);
+            TmplGenerated = true;
+        }
+        rootNode.pop();
+    }
+
+
+    public void beginSequence(AST s)
+    {
+        if (!TmplGenerated)
+        {
+            String result = dumperTmpl.generate(this);
+            out.print(result);
+            TmplGenerated = true;
+        }
+        sequence = (SequenceType) s;
+        String result = sequenceTmpl.generate(this);
         out.print(result);
     }
 
+
+    public void beginUnion(AST u)
+    {
+        if (!TmplGenerated)
+        {
+            String result = dumperTmpl.generate(this);
+            out.print(result);
+            TmplGenerated = true;
+        }
+        union = (UnionType) u;
+        String result = unionTmpl.generate(this);
+        out.print(result);
+    }
+
+
     public void beginEnumeration(AST e)
     {
+        if (!TmplGenerated)
+        {
+            String result = dumperTmpl.generate(this);
+            out.print(result);
+            TmplGenerated = true;
+        }
         enumeration = (EnumType) e;
         String result = enumerationTmpl.generate(this);
         out.print(result);
@@ -79,7 +136,8 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
         return getVisitor(type, "node." + AccessorNameEmitter.getGetterName(field) + "()",
                 field.getName());
     }
-    
+
+
     public String getVisitor(TypeInterface type, String nodeName, String fieldName)
     {
         type = TypeReference.resolveType(type);
@@ -149,8 +207,8 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
         }
         return buffer.toString();
     }
-    
-    
+
+
     public String getElementVisitor(Field field)
     {
         String result = null;
@@ -164,12 +222,14 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
         
         return result;
     }
-    
+
+
     public String startType()
     {
         return "startElement(arg);";
     }
-    
+
+
     public String endType()
     {
         return "endElement(arg);";

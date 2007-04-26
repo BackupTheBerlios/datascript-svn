@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
-import bits.ParamArray;
+import bits.arrays.ParamArray;
 import bits.ParamBlock;
 import datascript.runtime.array.UnsignedShortArray;
 

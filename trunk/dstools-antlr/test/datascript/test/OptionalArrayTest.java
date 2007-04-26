@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
-import bits.OptionalArraySequence;
+import bits.arrays.OptionalArraySequence;
 import datascript.runtime.array.ByteArray;
 import datascript.runtime.array.ShortArray;
 

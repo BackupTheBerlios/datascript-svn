@@ -37,6 +37,8 @@
  */
 package datascript.ast;
 
+import antlr.collections.AST;
+
 
 public class ArrayType extends TokenAST implements TypeInterface
 {
@@ -53,6 +55,16 @@ public class ArrayType extends TokenAST implements TypeInterface
         Value value = getLengthExpression().getValue();
         length = (value == null) ? 0 : value.integerValue().intValue();
         return length;
+    }
+
+    public String getName()
+    {
+        AST node = getFirstChild();
+        if (node != null)
+        {
+            return node.getText();
+        }
+        return null;
     }
     
     public Expression getLengthExpression()

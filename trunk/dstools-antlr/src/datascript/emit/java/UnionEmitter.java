@@ -37,6 +37,8 @@
  */
 package datascript.emit.java;
 
+import java.io.PrintStream;
+
 import datascript.ast.CompoundType;
 import datascript.ast.Field;
 import datascript.ast.Parameter;
@@ -55,28 +57,40 @@ public class UnionEmitter extends CompoundEmitter
     private UnionRead readReadTmpl = new UnionRead();
     private UnionWrite readWriteTmpl = new UnionWrite();
     
+
     public UnionEmitter(JavaDefaultEmitter j, UnionType union)
     {
         super(j);
         this.union = union;
         fieldEmitter = new UnionFieldEmitter(this);
     }
+
+
+    public void setOutputStream(PrintStream out)
+    {
+        super.setOutputStream(out);
+        fieldEmitter.setOutputStream(out);
+    }
    
+
     public UnionType getUnionType()
     {
         return union;
     }
     
+
     public CompoundType getCompoundType()
     {
         return union;
-    }        
+    }
+
 
     public FieldEmitter getFieldEmitter()
     {
         return fieldEmitter;
     }
     
+
     public void begin()
     {
         //reset();        
@@ -97,6 +111,7 @@ public class UnionEmitter extends CompoundEmitter
         out.print(result);
     }
     
+
     public void end()
     {
         String result = endTmpl.generate(this);

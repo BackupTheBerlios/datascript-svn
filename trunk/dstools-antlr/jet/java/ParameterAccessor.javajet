@@ -43,11 +43,9 @@
 <% 
     ParameterEmitter e = (ParameterEmitter) argument;
     Parameter param = e.getParameter();
-    TypeNameEmitter tne = new TypeNameEmitter();
-    String type =  tne.getTypeName(param.getType());    
+    String type =  TypeNameEmitter.getTypeName(param.getType());    
     String pname = param.getName();
-    AccessorNameEmitter ane = new AccessorNameEmitter();
-    String setter = ane.getSetterName(param);
+    String setter = AccessorNameEmitter.getSetterName(param);
 %>
     <%=type%> <%=pname%>;
     

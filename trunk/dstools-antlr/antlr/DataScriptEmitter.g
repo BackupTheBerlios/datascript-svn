@@ -56,16 +56,21 @@ options
         this.em = em;
     }
     
-    public void reportError(RecognitionException ex) {
+    public void reportError(RecognitionException ex)
+    {
         System.out.println(ex.toString());
         throw new RuntimeException(ex);
     }
 }
 
 translationUnit
-    :   { em.beginTranslationUnit(); }
-        #(ROOT (packageDeclaration)? (importDeclaration)* members)
-        { em.endTranslationUnit(); }
+	:	{ em.beginTranslationUnit(); }
+		r:rootDeclaration[#r]
+		{ em.endTranslationUnit(); }
+	;
+
+rootDeclaration[AST root]
+    :   #(ROOT (p:packageDeclaration)? (importDeclaration[root])* members[#p, root])
     ;    
 
 
@@ -73,18 +78,22 @@ packageDeclaration
     :   #(PACKAGE (ID)+)
     ;
     
-importDeclaration
-    :   #(IMPORT (ID)+)
+importDeclaration[AST rootNode]
+    :   { em.beginImport(rootNode); }
+    	#(IMPORT (ID)+ (r:rootDeclaration[#r])?)
+    	{ em.endImport(); }
     ;
         	
-members
-    :   #(MEMBERS (declaration)*)
+members[AST pack, AST root]
+    :   { em.beginMembers(pack, root); }
+    	#(MEMBERS (declaration)*)
+    	{ em.endMembers(); }
     ;
     
 declaration
-    :   fieldDefinition 
+    :   fieldDefinition
     //|   conditionDefinition
-    |   constDeclaration 
+    |   constDeclaration
     |   subtypeDeclaration
     |   sqlDatabaseDefinition
     |   sqlTableDeclaration
@@ -156,7 +165,7 @@ constDeclaration
 fieldDefinition
     :   #(f:FIELD 
            ((zipModifier typeReference ID) => zipModifier)?
-    	   typeReference 
+    	   typeReference
     	   (i:ID					{ em.beginField(f); })? 
            (fieldInitializer)?
            (fieldOptionalClause)?

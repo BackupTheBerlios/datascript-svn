@@ -46,6 +46,7 @@ import datascript.ast.TokenAST;
 public class ToolContext
 {
     private String fileName;
+    private String pathName;
     private int numWarnings;
     private int numErrors;
     private static ToolContext singleton;
@@ -62,26 +63,52 @@ public class ToolContext
         }
         return singleton;
     }
-    
+
+
     public void setFileName(String fileName)
     {
         this.fileName = fileName;
     }
-    
+
+
     public static String getFileName()
     {
         return getInstance().fileName;
     }
+
+
+    public void setPathName(String pathName)
+    {
+        this.pathName = pathName;
+    }
+
+
+    public static String getPathName()
+    {
+        return getInstance().pathName;
+    }
+
+
+    public static String getFullName()
+    {
+        return ((getPathName() != null)? 
+                (getPathName() + System.getProperties().getProperty("file.separator")) : "") + 
+                getFileName();
+    }
+
+
     public int getErrorCount()
     {
         return numErrors;
     }
-    
+
+
     public int getWarningCount()
     {
         return numWarnings;
     }
-    
+
+
     public void warning(TokenAST token, String text)
     {
         numWarnings++;
@@ -91,7 +118,8 @@ public class ToolContext
         message.append(text);
         System.err.println(message);
     }
-    
+
+
     public void error(TokenAST token, String text)
     {
         numErrors++;
@@ -101,16 +129,19 @@ public class ToolContext
         System.err.println(message);
     }
 
+
     public static void logError(TokenAST token, String text)
     {
         getInstance().error(token, text);
     }
-    
+
+
     public static void logWarning(TokenAST token, String text)
     {
         getInstance().warning(token, text);
     }
-    
+
+
     private void appendLocation(StringBuffer message, TokenAST token)
     {
 /*        

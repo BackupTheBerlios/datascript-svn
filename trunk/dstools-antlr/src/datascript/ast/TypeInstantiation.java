@@ -39,6 +39,8 @@ package datascript.ast;
 
 import java.util.Vector;
 
+import antlr.collections.AST;
+
 import datascript.tools.ToolContext;
 
 
@@ -71,6 +73,16 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
     public String toString()
     {
         return "instantiation of " + compound;
+    }
+
+    public String getName()
+    {
+        AST node = getFirstChild();
+        if (node != null)
+        {
+            return node.getText();
+        }
+        return null;
     }
 
     public CompoundType getBaseType()

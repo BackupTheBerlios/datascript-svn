@@ -51,7 +51,7 @@ options
 }
 
 {
-    private Stack<Scope> scopeStack = new Stack();
+    private Stack<Scope> scopeStack = new Stack<Scope>();
     private ToolContext context;
     
     public void setContext(ToolContext context)
@@ -98,7 +98,7 @@ packageDeclaration
     ;
     
 importDeclaration
-    :   #(IMPORT (ID)+)
+    :   #(IMPORT (ID)+ (translationUnit)?)
     ;
         	
 members
@@ -106,9 +106,9 @@ members
     ;
     
 declaration
-    :   fieldDefinition 
+    :   fieldDefinition
     //|   conditionDefinition
-    |   constDeclaration 
+    |   constDeclaration
     |   subtypeDeclaration
     |   sqlDatabaseDefinition
     |   sqlTableDeclaration
@@ -177,7 +177,7 @@ constDeclaration
 fieldDefinition
     :   #(FIELD                         { Field f = (Field)#FIELD; 
     					  CompoundType ct = scope().getOwner(); }
-          typeReference 
+          typeReference
           (i:ID 			{ scope().setSymbol(i, f);
           				  f.setName(i);
           				  ct.addField(f);
@@ -391,7 +391,7 @@ sqlTableDefinition[AST fd]
         { Field f = (Field)#fd;  
           CompoundType ct = scope().getOwner(); 
         }
-    : sqlTableDeclaration  
+    : sqlTableDeclaration
       (n:ID                             {
                                           scope().setSymbol(n, f);
           				  f.setName(n); ct.addField(f);

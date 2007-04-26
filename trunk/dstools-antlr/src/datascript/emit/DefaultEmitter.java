@@ -40,6 +40,11 @@ package datascript.emit;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Stack;
+import java.util.Set;
+import java.util.HashSet;
+
+import datascript.antlr.DataScriptParserTokenTypes;
 
 import antlr.collections.AST;
 
@@ -49,116 +54,174 @@ import antlr.collections.AST;
  * implement a few of the emitter actions.
  * @author HWellmann
  */
-public class DefaultEmitter implements Emitter
+abstract public class DefaultEmitter implements Emitter
 {
-    protected PrintStream out;
+    protected PrintStream out = null;
+    protected Stack<AST> packageNode = new Stack<AST>();
+    protected Stack<AST> rootNode = new Stack<AST>();
+
+
+    /**** implementation of interface methods ****/
+
+    abstract public void beginTranslationUnit();
+
+    abstract public void endTranslationUnit();
+
+    abstract public void beginImport(AST rootNode);
+
+    abstract public void endImport();
+
+    public void beginMembers(AST p, AST r)
+    {
+        setPackageNode(p);
+        setRootNode(r);
+    }
+
+    public void endMembers()
+    {
+        if (!packageNode.isEmpty())
+            packageNode.pop();
+        if (!rootNode.isEmpty())
+            rootNode.pop();
+    }
+
+    abstract public void beginSequence(AST s);
+
+    abstract public void endSequence(AST s);
+
+    abstract public void beginUnion(AST u);
+
+    abstract public void endUnion(AST u);
+
+    abstract public void beginField(AST f);
+
+    abstract public void endField(AST f);
+
+    abstract public void beginEnumeration(AST e);
+
+    abstract public void endEnumeration(AST e);
+
+    abstract public void beginEnumItem(AST e);
+
+    abstract public void endEnumItem(AST e);
+
+    abstract public void beginSubtype(AST s);
+
+    abstract public void endSubtype(AST s);
+
+    abstract public void beginSqlDatabase(AST s);
     
-    public void beginTranslationUnit()
-    {
-    }
-
-    public void endTranslationUnit()
-    {
-    }
-
-    public void beginField(AST f)
-    {
-    }
-
-    public void endField(AST f)
-    {
-    }
-
-    public void beginSequence(AST s)
-    {
-    }
-
-    public void endSequence(AST s)
-    {
-    }
-
-    public void beginUnion(AST u)
-    {
-    }
-
-    public void endUnion(AST u)
-    {
-    }
-
-    public void beginEnumeration(AST e)
-    {
-    }
-
-    public void endEnumeration(AST e)
-    {
-    }
-
-    public void beginEnumItem(AST e)
-    {
-    }
-
-    public void endEnumItem(AST e)
-    {
-    }
-
-    public void beginSubtype(AST s)
-    {
-    }
-
-    public void endSubtype(AST s)
-    {
-    }
-
-    public void beginSqlDatabase(AST s)
-    {        
-    }
+    abstract public void endSqlDatabase(AST s);
     
-    public void endSqlDatabase(AST s)
-    {        
-    }
+    abstract public void beginSqlMetadata(AST s);
     
-    public void beginSqlMetadata(AST s)
-    {        
-    }
+    abstract public void endSqlMetadata(AST s);
     
-    public void endSqlMetadata(AST s)
-    {        
-    }
+    abstract public void beginSqlPragma(AST s);
     
-    public void beginSqlPragma(AST s)
-    {        
-    }
+    abstract public void endSqlPragma(AST s);
     
-    public void endSqlPragma(AST s)
-    {        
-    }
+    abstract public void beginSqlTable(AST s);
     
-    public void beginSqlTable(AST s)
-    {        
-    }
+    abstract public void endSqlTable(AST s);
     
-    public void endSqlTable(AST s)
-    {        
-    }
+    abstract public void beginSqlInteger(AST s);
     
-    public void beginSqlInteger(AST s)
-    {        
+    abstract public void endSqlInteger(AST s);
+
+    /**** end implementation of interface methods ****/
+
+    public void setPackageNode(AST p)
+    {
+        packageNode.push(p);
     }
-    
-    public void endSqlInteger(AST s)
-    {        
-    }    
+
+    public AST getPackageNode()
+    {
+        if (packageNode.isEmpty())
+            return null;
+        return packageNode.peek();
+    }
+
+    public void setRootNode(AST i)
+    {
+        rootNode.push(i);
+    }
+
+    public AST getRootNode()
+    {
+        if (rootNode.isEmpty())
+            return null;
+        return rootNode.peek();
+    }
+
+    public Set<String> getImportNameList()
+    {
+        HashSet<String> retval = new HashSet<String>();
+        AST in = getRootNode().getFirstChild();
+
+        while (in != null)
+        {
+            getName(in, retval, DataScriptParserTokenTypes.IMPORT);
+            in = in.getNextSibling();
+        }
+        return retval;
+    }
+
+    public Set<String> getPackageNameList()
+    {
+        HashSet<String> retval = new HashSet<String>();
+        AST in = getPackageNode();
+
+        return getName(in, retval, DataScriptParserTokenTypes.PACKAGE);
+    }
+
+    protected static Set<String> getImportNameList(AST in, Set<String> retval)
+    {
+        return getName(in, retval, DataScriptParserTokenTypes.IMPORT);
+    }
+
+    protected static Set<String> getPackageNameList(AST in, Set<String> retval)
+    {
+        return getName(in, retval, DataScriptParserTokenTypes.PACKAGE);
+    }
+
+    protected static Set<String> getName(AST in, Set<String> retval, int tokenType)
+    {
+        if (in == null || in.getType() != tokenType)
+            return retval;
+
+        retval.add(getIDName(in.getFirstChild()));
+        return getName(in.getNextSibling(), retval, tokenType);
+    }
+
+    private static String getIDName(AST in)
+    {
+        if (in == null || in.getType() != DataScriptParserTokenTypes.ID)
+            return null;
+
+        String name = getIDName(in.getNextSibling());
+        if (name == null)
+            return in.getText();
+
+        return in.getText() + '.' + name;
+    }
+
 
     protected void openOutputFile(File directory, String fileName)
     {
         if (! directory.exists())
         {
-            directory.mkdir();
+            directory.mkdirs();
         }
-        File outputFile = new File(directory, fileName);
-        outputFile.delete();
         try
         {
+            File outputFile = new File(directory, fileName);
+            if (outputFile.exists())
+            {
+                System.err.println("WARNING: overwriting file " + outputFile.getAbsoluteFile());
+                outputFile.delete();
+            }
             outputFile.createNewFile();
             out = new PrintStream(outputFile);
         }

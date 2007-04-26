@@ -72,7 +72,7 @@ packageDeclaration
     ;
     
 importDeclaration
-    :   #(IMPORT (ID)+)
+    :   #(IMPORT (ID)+ (translationUnit)?)
     ;
         	
 members

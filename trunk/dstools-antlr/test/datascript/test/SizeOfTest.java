@@ -11,7 +11,7 @@ import javax.imageio.stream.FileImageOutputStream;
 import junit.framework.TestCase;
 import bits.ItemA;
 import bits.ItemB;
-import bits.VarArray;
+import bits.arrays.VarArray;
 import bits.VarArrayWithSize;
 import datascript.runtime.array.ObjectArray;
 

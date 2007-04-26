@@ -42,9 +42,7 @@
         class="ArrayWrite" 
 %><%
     ArrayEmitter e = (ArrayEmitter) argument;
-    ArrayType array = e.getArrayType();
 
-    AccessorNameEmitter ane = new AccessorNameEmitter();
     Field field  = e.getField();
     String getter = AccessorNameEmitter.getGetterName(field);
 %>

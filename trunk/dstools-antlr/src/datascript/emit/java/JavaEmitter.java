@@ -38,6 +38,7 @@
 package datascript.emit.java;
 
 import antlr.collections.AST;
+import datascript.ast.Subtype;
 import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
 import datascript.ast.SqlDatabaseType;
@@ -48,9 +49,39 @@ public class JavaEmitter extends JavaDefaultEmitter
 {
     private SequenceEmitter sequenceEmitter;
     private UnionEmitter unionEmitter;
-    
+
+
+
+    public JavaEmitter(String outPathName, String defaultPackageName, AST rootNode)
+    {
+        super(outPathName, defaultPackageName, rootNode);
+    }
+
+
+    public void beginTranslationUnit()
+    {
+    }
+
+
+    public void endTranslationUnit()
+    {
+    }
+
+
+    public void beginImport(AST importNode)
+    {
+    }
+
+
+    public void endImport()
+    {
+    }
+
+
     public void beginSequence(AST s)
     {
+        setPackageName(getPackageNode());
+
         SequenceType sequence = (SequenceType) s;
         String typeName = getTypeName(sequence);
         openOutputFile(dir, typeName + JAVA_EXT);
@@ -67,6 +98,8 @@ public class JavaEmitter extends JavaDefaultEmitter
 
     public void beginUnion(AST u)
     {
+        setPackageName(getPackageNode());
+
         UnionType union = (UnionType) u;
         String typeName = getTypeName(union);
         openOutputFile(dir, typeName + JAVA_EXT);
@@ -81,8 +114,20 @@ public class JavaEmitter extends JavaDefaultEmitter
         out.close();
     }
 
+
+    public void beginField(AST f)
+    {
+    }
+
+
+    public void endField(AST f)
+    {
+    }
+
     public void beginEnumeration(AST e)
     {
+        setPackageName(getPackageNode());
+
         EnumType enumType = (EnumType) e;
         EnumerationEmitter enumEmitter = new EnumerationEmitter(this, enumType);
         String typeName = getTypeName(enumType);
@@ -96,8 +141,38 @@ public class JavaEmitter extends JavaDefaultEmitter
         out.close();
     }
 
+
+    public void beginEnumItem(AST e)
+    {
+    }
+
+
+    public void endEnumItem(AST e)
+    {
+    }
+
+
+    public void beginSubtype(AST s)
+    {
+        setPackageName(getPackageNode());
+
+        Subtype subtype = (Subtype) s;
+        SubtypeEmitter subtypeEmitter = new SubtypeEmitter(this, subtype);
+        String typeName = subtype.getName();  //getTypeName(subtype);
+        openOutputFile(dir, typeName + JAVA_EXT);
+        subtypeEmitter.setOutputStream(out);
+        subtypeEmitter.emit(subtype);
+    }
+
+
+    public void endSubtype(AST s)
+    {
+    }
+
     public void beginSqlDatabase(AST s)
     {
+        setPackageName(getPackageNode());
+
         SqlDatabaseType db = (SqlDatabaseType)s;
         SqlDatabaseEmitter dbEmitter = new SqlDatabaseEmitter(this, db);
         String typeName = getTypeName(db);
@@ -111,8 +186,31 @@ public class JavaEmitter extends JavaDefaultEmitter
         out.close();
     }
 
+
+    public void beginSqlMetadata(AST s)
+    {
+    }
+
+
+    public void endSqlMetadata(AST s)
+    {
+    }
+
+
+    public void beginSqlPragma(AST s)
+    {
+    }
+
+
+    public void endSqlPragma(AST s)
+    {
+    }
+
+
     public void beginSqlTable(AST s)
     {
+        setPackageName(getPackageNode());
+
         SqlTableType table = (SqlTableType)s;
         SqlTableEmitter tableEmitter = new SqlTableEmitter(this, table);
         String typeName = getTypeName(table);
@@ -121,8 +219,19 @@ public class JavaEmitter extends JavaDefaultEmitter
         tableEmitter.emit(table);
     }
 
+
     public void endSqlTable(AST s)
     {
         out.close();
+    }
+
+
+    public void beginSqlInteger(AST s)
+    {
+    }
+
+
+    public void endSqlInteger(AST s)
+    {
     }
 }

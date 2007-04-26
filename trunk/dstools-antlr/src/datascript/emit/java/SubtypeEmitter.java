@@ -1,4 +1,3 @@
-<%
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -36,42 +35,62 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-%> 
-<%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.java.*" 
-        class="SequenceFieldAccessor" %>
-<% 
-    SequenceFieldEmitter e = (SequenceFieldEmitter) argument;
-    Field field = e.getField();
-    String type =  TypeNameEmitter.getTypeName(field.getFieldType());
-    AccessorNameEmitter ane = new AccessorNameEmitter();
-    String getter = AccessorNameEmitter.getGetterName(field);
-    String setter = ane.getSetterName(field);
-    String indicator = AccessorNameEmitter.getIndicatorName(field);
-    SequenceEmitter se = (SequenceEmitter)e.getCompoundEmitter();
-    String constraint = se.getOptionalClause(field);
-%>
-    private <%=type%> <%=field%>;
-    
-    public <%=type%> <%=getter%>() 
-    { 
-        return <%=field%>; 
-    }
-    
-    public void <%=setter%>(<%=type%> <%=field%>) 
-    { 
-        this.<%=field%> = <%=field%>; 
-    }
-<%
-    if (constraint != null)
-    {
-%>    
+package datascript.emit.java;
 
-    public boolean <%=indicator%>()
-    {
-        return <%=constraint%>;
-    }
-<%
-    }
-%>            
+import java.io.PrintStream;
 
+import datascript.ast.Subtype;
+import datascript.jet.java.SubtypeTmpl;
+
+/**
+ * @author HWedekind
+ * 
+ */
+public class SubtypeEmitter
+{
+    private JavaEmitter global;
+    private Subtype subtype;
+    //private PrintStream out;
+    //private SubtypeTmpl subtypeTmpl;
+
+
+    public SubtypeEmitter(JavaEmitter j, Subtype s)
+    {
+        global = j;
+        subtype = s;
+        //subtypeTmpl = new SubtypeTmpl();
+    }
+
+
+    public JavaEmitter getGlobal()
+    {
+        return global;
+    }
+
+
+    public Subtype getSubtype()
+    {
+        return subtype;
+    }
+
+
+    public String getName()
+    {
+        return subtype.getName();
+    }
+
+
+    public void setOutputStream(PrintStream out)
+    {
+        //this.out = out;
+    }
+
+
+    public void emit(Subtype subtype)
+    {
+        /* this does not generates serious content
+        String result = subtypeTmpl.generate(this);
+        out.print(result);
+        */
+    }
+}

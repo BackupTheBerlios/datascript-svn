@@ -69,6 +69,16 @@ public class ConsoleEmitter extends DefaultEmitter
 
     }
 
+
+    public void beginImport(AST importNode)
+    {
+    }
+
+
+    public void endImport()
+    {
+    }
+
     /* (non-Javadoc)
      * @see datascript.emit.Emitter#beginField(antlr.collections.AST)
      */
@@ -148,5 +158,65 @@ public class ConsoleEmitter extends DefaultEmitter
     {
         EnumItem item = (EnumItem)e;
         System.out.println("end " + item.getName());
+    }
+
+
+    public void beginSubtype(AST s)
+    {
+    }
+
+
+    public void endSubtype(AST s)
+    {
+    }
+
+
+    public void beginSqlDatabase(AST s)
+    {
+    }
+
+
+    public void endSqlDatabase(AST s)
+    {
+    }
+
+
+    public void beginSqlMetadata(AST s)
+    {
+    }
+
+
+    public void endSqlMetadata(AST s)
+    {
+    }
+
+
+    public void beginSqlPragma(AST s)
+    {
+    }
+
+
+    public void beginSqlTable(AST s)
+    {
+    }
+
+
+    public void endSqlTable(AST s)
+    {
+    }
+
+
+    public void endSqlPragma(AST s)
+    {
+    }
+
+
+    public void beginSqlInteger(AST s)
+    {
+    }
+
+
+    public void endSqlInteger(AST s)
+    {
     }
 }

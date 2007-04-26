@@ -60,7 +60,8 @@ public class TypeNameEmitter
     {
     }
 
-    public String getTypeName(TypeInterface t)
+
+    public static String getTypeName(TypeInterface t)
     {
         String result = null;
         t = TypeReference.resolveType(t);
@@ -106,7 +107,8 @@ public class TypeNameEmitter
         return result;
     }
 
-    protected String getTypeName(StdIntegerType t)
+
+    protected static String getTypeName(StdIntegerType t)
     {
         switch (t.getType())
         {
@@ -133,7 +135,8 @@ public class TypeNameEmitter
         }
     }
 
-    protected String getTypeName(BitFieldType t)
+
+    protected static String getTypeName(BitFieldType t)
     {
         int length = t.getLength();
         if (length == 0)
@@ -149,19 +152,22 @@ public class TypeNameEmitter
         else
             return "BigInteger";
     }
-    
-    protected String getTypeName(CompoundType compound)
+
+
+    protected static String getTypeName(CompoundType compound)
     {
         return compound.getName();                
     }
-    
-    protected String getTypeName(TypeInstantiation inst)
+
+
+    protected static String getTypeName(TypeInstantiation inst)
     {
-        CompoundType compound = (CompoundType)inst.getBaseType();
+        CompoundType compound = inst.getBaseType();
         return compound.getName();        
     }
-    
-    protected String getTypeName(ArrayType array)
+
+
+    protected static String getTypeName(ArrayType array)
     {
         TypeInterface elType = array.getElementType();
         String elTypeName = getTypeName(elType);
@@ -205,7 +211,8 @@ public class TypeNameEmitter
         return "ObjectArray<" + elTypeName +  ">";        
     }
 
-    public String getClassName(TypeInterface t)
+
+    public static String getClassName(TypeInterface t)
     {
         String result = null;
         t = TypeReference.resolveType(t);
@@ -219,8 +226,9 @@ public class TypeNameEmitter
         }
         return result;
     }
-    
-    private String getClassName(StdIntegerType t)
+
+
+    private static String getClassName(StdIntegerType t)
     {
         switch (t.getType())
         {

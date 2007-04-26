@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import bits.StringArraySequence;
+import bits.arrays.StringArraySequence;
 import datascript.runtime.io.FileBitStreamWriter;
 
 public class StringArraySequenceTest extends TestCase

@@ -47,6 +47,10 @@
     String name = u.getName(); 
 %>
 <%@include file="FileHeader.inc"%>
+// DS-Import
+<%=e.getGlobal().getPackageImports()%>
+
+
 public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
 {
     long __fpos;

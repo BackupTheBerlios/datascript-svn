@@ -37,6 +37,8 @@
  */
 package datascript.ast;
 
+import antlr.collections.AST;
+
 public class IntegerType extends TokenAST implements TypeInterface
 {
     static IntegerType integerType = new IntegerType();
@@ -60,6 +62,16 @@ public class IntegerType extends TokenAST implements TypeInterface
     public String toString()
     {
         return "integer";
+    }
+
+    public String getName()
+    {
+        AST node = getFirstChild();
+        if (node != null)
+        {
+            return node.getText();
+        }
+        return null;
     }
 
     public Scope getScope()
