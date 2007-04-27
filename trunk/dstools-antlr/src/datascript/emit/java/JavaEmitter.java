@@ -68,6 +68,16 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    public void beginPackage(AST p)
+    {
+    }
+
+
+    public void endPackage(AST p)
+    {
+    }
+
+
     public void beginImport(AST importNode)
     {
     }

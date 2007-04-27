@@ -40,9 +40,9 @@
 <%@ jet package="datascript.jet.html" 
         imports="datascript.ast.* datascript.emit.html.*" 
         class="Compound" %>
-<% 
-    HtmlEmitter e = (HtmlEmitter) argument;
-    CompoundType s = e.getCompound();
+<%
+    ContentEmitter e = (ContentEmitter) argument;
+    CompoundType s = e.getCompound();	// gets the current type
     String typeName = s.getName();
     TypeNameEmitter tne = new TypeNameEmitter();
     String category = e.getCategoryPlainText();
@@ -50,12 +50,13 @@
 %>
 <html>
   <head>
-    <title><%=category%> <%=typeName%></title>
-    <link rel="stylesheet" type="text/css" href="webStyles.css">
+    <title><%=category%> <%=e.getPackageName()%>.<%=typeName%></title>
+    <link rel="stylesheet" type="text/css" href="../webStyles.css">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   </head>
   <body>
 
+    <h2><%=e.getPackageName()%></h2>
     <div class="msgdetail"><i><%=category%></i> <%=typeName%></div>
     <p/>
     <%=e.getDocumentation(s)%>
@@ -66,7 +67,8 @@
 <%
 	// show the structure of this type
 	ParameterList pl = new ParameterList();
-	String parameterlist = pl.generate(s);
+	//e.setCurrentType(s);
+	String parameterlist = pl.generate(e);
 %>
       <tbody id="tabIdent">
         <tr><td colspan=3><%=categoryKey%><%=typeName%><%=parameterlist%></td></tr>
@@ -77,13 +79,13 @@
     {
         TypeInterface type = f.getFieldType();
         type = TypeReference.resolveType(type);
-
+        e.setCurrentType(type);
       	//String hname = TypeNameEmitter.getTypeName(type);
       	//parameterlist = tne.getParameterList(type, false);
-		parameterlist = pl.generate(type);
+		parameterlist = pl.generate(e);
 %>
         <tr>
-          <td valign="top" id="tabIdent"><%=typeNameGenerator.generate(type)%><%=parameterlist%></td>
+          <td valign="top" id="tabIdent"><%=typeNameGenerator.generate(e)%><%=parameterlist%></td>
 <%
     	String fname = f.getName();
 %>

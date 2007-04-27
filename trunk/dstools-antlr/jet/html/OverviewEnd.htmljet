@@ -1,7 +1,7 @@
 <%
 /* BSD License
  *
- * Copyright (c) 2007, Henrik Wedekind, Harman/Becker Automotive Systems
+ * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -38,55 +38,8 @@
  */
 %>
 <%@ jet package="datascript.jet.html" 
-        imports="datascript.emit.html.*" 
-        class="Subtype" %>
-<% 
-    ContentEmitter e = (ContentEmitter) argument;
-    datascript.ast.Subtype s = e.getSubtype();
-    String typeName = s.getName();
-
-%>
-<html>
-  <head>
-    <title>Subtype <%=e.getPackageName()%>.<%=typeName%></title>
-    <link rel="stylesheet" type="text/css" href="../webStyles.css">
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-
-    <h2><%=e.getPackageName()%></h2>
-    <div class="msgdetail"><i>Subtype</i> <%=typeName%></div>
-    <p/>
-    <%=e.getDocumentation(s)%>
-
-    <table>
-    <tr><td class="docuCode">
-      <table>
-<%
-	// show the structure of this type
-	ParameterList pl = new ParameterList();
-	//e.getCurrentType(s);
-	String parameterlist = pl.generate(e);
-
-	LinkedType typeNameGenerator = new LinkedType();
-	e.setCurrentType(s.getBaseType());
-%>
-      <tr>
-        <td colspan=3>subtype <%=typeNameGenerator.generate(e)%><%=parameterlist%> <%=typeName%>
-<%
-/*
-    TypeNameEmitter tne = new TypeNameEmitter();
-  	String constraint = tne.getConstraint(f);
-  	if (constraint != null)
-  	{
-    	%><%=constraint%><%
-    }
-*/
-%>;</td>
-      </tr>
-	  </table>
-	</td></tr>
-	</table>
-
+        imports="" 
+        class="OverviewEnd" %>
+    </ul>    
   </body>
 </html>

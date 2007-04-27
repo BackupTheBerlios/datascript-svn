@@ -43,6 +43,22 @@
 body
 {
 	font-family:Arial, Helvetica;
+	font-size:11pt;
+}
+
+h1
+{
+	font-size:1.8em;
+}
+
+h2
+{
+	font-size:1.6em;
+}
+
+h3
+{
+	font-size:1.4em;
 }
 
 a
@@ -133,6 +149,7 @@ div.msgdetail
 	width:98%;
 	padding:1ex;
 	font-weight:bold;
+	font-size:1.8em;
 	color:blue;
 	background-color:#f2f2ff;
 }
@@ -193,7 +210,19 @@ th
 	padding-left:5.5ex;
 }
 
-.typelist
+.packagelist
+{
+	height:0.2em;
+	padding-left:1em;
+	cursor:pointer;
+}
+
+.classlist
 {
 	padding-left:1em;
+}
+
+.classlist li
+{
+	display:list-item;
 }

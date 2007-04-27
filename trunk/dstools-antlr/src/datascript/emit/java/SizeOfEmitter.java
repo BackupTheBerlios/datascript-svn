@@ -76,6 +76,16 @@ public class SizeOfEmitter extends JavaDefaultEmitter
     }
 
 
+    public void beginPackage(AST p)
+    {
+    }
+
+
+    public void endPackage(AST p)
+    {
+    }
+
+
     public void beginImport(AST r)
     {
         rootNode.push(r);

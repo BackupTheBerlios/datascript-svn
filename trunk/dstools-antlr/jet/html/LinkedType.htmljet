@@ -41,7 +41,8 @@
         imports="datascript.ast.* datascript.emit.html.*" 
         class="LinkedType" %>
 <%
-    TypeInterface paramType = (TypeInterface) argument;
+    DefaultHTMLEmitter e = (DefaultHTMLEmitter) argument;
+    TypeInterface paramType = e.getCurrentType();
 
 	String styleStr = "";
     String ankerClass = "";
@@ -116,8 +117,7 @@
 		    return stringBuffer.toString();
         }
 
-		%><a class="<%=ankerClass%>" href="<%=paramTypeName%>.html" title="<%=titleText%>" target="detailedDocu" <%=styleStr%>><%=paramTypeName%></a><%
-
+		%><a class="<%=ankerClass%>" href="<%=e.getCurrentFolder().equals(ContentEmitter.contentFolder)? "" : (ContentEmitter.contentFolder+"/")%><%=paramTypeName%>.html" title="<%=titleText%>" target="detailedDocu" <%=styleStr%>><%=paramTypeName%></a><%
 	}
 	else
 	{

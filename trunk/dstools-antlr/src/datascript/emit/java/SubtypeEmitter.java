@@ -40,7 +40,6 @@ package datascript.emit.java;
 import java.io.PrintStream;
 
 import datascript.ast.Subtype;
-import datascript.jet.java.SubtypeTmpl;
 
 /**
  * @author HWedekind

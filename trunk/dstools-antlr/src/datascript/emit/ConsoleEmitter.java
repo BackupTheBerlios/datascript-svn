@@ -70,6 +70,16 @@ public class ConsoleEmitter extends DefaultEmitter
     }
 
 
+    public void beginPackage(AST p)
+    {
+    }
+
+
+    public void endPackage(AST p)
+    {
+    }
+
+
     public void beginImport(AST importNode)
     {
     }

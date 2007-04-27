@@ -41,19 +41,20 @@
         imports="datascript.ast.* datascript.emit.html.*" 
         class="Enum" %>
 <% 
-    HtmlEmitter e = (HtmlEmitter) argument;
+    ContentEmitter e = (ContentEmitter) argument;
     EnumType s = e.getEnum();
     String typeName = s.getName();
 
 %>
 <html>
   <head>
-    <title>enum <%=typeName%></title>
-    <link rel="stylesheet" type="text/css" href="webStyles.css">
+    <title>enum <%=e.getPackageName()%>.<%=typeName%></title>
+    <link rel="stylesheet" type="text/css" href="../webStyles.css">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   </head>
   <body>
 
+    <h2><%=e.getPackageName()%></h2>
     <div class="msgdetail"><i>enum</i> <%=typeName%></div>
     <p/>
     <%=e.getDocumentation(s)%>

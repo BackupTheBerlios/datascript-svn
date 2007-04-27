@@ -67,6 +67,10 @@ abstract public class DefaultEmitter implements Emitter
 
     abstract public void endTranslationUnit();
 
+    abstract public void beginPackage(AST p);
+
+    abstract public void endPackage(AST p);
+
     abstract public void beginImport(AST rootNode);
 
     abstract public void endImport();

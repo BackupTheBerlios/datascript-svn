@@ -43,21 +43,15 @@ import java.util.Vector;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 
+
 abstract public class CompoundType extends TokenAST implements TypeInterface
 {
-    Vector<Field> fields = new Vector<Field>();
+    protected Vector<Field> fields = new Vector<Field>();
 
-    Vector nestedTypes = new Vector();
-
-    Vector conditions = new Vector();
-
-    // / enum and bitmasks lexically contained in this compound
-    Vector settypes = new Vector();
-
-    Vector<Parameter> parameters = new Vector<Parameter>();
+    private Vector<Parameter> parameters = new Vector<Parameter>();
 
     // / set of compound types that can contain this type
-    Vector containers = new Vector();
+    private Vector<CompoundType> containers = new Vector<CompoundType>();
 
     // / one of TypeInterface.NOBYTEORDER, BIGENDIAN, LITTLEENDIAN
     int byteOrder;
@@ -65,8 +59,6 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     private Scope scope;
 
     private String name;
-
-    private String doc;
 
     private CompoundType parent;
 
@@ -81,7 +73,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     {
     }
     
-    CompoundType getParent()
+    public CompoundType getParent()
     {
         return parent;
     }
@@ -109,18 +101,16 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     {
         return parameters.get(index);
     }
-    
+
     public int getParameterCount()
     {
         return parameters.size();
     }
-    
-    
 
-    boolean isEmpty()
+
+    public boolean isEmpty()
     {
-        return fields.size() == 0 && conditions.size() == 0
-                && nestedTypes.size() == 0;
+        return fields.size() == 0;
     }
 
     public String getName()
@@ -151,7 +141,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         return result;
     }
 
-    void addContainer(CompoundType f)
+    public void addContainer(CompoundType f)
     {
         if (!containers.contains(f))
         {
@@ -163,9 +153,9 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     /**
      * @return true if 'this' is contained in compound type 'f'
      */
-    boolean isContainedIn(CompoundType f)
+    public boolean isContainedIn(CompoundType f)
     {
-        return isContainedIn(f, new Stack());
+        return isContainedIn(f, new Stack<CompoundType>());
     }
 
     /**
@@ -173,7 +163,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
      * them. This is a simple DFS path finding algorithm that finds a path from
      * 'this' to 'f'.
      */
-    boolean isContainedIn(CompoundType f, Stack seen)
+    private boolean isContainedIn(CompoundType f, Stack<CompoundType> seen)
     {
         if (containers.contains(f))
         {
@@ -246,7 +236,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         AST node = getFirstChild().getNextSibling();
         if (node.getType() == DataScriptParserTokenTypes.PARAMLIST)
         {
-            parameters = new Vector(node.getNumberOfChildren());
+            parameters = new Vector<Parameter>(node.getNumberOfChildren());
             AST p = node.getFirstChild();
             while (p != null)
             {

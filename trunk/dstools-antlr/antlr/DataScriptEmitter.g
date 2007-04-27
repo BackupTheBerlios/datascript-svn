@@ -75,7 +75,10 @@ rootDeclaration[AST root]
 
 
 packageDeclaration
-    :   #(PACKAGE (ID)+)
+    :   #(p:PACKAGE		{ em.beginPackage(p); }
+    	  (ID)+
+    	)
+    	{ em.endPackage(p); }
     ;
     
 importDeclaration[AST rootNode]

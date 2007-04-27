@@ -39,54 +39,74 @@
 %>
 <%@ jet package="datascript.jet.html" 
         imports="datascript.emit.html.*" 
-        class="Subtype" %>
+        class="PackageBegin" %>
 <% 
-    ContentEmitter e = (ContentEmitter) argument;
-    datascript.ast.Subtype s = e.getSubtype();
-    String typeName = s.getName();
-
+    PackageEmitter e = (PackageEmitter) argument;
+    String pkg = e.getPackageName(); 
 %>
 <html>
   <head>
-    <title>Subtype <%=e.getPackageName()%>.<%=typeName%></title>
-    <link rel="stylesheet" type="text/css" href="../webStyles.css">
+    <title>DataScript Package: <%=pkg%></title>
+    <link rel="stylesheet" type="text/css" href="webStyles.css">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script language="JavaScript">
+    	/*
+    	 * returns an array of CSS rules
+    	 */
+    	function getCSS(docToChange, index)
+    	{
+    	return null;
+    		if (!docToChange.styleSheets)
+    			return null;
+
+			var theRules = new Array();
+			var styleSheet = docToChange.styleSheets[index];
+			if (styleSheet.cssRules)
+				theRules = styleSheet.cssRules
+			else if (styleSheet.rules)
+				theRules = styleSheet.rules
+			else
+				return null;
+			return theRules;
+    	}
+
+
+    	function showhidePackage(clickedElement)
+    	{
+	    	clickedElement.style.listStyleType =  
+	    		(clickedElement.style.listStyleType == 'circle')? 'disc' : 'circle';
+
+	   		docToChange = parent.overview.document;
+			theRules = getCSS(docToChange, 0);
+			if (theRules)
+			{
+				styleToChange = theRules[theRules.length-1].style;				
+				styleToChange.display = 
+					(styleToChange.getPropertyValue('display') == 'none')? 'list-item' : 'none';
+			}
+			else
+			{
+	    		if (clickedElement.firstChild.data == "all")
+	    		{
+	    			classItems = docToChange.getElementsByTagName("li");
+					displayVal = "list-item";
+	    		}
+	    		else
+	    		{
+			    	var classItems = new Array();
+			    	classItems = docToChange.getElementsByName(clickedElement.firstChild.firstChild.data.replace(/\./g, '_'));
+					displayVal = (classItems[0].style.display == "none")? "list-item" : "none";
+			    }
+
+				for (i = 0; i < classItems.length; i++)
+				{
+					classItems[i].style.display = displayVal;
+				}
+			}
+    	}
+    </script>
   </head>
+
   <body>
-
-    <h2><%=e.getPackageName()%></h2>
-    <div class="msgdetail"><i>Subtype</i> <%=typeName%></div>
-    <p/>
-    <%=e.getDocumentation(s)%>
-
-    <table>
-    <tr><td class="docuCode">
-      <table>
-<%
-	// show the structure of this type
-	ParameterList pl = new ParameterList();
-	//e.getCurrentType(s);
-	String parameterlist = pl.generate(e);
-
-	LinkedType typeNameGenerator = new LinkedType();
-	e.setCurrentType(s.getBaseType());
-%>
-      <tr>
-        <td colspan=3>subtype <%=typeNameGenerator.generate(e)%><%=parameterlist%> <%=typeName%>
-<%
-/*
-    TypeNameEmitter tne = new TypeNameEmitter();
-  	String constraint = tne.getConstraint(f);
-  	if (constraint != null)
-  	{
-    	%><%=constraint%><%
-    }
-*/
-%>;</td>
-      </tr>
-	  </table>
-	</td></tr>
-	</table>
-
-  </body>
-</html>
+    <h2>DataScript Package: <%=pkg%></h2>
+    <!--ul class="packagelist" onclick="showhidePackage(this);"><li>all</li></ul-->

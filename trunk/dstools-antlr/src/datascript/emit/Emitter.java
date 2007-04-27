@@ -62,6 +62,9 @@ public interface Emitter
     public void beginTranslationUnit();
     public void endTranslationUnit();
 
+    public void beginPackage(AST p);
+    public void endPackage(AST p);
+
     public void beginImport(AST r);
     public void endImport();
 

@@ -59,7 +59,7 @@ import datascript.ast.Scope;
 import datascript.ast.TokenAST;
 
 import datascript.emit.XmlDumperEmitter;
-import datascript.emit.html.HtmlEmitter;
+import datascript.emit.html.ContentEmitter;
 import datascript.emit.html.FramesetEmitter;
 import datascript.emit.html.CssEmitter;
 import datascript.emit.html.PackageEmitter;
@@ -72,7 +72,7 @@ import datascript.emit.java.VisitorEmitter;
 
 public class DataScriptTool 
 {
-    private static final String VERSION = "rds 0.8 (24 Apr 2007)";
+    private static final String VERSION = "rds 0.81 (27 Apr 2007)";
     private ToolContext context;
     private TokenAST rootNode;
 
@@ -180,14 +180,13 @@ public class DataScriptTool
     }
 
 
-    public void emitDatascript() throws Exception
+    public void emitJava(DataScriptEmitter emitter) throws Exception
     {
         System.out.println("emitting java code");
 
         // emit Java code for decoders
         JavaEmitter javaEmitter = new JavaEmitter(outPathName, packageName, (AST)rootNode);
         javaEmitter.setPackageName(rootNode.getFirstChild());
-        DataScriptEmitter emitter = new DataScriptEmitter();
         emitter.setEmitter(javaEmitter);
         emitter.translationUnit(rootNode);
 
@@ -215,53 +214,44 @@ public class DataScriptTool
         xmlDumper.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(xmlDumper);
         emitter.translationUnit(rootNode);
-
-        if (generateDocs)
-        {
-            System.out.println("emitting html documentation");
-
-            // emit HTML documentation
-            HtmlEmitter htmlEmitter = new HtmlEmitter();
-            htmlEmitter.setPackageName(packageName);
-            emitter.setEmitter(htmlEmitter);
-            emitter.translationUnit(rootNode);
+    }
 
 
+    public void emitHTML(DataScriptEmitter emitter) throws Exception
+    {
+        System.out.println("emitting html documentation");
 /**
  * TODO: new HTML generating
  */
-            /*
-            // emit HTML documentation
-            HtmlEmitter htmlEmitter = new HtmlEmitter();
-            htmlEmitter.setPackageName(rootNode.getFirstChild());
-            emitter.setEmitter(htmlEmitter);
-            emitter.translationUnit(rootNode);
+        // emit HTML documentation
+        ContentEmitter htmlEmitter = new ContentEmitter();
+        htmlEmitter.setPackageName(rootNode.getFirstChild());
+        emitter.setEmitter(htmlEmitter);
+        emitter.translationUnit(rootNode);
 
-            // emit frameset
-            FramesetEmitter framesetEmitter = new FramesetEmitter();
-            framesetEmitter.setPackageName(rootNode.getFirstChild());
-            emitter.setEmitter(framesetEmitter);
-            emitter.translationUnit(rootNode);
+        // emit frameset
+        FramesetEmitter framesetEmitter = new FramesetEmitter();
+        framesetEmitter.setPackageName(rootNode.getFirstChild());
+        emitter.setEmitter(framesetEmitter);
+        emitter.translationUnit(rootNode);
 
-            // emit stylesheeds
-            CssEmitter cssEmitter = new CssEmitter();
-            cssEmitter.setPackageName(rootNode.getFirstChild());
-            emitter.setEmitter(cssEmitter);
-            emitter.translationUnit(rootNode);
+        // emit stylesheeds
+        CssEmitter cssEmitter = new CssEmitter();
+        cssEmitter.setPackageName(rootNode.getFirstChild());
+        emitter.setEmitter(cssEmitter);
+        emitter.translationUnit(rootNode);
 
-            // emit list of packages
-            PackageEmitter packageEmitter = new PackageEmitter();
-            packageEmitter.setPackageName(rootNode.getFirstChild());
-            emitter.setEmitter(packageEmitter);
-            emitter.translationUnit(rootNode);
+        // emit list of packages
+        PackageEmitter packageEmitter = new PackageEmitter();
+        packageEmitter.setPackageName(rootNode.getFirstChild());
+        emitter.setEmitter(packageEmitter);
+        emitter.translationUnit(rootNode);
 
-            // emit list of classes
-            OverviewEmitter overviewEmitter = new OverviewEmitter();
-            overviewEmitter.setPackageName(rootNode.getFirstChild());
-            emitter.setEmitter(overviewEmitter);
-            emitter.translationUnit(rootNode);
-            */
-        }
+        // emit list of classes
+        OverviewEmitter overviewEmitter = new OverviewEmitter();
+        overviewEmitter.setPackageName(rootNode.getFirstChild());
+        emitter.setEmitter(overviewEmitter);
+        emitter.translationUnit(rootNode);
     }
 
 
@@ -419,7 +409,11 @@ public class DataScriptTool
         {
             dsTool.parseArguments(args);
             dsTool.parseDatascript();
-            dsTool.emitDatascript();
+
+            DataScriptEmitter emitter = new DataScriptEmitter();
+            dsTool.emitJava(emitter);
+            if (dsTool.generateDocs)
+                dsTool.emitHTML(emitter);
         }
         catch (DataScriptException exc)
         {
