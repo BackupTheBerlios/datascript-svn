@@ -41,8 +41,6 @@ import java.io.File;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import antlr.collections.AST;
 
@@ -59,6 +57,7 @@ import datascript.ast.SqlTableType;
 import datascript.ast.Subtype;
 import datascript.ast.SqlDatabaseType;
 import datascript.ast.TypeInterface;
+import datascript.ast.TokenAST;
 import datascript.ast.UnionType;
 
 import datascript.jet.html.Compound;
@@ -68,35 +67,9 @@ import datascript.jet.html.Comment;
 
 public class ContentEmitter extends DefaultHTMLEmitter
 {
-    private class Pair<A, B>
-    {
-        private A first;
-        private B second;
-
-        Pair(A a, B b)
-        {
-            first = a;
-            second = b;
-        }
-        
-        public A getFirst()
-        {
-            return first;
-        }
-        
-        public B getSecond()
-        {
-            return second;
-        }
-    }
-
-
     private Compound compoundTmpl = new Compound();
     private Enum enumTmpl = new Enum();
     private datascript.jet.html.Subtype subtypeTmpl = new datascript.jet.html.Subtype();
-
-    private SortedMap<String, Pair<String, TypeInterface> > typeMap = 
-        new TreeMap<String, Pair<String, TypeInterface> >();
 
 
     /**** implementation of abstract methods ****/
@@ -111,24 +84,20 @@ public class ContentEmitter extends DefaultHTMLEmitter
         directory = new File(directory, contentFolder);
         setCurrentFolder(contentFolder);
 
-        for (Pair<String, TypeInterface> p : typeMap.values())
+        for (Pair<String, TokenAST> p : typeMap.values())
         {
-            TypeInterface type = p.getSecond();
-            // TODO: restore the right package tree
+            TypeInterface type = (TypeInterface) p.getSecond();
             setPackageName(p.getFirst());
             if (type instanceof CompoundType)
             {
-                setPackageNode((AST)type);
                 emitCompound((CompoundType) type);
             }
             else if (type instanceof EnumType)
             {
-                setPackageNode((AST)type);
                 emitEnumeration((EnumType) type);
             }
             else if (type instanceof Subtype)
             {
-                setPackageNode((AST)type);
                 emitSubtype((Subtype) type);
             }
         }
@@ -159,7 +128,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
     {
         setPackageName(getPackageNode());
         SequenceType seq = (SequenceType)s;
-        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), seq);
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), seq);
         typeMap.put(seq.getName(), p);
     }
     
@@ -171,7 +140,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
     {
         setPackageName(getPackageNode());
         UnionType un = (UnionType)u;
-        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), un);
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), un);
         typeMap.put(un.getName(), p);
     }
 
@@ -191,7 +160,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
     {
         setPackageName(getPackageNode());
         EnumType et = (EnumType)e;
-        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), et);
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), et);
         typeMap.put(et.getName(), p);
     }
 
@@ -215,7 +184,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
     {
         setPackageName(getPackageNode());
         Subtype st = (Subtype)s;
-        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), st);
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), st);
         typeMap.put(st.getName(), p);
     }
 
@@ -228,7 +197,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
     {
         setPackageName(getPackageNode());
         SqlDatabaseType sqlDb = (SqlDatabaseType)s;
-        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), sqlDb);
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlDb);
         typeMap.put(sqlDb.getName(), p);
     }
 
@@ -241,7 +210,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
     {
         setPackageName(getPackageNode());
         SqlMetadataType sqlMeta = (SqlMetadataType)s;
-        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), sqlMeta);
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlMeta);
         typeMap.put(sqlMeta.getName(), p);
     }
 
@@ -254,7 +223,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
     {
         setPackageName(getPackageNode());
         SqlPragmaType sqlPragma = (SqlPragmaType)s;
-        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), sqlPragma);
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlPragma);
         typeMap.put(sqlPragma.getName(), p);
     }
 
@@ -268,7 +237,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
     {
         setPackageName(getPackageNode());
         SqlTableType sqlTab = (SqlTableType)s;
-        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), sqlTab);
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlTab);
         typeMap.put(sqlTab.getName(), p);
     }
 
@@ -282,7 +251,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
     {
         setPackageName(getPackageNode());
         SqlIntegerType sqlInt = (SqlIntegerType)s;
-        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), sqlInt);
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlInt);
         typeMap.put(sqlInt.getName(), p);
     }
 
@@ -381,15 +350,15 @@ public class ContentEmitter extends DefaultHTMLEmitter
         return typeMap.keySet();
     }
 
-    public Collection< Pair<String, TypeInterface> > getTypes()
+    public Collection< Pair<String, TokenAST> > getTypes()
     {
         return typeMap.values();
     }
 
     public TypeInterface getType(String typeName)
     {
-        Pair<String, TypeInterface> p = typeMap.get(typeName);
-        return p.getSecond();
+        Pair<String, TokenAST> p = typeMap.get(typeName);
+        return (TypeInterface) p.getSecond();
     }
     
     private void emitCompound(CompoundType seq)

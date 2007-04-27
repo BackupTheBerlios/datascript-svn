@@ -72,7 +72,7 @@ import datascript.emit.java.VisitorEmitter;
 
 public class DataScriptTool 
 {
-    private static final String VERSION = "rds 0.8alpha (27 Apr 2007)";
+    private static final String VERSION = "rds 0.81alpha (27 Apr 2007)";
     private ToolContext context;
     private TokenAST rootNode;
 

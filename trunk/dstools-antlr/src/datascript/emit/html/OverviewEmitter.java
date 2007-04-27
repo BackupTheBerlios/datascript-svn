@@ -1,6 +1,8 @@
 package datascript.emit.html;
 
 import datascript.ast.SequenceType;
+import datascript.ast.TypeInterface;
+import datascript.ast.TokenAST;
 import datascript.ast.UnionType;
 import datascript.ast.EnumType;
 import datascript.ast.Subtype;
@@ -38,6 +40,12 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     @Override
     public void endTranslationUnit()
     {
+        for (Pair<String, TokenAST> p : typeMap.values())
+        {
+            setPackageName(p.getFirst());
+            currentType = (TypeInterface)p.getSecond();
+            out.print(itemTmpl.generate(this));
+        }
         out.print(endTmpl.generate(this));
         out.close();
     }
@@ -47,9 +55,8 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     public void beginSequence(AST s)
     {
         setPackageName(getPackageNode());
-
-        currentType = (SequenceType)s;
-        out.print(itemTmpl.generate(this));
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
+        typeMap.put(((SequenceType)s).getName(), p);
     }
 
 
@@ -63,9 +70,8 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     public void beginSqlDatabase(AST s)
     {
         setPackageName(getPackageNode());
-
-        currentType = (SqlDatabaseType)s;
-        out.print(itemTmpl.generate(this));
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
+        typeMap.put(((SqlDatabaseType)s).getName(), p);
     }
 
 
@@ -79,9 +85,8 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     public void beginUnion(AST u)
     {
         setPackageName(getPackageNode());
-
-        currentType = (UnionType)u;
-        out.print(itemTmpl.generate(this));
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)u);
+        typeMap.put(((UnionType)u).getName(), p);
     }
 
 
@@ -95,9 +100,8 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     public void beginEnumeration(AST e)
     {
         setPackageName(getPackageNode());
-
-        currentType = (EnumType)e;
-        out.print(itemTmpl.generate(this));
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)e);
+        typeMap.put(((EnumType)e).getName(), p);
     }
 
 
@@ -111,9 +115,8 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     public void beginSubtype(AST s)
     {
         setPackageName(getPackageNode());
-
-        currentType = (Subtype)s;
-        out.print(itemTmpl.generate(this));
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
+        typeMap.put(((Subtype)s).getName(), p);
     }
 
 
@@ -127,9 +130,8 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     public void beginSqlTable(AST s)
     {
         setPackageName(getPackageNode());
-
-        currentType = (SqlTableType)s;
-        out.print(itemTmpl.generate(this));
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
+        typeMap.put(((SqlTableType)s).getName(), p);
     }
 
 
@@ -143,9 +145,8 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     public void beginSqlPragma(AST s)
     {
         setPackageName(getPackageNode());
-
-        currentType = (SqlPragmaType)s;
-        out.print(itemTmpl.generate(this));
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
+        typeMap.put(((SqlPragmaType)s).getName(), p);
     }
 
 
@@ -159,9 +160,8 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     public void beginSqlMetadata(AST s)
     {
         setPackageName(getPackageNode());
-
-        currentType = (SqlMetadataType)s;
-        out.print(itemTmpl.generate(this));
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
+        typeMap.put(((SqlMetadataType)s).getName(), p);
     }
 
 
@@ -175,9 +175,8 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     public void beginSqlInteger(AST s)
     {
         setPackageName(getPackageNode());
-
-        currentType = (SqlIntegerType)s;
-        out.print(itemTmpl.generate(this));
+        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
+        typeMap.put(((SqlIntegerType)s).getName(), p);
     }
 
 
