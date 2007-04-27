@@ -73,9 +73,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
         private A first;
         private B second;
 
-        Pair()
+        Pair(A a, B b)
         {
-            
+            first = a;
+            second = b;
         }
         
         public A getFirst()
@@ -94,7 +95,8 @@ public class ContentEmitter extends DefaultHTMLEmitter
     private Enum enumTmpl = new Enum();
     private datascript.jet.html.Subtype subtypeTmpl = new datascript.jet.html.Subtype();
 
-    private SortedMap<String, TypeInterface> typeMap = new TreeMap<String, TypeInterface>();
+    private SortedMap<String, Pair<String, TypeInterface> > typeMap = 
+        new TreeMap<String, Pair<String, TypeInterface> >();
 
 
     /**** implementation of abstract methods ****/
@@ -109,8 +111,11 @@ public class ContentEmitter extends DefaultHTMLEmitter
         directory = new File(directory, contentFolder);
         setCurrentFolder(contentFolder);
 
-        for (TypeInterface type : typeMap.values())
+        for (Pair<String, TypeInterface> p : typeMap.values())
         {
+            TypeInterface type = p.getSecond();
+            // TODO: restore the right package tree
+            setPackageName(p.getFirst());
             if (type instanceof CompoundType)
             {
                 setPackageNode((AST)type);
@@ -152,11 +157,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSequence(AST s)
     {
-        // TODO: restore package name
         setPackageName(getPackageNode());
-        getPackageName();
         SequenceType seq = (SequenceType)s;
-        typeMap.put(seq.getName(), seq);
+        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), seq);
+        typeMap.put(seq.getName(), p);
     }
     
     public void endSequence(AST s)
@@ -165,8 +169,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginUnion(AST u)
     {
+        setPackageName(getPackageNode());
         UnionType un = (UnionType)u;
-        typeMap.put(un.getName(), un);
+        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), un);
+        typeMap.put(un.getName(), p);
     }
 
     public void endUnion(AST u)
@@ -183,8 +189,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginEnumeration(AST e)
     {
+        setPackageName(getPackageNode());
         EnumType et = (EnumType)e;
-        typeMap.put(et.getName(), et);
+        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), et);
+        typeMap.put(et.getName(), p);
     }
 
 
@@ -205,8 +213,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSubtype(AST s)
     {
+        setPackageName(getPackageNode());
         Subtype st = (Subtype)s;
-        typeMap.put(st.getName(), st);
+        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), st);
+        typeMap.put(st.getName(), p);
     }
 
 
@@ -216,8 +226,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSqlDatabase(AST s)
     {
+        setPackageName(getPackageNode());
         SqlDatabaseType sqlDb = (SqlDatabaseType)s;
-        typeMap.put(sqlDb.getName(), sqlDb);
+        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), sqlDb);
+        typeMap.put(sqlDb.getName(), p);
     }
 
 
@@ -227,8 +239,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSqlMetadata(AST s)
     {
+        setPackageName(getPackageNode());
         SqlMetadataType sqlMeta = (SqlMetadataType)s;
-        typeMap.put(sqlMeta.getName(), sqlMeta);
+        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), sqlMeta);
+        typeMap.put(sqlMeta.getName(), p);
     }
 
 
@@ -238,8 +252,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSqlPragma(AST s)
     {
+        setPackageName(getPackageNode());
         SqlPragmaType sqlPragma = (SqlPragmaType)s;
-        typeMap.put(sqlPragma.getName(), sqlPragma);
+        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), sqlPragma);
+        typeMap.put(sqlPragma.getName(), p);
     }
 
 
@@ -250,8 +266,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSqlTable(AST s)
     {
+        setPackageName(getPackageNode());
         SqlTableType sqlTab = (SqlTableType)s;
-        typeMap.put(sqlTab.getName(), sqlTab);
+        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), sqlTab);
+        typeMap.put(sqlTab.getName(), p);
     }
 
 
@@ -262,8 +280,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSqlInteger(AST s)
     {
+        setPackageName(getPackageNode());
         SqlIntegerType sqlInt = (SqlIntegerType)s;
-        typeMap.put(sqlInt.getName(), sqlInt);
+        Pair<String, TypeInterface> p = new Pair<String, TypeInterface>(getPackageName(), sqlInt);
+        typeMap.put(sqlInt.getName(), p);
     }
 
 
@@ -355,27 +375,21 @@ public class ContentEmitter extends DefaultHTMLEmitter
     {
         return (CompoundType)currentType;
     }
-/*    
-    public String getTypeName(TypeInterface type)
-    {
-        return typeEmitter.getTypeName(type);
-    }
- 
-*/
     
     public Set<String> getTypeNames()
     {
         return typeMap.keySet();
     }
 
-    public Collection<TypeInterface> getTypes()
+    public Collection< Pair<String, TypeInterface> > getTypes()
     {
         return typeMap.values();
     }
 
     public TypeInterface getType(String typeName)
     {
-        return typeMap.get(typeName);
+        Pair<String, TypeInterface> p = typeMap.get(typeName);
+        return p.getSecond();
     }
     
     private void emitCompound(CompoundType seq)
@@ -384,8 +398,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
         PrintStream indexOut = out;
         try
         {
-            // TODO: restore the right package tree
-            setPackageName(getPackageNode());
             openOutputFile(directory, seq.getName() + HTML_EXT);
             String result = compoundTmpl.generate(this);
             out.print(result);
