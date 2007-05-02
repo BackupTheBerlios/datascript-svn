@@ -72,7 +72,7 @@ import datascript.emit.java.VisitorEmitter;
 
 public class DataScriptTool 
 {
-    private static final String VERSION = "rds 0.81alpha (27 Apr 2007)";
+    private static final String VERSION = "rds 0.82alpha (02 May 2007)";
     private ToolContext context;
     private TokenAST rootNode;
 
@@ -114,6 +114,18 @@ public class DataScriptTool
             {
                 fileName = args[i];
             }
+        }
+        if (outPathName == null || outPathName.length() == 0)
+        {
+            outPathName = ".";
+        }
+        else
+        {
+            int i = outPathName.length();
+            while (outPathName.charAt(i-1) == File.separatorChar)
+                --i;
+            if (i < outPathName.length())
+                outPathName = outPathName.substring(0, i);
         }
 
         if (fileName == null /*|| packageName == null*/)
