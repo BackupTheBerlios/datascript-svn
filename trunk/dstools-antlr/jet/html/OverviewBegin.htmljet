@@ -38,14 +38,11 @@
  */
 %>
 <%@ jet package="datascript.jet.html" 
-        imports="datascript.emit.html.*" 
+        imports="" 
         class="OverviewBegin" %>
-<%
-    OverviewEmitter e = (OverviewEmitter) argument;
-%>
 <html>
   <head>
-    <title>DataScript Package: <%=e.getPackageName()%></title>
+    <title>DataScript Class-List</title>
     <link rel="stylesheet" type="text/css" href="webStyles.css">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   </head>

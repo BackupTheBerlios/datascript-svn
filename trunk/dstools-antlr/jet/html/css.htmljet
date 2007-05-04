@@ -212,14 +212,24 @@ th
 
 .packagelist
 {
-	height:0.2em;
+	margin-left:0em;
+	text-align:left;
 	padding-left:1em;
+	height:0.2em;
 	cursor:pointer;
+}
+
+* html .packagelist
+{  /* nur fuer Internet Explorer */
+	margin-top:0em;
+	margin-bottom:0em;
 }
 
 .classlist
 {
 	padding-left:1em;
+	margin-left:0em;
+	text-align:left;
 }
 
 .classlist li

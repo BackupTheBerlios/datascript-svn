@@ -46,4 +46,4 @@
     //TypeInterface type = e.getCurrentType();
 	LinkedType typeNameGenerator = new LinkedType();
 %>
-      <li name="<%=pkg%>"><%=typeNameGenerator.generate(e)%></li>
+      <li id="<%=pkg%>"><%=typeNameGenerator.generate(e)%></li>

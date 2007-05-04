@@ -38,8 +38,21 @@
  */
 %>
 <%@ jet package="datascript.jet.html" 
-        imports="" 
+        imports="datascript.emit.html.* java.util.Set" 
         class="OverviewEnd" %>
     </ul>    
   </body>
+<%
+    OverviewEmitter e = (OverviewEmitter) argument;
+    Set<String> pnl = e.getPackageNames();
+    for (String pn : pnl)
+    {
+    	pn = pn.replace('.', '_');
+%>
+    <style id="style_<%=pn%>" type="text/css">
+    	li#<%=pn%> { display: list-item; }
+    </style>   
+<%
+    }
+%>
 </html>

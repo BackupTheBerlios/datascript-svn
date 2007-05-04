@@ -46,7 +46,7 @@
 %>
 <html>
   <head>
-    <title>DataScript Package: <%=pkg%></title>
+    <title>DataScript Package-List</title>
     <link rel="stylesheet" type="text/css" href="webStyles.css">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <script language="JavaScript">
@@ -86,22 +86,26 @@
 			}
 			else
 			{
-	    		if (clickedElement.firstChild.data == "all")
-	    		{
-	    			classItems = docToChange.getElementsByTagName("li");
-					displayVal = "list-item";
-	    		}
-	    		else
-	    		{
-			    	var classItems = new Array();
-			    	classItems = docToChange.getElementsByName(clickedElement.firstChild.firstChild.data.replace(/\./g, '_'));
-					displayVal = (classItems[0].style.display == "none")? "list-item" : "none";
-			    }
+    			var styleItemId = "style_" + clickedElement.firstChild.firstChild.data.replace(/\./g, '_');
+		    	var styleElement = docToChange.getElementById(styleItemId);
+<%
+				/* DEBUG: show DOM object browser */
+		   		//parent.obrowser.getObjectBrowser().showProperties(styleElement, "styleElement");
+%>
+				var styleElementSheet = (styleElement.sheet)? styleElement.sheet : styleElement.styleSheet;
+		    	var styleElementRules = (styleElementSheet.rules)? styleElementSheet.rules : styleElementSheet.cssRules;
+		    	var styleElementStyle = styleElementRules[0].style;
+		    	styleElementStyle.display = (styleElementStyle.display == "none")? "list-item" : "none";
+<%
+		    	//var classItems = new Array();
+		    	//classItems = docToChange.getElementById(clickedElement.firstChild.firstChild.data.replace(/\./g, '_'));
+				//displayVal = (classItems[0].style.display == "none")? "list-item" : "none";
 
-				for (i = 0; i < classItems.length; i++)
-				{
-					classItems[i].style.display = displayVal;
-				}
+				//for (i = 0; i < classItems.length; i++)
+				//{
+				//	classItems[i].style.display = displayVal;
+				//}
+%>
 			}
     	}
     </script>
@@ -109,4 +113,3 @@
 
   <body>
     <h2>DataScript Package: <%=pkg%></h2>
-    <!--ul class="packagelist" onclick="showhidePackage(this);"><li>all</li></ul-->

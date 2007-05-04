@@ -1,5 +1,8 @@
 package datascript.emit.html;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import datascript.ast.SequenceType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TokenAST;
@@ -25,7 +28,14 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     private OverviewItem itemTmpl = new OverviewItem();
     private OverviewEnd endTmpl = new OverviewEnd();
 
+    private HashSet<String> packageNames = new HashSet<String>();
 
+
+
+    public Set<String> getPackageNames()
+    {
+        return packageNames;
+    }
 
     @Override
     public void beginTranslationUnit()
@@ -48,6 +58,19 @@ public class OverviewEmitter extends DefaultHTMLEmitter
         }
         out.print(endTmpl.generate(this));
         out.close();
+    }
+
+
+    @Override
+    public void beginPackage(AST p)
+    {
+        packageNames.add(getIDName(p.getFirstChild()));
+    }
+
+
+    @Override
+    public void endPackage(AST p)
+    {
     }
 
 
@@ -211,14 +234,6 @@ public class OverviewEmitter extends DefaultHTMLEmitter
 
 
     @Override
-    public void beginPackage(AST p)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
     public void endEnumItem(AST e)
     {
         // TODO Auto-generated method stub
@@ -236,14 +251,6 @@ public class OverviewEmitter extends DefaultHTMLEmitter
 
     @Override
     public void endImport()
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
-    public void endPackage(AST p)
     {
         // TODO Auto-generated method stub
 

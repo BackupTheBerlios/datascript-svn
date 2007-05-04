@@ -199,7 +199,7 @@ abstract public class DefaultEmitter implements Emitter
         return getName(in.getNextSibling(), retval, tokenType);
     }
 
-    private static String getIDName(AST in)
+    protected static String getIDName(AST in)
     {
         if (in == null || in.getType() != DataScriptParserTokenTypes.ID)
             return null;
