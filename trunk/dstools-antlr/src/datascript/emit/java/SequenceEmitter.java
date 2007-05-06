@@ -93,8 +93,6 @@ public class SequenceEmitter extends CompoundEmitter
 
     public void begin()
     {
-        //reset();
-        System.out.println(seq.getName() +": " + seq.getScope().getPackage().getPackageName());
         String result = beginTmpl.generate(this);
         out.print(result);
         

@@ -142,9 +142,10 @@ public class Package extends Scope
             p.resolveImports();
             p.link(null);
         }
-        dumpAll();
+        //dumpAll();
     }
     
+    // only for debugging
     private static void dumpAll()
     {
         for (Package p : allPackages.values())
