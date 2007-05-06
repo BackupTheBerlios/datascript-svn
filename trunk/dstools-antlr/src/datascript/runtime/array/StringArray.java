@@ -37,7 +37,6 @@
  */
 package datascript.runtime.array;
 
-import java.io.DataInput;
 import java.io.IOException;
 
 import datascript.runtime.CallChain;

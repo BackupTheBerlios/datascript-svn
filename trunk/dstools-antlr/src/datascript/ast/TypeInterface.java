@@ -65,12 +65,11 @@ public interface TypeInterface
      */
     Value castFrom(Value val);
 
-    public Scope getScope();
+    Scope getScope();
 
-    public int getLength();
-    
-    public String getName();
+    int getLength();
 
-    public Expression getLengthExpression();
+    String getName();
 
+    Expression getLengthExpression();
 }

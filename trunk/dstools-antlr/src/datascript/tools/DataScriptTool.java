@@ -55,6 +55,7 @@ import datascript.antlr.TypeEvaluator;
 
 import datascript.ast.DataScriptException;
 import datascript.ast.ParserException;
+import datascript.ast.Package;
 import datascript.ast.Scope;
 import datascript.ast.TokenAST;
 
@@ -72,11 +73,11 @@ import datascript.emit.java.VisitorEmitter;
 
 public class DataScriptTool 
 {
-    private static final String VERSION = "rds 0.83alpha (04 May 2007)";
+    private static final String VERSION = "rds 0.8alpha (6 May 2007)";
     private ToolContext context;
     private TokenAST rootNode;
 
-    private String packageName = null;
+    private String packageName = "";
     private String fileName = null;
     private String pathName = null;
     private String outPathName = null;
@@ -102,7 +103,7 @@ public class DataScriptTool
             {
                 checkSyntax = true;
             }
-            else if (args[i].equals("-path"))
+            else if (args[i].equals("-src"))
             {
                 pathName = args[++i];
             }
@@ -128,20 +129,20 @@ public class DataScriptTool
                 outPathName = outPathName.substring(0, i);
         }
 
-        if (fileName == null /*|| packageName == null*/)
+        if (fileName == null)
         {
             final String NL = System.getProperties().getProperty("line.separator");
             final StringBuilder buffer = new StringBuilder();
 
             buffer.append("parameter missing." + NL + NL);
-            buffer.append("rds [-doc] [-c] [-out \"pathname for output\"] [-pkg \"packagename\"] [-path \"pathname\"] \"filename\"" + NL);
+            buffer.append("rds [-doc] [-c] [-out \"pathname for output\"] [-pkg \"packagename\"] [-src \"pathname\"] \"filename\"" + NL);
             buffer.append("usage: " + NL);
             buffer.append(" -doc\tgenerates Javadoc-style documentation" + NL);
             buffer.append(" -c\tchecks syntax" + NL);
-            buffer.append(" -out \"pathname\"\tdefines the path to the directory in witch the generated code is stored" + NL);
-            buffer.append(" -pkg \"packagename\"\tdefines the default packagename" + NL);
-            buffer.append(" -path \"pathname\"\tdefines the path to datascript files" + NL);
-            buffer.append(" \"filename\"\tdefines the main datascript file" + NL);
+            buffer.append(" -out \"pathname\"\tpath to the directory in witch the generated code is stored" + NL);
+            buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScipt package" + NL);
+            buffer.append(" -src \"pathname\"\tpath to DataScript source files" + NL);
+            buffer.append(" \"filename\"\tmain DataScript source file" + NL);
 
             throw new DataScriptException(buffer.toString());
         }
@@ -180,7 +181,8 @@ public class DataScriptTool
         Scope globals = new Scope();
         typeEval.pushScope(globals);
         typeEval.translationUnit(rootNode);
-        globals.link(null);
+        //globals.link(null);
+        Package.linkAll();
         
         // check expression types and evaluate constant expressions
         ExpressionEvaluator exprEval = new ExpressionEvaluator();
@@ -247,7 +249,7 @@ public class DataScriptTool
         emitter.setEmitter(framesetEmitter);
         emitter.translationUnit(rootNode);
 
-        // emit stylesheeds
+        // emit stylesheets
         CssEmitter cssEmitter = new CssEmitter();
         cssEmitter.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(cssEmitter);
@@ -269,6 +271,8 @@ public class DataScriptTool
 
     private void parseImportedPackages(AST rootNode) throws Exception
     {
+        allPackageFiles.add(fileName);
+        
         AST node = rootNode.getFirstChild();
         if (node.getType() == DataScriptParserTokenTypes.PACKAGE)
         {
@@ -341,23 +345,30 @@ public class DataScriptTool
         parser.translationUnit();
         if (context.getErrorCount() != 0)
             throw new ParserException("Parser errors.");
-
+        
+        // TODO: Log warning if package name AST does not match file name
         return parser.getAST();
     }
 
 
-
+    // TODO: Do not include the package tree in the import list of
+    // the imported package. Instead, create a new AST type TRANSLATION_UNIT
+    // to replace the current ROOT.
+    // root : #(ROOT (translationUnit)+)
+    // Refactor the package and import related methods using the new Package
+    // class. There is some redundancy.
+    
     private void mergeSyntaxTrees(AST rootNode, AST packageRoot)
     {
         AST rootMembers = getImportNode(rootNode, getPackageNode(packageRoot));
         if (rootMembers == null)
         {
             rootMembers = getMembersNode(rootNode);
-        	AST importedMembers = getMembersNode(packageRoot);
-        	rootMembers.addChild(importedMembers.getFirstChild());
-       	}
-       	else
-       	    rootMembers.addChild(packageRoot);
+            AST importedMembers = getMembersNode(packageRoot);
+            rootMembers.addChild(importedMembers.getFirstChild());
+        }
+        else
+            rootMembers.addChild(packageRoot);
     }
 
 

@@ -41,25 +41,46 @@ import antlr.Token;
 import antlr.collections.AST;
 import datascript.tools.ToolContext;
 
+/**
+ * Any occurrence of a type name which is not the defining one is a type
+ * reference and has an AST node of this class.
+ * <p>
+ * In the link phase, the type reference is mapped to the corresponding type.
+ * <p>
+ * A type reference is either a simple name or a sequence of simple names
+ * separated by dots referring to a nested type, e.g. {@code Outer.Inner}.
+ * @author HWellmann
+ *
+ */
 public class TypeReference extends TokenAST implements TypeInterface,
         LinkAction
 {
     /** The referenced type. */
     private TypeInterface refType;
 
-    /** Qualified name of this type. */
+    /** 
+     * Qualified name of referenced type. 
+     * @see #getName().
+     */
     private String name;
-
 
     public TypeReference()
     {
+        
     }
-
+    
+    /** Constructs a type reference from a token. */
     public TypeReference(Token token)
     {
         super(token);
     }
 
+    /** 
+     * Returns the qualified name of this type within the current package, e.g. 
+     * {@code Outer.Inner}. This is different from the fully qualified name 
+     * which includes the package, e.g. {@code com.acme.foo.bar.Outer.Inner}.
+     * @return type name
+     */
     public String getName()
     {
         if (name == null)
@@ -81,48 +102,38 @@ public class TypeReference extends TokenAST implements TypeInterface,
         return name;
     }
 
-
+    /**
+     * Links this reference to the corresponding type and logs an error if
+     * there is a cycle in the containment hierarchy.
+     */
     public void link(Context ctxt)
     {
         CompoundType outer = ctxt.getOwner();
         //String outerName = (outer == null) ? "<global>" : outer.getName();
-        Object obj = null;
+        //Object obj = null;
+        
+        // From left to right, link each part of a nested reference.
         for (AST node = getFirstChild(); node != null; node = node
                 .getNextSibling())
         {
             String name = node.getText();
-            obj = ctxt.getSymbol(name);
+            refType = ctxt.getType(name);
             //System.out.println("Linking " + name + " in scope " + outerName);
-            if (obj == null)
+            if (refType == null)
             {
                 ToolContext.logError((TokenAST)node, "'" + name + "' is undefined");
             }
-            /*
-             * TODO: Fix this when we're using StructType etc. instead of
-             * CommonAST.
-             * 
-             * if (!(obj instanceof TypeInterface)) { ToolContext.logError(node,
-             * obj + " is not a type"); }
-             */
-            if (obj instanceof CompoundType)
+            if (refType instanceof CompoundType)
             {
-                CompoundType ctype = (CompoundType) obj;
+                CompoundType ctype = (CompoundType) refType;
                 ctxt = ctype.getScope();
             }
         }
         
-        if (obj instanceof TypeInterface)
+        // Check for circular containment
+        if (refType instanceof CompoundType)
         {
-            refType = (TypeInterface) obj;
-        }
-        else
-        {
-            ToolContext.logError(this, "'" + getName() + "' is not a type name");
-        }
-        
-        if (obj instanceof CompoundType)
-        {
-            CompoundType inner = (CompoundType) obj;
+            CompoundType inner = (CompoundType) refType;
             if (outer != null && outer.isContainedIn(inner))
             {
                 ToolContext.logError(this, "circular containment between '" +
@@ -130,12 +141,6 @@ public class TypeReference extends TokenAST implements TypeInterface,
             }
             inner.addContainer(outer);
         }
-    }
-
-    public void resolve(Context ctxt)
-    {
-        //System.out.println("to be resolved: " + getName() + " in scope " + ctxt.getOwner().getName());
-        ctxt.postLinkAction(this);
     }
 
     public IntegerValue sizeof(Context ctxt)
@@ -174,16 +179,16 @@ public class TypeReference extends TokenAST implements TypeInterface,
 
     public Scope getScope()
     {
-        throw new InternalError("TypeReference.getScope() not implemented");
+        throw new UnsupportedOperationException();
     }    
     public int getLength()
     {
-        throw new InternalError("not implemented");
+        throw new UnsupportedOperationException();
     }
     
     public Expression getLengthExpression()
     {
-        throw new InternalError("not implemented");
+        throw new UnsupportedOperationException();
     }
     
 }

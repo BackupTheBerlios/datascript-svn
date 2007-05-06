@@ -37,13 +37,12 @@
  */
 package datascript.runtime.array;
 
-import java.io.DataInput;
 import java.io.IOException;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
-import datascript.runtime.io.BitStreamWriter;
 import datascript.runtime.io.BitStreamReader;
+import datascript.runtime.io.BitStreamWriter;
 
 public class UnsignedShortArray implements Array, SizeOf
 {

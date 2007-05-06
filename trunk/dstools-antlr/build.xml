@@ -12,26 +12,9 @@
   <property name="antlr" value="${basedir}/antlr"/>
   <property name="antlr.out" value="${gen}/datascript/antlr"/>
 
-  <!--property name="eclipse.plugins.dir" value="C:/Programme/Eclipse-3.2/eclipse/plugins"/-->
-
-
   <taskdef name="jetc" classname="ch.paranor.epla.structure.JETCTask">
     <classpath>
       <pathelement location="${basedir}/lib/jetc-task.jar"/>
-      <!--fileset dir="${eclipse.plugins.dir}">
-        <include name="org.eclipse.core.boot_3.1.100.v20060603.jar"/>
-        <include name="org.eclipse.core.resources_3.2.1.R32x_v20060914.jar"/>
-        <include name="org.eclipse.core.runtime_3.2.0.v20060603.jar"/>
-
-        <include name="org.eclipse.emf.codegen_2.2.1.v200609210005.jar"/>
-        <include name="org.eclipse.emf.common_2.2.1.v200609210005.jar"/>
-        <include name="org.eclipse.jdt.core_3.2.1.v_677_R32x.jar"/>
-        <include name="org.eclipse.equinox.common_3.2.0.v20060603.jar"/>
-        <include name="org.eclipse.core.jobs_3.2.0.v20060603.jar"/>
-        <include name="org.eclipse.jface.text_3.2.1.r321_v20060810.jar"/>
-        <include name="org.eclipse.text_3.2.0.v20060605-1400.jar"/>
-        <include name="org.eclipse.equinox.preferences_3.2.1.R32x_v20060717.jar"/>
-      </fileset-->
     </classpath>
   </taskdef>
 
@@ -40,7 +23,9 @@
     <delete dir="${build}"/>
   </target>
 
-  <target name="cleanall" depends="clean, test.clean, examples.clean" description="removes all generated Java sources and classes" />
+  <target name="cleanall" 
+    depends="clean, test.clean, examples.clean" 
+    description="removes all generated Java sources and classes" />
 
   <target name="init">
     <uptodate 
@@ -156,11 +141,13 @@
         <pathelement path="${gen}"/>
         <pathelement path="${lib}/antlr.jar"/>
       </classpath>
-      <arg line="-c -out ${test} -pkg bits -path scripts bits.ds"/>
+      <arg line="-c -out ${test} -src scripts bits.ds"/>
     </java>
   </target>
 
-  <target name="test.compile" depends="test.gen, sqltest.gen, jar, check.junit" description="Builds the test cases">
+  <target name="test.compile" 
+    depends="test.gen, sqltest.gen, pkgtest.gen, jar, check.junit" 
+    description="Builds the test cases">
     <javac destdir="${build}/test/classes" debug="on" target="1.5">
       <classpath>
         <pathelement path="${jar}/rds.jar"/>
@@ -197,12 +184,40 @@
         <pathelement path="${gen}"/>
         <pathelement path="${lib}/antlr.jar"/>
       </classpath>
-      <arg line="-c -out ${test} -pkg sqltest -path scripts sqltest.ds"/>
+      <arg line="-c -out ${test} -src scripts sqltest.ds"/>
     </java>
   </target>
 
   <target name="sqltest.clean" description="removes all generated test Java sources and classes">
     <delete dir="${test}/sqltest" />
+  </target>
+
+  <!-- Currently, there are no test units using the code generated here, but at
+       least we can test that rds can handle more advanced package relations.
+  -->
+  <target name="pkgtest.gen" depends="jar" 
+    description="Generates parser for test cases"  
+    unless="pkgtest.uptodate">
+    <java jar="${jar}/rds.jar" dir="${test}" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}"/>
+        <pathelement path="${lib}/antlr.jar"/>
+      </classpath>
+      <arg line="-c -out ${test} -src scripts child.ds"/>
+    </java>
+    <java jar="${jar}/rds.jar" dir="${test}" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}"/>
+        <pathelement path="${lib}/antlr.jar"/>
+      </classpath>
+      <arg line="-c -out ${test} -src scripts pkg\top.ds"/>
+    </java>
+  </target>
+
+  <target name="pkgtest.clean" description="removes all generated test Java sources and classes">
+    <delete dir="${test}/parent" />
+    <delete dir="${test}/child" />
+    <delete dir="${test}/pkg" />
   </target>
 
   
@@ -218,7 +233,7 @@
         <pathelement path="${gen}"/>
         <pathelement path="${lib}/antlr.jar"/>
       </classpath>
-      <arg line="-c -out ${examples} -pkg gif gif.ds"/>
+      <arg line="-c -out ${examples} gif.ds"/>
     </java>
   </target>
 

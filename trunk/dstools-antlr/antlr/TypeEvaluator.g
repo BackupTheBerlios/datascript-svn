@@ -39,6 +39,7 @@ header
 {
 package datascript.antlr;
 import datascript.ast.*;
+import datascript.ast.Package;  // explicit to override java.lang.Package
 import datascript.tools.ToolContext;
 import java.util.Stack;
 }
@@ -53,6 +54,7 @@ options
 {
     private Stack<Scope> scopeStack = new Stack<Scope>();
     private ToolContext context;
+    private Package pkg;
     
     public void setContext(ToolContext context)
     {
@@ -94,11 +96,13 @@ translationUnit
 
 
 packageDeclaration
-    :   #(PACKAGE (ID)+)
+    :   #(p:PACKAGE (ID)+)
+        { pkg = new Package(p); pushScope(pkg); }
     ;
     
 importDeclaration
-    :   #(IMPORT (ID)+ (translationUnit)?)
+    :   #(i:IMPORT (ID)+ (translationUnit)?)
+        { pkg.addPackageImport(i); }
     ;
         	
 members
@@ -151,7 +155,7 @@ parameterDefinition
 
 enumDeclaration
     : #(e:"enum" builtinType 
-        (i:ID                		{scope().setSymbol(i, e); }
+        (i:ID                		{scope().setTypeSymbol(i, e); }
         )? 
         enumMemberList[e])
     ;
@@ -243,7 +247,7 @@ paramTypeInstantiation
     
 sequenceDeclaration
     :   #(s:SEQUENCE 
-          (i:ID      		{ scope().setSymbol(i, s); }
+          (i:ID      		{ scope().setTypeSymbol(i, s); }
           )?			{ pushScope(); ((SequenceType)s).setScope(scope()); }
           (parameterList)? 	
           memberList)		{ popScope(); 
@@ -255,7 +259,7 @@ sequenceDeclaration
 unionDeclaration
     :   #(u:UNION 
     
-          (i:ID      		{ scope().setSymbol(i, u); }
+          (i:ID      		{ scope().setTypeSymbol(i, u); }
           )?			{ pushScope(); ((UnionType)u).setScope(scope()); }
           (parameterList)? 	
           memberList)		{ popScope(); 
@@ -268,13 +272,13 @@ memberList
     ;
 
 definedType
-    :  #(t:TYPEREF ID (DOT ID)*) 	{ ((TypeReference)t).resolve(scope()); }
+    :  #(t:TYPEREF ID (DOT ID)*) { scope().postLinkAction((TypeReference)t); }
     |   builtinType
     ;
 
 subtypeDeclaration
     : #(s:SUBTYPE definedType i:ID (expression)? (DOC)?)
-                                { scope().setSymbol(i, s); 
+                                { scope().setTypeSymbol(i, s); 
                                   //((TypeReference)s).resolve(scope()); 
                                 }
     ;
@@ -327,7 +331,7 @@ integerType
 /*********************************************************************/
 
 sqlDatabaseDefinition
-    : #(s:SQL_DATABASE i:ID              { scope().setSymbol(i, s); pushScope();
+    : #(s:SQL_DATABASE i:ID              { scope().setTypeSymbol(i, s); pushScope();
     					   ((CompoundType)s).setScope(scope()); }
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)? 
@@ -401,12 +405,12 @@ sqlTableDefinition[AST fd]
     | #(t:TYPEREF ID m:ID )             { 
                                           scope().setSymbol(m, f);
           				  f.setName(m); ct.addField(f);
-          				  ((TypeReference)t).resolve(scope()); 
+          				  scope().postLinkAction((TypeReference)t);          				  
                                         }
     ;
 
 sqlTableDeclaration
-    : #(s:SQL_TABLE i:ID                 { scope().setSymbol(i, s); pushScope();
+    : #(s:SQL_TABLE i:ID                 { scope().setTypeSymbol(i, s); pushScope();
     	  				   ((CompoundType)s).setScope(scope()); }
         (sqlFieldDefinition)+
         (c:sqlConstraint                   { ((SqlTableType)s).setSqlConstraint(c); } 

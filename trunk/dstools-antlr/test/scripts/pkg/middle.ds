@@ -1,0 +1,11 @@
+package pkg.middle;
+
+import pkg.bottom.*;
+
+
+Middle
+{
+    uint8 type = 2;
+    int32 data;
+    Bottom bottom;
+};

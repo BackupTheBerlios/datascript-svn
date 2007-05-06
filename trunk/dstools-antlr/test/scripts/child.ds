@@ -1,0 +1,15 @@
+package child;
+
+import parent.*;
+
+Child
+{
+    uint16 part1;
+    uint16 part2;
+};
+
+Parents
+{
+    Father f;
+    Mother m;
+};

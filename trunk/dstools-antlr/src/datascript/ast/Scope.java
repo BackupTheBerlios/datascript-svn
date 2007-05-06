@@ -47,7 +47,7 @@ public class Scope implements Context, LinkAction
 {
     private HashMap<String, Object> symbolTable = new HashMap<String, Object>();
 
-    private Context parentScope;
+    private Scope parentScope;
     private CompoundType owner;
     private Field currentField;
 
@@ -58,7 +58,7 @@ public class Scope implements Context, LinkAction
         this(null);
     }
 
-    public Scope(Context parentScope)
+    public Scope(Scope parentScope)
     {
         this.parentScope = parentScope;
         if (parentScope != null)
@@ -97,6 +97,20 @@ public class Scope implements Context, LinkAction
             return parentScope.getSymbol(name);
         return obj;
     }
+    
+    public TypeInterface getType(String name)
+    {
+        Object obj = getSymbol(name);
+        if (obj == null)
+        {
+            if (parentScope != null)
+            {
+                obj = parentScope.getType(name);
+            }
+        }
+        return (obj instanceof TypeInterface) ? (TypeInterface)obj : null;
+    }
+
 
     /**
      * Get the owner is whose scope this symbol is defined.
@@ -144,16 +158,11 @@ public class Scope implements Context, LinkAction
                     + "' is already defined in this scope");
     }
 
-    /**
-     * set this symbol, discarding any previous setting (if any)
-     */
-    public void replaceSymbol(String name, Object symbol)
+    public void setTypeSymbol(AST node, Object type)
     {
-        // Main.debug(this + ": redefining " + name + " to be " +
-        // symbol.getClass() + ":" + symbol);
-        symbolTable.put(name, symbol);
+        setSymbol(node, type);
     }
-
+    
     public Context getParentScope()
     {
         return parentScope;
@@ -170,5 +179,10 @@ public class Scope implements Context, LinkAction
         {
             l.link(this);
         }
+    }
+    
+    public Package getPackage()
+    {
+        return parentScope.getPackage();
     }
 }

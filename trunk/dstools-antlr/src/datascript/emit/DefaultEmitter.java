@@ -172,19 +172,6 @@ abstract public class DefaultEmitter implements Emitter
         return retval;
     }
 
-    public Set<String> getPackageNameList()
-    {
-        HashSet<String> retval = new HashSet<String>();
-        AST in = getPackageNode();
-
-        return getName(in, retval, DataScriptParserTokenTypes.PACKAGE);
-    }
-
-    protected static Set<String> getImportNameList(AST in, Set<String> retval)
-    {
-        return getName(in, retval, DataScriptParserTokenTypes.IMPORT);
-    }
-
     protected static Set<String> getPackageNameList(AST in, Set<String> retval)
     {
         return getName(in, retval, DataScriptParserTokenTypes.PACKAGE);
@@ -217,16 +204,21 @@ abstract public class DefaultEmitter implements Emitter
         if (! directory.exists())
         {
             directory.mkdirs();
+            // TODO: handle false result
         }
         try
         {
             File outputFile = new File(directory, fileName);
-            if (outputFile.exists())
-            {
-                System.err.println("WARNING: overwriting file " + outputFile.getAbsoluteFile());
-                outputFile.delete();
-            }
-            outputFile.createNewFile();
+            
+// TODO HWellmann: What for? The warning is annoying and the delete/create
+// is redundant
+            
+//            if (outputFile.exists())
+//            {
+//                System.err.println("WARNING: overwriting file " + outputFile.getAbsoluteFile());
+//                outputFile.delete();
+//            }
+//            outputFile.createNewFile();
             out = new PrintStream(outputFile);
         }
         catch (IOException exc)
@@ -234,5 +226,4 @@ abstract public class DefaultEmitter implements Emitter
             exc.printStackTrace();
         }
     }
-
 }

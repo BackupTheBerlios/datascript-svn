@@ -39,17 +39,82 @@ package datascript.ast;
 
 import antlr.collections.AST;
 
+/**
+ * A Context is a lexical scope which maps names to objects. A name must be
+ * unique in its scope. This is also true for different object categories:
+ * e.g. a type name cannot be reused as a field name in the same scope.
+ *  
+ * A scope may have a parent scope. Names of the parent
+ * scope are visible in the current scope, but may be shadowed.
+ * @author HWellmann
+ *
+ */
 public interface Context
 {
-    public Context getParentScope();
+    /** Returns the parent scope, or null. */
+    Context getParentScope();
 
+    /** 
+     * Returns the object for the given name, or null if no such name is 
+     * visible. If the name is not defined in the current scope, it is
+     * recursively looked up in the parent scope.
+     * @param symbol   name to be looked up
+     * @return corresponding object, or null
+     */
     Object getSymbol(String symbol);
 
-    void setSymbol(AST name, Object symbol);
+    /**
+     * Adds a name with its corresponding object to the current scope.
+     * @pre The name is not yet defined in the current scope.
+     * @param symbol    name to be added
+     * @param obj       object with this name
+     */
+    void setSymbol(AST symbol, Object obj);
 
-    void replaceSymbol(String name, Object symbol);
+    /**
+     * Adds a name with its corresponding object to the current scope and
+     * marks it as a type name.
+     * @pre The name is not yet defined in the current scope.
+     * @pre The object is a TypeInterface.
+     * @param symbol    name to be added
+     * @param obj       object with this name
+     */
+    void setTypeSymbol(AST symbol, Object obj);
 
+    /**
+     * Registers a link action to be resolved in this scope at a later stage.
+     * A link action is posted for each type reference. The reference will 
+     * be resolved to the type object of that name.
+     * 
+     * Note that for a field definition {@code Foo myFoo;}, the name 
+     * {@code myFoo} maps to a type reference, whereas the defining occurrence
+     * of the name {@code Foo} maps to the type object for {@code Foo}. 
+     * 
+     * @param act       link action
+     */
     void postLinkAction(LinkAction act);
 
-    public CompoundType getOwner();
+    /**
+     * Each compound type defines its own lexical scope. The parent of this is
+     * the one owned by the enclosing compound or by the defining package 
+     * otherwise
+     * @return the compound type owning this scope, or null, if this scope does
+     * not belong to a compound.
+     */
+    CompoundType getOwner();
+    
+    /**
+     * Looks up a type with a given name in the current scope (including
+     * recursion to enclosing scopes).
+     * 
+     * The result may be null if
+     * <ul>
+     * <li>The name is not defined.</li>
+     * <li>The name is not visible.</li>
+     * <li>The name is does not belong to a type.</li>
+     * </ul>
+     * @param name
+     * @return a type with the given name, or null
+     */
+    TypeInterface getType(String name);
 }
