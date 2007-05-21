@@ -299,12 +299,7 @@ public class DataScriptXmlDumper extends XMLFilterImpl
     {
         handler = getContentHandler();
         handler.startDocument();
-        TokenAST unitRoot = (TokenAST) rootNode.getFirstChild();
-        while (unitRoot != null)
-        {
-            fireSaxEvents(unitRoot);
-            unitRoot = (TokenAST) unitRoot.getNextSibling();
-        }
+        fireSaxEvents((TokenAST) rootNode);
         handler.endDocument();
     }
 
