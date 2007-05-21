@@ -9,7 +9,7 @@ public class CssEmitter extends DefaultHTMLEmitter
 
 
     @Override
-    public void beginTranslationUnit(AST rootNode, AST unitNode)
+    public void beginRoot(AST rootNode)
     {
         openOutputFile(directory, "webStyles.css");
         out.print(cssTmpl.generate(this));

@@ -48,6 +48,7 @@ import datascript.ast.CompoundType;
 import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
 import datascript.ast.Field;
+import datascript.ast.Package;
 import datascript.ast.SequenceType;
 import datascript.ast.SetType;
 import datascript.ast.SqlIntegerType;
@@ -71,14 +72,19 @@ public class ContentEmitter extends DefaultHTMLEmitter
     private Enum enumTmpl = new Enum();
     private datascript.jet.html.Subtype subtypeTmpl = new datascript.jet.html.Subtype();
 
-
     /**** implementation of abstract methods ****/
 
+    public void beginRoot(AST root)
+    {
+        directory = new File(directory, contentFolder);
+        setCurrentFolder(contentFolder);
+    }
+    
     public void beginTranslationUnit(AST rootNode, AST unitNode)
     {
     }
     
-    public void endTranslationUnit()
+    public void endTranslationUnit_()
     {
         /* now producing the real content */
         directory = new File(directory, contentFolder);
@@ -104,142 +110,28 @@ public class ContentEmitter extends DefaultHTMLEmitter
     }
 
 
-    public void beginPackage(AST p)
-    {
-    }
-
-
     public void endPackage(AST p)
     {
+    	for (String typeName : currentPackage.getLocalTypeNames())
+    	{
+    		TypeInterface t = currentPackage.getLocalType(typeName);
+    		TokenAST type = (TokenAST) t;
+            if (type instanceof CompoundType)
+            {
+                emitCompound((CompoundType) type);
+            }
+            else if (type instanceof EnumType)
+            {
+                emitEnumeration((EnumType) type);
+            }
+            else if (type instanceof Subtype)
+            {
+                emitSubtype((Subtype) type);
+            }
+    	}
     }
 
 
-    public void beginImport(AST importNode)
-    {
-    }
-
-
-    public void endImport()
-    {
-    }
-
-
-    public void beginSequence(AST s)
-    {
-        SequenceType seq = (SequenceType)s;
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), seq);
-        typeMap.put(seq.getName(), p);
-    }
-    
-    public void endSequence(AST s)
-    {
-    }
-
-    public void beginUnion(AST u)
-    {
-        UnionType un = (UnionType)u;
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), un);
-        typeMap.put(un.getName(), p);
-    }
-
-    public void endUnion(AST u)
-    {
-    }
-
-    public void beginField(AST f)
-    {
-    }
-
-    public void endField(AST f)
-    {
-    }
-
-    public void beginEnumeration(AST e)
-    {
-        EnumType et = (EnumType)e;
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), et);
-        typeMap.put(et.getName(), p);
-    }
-
-
-    public void endEnumeration(AST e)
-    {
-    }
-
-
-    public void beginSubtype(AST s)
-    {
-        Subtype st = (Subtype)s;
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), st);
-        typeMap.put(st.getName(), p);
-    }
-
-
-    public void endSubtype(AST s)
-    {
-    }
-
-    public void beginSqlDatabase(AST s)
-    {
-        SqlDatabaseType sqlDb = (SqlDatabaseType)s;
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlDb);
-        typeMap.put(sqlDb.getName(), p);
-    }
-
-
-    public void endSqlDatabase(AST s)
-    {
-    }
-
-    public void beginSqlMetadata(AST s)
-    {
-        SqlMetadataType sqlMeta = (SqlMetadataType)s;
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlMeta);
-        typeMap.put(sqlMeta.getName(), p);
-    }
-
-
-    public void endSqlMetadata(AST s)
-    {
-    }
-
-    public void beginSqlPragma(AST s)
-    {
-        SqlPragmaType sqlPragma = (SqlPragmaType)s;
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlPragma);
-        typeMap.put(sqlPragma.getName(), p);
-    }
-
-
-    public void endSqlPragma(AST s)
-    {
-    }
-
-
-    public void beginSqlTable(AST s)
-    {
-        SqlTableType sqlTab = (SqlTableType)s;
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlTab);
-        typeMap.put(sqlTab.getName(), p);
-    }
-
-
-    public void endSqlTable(AST s)
-    {
-    }
-
-
-    public void beginSqlInteger(AST s)
-    {
-        SqlIntegerType sqlInt = (SqlIntegerType)s;
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlInt);
-        typeMap.put(sqlInt.getName(), p);
-    }
-
-
-    public void endSqlInteger(AST s)
-    {
-    }
 
 /**** end of implementation of abstract methods ****/
     

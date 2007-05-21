@@ -9,7 +9,7 @@ import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.TypeInterface;
 import datascript.ast.TokenAST;
 import datascript.emit.DefaultEmitter;
-
+import datascript.ast.Package;
 
 abstract public class DefaultHTMLEmitter extends DefaultEmitter
 {
@@ -44,6 +44,7 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
         new TreeMap<String, Pair<String, TokenAST> >();
     private String packageName;
     private String currentFolder = "/";
+    protected Package currentPackage;
 
 
     public void setCurrentFolder(String currentFolder)
@@ -70,26 +71,6 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
     }
 
 
-    public void setPackageName(AST packageNode)
-    {
-        if (packageNode != null && packageNode.getType() == DataScriptParserTokenTypes.PACKAGE)
-        {
-            AST sibling = packageNode.getFirstChild();
-            String fileName = sibling.getText();
-            while (true)
-            {
-                sibling = sibling.getNextSibling();
-                if (sibling == null)
-                    break;
-                
-                fileName = fileName + "." + sibling.getText();
-            }
-            
-            setPackageName(fileName);
-        }
-    }
-
-
     public void setPackageName(String packageName)
     {
         this.packageName = packageName;
@@ -98,6 +79,17 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
 
     public String getPackageName()
     {
-        return packageName;
+        return currentPackage.getPackageName();
     }
+    
+    public String getRootPackageName()
+    {
+        return Package.getRoot().getPackageName();
+    }
+    
+    public void beginPackage(AST p)
+    {
+    	currentPackage = Package.lookup(p);
+    }    
+    
 }

@@ -111,11 +111,6 @@ public class DefaultEmitter implements Emitter
 
     /**** end implementation of interface methods ****/
 
-    public final void setRootNode(AST i) throws Exception
-    {
-        throw new Exception("this member function is obsolete!");
-    }
-
     public Set<String> getImportNameList()
     {
         HashSet<String> retval = new HashSet<String>();
@@ -167,7 +162,7 @@ public class DefaultEmitter implements Emitter
         try
         {
             File outputFile = new File(directory, fileName);
-            System.out.println(String.format("writing %1$s", fileName));
+            //System.out.println(String.format("writing %1$s", fileName));
             out = new PrintStream(outputFile);
         }
         catch (IOException exc)

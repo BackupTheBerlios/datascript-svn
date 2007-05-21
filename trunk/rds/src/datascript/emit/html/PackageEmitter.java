@@ -1,7 +1,6 @@
 package datascript.emit.html;
 
 import antlr.collections.AST;
-import datascript.ast.TokenAST;
 import datascript.jet.html.PackageBegin;
 import datascript.jet.html.PackageEnd;
 import datascript.jet.html.PackageItem;
@@ -15,42 +14,25 @@ public class PackageEmitter extends DefaultHTMLEmitter
 
 
     @Override
-    public void beginTranslationUnit(AST rootNode, AST unitNode)
+    public void beginRoot(AST rootNode)
     {
-        setPackageName(unitNode);
+        //setPackageName(rootNode.getFirstChild().getFirstChild());
 
         openOutputFile(directory, "packages" + HTML_EXT);
         out.print(beginTmpl.generate(this));
     }
 
-
     @Override
-    public void endTranslationUnit()
+    public void endRoot()
     {
-        for (Pair<String, TokenAST> p : typeMap.values())
-        {
-            //TokenAST type = (TokenAST) p.getSecond();
-            setPackageName(p.getFirst());
-            out.print(itemTmpl.generate(this));
-        }
         out.print(endTmpl.generate(this));
         out.close();
     }
 
-
-    @Override
-    public void beginPackage(AST pack)
-    {
-        //setPackageName(getPackageNode());
-        setPackageName(pack);
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)pack);
-        typeMap.put(getPackageName(), p);
-    }
-
-
     @Override
     public void endPackage(AST p)
     {
+        out.print(itemTmpl.generate(this));
     }
 
 }

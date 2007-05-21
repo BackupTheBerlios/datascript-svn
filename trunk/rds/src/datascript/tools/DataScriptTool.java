@@ -247,31 +247,26 @@ public class DataScriptTool
 
         // emit HTML documentation
         ContentEmitter htmlEmitter = new ContentEmitter();
-        htmlEmitter.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(htmlEmitter);
         emitter.root(rootNode);
 
         // emit frameset
         FramesetEmitter framesetEmitter = new FramesetEmitter();
-        framesetEmitter.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(framesetEmitter);
         emitter.root(rootNode);
 
         // emit stylesheets
         CssEmitter cssEmitter = new CssEmitter();
-        cssEmitter.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(cssEmitter);
         emitter.root(rootNode);
 
         // emit list of packages
         PackageEmitter packageEmitter = new PackageEmitter();
-        packageEmitter.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(packageEmitter);
         emitter.root(rootNode);
 
         // emit list of classes
         OverviewEmitter overviewEmitter = new OverviewEmitter();
-        overviewEmitter.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(overviewEmitter);
         emitter.root(rootNode);
     }

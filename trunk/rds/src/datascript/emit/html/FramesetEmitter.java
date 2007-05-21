@@ -9,17 +9,12 @@ public class FramesetEmitter extends DefaultHTMLEmitter
 
 
     @Override
-    public void beginTranslationUnit(AST rootNode, AST unitNode)
+    public void beginRoot(AST rootNode)
     {
         openOutputFile(directory, "index" + HTML_EXT);
         out.print(indexTmpl.generate(this));
         out.close();
     }
 
-
-    @Override
-    public void endTranslationUnit()
-    {
-    }
 
 }

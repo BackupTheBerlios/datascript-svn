@@ -3,23 +3,12 @@ package datascript.emit.html;
 import java.util.HashSet;
 import java.util.Set;
 
-import datascript.ast.SequenceType;
-import datascript.ast.TypeInterface;
+import antlr.collections.AST;
 import datascript.ast.TokenAST;
-import datascript.ast.UnionType;
-import datascript.ast.EnumType;
-import datascript.ast.Subtype;
-import datascript.ast.SqlDatabaseType;
-import datascript.ast.SqlTableType;
-import datascript.ast.SqlPragmaType;
-import datascript.ast.SqlMetadataType;
-import datascript.ast.SqlIntegerType;
-
+import datascript.ast.TypeInterface;
 import datascript.jet.html.OverviewBegin;
 import datascript.jet.html.OverviewEnd;
 import datascript.jet.html.OverviewItem;
-
-import antlr.collections.AST;
 
 
 public class OverviewEmitter extends DefaultHTMLEmitter
@@ -29,30 +18,42 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     private OverviewEnd endTmpl = new OverviewEnd();
 
     private HashSet<String> packageNames = new HashSet<String>();
-
-
+    private String packageName;
 
     public Set<String> getPackageNames()
     {
         return packageNames;
     }
 
-    @Override
-    public void beginTranslationUnit(AST rootNode, AST unitNode)
-    {
-        setPackageName(unitNode);
+    
 
+    @Override
+    public void beginRoot(AST rootNode)
+    {
+    	typeMap.clear();
         openOutputFile(directory, "overview" + HTML_EXT);
         out.print(beginTmpl.generate(this));
     }
 
+    public void endPackage(AST p)
+    {
+		String pkgName = currentPackage.getPackageName();
+    	for (String typeName : currentPackage.getLocalTypeNames())
+    	{
+    		TypeInterface t = currentPackage.getLocalType(typeName);
+    		TokenAST type = (TokenAST) t;
+    		Pair<String, TokenAST> entry = new Pair<String, TokenAST>(pkgName, type);    		
+    		typeMap.put(typeName, entry);
+    	}
+    	packageNames.add(pkgName);
+    }
 
     @Override
-    public void endTranslationUnit()
+    public void endRoot()
     {
         for (Pair<String, TokenAST> p : typeMap.values())
         {
-            setPackageName(p.getFirst());
+            packageName = p.getFirst();
             currentType = (TypeInterface)p.getSecond();
             out.print(itemTmpl.generate(this));
         }
@@ -60,152 +61,9 @@ public class OverviewEmitter extends DefaultHTMLEmitter
         out.close();
     }
 
-
-    @Override
-    public void beginPackage(AST p)
+    public String getPackageName()
     {
-        packageNames.add(getIDName(p.getFirstChild()));
-    }
-
-
-    @Override
-    public void endPackage(AST p)
-    {
-    }
-
-
-    @Override
-    public void beginSequence(AST s)
-    {
-        //setPackageName(getPackageNode());
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
-        typeMap.put(((SequenceType)s).getName(), p);
-    }
-
-
-    @Override
-    public void endSequence(AST s)
-    {
-    }
-
-
-    @Override
-    public void beginSqlDatabase(AST s)
-    {
-        //setPackageName(getPackageNode());
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
-        typeMap.put(((SqlDatabaseType)s).getName(), p);
-    }
-
-
-    @Override
-    public void endSqlDatabase(AST s)
-    {
-    }
-
-
-    @Override
-    public void beginUnion(AST u)
-    {
-        //setPackageName(getPackageNode());
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)u);
-        typeMap.put(((UnionType)u).getName(), p);
-    }
-
-
-    @Override
-    public void endUnion(AST u)
-    {
-    }
-
-
-    @Override
-    public void beginEnumeration(AST e)
-    {
-        //setPackageName(getPackageNode());
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)e);
-        typeMap.put(((EnumType)e).getName(), p);
-    }
-
-
-    @Override
-    public void endEnumeration(AST e)
-    {
-    }
-
-
-    @Override
-    public void beginSubtype(AST s)
-    {
-        //setPackageName(getPackageNode());
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
-        typeMap.put(((Subtype)s).getName(), p);
-    }
-
-
-    @Override
-    public void endSubtype(AST s)
-    {
-    }
-
-
-    @Override
-    public void beginSqlTable(AST s)
-    {
-        //setPackageName(getPackageNode());
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
-        typeMap.put(((SqlTableType)s).getName(), p);
-    }
-
-
-    @Override
-    public void endSqlTable(AST s)
-    {
-    }
-
-
-    @Override
-    public void beginSqlPragma(AST s)
-    {
-        //setPackageName(getPackageNode());
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
-        typeMap.put(((SqlPragmaType)s).getName(), p);
-    }
-
-
-    @Override
-    public void endSqlPragma(AST s)
-    {
-    }
-
-
-    @Override
-    public void beginSqlMetadata(AST s)
-    {
-        //setPackageName(getPackageNode());
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
-        typeMap.put(((SqlMetadataType)s).getName(), p);
-    }
-
-
-    @Override
-    public void endSqlMetadata(AST s)
-    {
-    }
-
-
-    @Override
-    public void beginSqlInteger(AST s)
-    {
-        //setPackageName(getPackageNode());
-        Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
-        typeMap.put(((SqlIntegerType)s).getName(), p);
-    }
-
-
-    @Override
-    public void endSqlInteger(AST s)
-    {
+    	return packageName;
     }
 
 }

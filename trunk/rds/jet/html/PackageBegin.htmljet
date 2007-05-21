@@ -42,7 +42,7 @@
         class="PackageBegin" %>
 <% 
     PackageEmitter e = (PackageEmitter) argument;
-    String pkg = e.getPackageName(); 
+    String pkg = e.getRootPackageName(); 
 %>
 <html>
   <head>

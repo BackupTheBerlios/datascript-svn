@@ -59,17 +59,17 @@ public class SizeOfEmitter extends JavaDefaultEmitter
     }
 
 
-    public void beginTranslationUnit(AST rootNode, AST unitNode)
+    public void beginRoot(AST rootNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
-        setPackageName(unitNode);
+        setPackageName(rootNode.getFirstChild());
         openOutputFile(dir, "__SizeOf.java");
         String result = sizeOfTmpl.generate(this);
         out.print(result);
     }
 
 
-    public void endTranslationUnit()
+    public void endRoot()
     {
         String result = endTmpl.generate(this);
         out.print(result);

@@ -67,7 +67,10 @@ import datascript.tools.ToolContext;
 public class Package extends Scope
 {
     /** Map of all packages in the project. */
-    private static Map<String, Package> allPackages = new HashMap<String, Package>();
+    private static Map<String, Package> nameToPackage = new HashMap<String, Package>();
+    
+    /** Map of all packages in the project. */
+    private static Map<TokenAST, Package> nodeToPackage = new HashMap<TokenAST, Package>();
     
     /** The root package, i.e. the one first parsed. */
     private static Package root = null;
@@ -120,7 +123,17 @@ public class Package extends Scope
      */
     public static Package lookup(String packageName)
     {
-        return allPackages.get(packageName);
+        return nameToPackage.get(packageName);
+    }
+    
+    /**
+     * Finds a package for a given AST node of type PACKAGE.
+     * @param node AST node
+     * @return the corresponding package, or null.
+     */
+    public static Package lookup(AST node)
+    {
+        return nodeToPackage.get(node);
     }
     
     /**
@@ -138,7 +151,7 @@ public class Package extends Scope
      */
     public static void linkAll()
     {
-        for (Package p : allPackages.values())
+        for (Package p : nameToPackage.values())
         {
             p.resolveImports();
             p.link(null);
@@ -149,7 +162,7 @@ public class Package extends Scope
     // only for debugging
     private static void dumpAll()
     {
-        for (Package p : allPackages.values())
+        for (Package p : nameToPackage.values())
         {
             System.out.println(p.getPackageName());
             for (String t : p.localTypes.keySet())
@@ -166,7 +179,7 @@ public class Package extends Scope
     {
         for (String importedName : importedPackages.keySet())
         {
-            Package importedPackage = allPackages.get(importedName);
+            Package importedPackage = nameToPackage.get(importedName);
             
             // The parser should have complained if there is no package for 
             // the given name. Thus this case should never occur, so we throw
@@ -196,10 +209,11 @@ public class Package extends Scope
     {
         this.node = (TokenAST) n;
         String packageName = getPackageName();
-        Package p = allPackages.get(packageName);
+        Package p = nameToPackage.get(packageName);
         if (p == null)
         {
-            allPackages.put(packageName, this);
+            nameToPackage.put(packageName, this);
+            nodeToPackage.put(node, this);
         }
         else
         {
@@ -228,6 +242,11 @@ public class Package extends Scope
     public TypeInterface getLocalType(String name)
     {
         return localTypes.get(name);
+    }
+    
+    public Set<String> getLocalTypeNames()
+    {
+    	return localTypes.keySet();
     }
 
     /**
