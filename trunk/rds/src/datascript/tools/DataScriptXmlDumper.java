@@ -106,7 +106,7 @@ public class DataScriptXmlDumper extends XMLFilterImpl
                 }
 
                 AST child = node.getFirstChild();
-                while(child != null && child.getType() != DataScriptParserTokenTypes.ROOT)
+                while(child != null && child.getType() != DataScriptParserTokenTypes.TRANSLATION_UNIT)
                     child = child.getNextSibling();
                 if (child != null)
                     parseImportedPackages(child);

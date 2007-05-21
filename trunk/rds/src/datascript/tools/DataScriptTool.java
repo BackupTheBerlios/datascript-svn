@@ -73,18 +73,27 @@ import datascript.emit.java.VisitorEmitter;
 
 public class DataScriptTool 
 {
-    private static final String VERSION = "rds 0.8alpha (6 May 2007)";
+    private static final String VERSION = "rds 0.8alpha (14 May 2007)";
     private ToolContext context;
-    private TokenAST rootNode;
+    private TokenAST rootNode = null;
+    private Scope globals = null;
+    private HashSet<String> allPackageFiles = new HashSet<String>();
 
-    private String packageName = "";
+    /* Properties for command line parameters */
+    private String defaultPackageName = "";
     private String fileName = null;
     private String pathName = null;
     private String outPathName = null;
     private boolean generateDocs = false;
-    private boolean checkSyntax = false;
-    private HashSet<String> allPackageFiles = new HashSet<String>(); 
+    private boolean checkSyntax = false; 
 
+
+
+    public DataScriptTool()
+    {
+        rootNode = new TokenAST(new antlr.Token(DataScriptParserTokenTypes.ROOT));
+        globals = new Scope();
+    }
 
 
     public void parseArguments(String[] args) throws DataScriptException
@@ -93,7 +102,7 @@ public class DataScriptTool
         {
             if (args[i].equals("-pkg"))
             {
-                packageName = args[++i];
+                defaultPackageName = args[++i];
             }
             else if (args[i].equals("-doc"))
             {
@@ -157,11 +166,10 @@ public class DataScriptTool
         context.setFileName(fileName);
         context.setPathName(pathName);
 
-        rootNode = (TokenAST) parsePackage();
-        if (context.getErrorCount() != 0)
-            throw new ParserException("Parser errors.");
-        
-        parseImportedPackages(rootNode);
+        allPackageFiles.add(fileName);
+        AST unitRoot = (TokenAST) parsePackage();
+        rootNode.addChild(unitRoot);
+        parseImportedPackages(unitRoot);
 
 
         // Validate the syntax tree - this has no side effects.
@@ -169,7 +177,7 @@ public class DataScriptTool
         {
             DataScriptWalker walker = new DataScriptWalker();
             walker.setContext(context);
-            walker.translationUnit(rootNode);
+            walker.root(rootNode);
             if (context.getErrorCount() != 0)
                 throw new ParserException("Parser errors.");
         }
@@ -177,18 +185,18 @@ public class DataScriptTool
         // create name scopes and resolve references
         TypeEvaluator typeEval = new TypeEvaluator();
         typeEval.setContext(context);
-
-        Scope globals = new Scope();
         typeEval.pushScope(globals);
-        typeEval.translationUnit(rootNode);
+        typeEval.root(rootNode);
+        if (context.getErrorCount() != 0)
+            throw new ParserException("Parser errors.");
         //globals.link(null);
         Package.linkAll();
         
         // check expression types and evaluate constant expressions
         ExpressionEvaluator exprEval = new ExpressionEvaluator();
         exprEval.setContext(context);
-        exprEval.pushScope(globals);
-        exprEval.translationUnit(rootNode);
+        //exprEval.pushScope(globals);
+        exprEval.root(rootNode);
         if (context.getErrorCount() != 0)
             throw new ParserException("Parser errors.");
     }
@@ -197,90 +205,88 @@ public class DataScriptTool
     public void emitJava(DataScriptEmitter emitter) throws Exception
     {
         System.out.println("emitting java code");
+        //Package packageRoot = Package.getRoot();
 
         // emit Java code for decoders
-        JavaEmitter javaEmitter = new JavaEmitter(outPathName, packageName, (AST)rootNode);
-        javaEmitter.setPackageName(rootNode.getFirstChild());
+        System.out.println("emitting java");
+        JavaEmitter javaEmitter = new JavaEmitter(outPathName, defaultPackageName);
+        //JavaEmitter javaEmitter = new JavaEmitter(outPathName, defaultPackageName, packageRoot);
         emitter.setEmitter(javaEmitter);
-        emitter.translationUnit(rootNode);
+        emitter.root(rootNode);
 
         // emit Java __Visitor interface
-        VisitorEmitter visitorEmitter = new VisitorEmitter(outPathName, packageName, (AST)rootNode);
-        visitorEmitter.setPackageName(rootNode.getFirstChild());
+        System.out.println("emitting visitor");
+        VisitorEmitter visitorEmitter = new VisitorEmitter(outPathName, defaultPackageName);
         emitter.setEmitter(visitorEmitter);
-        emitter.translationUnit(rootNode);
+        emitter.root(rootNode);
 
         // emit Java __DepthFirstVisitor class
+        System.out.println("emitting first visitor");
         DepthFirstVisitorEmitter dfVisitorEmitter = 
-            new DepthFirstVisitorEmitter(outPathName, packageName, (AST)rootNode);
-        dfVisitorEmitter.setPackageName(rootNode.getFirstChild());
+            new DepthFirstVisitorEmitter(outPathName, defaultPackageName);
         emitter.setEmitter(dfVisitorEmitter);
-        emitter.translationUnit(rootNode);
+        emitter.root(rootNode);
 
         // emit Java __SizeOf class
-        SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(outPathName, packageName, (AST)rootNode);
-        sizeOfEmitter.setPackageName(rootNode.getFirstChild());
+        System.out.println("emitting sizeof");
+        SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(outPathName, defaultPackageName);
         emitter.setEmitter(sizeOfEmitter);
-        emitter.translationUnit(rootNode);
+        emitter.root(rootNode);
 
         // emit Java __XmlDumper class
-        XmlDumperEmitter xmlDumper = new XmlDumperEmitter(outPathName, packageName, (AST)rootNode);
-        xmlDumper.setPackageName(rootNode.getFirstChild());
+        System.out.println("emitting xmlDumper");
+        XmlDumperEmitter xmlDumper = new XmlDumperEmitter(outPathName, defaultPackageName);
         emitter.setEmitter(xmlDumper);
-        emitter.translationUnit(rootNode);
+        emitter.root(rootNode);
     }
 
 
     public void emitHTML(DataScriptEmitter emitter) throws Exception
     {
         System.out.println("emitting html documentation");
-/**
- * TODO: new HTML generating
- */
+
         // emit HTML documentation
         ContentEmitter htmlEmitter = new ContentEmitter();
         htmlEmitter.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(htmlEmitter);
-        emitter.translationUnit(rootNode);
+        emitter.root(rootNode);
 
         // emit frameset
         FramesetEmitter framesetEmitter = new FramesetEmitter();
         framesetEmitter.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(framesetEmitter);
-        emitter.translationUnit(rootNode);
+        emitter.root(rootNode);
 
         // emit stylesheets
         CssEmitter cssEmitter = new CssEmitter();
         cssEmitter.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(cssEmitter);
-        emitter.translationUnit(rootNode);
+        emitter.root(rootNode);
 
         // emit list of packages
         PackageEmitter packageEmitter = new PackageEmitter();
         packageEmitter.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(packageEmitter);
-        emitter.translationUnit(rootNode);
+        emitter.root(rootNode);
 
         // emit list of classes
         OverviewEmitter overviewEmitter = new OverviewEmitter();
         overviewEmitter.setPackageName(rootNode.getFirstChild());
         emitter.setEmitter(overviewEmitter);
-        emitter.translationUnit(rootNode);
+        emitter.root(rootNode);
     }
 
 
-    private void parseImportedPackages(AST rootNode) throws Exception
-    {
-        allPackageFiles.add(fileName);
-        
-        AST node = rootNode.getFirstChild();
+    private void parseImportedPackages(AST unitNode) throws Exception
+    {        
+        AST node = unitNode.getFirstChild();
         if (node.getType() == DataScriptParserTokenTypes.PACKAGE)
         {
             while (true)
             {
                 node = node.getNextSibling();
                 if (node == null || 
-                    node.getType() != DataScriptParserTokenTypes.IMPORT)
+                        node.getType() != DataScriptParserTokenTypes.IMPORT)
                     break;
                 
                 String fileName = getPackageFile(node);
@@ -288,16 +294,10 @@ public class DataScriptTool
                 {
                     allPackageFiles.add(fileName);
                     context.setFileName(fileName);
-                    AST packageRoot = parsePackage();
-
-                    mergeSyntaxTrees(rootNode, packageRoot);
+                    AST unitRoot = parsePackage();
+                    rootNode.addChild(unitRoot);
+                    parseImportedPackages(unitRoot);
                 }
-
-                AST child = node.getFirstChild();
-                while(child != null && child.getType() != DataScriptParserTokenTypes.ROOT)
-                    child = child.getNextSibling();
-                if (child != null)
-                    parseImportedPackages(child);
             }
         }
     }
@@ -348,79 +348,6 @@ public class DataScriptTool
         
         // TODO: Log warning if package name AST does not match file name
         return parser.getAST();
-    }
-
-
-    // TODO: Do not include the package tree in the import list of
-    // the imported package. Instead, create a new AST type TRANSLATION_UNIT
-    // to replace the current ROOT.
-    // root : #(ROOT (translationUnit)+)
-    // Refactor the package and import related methods using the new Package
-    // class. There is some redundancy.
-    
-    private void mergeSyntaxTrees(AST rootNode, AST packageRoot)
-    {
-        AST rootMembers = getImportNode(rootNode, getPackageNode(packageRoot));
-        if (rootMembers == null)
-        {
-            rootMembers = getMembersNode(rootNode);
-            AST importedMembers = getMembersNode(packageRoot);
-            rootMembers.addChild(importedMembers.getFirstChild());
-        }
-        else
-            rootMembers.addChild(packageRoot);
-    }
-
-
-    private AST getMembersNode(AST root)
-    {
-        AST node = root.getFirstChild();
-        while (node != null && node.getType() != DataScriptParserTokenTypes.MEMBERS)
-        {
-            node = node.getNextSibling();
-        }        
-        return node;
-    }
-
-
-    private AST getPackageNode(AST root)
-    {
-        AST node = root.getFirstChild();
-        while (node != null && node.getType() != DataScriptParserTokenTypes.PACKAGE)
-        {
-            node = node.getNextSibling();
-        }
-        return node;
-    }
-
-
-    private AST getImportNode(AST root, AST packageNode)
-    {
-        if (packageNode == null)
-            return null;
-        AST node = root.getFirstChild();
-        while (true)
-        {
-            while (node != null && node.getType() != DataScriptParserTokenTypes.IMPORT)
-            {
-                node = node.getNextSibling();
-            }
-    
-            if (node != null)
-            {
-                AST pn = packageNode.getFirstChild();
-                AST in = node.getFirstChild();
-                while (in != null && pn != null && in.getText().equals(pn.getText()))
-                {
-                    pn = pn.getNextSibling();
-                    in = in.getNextSibling();
-                }
-                if (in == null && pn == null)
-                    break;
-                node = node.getNextSibling();
-            }
-        }
-        return node;
     }
 
 

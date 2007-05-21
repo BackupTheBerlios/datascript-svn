@@ -74,7 +74,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     /**** implementation of abstract methods ****/
 
-    public void beginTranslationUnit()
+    public void beginTranslationUnit(AST rootNode, AST unitNode)
     {
     }
     
@@ -126,7 +126,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSequence(AST s)
     {
-        setPackageName(getPackageNode());
         SequenceType seq = (SequenceType)s;
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), seq);
         typeMap.put(seq.getName(), p);
@@ -138,7 +137,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginUnion(AST u)
     {
-        setPackageName(getPackageNode());
         UnionType un = (UnionType)u;
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), un);
         typeMap.put(un.getName(), p);
@@ -158,7 +156,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginEnumeration(AST e)
     {
-        setPackageName(getPackageNode());
         EnumType et = (EnumType)e;
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), et);
         typeMap.put(et.getName(), p);
@@ -170,19 +167,8 @@ public class ContentEmitter extends DefaultHTMLEmitter
     }
 
 
-    public void beginEnumItem(AST e)
-    {
-    }
-
-
-    public void endEnumItem(AST e)
-    {
-    }
-
-
     public void beginSubtype(AST s)
     {
-        setPackageName(getPackageNode());
         Subtype st = (Subtype)s;
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), st);
         typeMap.put(st.getName(), p);
@@ -195,7 +181,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSqlDatabase(AST s)
     {
-        setPackageName(getPackageNode());
         SqlDatabaseType sqlDb = (SqlDatabaseType)s;
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlDb);
         typeMap.put(sqlDb.getName(), p);
@@ -208,7 +193,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSqlMetadata(AST s)
     {
-        setPackageName(getPackageNode());
         SqlMetadataType sqlMeta = (SqlMetadataType)s;
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlMeta);
         typeMap.put(sqlMeta.getName(), p);
@@ -221,7 +205,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSqlPragma(AST s)
     {
-        setPackageName(getPackageNode());
         SqlPragmaType sqlPragma = (SqlPragmaType)s;
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlPragma);
         typeMap.put(sqlPragma.getName(), p);
@@ -235,7 +218,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSqlTable(AST s)
     {
-        setPackageName(getPackageNode());
         SqlTableType sqlTab = (SqlTableType)s;
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlTab);
         typeMap.put(sqlTab.getName(), p);
@@ -249,7 +231,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginSqlInteger(AST s)
     {
-        setPackageName(getPackageNode());
         SqlIntegerType sqlInt = (SqlIntegerType)s;
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), sqlInt);
         typeMap.put(sqlInt.getName(), p);

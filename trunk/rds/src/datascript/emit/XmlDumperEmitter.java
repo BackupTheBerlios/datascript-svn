@@ -63,39 +63,24 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
 
 
 
-    public XmlDumperEmitter(String outPathName, String defaultPackageName, AST rootNode)
+    public XmlDumperEmitter(String outPathName, String defaultPackageName)
     {
-        super(outPathName, defaultPackageName, rootNode);
+        super(outPathName, defaultPackageName);
     }
 
 
-    public void beginTranslationUnit()
+    public void beginTranslationUnit(AST rootNode, AST unitNode)
     {
+        findAllPackageNames(rootNode, allPackageNames);
+        setPackageName(unitNode);
         openOutputFile(dir, "__XmlDumper.java");
-    }
-
-
-    public void beginImport(AST r)
-    {
-        rootNode.push(r);
-        if (!TmplGenerated)
-        {
-            String result = dumperTmpl.generate(this);
-            out.print(result);
-            TmplGenerated = true;
-        }
-        rootNode.pop();
+        String result = dumperTmpl.generate(this);
+        out.print(result);
     }
 
 
     public void beginSequence(AST s)
     {
-        if (!TmplGenerated)
-        {
-            String result = dumperTmpl.generate(this);
-            out.print(result);
-            TmplGenerated = true;
-        }
         sequence = (SequenceType) s;
         String result = sequenceTmpl.generate(this);
         out.print(result);
@@ -104,12 +89,6 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
 
     public void beginUnion(AST u)
     {
-        if (!TmplGenerated)
-        {
-            String result = dumperTmpl.generate(this);
-            out.print(result);
-            TmplGenerated = true;
-        }
         union = (UnionType) u;
         String result = unionTmpl.generate(this);
         out.print(result);
@@ -118,12 +97,6 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
 
     public void beginEnumeration(AST e)
     {
-        if (!TmplGenerated)
-        {
-            String result = dumperTmpl.generate(this);
-            out.print(result);
-            TmplGenerated = true;
-        }
         enumeration = (EnumType) e;
         String result = enumerationTmpl.generate(this);
         out.print(result);

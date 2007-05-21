@@ -46,23 +46,21 @@ import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.TypeInterface;
 import datascript.emit.DefaultEmitter;
 
-abstract public class JavaDefaultEmitter extends DefaultEmitter
+
+public class JavaDefaultEmitter extends DefaultEmitter
 {
     protected static final String JAVA_EXT = ".java";
     protected String packageName;
     protected String packagePath;
-    protected File dir;
-    private final HashSet<String> allPackageNames = new HashSet<String>();
+    protected File dir = null;
+    protected final HashSet<String> allPackageNames = new HashSet<String>();
 
 
 
-    public JavaDefaultEmitter(String outPathName, String defaultPackageName, AST rootNode)
+    public JavaDefaultEmitter(String outPathName, String defaultPackageName)
     {
-        findAllPackageNames(rootNode, allPackageNames);
-
         packagePath = outPathName;
         packageName = defaultPackageName;
-        dir = new File(packagePath, packageName.replace('.', File.separatorChar));
     }
 
 
@@ -73,20 +71,30 @@ abstract public class JavaDefaultEmitter extends DefaultEmitter
     }
 
 
-    public void setPackageName(AST packageNode)
+    protected void setPackageName(AST unitNode)
     {
-        if (packageNode != null && packageNode.getType() == DataScriptParserTokenTypes.PACKAGE)
+        curUnitNode = unitNode;
+        if (unitNode == null)
+            return;
+        AST sibling = unitNode;
+
+        if (sibling.getType() == DataScriptParserTokenTypes.TRANSLATION_UNIT);
         {
-            AST sibling = packageNode.getFirstChild();
-            String fileName = sibling.getText();
-            File file = new File(fileName);
-            while (true)
-            {
+            sibling = unitNode.getFirstChild();
+            while (sibling != null && sibling.getType() != DataScriptParserTokenTypes.PACKAGE)
                 sibling = sibling.getNextSibling();
-                if (sibling == null)
-                    break;
-                
+            if (sibling == null)
+                return;
+        }
+
+        if (sibling.getType() == DataScriptParserTokenTypes.PACKAGE)
+        {
+            sibling = sibling.getFirstChild();
+            File file = null;
+            while (sibling != null)
+            {                
                 file = new File(file, sibling.getText());
+                sibling = sibling.getNextSibling();
             }
             packageName = file.getPath().replace(File.separatorChar, '.');
             dir = new File(packagePath, file.getPath());
@@ -114,26 +122,17 @@ abstract public class JavaDefaultEmitter extends DefaultEmitter
     }
 
 
-    private void findAllPackageNames(AST startNode, java.util.Set<String> names)
+    protected void findAllPackageNames(AST rootNode, java.util.Set<String> names)
     {
-        AST silbling = startNode;
-        while (silbling != null && silbling.getType() != DataScriptParserTokenTypes.ROOT)
-            silbling = silbling.getNextSibling();
-
-        if (silbling != null)
-        {
-            silbling = silbling.getFirstChild();
-            getPackageNameList(silbling, names);
-        }
+        AST silbling = rootNode.getFirstChild();
         while (silbling != null)
         {
-            while (silbling != null && silbling.getType() != DataScriptParserTokenTypes.IMPORT)
-                silbling = silbling.getNextSibling();
-            if (silbling != null)
-            {
-                findAllPackageNames(silbling.getFirstChild(), names);
-                silbling = silbling.getNextSibling();
-            }
+            if (silbling.getType() != DataScriptParserTokenTypes.TRANSLATION_UNIT)
+                continue;
+
+            AST node = silbling.getFirstChild();
+            getPackageNameList(node, names);
+            silbling = silbling.getNextSibling();
         }
     }
 

@@ -183,6 +183,8 @@ public class Scope implements Context, LinkAction
     
     public Package getPackage()
     {
+        if (parentScope == null)
+            return null;
         return parentScope.getPackage();
     }
 }

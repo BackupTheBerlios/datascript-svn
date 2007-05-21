@@ -63,8 +63,10 @@ options
     }
 }
 
+root : #(ROOT (translationUnit)+ );
+
 translationUnit
-    :   #(ROOT (packageDeclaration)? (importDeclaration)* members)
+    :   #(TRANSLATION_UNIT (packageDeclaration)? (importDeclaration)* members)
     ;    
 
 packageDeclaration
@@ -72,7 +74,7 @@ packageDeclaration
     ;
     
 importDeclaration
-    :   #(IMPORT (ID)+ (translationUnit)?)
+    :   #(IMPORT (ID)+)
     ;
         	
 members

@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
@@ -176,6 +177,15 @@ public class Package extends Scope
             }
             importedPackages.put(importedName, importedPackage);
         }
+    }
+
+    /**
+     * Returns all names of imported packages of the current package
+     * @return set of names
+     */
+    public Set<String> getImportNames()
+    {
+        return importedPackages.keySet();
     }
     
     /**

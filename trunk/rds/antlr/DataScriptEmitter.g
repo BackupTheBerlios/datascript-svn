@@ -63,16 +63,16 @@ options
     }
 }
 
-translationUnit
-	:	{ em.beginTranslationUnit(); }
-		r:rootDeclaration[#r]
+root : #(r:ROOT (translationUnit[#r])+ );
+
+translationUnit[AST r]
+    :   #(u:TRANSLATION_UNIT { em.beginTranslationUnit(r, u); }
+	      (packageDeclaration)? 
+	      (importDeclaration)* 
+	      members
+	    )
 		{ em.endTranslationUnit(); }
 	;
-
-rootDeclaration[AST root]
-    :   #(ROOT (p:packageDeclaration)? (importDeclaration[root])* members[#p, root])
-    ;    
-
 
 packageDeclaration
     :   #(p:PACKAGE		{ em.beginPackage(p); }
@@ -81,14 +81,15 @@ packageDeclaration
     	{ em.endPackage(p); }
     ;
     
-importDeclaration[AST rootNode]
-    :   { em.beginImport(rootNode); }
-    	#(IMPORT (ID)+ (r:rootDeclaration[#r])?)
+importDeclaration
+    :   #(i:IMPORT 		{ em.beginImport(i); }
+    	  (ID)+
+    	)
     	{ em.endImport(); }
     ;
         	
-members[AST pack, AST root]
-    :   { em.beginMembers(pack, root); }
+members
+    :   { em.beginMembers(); }
     	#(MEMBERS (declaration)*)
     	{ em.endMembers(); }
     ;

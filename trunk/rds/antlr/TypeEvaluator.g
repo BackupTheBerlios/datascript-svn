@@ -54,7 +54,7 @@ options
 {
     private Stack<Scope> scopeStack = new Stack<Scope>();
     private ToolContext context;
-    private Package pkg;
+    private Package pkg = null;
     
     public void setContext(ToolContext context)
     {
@@ -90,8 +90,10 @@ options
     }
 }
 
+root : #(ROOT (translationUnit)+ );
+
 translationUnit
-    :   #(ROOT (packageDeclaration)? (importDeclaration)* members)
+    :   #(TRANSLATION_UNIT (packageDeclaration)? (importDeclaration)* members)
     ;    
 
 
@@ -101,7 +103,7 @@ packageDeclaration
     ;
     
 importDeclaration
-    :   #(i:IMPORT (ID)+ (translationUnit)?)
+    :   #(i:IMPORT (ID)+)
         { pkg.addPackageImport(i); }
     ;
         	

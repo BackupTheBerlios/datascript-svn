@@ -40,7 +40,6 @@ package datascript.emit;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Stack;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -54,115 +53,71 @@ import antlr.collections.AST;
  * implement a few of the emitter actions.
  * @author HWellmann
  */
-abstract public class DefaultEmitter implements Emitter
+public class DefaultEmitter implements Emitter
 {
     protected PrintStream out = null;
-    protected Stack<AST> packageNode = new Stack<AST>();
-    protected Stack<AST> rootNode = new Stack<AST>();
+    protected AST curUnitNode = null;
 
 
     /**** implementation of interface methods ****/
 
-    abstract public void beginTranslationUnit();
+    public void beginTranslationUnit(AST r, AST u) {}
+    public void endTranslationUnit() {}
 
-    abstract public void endTranslationUnit();
+    public void beginPackage(AST p) {}
+    public void endPackage(AST p) {}
 
-    abstract public void beginPackage(AST p);
+    public void beginImport(AST i) {}
+    public void endImport() {}
 
-    abstract public void endPackage(AST p);
+    public void beginMembers() {}
+    public void endMembers() {}
 
-    abstract public void beginImport(AST rootNode);
+    public void beginSequence(AST s) {}
+    public void endSequence(AST s) {}
 
-    abstract public void endImport();
+    public void beginUnion(AST u) {}
+    public void endUnion(AST u) {}
 
-    public void beginMembers(AST p, AST r)
-    {
-        setPackageNode(p);
-        setRootNode(r);
-    }
+    public void beginField(AST f) {}
+    public void endField(AST f) {}
 
-    public void endMembers()
-    {
-        if (!packageNode.isEmpty())
-            packageNode.pop();
-        if (!rootNode.isEmpty())
-            rootNode.pop();
-    }
+    public void beginEnumeration(AST e) {}
+    public void endEnumeration(AST e) {}
 
-    abstract public void beginSequence(AST s);
+    public void beginEnumItem(AST e) {}
+    public void endEnumItem(AST e) {}
 
-    abstract public void endSequence(AST s);
+    public void beginSubtype(AST s) {}
+    public void endSubtype(AST s) {}
 
-    abstract public void beginUnion(AST u);
+    public void beginSqlDatabase(AST s) {}
+    public void endSqlDatabase(AST s) {}
 
-    abstract public void endUnion(AST u);
+    public void beginSqlMetadata(AST s) {}
+    public void endSqlMetadata(AST s) {}
 
-    abstract public void beginField(AST f);
+    public void beginSqlPragma(AST s) {}
+    public void endSqlPragma(AST s) {}
 
-    abstract public void endField(AST f);
+    public void beginSqlTable(AST s) {}
+    public void endSqlTable(AST s) {}
 
-    abstract public void beginEnumeration(AST e);
-
-    abstract public void endEnumeration(AST e);
-
-    abstract public void beginEnumItem(AST e);
-
-    abstract public void endEnumItem(AST e);
-
-    abstract public void beginSubtype(AST s);
-
-    abstract public void endSubtype(AST s);
-
-    abstract public void beginSqlDatabase(AST s);
-    
-    abstract public void endSqlDatabase(AST s);
-    
-    abstract public void beginSqlMetadata(AST s);
-    
-    abstract public void endSqlMetadata(AST s);
-    
-    abstract public void beginSqlPragma(AST s);
-    
-    abstract public void endSqlPragma(AST s);
-    
-    abstract public void beginSqlTable(AST s);
-    
-    abstract public void endSqlTable(AST s);
-    
-    abstract public void beginSqlInteger(AST s);
-    
-    abstract public void endSqlInteger(AST s);
+    public void beginSqlInteger(AST s) {}
+    public void endSqlInteger(AST s) {}
 
     /**** end implementation of interface methods ****/
 
-    public void setPackageNode(AST p)
+    public final void setRootNode(AST i) throws Exception
     {
-        packageNode.push(p);
-    }
-
-    public AST getPackageNode()
-    {
-        if (packageNode.isEmpty())
-            return null;
-        return packageNode.peek();
-    }
-
-    public void setRootNode(AST i)
-    {
-        rootNode.push(i);
-    }
-
-    public AST getRootNode()
-    {
-        if (rootNode.isEmpty())
-            return null;
-        return rootNode.peek();
+        throw new Exception("this member function is obsolete!");
     }
 
     public Set<String> getImportNameList()
     {
         HashSet<String> retval = new HashSet<String>();
-        AST in = getRootNode().getFirstChild();
+        //AST in = getRootNode().getFirstChild();
+        AST in = curUnitNode.getFirstChild();
 
         while (in != null)
         {
@@ -209,16 +164,7 @@ abstract public class DefaultEmitter implements Emitter
         try
         {
             File outputFile = new File(directory, fileName);
-            
-// TODO HWellmann: What for? The warning is annoying and the delete/create
-// is redundant
-            
-//            if (outputFile.exists())
-//            {
-//                System.err.println("WARNING: overwriting file " + outputFile.getAbsoluteFile());
-//                outputFile.delete();
-//            }
-//            outputFile.createNewFile();
+            System.out.println(String.format("writing %1$s", fileName));
             out = new PrintStream(outputFile);
         }
         catch (IOException exc)

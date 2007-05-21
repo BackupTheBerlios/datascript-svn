@@ -45,6 +45,7 @@ import datascript.ast.SqlDatabaseType;
 import datascript.ast.SqlTableType;
 import datascript.ast.UnionType;
 
+
 public class JavaEmitter extends JavaDefaultEmitter
 {
     private SequenceEmitter sequenceEmitter;
@@ -52,46 +53,21 @@ public class JavaEmitter extends JavaDefaultEmitter
 
 
 
-    public JavaEmitter(String outPathName, String defaultPackageName, AST rootNode)
+    public JavaEmitter(String outPathName, String defaultPackageName)
     {
-        super(outPathName, defaultPackageName, rootNode);
+        super(outPathName, defaultPackageName);
     }
 
 
-    public void beginTranslationUnit()
+    public void beginTranslationUnit(AST rootNode, AST unitNode)
     {
-    }
-
-
-    public void endTranslationUnit()
-    {
-    }
-
-
-    public void beginPackage(AST p)
-    {
-    }
-
-
-    public void endPackage(AST p)
-    {
-    }
-
-
-    public void beginImport(AST importNode)
-    {
-    }
-
-
-    public void endImport()
-    {
+        findAllPackageNames(rootNode, allPackageNames);
+        setPackageName(unitNode);
     }
 
 
     public void beginSequence(AST s)
     {
-        setPackageName(getPackageNode());
-
         SequenceType sequence = (SequenceType) s;
         String typeName = getTypeName(sequence);
         openOutputFile(dir, typeName + JAVA_EXT);
@@ -108,8 +84,6 @@ public class JavaEmitter extends JavaDefaultEmitter
 
     public void beginUnion(AST u)
     {
-        setPackageName(getPackageNode());
-
         UnionType union = (UnionType) u;
         String typeName = getTypeName(union);
         openOutputFile(dir, typeName + JAVA_EXT);
@@ -124,24 +98,12 @@ public class JavaEmitter extends JavaDefaultEmitter
         out.close();
     }
 
-
-    public void beginField(AST f)
-    {
-    }
-
-
-    public void endField(AST f)
-    {
-    }
-
     public void beginEnumeration(AST e)
     {
-        setPackageName(getPackageNode());
-
         EnumType enumType = (EnumType) e;
-        EnumerationEmitter enumEmitter = new EnumerationEmitter(this, enumType);
         String typeName = getTypeName(enumType);
         openOutputFile(dir, typeName + JAVA_EXT);
+        EnumerationEmitter enumEmitter = new EnumerationEmitter(this, enumType);
         enumEmitter.setOutputStream(out);
         enumEmitter.emit(enumType);
     }
@@ -152,24 +114,12 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
-    public void beginEnumItem(AST e)
-    {
-    }
-
-
-    public void endEnumItem(AST e)
-    {
-    }
-
-
     public void beginSubtype(AST s)
     {
-        setPackageName(getPackageNode());
-
         Subtype subtype = (Subtype) s;
-        SubtypeEmitter subtypeEmitter = new SubtypeEmitter(this, subtype);
         String typeName = subtype.getName();  //getTypeName(subtype);
         openOutputFile(dir, typeName + JAVA_EXT);
+        SubtypeEmitter subtypeEmitter = new SubtypeEmitter(this, subtype);
         subtypeEmitter.setOutputStream(out);
         subtypeEmitter.emit(subtype);
     }
@@ -181,12 +131,10 @@ public class JavaEmitter extends JavaDefaultEmitter
 
     public void beginSqlDatabase(AST s)
     {
-        setPackageName(getPackageNode());
-
         SqlDatabaseType db = (SqlDatabaseType)s;
-        SqlDatabaseEmitter dbEmitter = new SqlDatabaseEmitter(this, db);
         String typeName = getTypeName(db);
         openOutputFile(dir, typeName + JAVA_EXT);
+        SqlDatabaseEmitter dbEmitter = new SqlDatabaseEmitter(this, db);
         dbEmitter.setOutputStream(out);
         dbEmitter.emit(db);
     }
@@ -197,34 +145,12 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
-    public void beginSqlMetadata(AST s)
-    {
-    }
-
-
-    public void endSqlMetadata(AST s)
-    {
-    }
-
-
-    public void beginSqlPragma(AST s)
-    {
-    }
-
-
-    public void endSqlPragma(AST s)
-    {
-    }
-
-
     public void beginSqlTable(AST s)
     {
-        setPackageName(getPackageNode());
-
         SqlTableType table = (SqlTableType)s;
-        SqlTableEmitter tableEmitter = new SqlTableEmitter(this, table);
         String typeName = getTypeName(table);
         openOutputFile(dir, typeName + JAVA_EXT);
+        SqlTableEmitter tableEmitter = new SqlTableEmitter(this, table);
         tableEmitter.setOutputStream(out);
         tableEmitter.emit(table);
     }
@@ -233,15 +159,5 @@ public class JavaEmitter extends JavaDefaultEmitter
     public void endSqlTable(AST s)
     {
         out.close();
-    }
-
-
-    public void beginSqlInteger(AST s)
-    {
-    }
-
-
-    public void endSqlInteger(AST s)
-    {
     }
 }

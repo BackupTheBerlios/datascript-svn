@@ -59,16 +59,16 @@ public interface Emitter
      * translation unit is unclear. One single DataScript file, or the
      * same file with all its imports?
      */
-    public void beginTranslationUnit();
+    public void beginTranslationUnit(AST r, AST u);
     public void endTranslationUnit();
 
     public void beginPackage(AST p);
     public void endPackage(AST p);
 
-    public void beginImport(AST r);
+    public void beginImport(AST i);
     public void endImport();
 
-    public void beginMembers(AST p, AST i);
+    public void beginMembers();
     public void endMembers();
 
     public void beginField(AST f);

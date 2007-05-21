@@ -83,8 +83,10 @@ options
     }
 }
 
+root : #(ROOT (translationUnit)+ );
+
 translationUnit
-    :   #(ROOT (packageDeclaration)? (importDeclaration)* members)
+    :   #(TRANSLATION_UNIT (packageDeclaration)? (importDeclaration)* members)
     ;    
 
 
@@ -93,7 +95,7 @@ packageDeclaration
     ;
     
 importDeclaration
-    :   #(IMPORT (ID)+ (translationUnit)?)
+    :   #(IMPORT (ID)+)
     ;
         	
 members
@@ -175,7 +177,7 @@ constDeclaration
     ;
 
 fieldDefinition
-    :   #(f:FIELD                       { scope().setCurrentField((Field)f); }
+    :   #(f:FIELD                       /*{ scope().setCurrentField((Field)f); }*/
           typeReference 
           (i:ID)? 
           (in:fieldInitializer)?

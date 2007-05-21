@@ -43,125 +43,42 @@ import datascript.jet.java.SequenceEnd;
 import datascript.jet.java.SizeOf;
 import datascript.jet.java.SizeOfEnumeration;
 
+
 public class SizeOfEmitter extends JavaDefaultEmitter
 {
     private SizeOf sizeOfTmpl = new SizeOf();
     private SizeOfEnumeration enumerationTmpl = new SizeOfEnumeration();
     private SequenceEnd endTmpl = new SequenceEnd();
     private EnumType enumeration;
-    private boolean TmplGenerated = false;
 
 
 
-    public SizeOfEmitter(String outPathName, String defaultPackageName, AST rootNode)
+    public SizeOfEmitter(String outPathName, String defaultPackageName)
     {
-        super(outPathName, defaultPackageName, rootNode);
+        super(outPathName, defaultPackageName);
     }
 
 
-    public void beginTranslationUnit()
+    public void beginTranslationUnit(AST rootNode, AST unitNode)
     {
+        findAllPackageNames(rootNode, allPackageNames);
+        setPackageName(unitNode);
         openOutputFile(dir, "__SizeOf.java");
+        String result = sizeOfTmpl.generate(this);
+        out.print(result);
     }
 
 
     public void endTranslationUnit()
     {
-        if (TmplGenerated)
-        {
-            String result = endTmpl.generate(this);
-            out.print(result);
-        }
+        String result = endTmpl.generate(this);
+        out.print(result);
         out.close();
-    }
-
-
-    public void beginPackage(AST p)
-    {
-    }
-
-
-    public void endPackage(AST p)
-    {
-    }
-
-
-    public void beginImport(AST r)
-    {
-        rootNode.push(r);
-        if (!TmplGenerated)
-        {
-            String result = sizeOfTmpl.generate(this);
-            out.print(result);
-            TmplGenerated = true;
-        }
-        rootNode.pop();
-    }
-
-
-    public void endImport()
-    {
-    }
-
-
-    public void beginMembers(AST p, AST i)
-    {
-        super.beginMembers(p, i);
-
-        setPackageName(p);
-        if (!TmplGenerated)
-        {
-            String result = sizeOfTmpl.generate(this);
-            out.print(result);
-            TmplGenerated = true;
-        }
-    }
-
-
-    public void endMembers()
-    {
-        super.endMembers();
-    }
-
-
-    public void beginSequence(AST s)
-    {
-    }
-
-
-    public void endSequence(AST s)
-    {
-    }
-
-
-    public void beginUnion(AST u)
-    {
-    }
-
-
-    public void endUnion(AST u)
-    {
-    }
-
-
-    public void beginField(AST f)
-    {
-    }
-
-
-    public void endField(AST f)
-    {
     }
 
 
     public void beginEnumeration(AST e)
     {
-        if (!TmplGenerated)
-        {
-            String result = sizeOfTmpl.generate(this);
-            out.print(result);
-            TmplGenerated = true;
-        }
         enumeration = (EnumType)e;
         String result = enumerationTmpl.generate(this);
         out.print(result);
@@ -172,75 +89,6 @@ public class SizeOfEmitter extends JavaDefaultEmitter
     {
     }
 
-
-    public void beginEnumItem(AST e)
-    {
-    }
-
-
-    public void endEnumItem(AST e)
-    {
-    }
-
-
-    public void beginSubtype(AST s)
-    {
-    }
-
-
-    public void endSubtype(AST s)
-    {
-    }
-
-
-    public void beginSqlDatabase(AST s)
-    {
-    }
-
-
-    public void endSqlDatabase(AST s)
-    {
-    }
-
-
-    public void beginSqlMetadata(AST s)
-    {
-    }
-
-
-    public void endSqlMetadata(AST s)
-    {
-    }
-
-
-    public void beginSqlPragma(AST s)
-    {
-    }
-
-
-    public void endSqlPragma(AST s)
-    {
-    }
-
-
-    public void beginSqlTable(AST s)
-    {
-    }
-
-
-    public void endSqlTable(AST s)
-    {
-    }
-
-
-    public void beginSqlInteger(AST s)
-    {
-    }
-
-
-    public void endSqlInteger(AST s)
-    {
-    }
 
 
     public EnumType getEnumerationType()

@@ -38,9 +38,9 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     }
 
     @Override
-    public void beginTranslationUnit()
+    public void beginTranslationUnit(AST rootNode, AST unitNode)
     {
-        setPackageName(getPackageNode());
+        setPackageName(unitNode);
 
         openOutputFile(directory, "overview" + HTML_EXT);
         out.print(beginTmpl.generate(this));
@@ -77,7 +77,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     @Override
     public void beginSequence(AST s)
     {
-        setPackageName(getPackageNode());
+        //setPackageName(getPackageNode());
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
         typeMap.put(((SequenceType)s).getName(), p);
     }
@@ -92,7 +92,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     @Override
     public void beginSqlDatabase(AST s)
     {
-        setPackageName(getPackageNode());
+        //setPackageName(getPackageNode());
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
         typeMap.put(((SqlDatabaseType)s).getName(), p);
     }
@@ -107,7 +107,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     @Override
     public void beginUnion(AST u)
     {
-        setPackageName(getPackageNode());
+        //setPackageName(getPackageNode());
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)u);
         typeMap.put(((UnionType)u).getName(), p);
     }
@@ -122,7 +122,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     @Override
     public void beginEnumeration(AST e)
     {
-        setPackageName(getPackageNode());
+        //setPackageName(getPackageNode());
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)e);
         typeMap.put(((EnumType)e).getName(), p);
     }
@@ -137,7 +137,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     @Override
     public void beginSubtype(AST s)
     {
-        setPackageName(getPackageNode());
+        //setPackageName(getPackageNode());
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
         typeMap.put(((Subtype)s).getName(), p);
     }
@@ -152,7 +152,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     @Override
     public void beginSqlTable(AST s)
     {
-        setPackageName(getPackageNode());
+        //setPackageName(getPackageNode());
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
         typeMap.put(((SqlTableType)s).getName(), p);
     }
@@ -167,7 +167,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     @Override
     public void beginSqlPragma(AST s)
     {
-        setPackageName(getPackageNode());
+        //setPackageName(getPackageNode());
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
         typeMap.put(((SqlPragmaType)s).getName(), p);
     }
@@ -182,7 +182,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     @Override
     public void beginSqlMetadata(AST s)
     {
-        setPackageName(getPackageNode());
+        //setPackageName(getPackageNode());
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
         typeMap.put(((SqlMetadataType)s).getName(), p);
     }
@@ -197,7 +197,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     @Override
     public void beginSqlInteger(AST s)
     {
-        setPackageName(getPackageNode());
+        //setPackageName(getPackageNode());
         Pair<String, TokenAST> p = new Pair<String, TokenAST>(getPackageName(), (TokenAST)s);
         typeMap.put(((SqlIntegerType)s).getName(), p);
     }
@@ -206,54 +206,6 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     @Override
     public void endSqlInteger(AST s)
     {
-    }
-
-
-    @Override
-    public void beginEnumItem(AST e)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
-    public void beginField(AST f)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
-    public void beginImport(AST rootNode)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
-    public void endEnumItem(AST e)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
-    public void endField(AST f)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
-    public void endImport()
-    {
-        // TODO Auto-generated method stub
-
     }
 
 }

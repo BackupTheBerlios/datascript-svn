@@ -66,6 +66,7 @@ tokens
     BLOCK;
     CAST;
     ROOT;
+    TRANSLATION_UNIT;
     MEMBERS;
     PACKAGE;
     IMPORT;
@@ -135,7 +136,7 @@ tokens
 
 translationUnit
     : (packageDeclaration)? (importDeclaration)* declarationList EOF!
-      { #translationUnit = #([ROOT, "ROOT"], translationUnit); }
+      { #translationUnit = #([TRANSLATION_UNIT, "TRANSLATION_UNIT"], translationUnit); }
     ;    
 
 packageDeclaration

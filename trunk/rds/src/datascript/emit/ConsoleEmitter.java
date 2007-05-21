@@ -54,7 +54,7 @@ public class ConsoleEmitter extends DefaultEmitter
     /* (non-Javadoc)
      * @see datascript.emit.Emitter#beginTranslationUnit()
      */
-    public void beginTranslationUnit()
+    public void beginTranslationUnit(AST rootNode, AST unitNode)
     {
         // TODO Auto-generated method stub
 
@@ -67,26 +67,6 @@ public class ConsoleEmitter extends DefaultEmitter
     {
         // TODO Auto-generated method stub
 
-    }
-
-
-    public void beginPackage(AST p)
-    {
-    }
-
-
-    public void endPackage(AST p)
-    {
-    }
-
-
-    public void beginImport(AST importNode)
-    {
-    }
-
-
-    public void endImport()
-    {
     }
 
     /* (non-Javadoc)
@@ -168,65 +148,5 @@ public class ConsoleEmitter extends DefaultEmitter
     {
         EnumItem item = (EnumItem)e;
         System.out.println("end " + item.getName());
-    }
-
-
-    public void beginSubtype(AST s)
-    {
-    }
-
-
-    public void endSubtype(AST s)
-    {
-    }
-
-
-    public void beginSqlDatabase(AST s)
-    {
-    }
-
-
-    public void endSqlDatabase(AST s)
-    {
-    }
-
-
-    public void beginSqlMetadata(AST s)
-    {
-    }
-
-
-    public void endSqlMetadata(AST s)
-    {
-    }
-
-
-    public void beginSqlPragma(AST s)
-    {
-    }
-
-
-    public void beginSqlTable(AST s)
-    {
-    }
-
-
-    public void endSqlTable(AST s)
-    {
-    }
-
-
-    public void endSqlPragma(AST s)
-    {
-    }
-
-
-    public void beginSqlInteger(AST s)
-    {
-    }
-
-
-    public void endSqlInteger(AST s)
-    {
     }
 }
