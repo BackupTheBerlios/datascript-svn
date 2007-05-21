@@ -77,15 +77,15 @@ public class DataScriptXmlDumper extends XMLFilterImpl
 {
     private ContentHandler handler;
     private AttributesImpl noAttr = new AttributesImpl();
-    private TokenAST rootNode;
+    private TokenAST rootNode = new TokenAST(new antlr.Token(DataScriptParserTokenTypes.ROOT));
     private DataScriptParser parser;
     private ToolContext context;
-    private HashSet<String> allPackageFiles = new HashSet<String>(); 
+    private HashSet<String> allPackageFiles = new HashSet<String>();
 
 
-    private void parseImportedPackages(AST rootNode) throws Exception
+    private void parseImportedPackages(AST unitNode) throws Exception
     {
-        AST node = rootNode.getFirstChild();
+        AST node = unitNode.getFirstChild();
         if (node.getType() == DataScriptParserTokenTypes.PACKAGE)
         {
             while (true)
@@ -100,16 +100,10 @@ public class DataScriptXmlDumper extends XMLFilterImpl
                 {
                     allPackageFiles.add(fileName);
                     context.setFileName(fileName);
-                    AST packageRoot = parsePackage();
-
-                    mergeSyntaxTrees(rootNode, packageRoot);
+                    AST unitRoot = parsePackage();
+                    rootNode.addChild(unitRoot);
+                    parseImportedPackages(unitRoot);
                 }
-
-                AST child = node.getFirstChild();
-                while(child != null && child.getType() != DataScriptParserTokenTypes.TRANSLATION_UNIT)
-                    child = child.getNextSibling();
-                if (child != null)
-                    parseImportedPackages(child);
             }
         }
     }
@@ -145,8 +139,10 @@ public class DataScriptXmlDumper extends XMLFilterImpl
         TokenBuffer buffer = new TokenBuffer(lexer);
         parser = new DataScriptParser(buffer);
         parser.setContext(context);
+
         // must call this to see file name in error messages
         parser.setFilename(fileName);
+
         // use custom node class containing line information
         parser.setASTNodeClass("datascript.ast.TokenAST");
 
@@ -155,71 +151,8 @@ public class DataScriptXmlDumper extends XMLFilterImpl
         if (context.getErrorCount() != 0)
             throw new ParserException("Parser errors.");
 
+        // TODO: Log warning if package name AST does not match file name
         return parser.getAST();
-    }
-
-
-    private void mergeSyntaxTrees(AST rootNode, AST packageRoot)
-    {
-        AST rootMembers = getImportNode(rootNode, getPackageNode(packageRoot));
-        if (rootMembers == null)
-        {
-            rootMembers = getMembersNode(rootNode);
-            AST importedMembers = getMembersNode(packageRoot);
-            rootMembers.addChild(importedMembers.getFirstChild());
-        }
-        else
-            rootMembers.addChild(packageRoot);
-    }
-
-    
-    private AST getMembersNode(AST root)
-    {
-        AST node = root.getFirstChild();
-        while (node != null && node.getType() != DataScriptParserTokenTypes.MEMBERS)
-        {
-            node = node.getNextSibling();
-        }        
-        return node;
-    }
-
-
-    private AST getPackageNode(AST root)
-    {
-        AST node = root.getFirstChild();
-        while (node != null && node.getType() != DataScriptParserTokenTypes.PACKAGE)
-        {
-            node = node.getNextSibling();
-        }
-        return node;
-    }
-
-
-    private AST getImportNode(AST root, AST packageNode)
-    {
-        AST node = root.getFirstChild();
-        while (true)
-        {
-            while (node != null && node.getType() != DataScriptParserTokenTypes.IMPORT)
-            {
-                node = node.getNextSibling();
-            }
-    
-            if (node != null)
-            {
-                AST pn = packageNode.getFirstChild();
-                AST in = node.getFirstChild();
-                while (in != null && pn != null && in.getText().equals(pn.getText()))
-                {
-                    pn = pn.getNextSibling();
-                    in = in.getNextSibling();
-                }
-                if (in == null && pn == null)
-                    break;
-                node = node.getNextSibling();
-            }
-        }
-        return node;
     }
 
 
@@ -366,7 +299,12 @@ public class DataScriptXmlDumper extends XMLFilterImpl
     {
         handler = getContentHandler();
         handler.startDocument();
-        fireSaxEvents(rootNode);
+        TokenAST unitRoot = (TokenAST) rootNode.getFirstChild();
+        while (unitRoot != null)
+        {
+            fireSaxEvents(unitRoot);
+            unitRoot = (TokenAST) unitRoot.getNextSibling();
+        }
         handler.endDocument();
     }
 
@@ -414,8 +352,9 @@ public class DataScriptXmlDumper extends XMLFilterImpl
             int i = 0;
             //dsTool.context.setPathName(args[i++]);
             dsTool.context.setFileName(args[i++]);
-            dsTool.rootNode = (TokenAST) dsTool.parsePackage();
-            dsTool.parseImportedPackages(dsTool.rootNode);
+            AST unitRoot = (TokenAST) dsTool.parsePackage();
+            dsTool.rootNode.addChild(unitRoot);
+            dsTool.parseImportedPackages(unitRoot);
 
             os = System.out;    // or a file output stream
 
