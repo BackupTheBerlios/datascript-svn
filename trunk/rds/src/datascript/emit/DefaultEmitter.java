@@ -61,6 +61,9 @@ public class DefaultEmitter implements Emitter
 
     /**** implementation of interface methods ****/
 
+    public void beginRoot(AST r) {}
+    public void endRoot() {}
+
     public void beginTranslationUnit(AST r, AST u) {}
     public void endTranslationUnit() {}
 

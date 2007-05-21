@@ -195,7 +195,7 @@ public class DataScriptTool
         // check expression types and evaluate constant expressions
         ExpressionEvaluator exprEval = new ExpressionEvaluator();
         exprEval.setContext(context);
-        //exprEval.pushScope(globals);
+        exprEval.pushScope(globals);
         exprEval.root(rootNode);
         if (context.getErrorCount() != 0)
             throw new ParserException("Parser errors.");

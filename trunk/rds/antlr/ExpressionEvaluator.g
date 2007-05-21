@@ -177,7 +177,7 @@ constDeclaration
     ;
 
 fieldDefinition
-    :   #(f:FIELD                       /*{ scope().setCurrentField((Field)f); }*/
+    :   #(f:FIELD                       { scope().setCurrentField((Field)f); }
           typeReference 
           (i:ID)? 
           (in:fieldInitializer)?

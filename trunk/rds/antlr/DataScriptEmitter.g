@@ -63,7 +63,10 @@ options
     }
 }
 
-root : #(r:ROOT (translationUnit[#r])+ );
+root : #(r:ROOT                 { em.beginRoot(r); }
+         (translationUnit[#r])+ )
+       { em.endRoot(); }  
+     ;
 
 translationUnit[AST r]
     :   #(u:TRANSLATION_UNIT { em.beginTranslationUnit(r, u); }

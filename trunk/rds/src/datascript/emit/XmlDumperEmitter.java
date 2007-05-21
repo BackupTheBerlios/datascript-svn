@@ -69,10 +69,10 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
     }
 
 
-    public void beginTranslationUnit(AST rootNode, AST unitNode)
+    public void beginRoot(AST rootNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
-        setPackageName(unitNode);
+        setPackageName(rootNode.getFirstChild());
         openOutputFile(dir, "__XmlDumper.java");
         String result = dumperTmpl.generate(this);
         out.print(result);

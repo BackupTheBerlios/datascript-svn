@@ -1,5 +1,6 @@
 package bits.arrays;
 
+import bits.*;
 
 IntegerArray
 {

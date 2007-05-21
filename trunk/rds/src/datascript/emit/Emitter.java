@@ -54,11 +54,9 @@ import antlr.collections.AST;
  */
 public interface Emitter
 {
-    /*
-     * TODO: Now that we support packages and imports, the meaning of
-     * translation unit is unclear. One single DataScript file, or the
-     * same file with all its imports?
-     */
+    public void beginRoot(AST r);
+    public void endRoot();
+
     public void beginTranslationUnit(AST r, AST u);
     public void endTranslationUnit();
 

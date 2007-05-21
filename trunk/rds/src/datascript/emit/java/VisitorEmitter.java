@@ -58,17 +58,17 @@ public class VisitorEmitter extends JavaDefaultEmitter
     }
 
 
-    public void beginTranslationUnit(AST rootNode, AST unitNode)
+    public void beginRoot(AST rootNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
-        setPackageName(unitNode);
+        setPackageName(rootNode.getFirstChild());
         openOutputFile(dir, "__Visitor.java");
         String result = visitorTmpl.generate(this);
         out.print(result);
     }
 
 
-    public void endTranslationUnit()
+    public void endRoot()
     {
         String result = endTmpl.generate(this);
         out.print(result);
