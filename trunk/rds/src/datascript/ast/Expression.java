@@ -202,12 +202,16 @@ public class Expression extends TokenAST
     private void evaluateIdentifier()
     {
         String symbol = getText();
-        Object obj = scope.getSymbol(symbol);
+        Object obj = scope.getType(symbol);
         if (obj == null)
         {
+        	obj = scope.getSymbol(symbol);
+        	if (obj == null)
+        	{
             ToolContext.logError(this, "'" + symbol + 
                     "' undefined in scope of '" + scope.getOwner().getName() + 
                     "'");
+        	}
         }
         else if (obj instanceof Field)
         {
@@ -229,6 +233,10 @@ public class Expression extends TokenAST
                 //CompoundType compound = (CompoundType)type;
                 // ??? scope = compound.getScope();
             }
+        }
+        else if (obj instanceof EnumType)
+        {
+            type = (EnumType)obj;
         }
         else if (obj instanceof IntegerType)
         {
@@ -275,9 +283,16 @@ public class Expression extends TokenAST
         Expression op1 = op1();
         Expression op2 = op2();
         TypeInterface t = op1.getExprType();
-        if (!(t instanceof CompoundType))
+        if (t instanceof CompoundType)
         {
             ToolContext.logError(this, "compound type expected");
+        }
+        else if (t instanceof EnumType)
+        {
+        }
+        else
+        {
+            ToolContext.logError(this, "compound or enumeration type expected");        	
         }
         CompoundType compound = (CompoundType)t;
         String symbol = op2.getText();

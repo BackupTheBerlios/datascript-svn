@@ -10,4 +10,5 @@ Top
     int32 data;
     Middle middle;
     Bottom bottom;
+    Colour colour = Colour.RED;
 };
