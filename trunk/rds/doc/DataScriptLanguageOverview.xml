@@ -57,44 +57,84 @@
           <para>Added section on Subtypes.</para>
         </revdescription>
       </revision>
+
+      <revision>
+        <revnumber>0.5</revnumber>
+
+        <date>23 May 2007</date>
+
+        <revdescription>
+          <para>More details on packages. Scope of enum items changed from
+          global to local. More background in introduction.</para>
+        </revdescription>
+      </revision>
     </revhistory>
   </articleinfo>
 
   <section>
     <title>Introduction</title>
 
-    <para>There are thousands of languages for modelling abstract datatypes.
-    For some of these, the binary representation of the defined types is
-    implementation dependent and of no concern. Others do provide a binary
-    encoding, but there is usually no way to retrofit an abstract
-    specification to an existing binary format.</para>
+    <section>
+      <title>Motivation</title>
 
-    <para>DataScript <xref linkend="Back" /> is a language for modelling
-    binary datatypes or bitstreams. It was designed by Godmar Back to
-    unambiguously define complex binary data formats. His reference
-    implementation of a DataScript compiler also includes a Java code
-    generator producing Java classes which are able to read and write a binary
-    stream that complies with a DataScript specification.</para>
+      <para>There are dozens of languages for modelling abstract datatypes.
+      For some of these, the binary representation of the defined types is
+      implementation dependent and of no concern. Others do provide a binary
+      encoding, but there is usually no way to retrofit an abstract
+      specification to an existing binary format.</para>
 
-    <para>After evaluating different data modelling languages and toolsets,
-    DataScript was selected by the authors as the most promising approach for
-    formally defining a car navigation database format.</para>
+      <para>DataScript is a formal language for modelling binary datatypes,
+      bitstreams or file formats. Using a formal language for defining such
+      binary datatypes resolves all ambiguities typically found in textual or
+      tabular specifications.</para>
 
-    <para>While Back's reference implementation <xref linkend="DataScript" />
-    provided a great start, it does not fully implement the semantics
-    introduced in his specification. In addition, we found that some language
-    extensions were desirable to better support our specific requirements. For
-    this reason, we branched off our own DataScript project from Back's
-    reference implementation.</para>
+      <para>In addition, one can automatically generate encoders and decoders
+      for a given binary format from such a formal specification, so that
+      application developers do not have to worry about serialization and can
+      focus on application logic instead.</para>
 
-    <para>The present document describes a DataScript dialect supported by our
-    implementation. It is more of a User's Manual than a formal language
-    specification. Some features of the original DataScript specification that
-    were semantically ambiguous, not fully implemented or simply not very
-    important to us have been silently suppressed. New features of our own
-    have been added and are documented in this overview. Features from the
-    original specification not documented here may or may not be functional,
-    but we are not actively supporting them.</para>
+      <para>The present document describes a DataScript dialect supported by
+      our implementation called <literal>rds</literal> (short for Relational
+      DataScript), which is available from SourceForge <xref linkend="rds" />
+      under a BSD License. This Language Overview is more of a User's Manual
+      than a formal language specification. </para>
+    </section>
+
+    <section>
+      <title>History and Background</title>
+
+      <para>DataScript was designed by Godmar Back <xref linkend="Back" />.
+      His reference implementation of a DataScript compiler also includes a
+      Java code generator producing Java classes which are able to read and
+      write a binary stream that complies with a DataScript
+      specification.</para>
+
+      <para><literal>rds</literal> and the DataScript dialect defined in this
+      document are a spin-off of the Physical Storage Format Standardization
+      Initiative (PSI), a joint effort of about 20 partner companies in the
+      automotive industry to standardize a car navigation database format.
+      </para>
+
+      <para>After evaluating different data modelling languages and toolsets,
+      including ASN.1, CSN.1, UML, XML Schema and others, DataScript was
+      selected by the PSI as the closest match to our requirements.</para>
+
+      <para>While Back's reference implementation <xref
+      linkend="DataScript" /> provided a great start, we found that some
+      language extensions were desirable to better support our specific
+      requirements. For this reason, we branched off our own DataScript Tools
+      or <literal>dstools</literal> project from Back's reference
+      implementation. </para>
+
+      <para>As a major addition to the DataScript language, we introduced
+      relational extensions, which permit the definition of hybrid data
+      models, where the high-level access structures are implemented by
+      relational tables and indices, whereas the bulk data are stored in
+      single columns as BLOBs with a format defined in DataScript, hence the
+      name <emphasis>Relational DataScript</emphasis>. <literal>rds</literal>
+      is currently built on top of the SQLite embedded database <xref
+      linkend="SQLite" />.</para>
+    </section>
   </section>
 
   <section>
@@ -225,11 +265,16 @@
     3 bits from the stream and report an error when the integer value of these
     3 bits is not one of 0, 2, 3 or 7.</para>
 
-    <para>An enumeration type does not provide its own lexical scope. The
-    member names are and must be unique in the enclosing scope. Thus, if
-    <literal>Color</literal> is defined at global scope, other enumerations at
-    global scope may not contain a member named
-    <literal>NONE</literal>.</para>
+    <para>An enumeration type provides its own lexical scope, similar to Java
+    and dissimilar to C++. The member names must be unique within each
+    enumeration type, but may be reused in other contexts with different
+    meanings. Referring to the example, any other enumeration type
+    <literal>Foo</literal> may also contain a member named
+    <literal>NONE</literal>. </para>
+
+    <para>In expressions outside of the defining type, enumeration members
+    must always be prefixed by the type name and a dot, e.g.
+    <literal>Color.NONE</literal>.</para>
   </section>
 
   <section>
@@ -673,7 +718,7 @@ Database::stringOffset:
   </section>
 
   <section id="nested">
-    <title>Nested Types</title>
+    <title id="nestedtypes">Nested Types</title>
 
     <para>DataScript syntax permits the definition of nested types, however,
     it is not easy to define the semantics of such types in a consistent way.
@@ -989,45 +1034,134 @@ ParamType(Foo arg1, Blah arg2)
   <section>
     <title>Packages and Imports</title>
 
-    <para>Complex DataScript specifications should be split into multiple
-    packages stored in separate source files. Every user-defined type belongs
-    to a unique package. There is an unnamed default package used for files
-    without an explicit package declaration. Types from other packages can be
-    imported into the current package.</para>
+    <section>
+      <title>Type Name Visibility</title>
 
-    <para>The package and import syntax and semantics follow the Java
-    example.</para>
+      <para>Complex DataScript specifications should be split into multiple
+      packages stored in separate source files. Every user-defined type
+      belongs to a unique package. For backward compatibility, there is an
+      unnamed default package used for files without an explicit package
+      declaration. It is strongly recommended to use a package declaration in
+      each DataScript source file.</para>
 
-    <programlisting>package map;
+      <para>A package provides a lexical scope for types. Type names must be
+      unique within a package, but a given type name may be defined in more
+      than one package. If a type named <literal>Coordinate</literal> is
+      defined in package <literal>com.acme.foo</literal>, the type can be
+      globally identified by its fully qualified name
+      <literal>com.acme.foo.Coordinate</literal>, which is obtained by
+      prefixing the type name with the name of the defining package, joined by
+      a dot. Another package <literal>com.acme.foo.bar</literal> may also
+      define a type named <literal>Coordinate</literal>, having the fully
+      qualified name <literal>com.acme.bar.Coordinate</literal>.</para>
+
+      <para>By default, types from other packages are not visible in the
+      current package, unless there are imported explicitly. The package and
+      import syntax and semantics follow the Java example.</para>
+
+      <programlisting>package map;
 
 import common.geometry.*;
 import common.featuretypes.*;</programlisting>
 
-    <para>Package and file names are closely related. The above example
-    declares a package <literal>map</literal> stored in a source file
-    <literal>map.ds</literal>. The import declarations direct the parser to
-    locate and parse source files <literal>common/geometry.ds</literal> and
-    <literal>common/featuretypes.ds</literal> and to import
-    <emphasis>all</emphasis> types from these packages into the current scope.
-    Imported files may again contain import declarations.</para>
+      <para>Import declarations only have any effect when there is a reference
+      to a type name not defined in the current package. If package
+      <literal>map</literal> defines its own <literal>Coordinate</literal>
+      type, any reference to that within package map will be resolved to the
+      local type <literal>map.Coordinate</literal>, even when one or more of
+      the imported packages also define a type named
+      <literal>Coordinate</literal>.</para>
 
-    <para>Unlike Java, DataScript cannot import individual types from another
-    package (e.g. <literal>import common.geometry.Line;</literal>), nor is it
-    possible to refer to an external type via its fully qualified name without
-    an import declaration.</para>
+      <para>On the other hand, if package <literal>map</literal> references a
+      <literal>Coordinate</literal> type but does not define it, the import
+      declarations are used to resolve that type in one of the imported
+      packages. In that case, the referenced type must be matched by exactly
+      one of the imported packages. It is obviously a semantic error if the
+      type name is defined in none of the packages. It is also an error if the
+      type name is defined in two or more of the imported packages. The order
+      of the import declarations does not matter.</para>
+
+      <para>Individual types can be imported using their fully qualified
+      name:</para>
+
+      <programlisting><literal>import common.geometry.Geometry</literal>;</programlisting>
+
+      <para>This single import has precedence over any wildcard import. It
+      prevents an ambiguity with
+      <literal>common.featuretypes.Geometry</literal>. However, it would be a
+      semantic error to have another single import of the same type name from
+      a different package.</para>
+
+      <para><remark>Implementation note: rds 0.8 supports wildcard imports.
+      Single imports are not yet implemented but will be added in the near
+      future. There are currently no plans to implement references to types by
+      their fully qualified names, as this would cause parser ambiguities with
+      the nested type syntax, see <xref
+      linkend="nestedtypes" />.</remark></para>
+    </section>
+
+    <section>
+      <title>Packages and Files</title>
+
+      <para>Package and file names are closely related. Each package must be
+      located in a separate file. The above example declares a package
+      <literal>map</literal> stored in a source file
+      <literal>map.ds</literal>. The import declarations direct the parser to
+      locate and parse source files <literal>common/geometry.ds</literal> and
+      <literal>common/featuretypes.ds</literal>.</para>
+
+      <para>Imported files may again contain import declarations. Cyclic
+      import relations between packages are supported but should be avoided.
+      The DataScript parser takes care to parse each source file just
+      once.</para>
+    </section>
   </section>
 
   <bibliography>
     <title>References</title>
 
-    <bibliomixed id="Back">Godmar Back, <citetitle>DataScript - a
-    Specification and Scripting Language for Binary Data</citetitle>.
-    Proceedings of the ACM Conference on Generative Programming and Component
-    Engineering Proceedings (GPCE 2002), published as LNCS 2487. ACM.
-    Pittsburgh, PA. October 2002. pp. 66-77.
-    http://www.cs.vt.edu/~gback/papers/gback-datascript-gpce2002.pdf</bibliomixed>
+    <biblioentry id="Back">
+      <abbrev>Back</abbrev>
 
-    <bibliomixed id="DataScript">DataScript Reference Implementation,
-    http://datascript.sourceforge.net.</bibliomixed>
+      <author>
+        <firstname>Godmar</firstname>
+
+        <surname>Back</surname>
+      </author>
+
+      <citetitle><ulink
+      url="http://www.cs.vt.edu/~gback/papers/gback-datascript-gpce2002.pdf">DataScript
+      - a Specification and Scripting Language for Binary
+      Data</ulink></citetitle>
+
+      <edition>Proceedings of the ACM Conference on Generative Programming and
+      Component Engineering Proceedings (GPCE 2002), published as LNCS 2487.
+      ACM. Pittsburgh, PA</edition>
+
+      <date>October 2002</date>
+
+      <pagenums>pp. 66-77</pagenums>
+    </biblioentry>
+
+    <biblioentry id="DataScript">
+      <abbrev>DataScript</abbrev>
+
+      <citetitle><ulink url="http://datascript.sourceforge.net">DataScript
+      Reference Implementation</ulink></citetitle>
+    </biblioentry>
+
+    <biblioentry id="rds">
+      <abbrev>rds</abbrev>
+
+      <citetitle><ulink url="http://dstools.sourceforge.net">Relational
+      DataScript</ulink></citetitle>
+    </biblioentry>
+
+    <biblioentry id="SQLite">
+      <abbrev>SQLite</abbrev>
+
+      <citetitle><ulink url="http://www.sqlite.org">SQLite Embedded
+      Database</ulink></citetitle>
+    </biblioentry>
   </bibliography>
 </article>
