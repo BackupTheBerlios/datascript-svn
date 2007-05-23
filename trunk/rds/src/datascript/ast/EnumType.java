@@ -42,6 +42,7 @@ import java.util.Iterator;
 public class EnumType extends SetType
 {
     private TokenAST members;
+    private Scope scope;
     
     public EnumType()
     {
@@ -78,5 +79,17 @@ public class EnumType extends SetType
     public String toString()
     {
         return "ENUM";
+    }
+    
+    public Scope getScope()
+    {
+        return scope;
+    }
+    
+    public void setScope(Scope scope)
+    {
+        this.scope = scope;
+        scope.setOwner(this);
+        
     }
 }

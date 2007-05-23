@@ -104,7 +104,7 @@
       	String constraint = tne.getConstraint(f);
       	if (constraint != null)
       	{
-        	%><%=constraint%><%
+        	%> : <%=constraint%><%
         }
 %>;</td>
         </tr>

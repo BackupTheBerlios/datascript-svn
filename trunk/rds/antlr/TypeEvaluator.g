@@ -157,9 +157,9 @@ parameterDefinition
 
 enumDeclaration
     : #(e:"enum" builtinType 
-        (i:ID                		{scope().setTypeSymbol(i, e); }
-        )? 
-        enumMemberList[e])
+        (i:ID                		{ scope().setTypeSymbol(i, e); }
+        )?                              { pushScope(); ((EnumType)e).setScope(scope()); }
+        enumMemberList[e])              { popScope(); }
     ;
 
 enumMemberList[AST e]
@@ -182,7 +182,7 @@ constDeclaration
 
 fieldDefinition
     :   #(FIELD                         { Field f = (Field)#FIELD; 
-    					  CompoundType ct = scope().getOwner(); }
+    					  CompoundType ct = (CompoundType) scope().getOwner(); }
           typeReference
           (i:ID 			{ scope().setSymbol(i, f);
           				  f.setName(i);
@@ -351,7 +351,7 @@ sqlPragmaBlock
     
 sqlPragma
     : #(FIELD                            { Field f = (Field)#FIELD; 
-    					  CompoundType ct = scope().getOwner(); }
+    					  CompoundType ct = (CompoundType) scope().getOwner(); }
         (DOC)? 
         t:sqlPragmaType n:ID             { scope().setSymbol(n, f);
           				   f.setName(n);
@@ -375,7 +375,7 @@ sqlMetadataBlock
     
 sqlMetadataField
     : #(FIELD typeReference             { Field f = (Field)#FIELD; 
-    					  CompoundType ct = scope().getOwner(); }
+    					  CompoundType ct = (CompoundType) scope().getOwner(); }
         n:ID                              { scope().setSymbol(n, f);
           				   f.setName(n);
           				   ct.addField(f);
@@ -395,7 +395,7 @@ sqlTableField
       
 sqlTableDefinition[AST fd]
         { Field f = (Field)#fd;  
-          CompoundType ct = scope().getOwner(); 
+          CompoundType ct = (CompoundType) scope().getOwner(); 
         }
     : sqlTableDeclaration
       (n:ID                             {
@@ -422,7 +422,7 @@ sqlTableDeclaration
     
 sqlFieldDefinition
     : #(FIELD definedType                { Field f = (Field)#FIELD; 
-    					  CompoundType ct = scope().getOwner(); }
+    					  CompoundType ct = (CompoundType) scope().getOwner(); }
         n:ID                             { scope().setSymbol(n, f);
           				   f.setName(n);
           				   ct.addField(f);
@@ -444,7 +444,7 @@ sqlIntegerDeclaration
     
 sqlIntegerFieldDefinition
     : #(FIELD                            { Field f = (Field)#FIELD; 
-    					  CompoundType ct = scope().getOwner(); }
+    					  CompoundType ct = (CompoundType) scope().getOwner(); }
         t:integerType n:ID               { scope().setSymbol(n, f);
           				   f.setName(n);
           				   ct.addField(f);

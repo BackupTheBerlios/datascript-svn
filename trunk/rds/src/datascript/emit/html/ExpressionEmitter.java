@@ -40,6 +40,7 @@ package datascript.emit.html;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.CompoundType;
 import datascript.ast.EnumItem;
+import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.Parameter;
@@ -296,11 +297,20 @@ public class ExpressionEmitter
     {
         String symbol = expr.getText();
         Scope scope = expr.getScope();
-        Object obj = scope.getSymbol(symbol);
-
-        if (obj instanceof TypeInterface)
+        Object obj = scope.getType(symbol);
+        if (obj == null)
         {
-            CompoundType compound = scope.getOwner();
+            obj = scope.getSymbol(symbol);
+        }
+
+        if (obj instanceof EnumType)
+        {
+            EnumType enumeration = (EnumType) obj;
+            buffer.append(enumeration.getName());                
+        }
+        else if (obj instanceof TypeInterface)
+        {
+            CompoundType compound = (CompoundType) scope.getOwner();
             if (compound != null && compound.isParameter(symbol))
             {
                 emitCompoundPrefix();
@@ -328,8 +338,8 @@ public class ExpressionEmitter
             EnumItem item = (EnumItem)obj;
             String type = item.getEnumType().getName();
             String value = item.getName();
-            buffer.append(type);
-            buffer.append('.');
+            //buffer.append(type);
+            //buffer.append('.');
             buffer.append(value);
         }
         else

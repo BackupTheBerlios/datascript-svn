@@ -205,15 +205,15 @@ public class Expression extends TokenAST
         Object obj = scope.getType(symbol);
         if (obj == null)
         {
-        	obj = scope.getSymbol(symbol);
-        	if (obj == null)
-        	{
-            ToolContext.logError(this, "'" + symbol + 
-                    "' undefined in scope of '" + scope.getOwner().getName() + 
-                    "'");
-        	}
+            obj = scope.getSymbol(symbol);
+            if (obj == null)
+            {
+                ToolContext.logError(this, "'" + symbol
+                        + "' undefined in scope of '"
+                        + scope.getOwner().getName() + "'");
+            }
         }
-        else if (obj instanceof Field)
+        if (obj instanceof Field)
         {
             Field field = (Field)obj;
             type = TypeReference.resolveType(field.getFieldType());
@@ -245,7 +245,8 @@ public class Expression extends TokenAST
         else if (obj instanceof CompoundType)
         {
             CompoundType compound = (CompoundType)obj;
-            if (scope.getOwner().isContainedIn(compound))
+            CompoundType owner = (CompoundType) scope.getOwner();
+            if (owner.isContainedIn(compound))
             {
                 type = compound;                
             }
@@ -283,19 +284,25 @@ public class Expression extends TokenAST
         Expression op1 = op1();
         Expression op2 = op2();
         TypeInterface t = op1.getExprType();
+        String symbol = op2.getText();
         if (t instanceof CompoundType)
         {
-            ToolContext.logError(this, "compound type expected");
+            CompoundType compound = (CompoundType)t;
+            evaluateCompoundMember(compound, symbol);
         }
         else if (t instanceof EnumType)
         {
+            EnumType enumeration = (EnumType)t;
+            evaluateEnumerationItem(enumeration, symbol);
         }
         else
         {
             ToolContext.logError(this, "compound or enumeration type expected");        	
         }
-        CompoundType compound = (CompoundType)t;
-        String symbol = op2.getText();
+    }    
+    
+    private void evaluateCompoundMember(CompoundType compound, String symbol)
+    {
         Scope scope = compound.getScope();
         Object obj = scope.getSymbol(symbol);
         if (obj == null)
@@ -303,7 +310,7 @@ public class Expression extends TokenAST
             ToolContext.logError(this, "'" + symbol + 
                     "' undefined in current scope");
         }
-        op2.scope = scope;
+        op2().scope = scope;
         if (obj instanceof Field)
         {
             Field field = (Field)obj;
@@ -316,9 +323,25 @@ public class Expression extends TokenAST
         else 
         {
             throw new InternalError("cannot resolve symbol '" + symbol + "'");
-        }
-    }    
+        }        
+    }
 
+    private void evaluateEnumerationItem(EnumType enumeration, String symbol)
+    {
+        Scope scope = enumeration.getScope();
+        Object obj = scope.getSymbol(symbol);
+        if (obj == null)
+        {
+            ToolContext.logError(this, "'" + symbol + 
+                    "' undefined in enumeration '" + enumeration.getName() + "'");
+        }
+        op2().scope = scope;
+        EnumItem item = (EnumItem)obj;
+        value = item.getValue();
+        type =  item.getEnumType();
+    }
+    
+    
     private void evaluateArrayElement()
     {
         TypeInterface t = op1().getExprType();

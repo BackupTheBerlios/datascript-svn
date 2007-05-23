@@ -101,7 +101,7 @@ public interface Context
      * @return the compound type owning this scope, or null, if this scope does
      * not belong to a compound.
      */
-    CompoundType getOwner();
+    TypeInterface getOwner();
     
     /**
      * Looks up a type with a given name in the current scope (including

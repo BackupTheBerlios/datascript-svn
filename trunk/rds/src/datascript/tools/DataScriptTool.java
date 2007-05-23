@@ -73,7 +73,7 @@ import datascript.emit.java.VisitorEmitter;
 
 public class DataScriptTool 
 {
-    private static final String VERSION = "rds 0.8alpha (14 May 2007)";
+    private static final String VERSION = "rds 0.8beta (22 May 2007)";
     private ToolContext context;
     private TokenAST rootNode = null;
     private Scope globals = null;
@@ -148,8 +148,8 @@ public class DataScriptTool
             buffer.append("usage: " + NL);
             buffer.append(" -doc\tgenerates Javadoc-style documentation" + NL);
             buffer.append(" -c\tchecks syntax" + NL);
-            buffer.append(" -out \"pathname\"\tpath to the directory in witch the generated code is stored" + NL);
-            buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScipt package" + NL);
+            buffer.append(" -out \"pathname\"\tpath to the directory in which the generated code is stored" + NL);
+            buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScript package" + NL);
             buffer.append(" -src \"pathname\"\tpath to DataScript source files" + NL);
             buffer.append(" \"filename\"\tmain DataScript source file" + NL);
 
@@ -189,7 +189,6 @@ public class DataScriptTool
         typeEval.root(rootNode);
         if (context.getErrorCount() != 0)
             throw new ParserException("Parser errors.");
-        //globals.link(null);
         Package.linkAll();
         
         // check expression types and evaluate constant expressions
@@ -205,36 +204,29 @@ public class DataScriptTool
     public void emitJava(DataScriptEmitter emitter) throws Exception
     {
         System.out.println("emitting java code");
-        //Package packageRoot = Package.getRoot();
 
         // emit Java code for decoders
-        System.out.println("emitting java");
         JavaEmitter javaEmitter = new JavaEmitter(outPathName, defaultPackageName);
-        //JavaEmitter javaEmitter = new JavaEmitter(outPathName, defaultPackageName, packageRoot);
         emitter.setEmitter(javaEmitter);
         emitter.root(rootNode);
 
         // emit Java __Visitor interface
-        System.out.println("emitting visitor");
         VisitorEmitter visitorEmitter = new VisitorEmitter(outPathName, defaultPackageName);
         emitter.setEmitter(visitorEmitter);
         emitter.root(rootNode);
 
         // emit Java __DepthFirstVisitor class
-        System.out.println("emitting first visitor");
         DepthFirstVisitorEmitter dfVisitorEmitter = 
             new DepthFirstVisitorEmitter(outPathName, defaultPackageName);
         emitter.setEmitter(dfVisitorEmitter);
         emitter.root(rootNode);
 
         // emit Java __SizeOf class
-        System.out.println("emitting sizeof");
         SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(outPathName, defaultPackageName);
         emitter.setEmitter(sizeOfEmitter);
         emitter.root(rootNode);
 
         // emit Java __XmlDumper class
-        System.out.println("emitting xmlDumper");
         XmlDumperEmitter xmlDumper = new XmlDumperEmitter(outPathName, defaultPackageName);
         emitter.setEmitter(xmlDumper);
         emitter.root(rootNode);
@@ -243,8 +235,6 @@ public class DataScriptTool
 
     public void emitHTML(DataScriptEmitter emitter) throws Exception
     {
-        System.out.println("emitting html documentation");
-
         // emit HTML documentation
         ContentEmitter htmlEmitter = new ContentEmitter();
         emitter.setEmitter(htmlEmitter);
@@ -358,7 +348,9 @@ public class DataScriptTool
             DataScriptEmitter emitter = new DataScriptEmitter();
             dsTool.emitJava(emitter);
             if (dsTool.generateDocs)
+            {
                 dsTool.emitHTML(emitter);
+            }
         }
         catch (DataScriptException exc)
         {

@@ -108,7 +108,7 @@ public class TypeReference extends TokenAST implements TypeInterface,
      */
     public void link(Context ctxt)
     {
-        CompoundType outer = ctxt.getOwner();
+        CompoundType outer = (CompoundType) ctxt.getOwner();
         //String outerName = (outer == null) ? "<global>" : outer.getName();
         //Object obj = null;
         

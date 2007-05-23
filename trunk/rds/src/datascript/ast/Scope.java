@@ -48,7 +48,7 @@ public class Scope implements Context, LinkAction
     private HashMap<String, Object> symbolTable = new HashMap<String, Object>();
 
     private Scope parentScope;
-    private CompoundType owner;
+    private TypeInterface owner;
     private Field currentField;
 
     private Vector<LinkAction> linkActions = new Vector<LinkAction>();
@@ -67,12 +67,12 @@ public class Scope implements Context, LinkAction
         }
     }
 
-    public CompoundType getOwner()
+    public TypeInterface getOwner()
     {
         return owner;
     }
     
-    public void setOwner(CompoundType owner)
+    public void setOwner(TypeInterface owner)
     {
         this.owner = owner;
     }
@@ -131,7 +131,7 @@ public class Scope implements Context, LinkAction
         }
         else
         {
-            return owner;
+            return (CompoundType) owner;
         }
     }
 

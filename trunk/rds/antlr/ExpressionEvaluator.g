@@ -147,10 +147,11 @@ parameterDefinition
 /******************* begin of enumerator stuff *****************/
 
 enumDeclaration
-    : #(e:"enum" builtinType 
+    : #(e:"enum"                        { pushScope(((EnumType)e).getScope()); }
+        builtinType 
         (i:ID                
         )? 
-        enumMemberList)
+        enumMemberList)                 { popScope(); }
     ;
 
 enumMemberList
