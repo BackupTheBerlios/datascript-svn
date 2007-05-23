@@ -12,6 +12,9 @@ import junit.framework.TestCase;
 import bits.Colour;
 import bits.Dimension;
 import bits.Enums;
+import bits.DuplicateEnum;
+import bits.TrafficLight;
+
 /**
  * @author HWellmann
  *
@@ -112,5 +115,22 @@ public class EnumerationTest extends TestCase
         Enums e2 = new Enums(wFileName);
         checkEnums(e2, size, Colour.YELLOW, Colour.BLUE, Dimension.HEIGHT, Dimension.WIDTH);
         assertTrue(e.equals(e2));
+    }
+    
+    public void testDuplicateEnum() throws IOException
+    {
+    	DuplicateEnum de = new DuplicateEnum();
+    	de.setColour(Colour.RED);
+    	de.setLight(TrafficLight.RED);
+    	assertEquals(de.getColour(), Colour.RED);
+    	assertEquals(de.getLight(), TrafficLight.RED);
+    	assertEquals(de.sizeof(), 3);
+    	
+    	de.write(wFileName);
+    	
+    	de = new DuplicateEnum(wFileName);
+    	assertEquals(de.getColour(), Colour.RED);
+    	assertEquals(de.getLight(), TrafficLight.RED);
+    	assertEquals(de.sizeof(), 3);    	    	
     }
 }

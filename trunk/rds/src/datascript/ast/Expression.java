@@ -202,17 +202,12 @@ public class Expression extends TokenAST
     private void evaluateIdentifier()
     {
         String symbol = getText();
-        Object obj = scope.getType(symbol);
-        if (obj == null)
-        {
-            obj = scope.getSymbol(symbol);
-            if (obj == null)
-            {
-                ToolContext.logError(this, "'" + symbol
-                        + "' undefined in scope of '"
-                        + scope.getOwner().getName() + "'");
-            }
-        }
+        Object obj = scope.getTypeOrSymbol(symbol);
+        if (obj == null) {
+			ToolContext.logError(this, "'" + symbol
+					+ "' undefined in scope of '" + scope.getOwner().getName()
+					+ "'");
+		}
         if (obj instanceof Field)
         {
             Field field = (Field)obj;
@@ -225,14 +220,8 @@ public class Expression extends TokenAST
         }
         else if (obj instanceof TypeReference)
         {
-            //System.out.println("evaluateIdentifier(): " + symbol + "-> TypeReference");
             TypeReference ref = (TypeReference)obj;
             type = TypeReference.resolveType(ref);
-            if (type instanceof CompoundType)
-            {
-                //CompoundType compound = (CompoundType)type;
-                // ??? scope = compound.getScope();
-            }
         }
         else if (obj instanceof EnumType)
         {

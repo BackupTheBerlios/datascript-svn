@@ -90,6 +90,19 @@ enum uint8 Dimension
     HEIGHT = 3
 };
 
+enum uint8 TrafficLight
+{
+    RED = 10,
+    YELLOW = 12,
+    GREEN = 14
+};
+
+DuplicateEnum
+{
+    Colour colour = Colour.RED;
+    TrafficLight light = TrafficLight.RED;
+}; 
+
 Enums
 {
     Colour colour1;

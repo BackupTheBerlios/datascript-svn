@@ -297,11 +297,7 @@ public class ExpressionEmitter
     {
         String symbol = expr.getText();
         Scope scope = expr.getScope();
-        Object obj = scope.getType(symbol);
-        if (obj == null)
-        {
-            obj = scope.getSymbol(symbol);
-        }
+        Object obj = scope.getTypeOrSymbol(symbol);
         if (obj instanceof EnumType)
         {
             EnumType enumeration = (EnumType) obj;

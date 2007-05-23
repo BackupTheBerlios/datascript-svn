@@ -43,21 +43,42 @@ import antlr.collections.AST;
  * A Context is a lexical scope which maps names to objects. A name must be
  * unique in its scope. This is also true for different object categories:
  * e.g. a type name cannot be reused as a field name in the same scope.
- *  
+ * <p> 
  * A scope may have a parent scope. Names of the parent
  * scope are visible in the current scope, but may be shadowed.
+ * <p>
+ * Packages have their own scope. All top level types defined in the package
+ * are within the package scope. The package scope has no parent scope. 
+ * A top level compound or enumeration type defines its own scope. The field or
+ * item names of this type are contained in this scope.
+ * <p>
+ * A compound type B defined within a compound type A is located in the scope
+ * of A. It defines its own scope B with parent scope A.
+ * <p>
+ * Note: Scope is the only class implementing the Context interface. Context
+ * and Scope are inherited from datascript 0.1. I am not sure if the 
+ * distinction makes sense - maybe we should stick with the Scope terminology
+ * and simply drop this Context interface.
+ * 
  * @author HWellmann
- *
  */
 public interface Context
 {
+    /**
+     * Each compound type defines its own lexical scope. The parent of this is
+     * the one owned by the enclosing compound or by the defining package 
+     * otherwise
+     * @return the compound type owning this scope, or null, if this scope does
+     * not belong to a compound.
+     */
     /** Returns the parent scope, or null. */
     Context getParentScope();
 
     /** 
      * Returns the object for the given name, or null if no such name is 
      * visible. If the name is not defined in the current scope, it is
-     * recursively looked up in the parent scope.
+     * recursively looked up in the parent scope. The recursion terminates
+     * at the enclosing package scope, which has no parent.
      * @param symbol   name to be looked up
      * @return corresponding object, or null
      */
@@ -105,16 +126,30 @@ public interface Context
     
     /**
      * Looks up a type with a given name in the current scope (including
-     * recursion to enclosing scopes).
+     * recursion to enclosing scopes). If the type name is not visible at
+     * in the current package scope, it will also be looked up in imported
+     * packages.
+     * <p>
      * 
      * The result may be null if
      * <ul>
      * <li>The name is not defined.</li>
      * <li>The name is not visible.</li>
-     * <li>The name is does not belong to a type.</li>
+     * <li>The name does not belong to a type.</li>
      * </ul>
      * @param name
      * @return a type with the given name, or null
      */
     TypeInterface getType(String name);
+    
+    /**
+     * Looks up a type with a given name in the current package and in imported
+     * packages. If no such type exists, another lookup will be performed within
+     * the current package for any objects which are not types.
+     * @param name    symbol to be looked up
+     * @return a type from the current or any imported package, or any object
+     *         from the current package.
+     */
+    Object getTypeOrSymbol(String name);
+    
 }
