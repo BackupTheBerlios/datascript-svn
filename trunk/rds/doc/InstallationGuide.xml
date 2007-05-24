@@ -2,7 +2,7 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 <article>
-  <title>Installing and Building the DataScript Tools</title>
+  <title>Installing and Building Relational DataScript (rds)</title>
 
   <articleinfo>
     <author>
@@ -59,6 +59,18 @@
           <para>Changes for Java 1.6.0. Added -doc option.</para>
         </revdescription>
       </revision>
+
+      <revision>
+        <revnumber>0.5</revnumber>
+
+        <date>23 May 2007</date>
+
+        <revdescription>
+          <para>Java 1.6.0 is now default. Adapted to rds 0.8. New command
+          line options. Renamed dstools-antlr to rds. Hints on Linux support.
+          Remark on Eclipse dependency.</para>
+        </revdescription>
+      </revision>
     </revhistory>
   </articleinfo>
 
@@ -69,32 +81,19 @@
       <title>Purpose</title>
 
       <para>This is a short guide for installing and running the DataScript
-      tools and for getting the source and building the tools from
-      source.</para>
+      tools, for getting the source from a release package or from Subversion
+      and for building the tools from source.</para>
     </section>
 
     <section>
       <title>Package Overview</title>
 
       <para>This guide relates to the packages available from the
-      <literal>dstools</literal> project at Sourceforge (see <ulink
-      url="???">http://dstools.sourceforge.net</ulink>). There are the
-      following packages:</para>
+      <literal><ulink
+      url="http://dstools.sourceforge.net">dstools</ulink></literal> project
+      at Sourceforge. There are the following packages:</para>
 
       <itemizedlist>
-        <listitem>
-          <para><literal>dstools-bin</literal>: Binary distribution of a
-          DataScript parser and code generator, directly derived from the
-          reference implementation of Godmar Back. This was the starting point
-          of the dstools project, which has now been superseded by a
-          reimplementation called rds (Relational DataScript).</para>
-        </listitem>
-
-        <listitem>
-          <para><literal>dstools-src</literal>: The source package
-          corresponding to <emphasis>dstools-bin</emphasis>.</para>
-        </listitem>
-
         <listitem>
           <para><literal>rds-bin</literal>: Binary distribution of Relational
           DataScript, our current baseline version for a DataScript parser,
@@ -104,6 +103,19 @@
         <listitem>
           <para><literal>rds-src</literal>: The source package corresponding
           to <literal>rds-bin</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>dstools-bin</literal>: Binary distribution of a
+          DataScript parser and code generator, directly derived from the
+          reference implementation of Godmar Back (obsolete). This was the
+          starting point of the dstools project, which has now been superseded
+          by <literal>rds</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>dstools-src</literal>: The source package
+          corresponding to <emphasis>dstools-bin</emphasis>.</para>
         </listitem>
       </itemizedlist>
     </section>
@@ -121,11 +133,16 @@
       trusting in the ability of Unix users to silently make the necessary
       changes.</para>
 
-      <para><literal>rds</literal> also runs on Java SE 1.5.0. Versions 1.4.x
-      or earlier are not compatible due to the use of generics in the
-      <literal>rds</literal> implementation. The JAR files provided in the
-      <literal>rds-bin</literal> package are compiled to be compatible with
-      Java SE 1.5.0.</para>
+      <para>Java versions 1.4.x or earlier are not compatible due to the use
+      of generics in the <literal>rds</literal> implementation. The JAR files
+      provided in the <literal>rds-bin</literal> package are compiled with
+      Java SE 1.6.0. <literal>rds</literal> development was started on Java SE
+      1.5.0 and we are not aware of any 1.6.0 dependencies, but we do not
+      check this on a regular basis. </para>
+
+      <para><literal>rds</literal> is also known to run under Linux (SuSE
+      10.0). However, we currently do not guarantee for that, nor do we
+      provide binary packages for Linux.</para>
     </section>
   </section>
 
@@ -135,22 +152,14 @@
     <para>To install the DataScript tools, download the
     <literal>rds-bin</literal> package and unzip it to an installation
     directory <literal>%RDS_HOME%</literal>. <literal>rds</literal> is
-    implemented in Java. You need a Java VM 1.5.0 or higher to run it.</para>
+    implemented in Java. You need a Java VM 1.6.0 or higher to run it.</para>
 
     <para><literal>rds.jar</literal> is an executable Java Archive which can
     be run by</para>
 
-    <programlisting>java -jar %RDS_HOME%\rds.jar [-doc] -pkg <emphasis>&lt;output package&gt;</emphasis> <emphasis>&lt;input file&gt;</emphasis></programlisting>
-
-    <para>The output package option specifies the package name for the
-    generated Java files. The files will be created in a subdirectory
-    <emphasis>&lt;output package&gt;</emphasis> of the current working
-    directory. Nested output package names (e.g.
-    <literal>foo.bar.bla</literal>) are not yet supported.</para>
-
-    <para>If the <literal>-doc</literal> option is present, HTML documentation
-    will be generated into a subdirectory <literal>html</literal> of the
-    current working directory.</para>
+    <programlisting>java -jar %RDS_HOME%\rds.jar 
+[-c] [-doc] [-pkg <emphasis>&lt;output package&gt;</emphasis>] [-out <emphasis>&lt;output path&gt;</emphasis>] [-src <emphasis>&lt;source path&gt;</emphasis>]<emphasis>
+&lt;input file&gt;</emphasis></programlisting>
 
     <para><emphasis>&lt;input file&gt;</emphasis> is an absolute or relative
     file name for the top-level DataScript package to be parsed. If this
@@ -158,14 +167,50 @@
     <literal>rds</literal> will convert this package name to a relative path
     name and try to read the imported package from
     <literal>foo\bar\bla.ds</literal>.</para>
+
+    <para>The <literal>-src</literal> option defines the root directory for
+    the input file and all imported packages. If this option is missing, the
+    default value is the current working directory. Example: If the source
+    path is <literal>C:\datascript</literal> and the input file is
+    <literal>com\acme\foo.ds</literal>, <literal>rds</literal> will try
+    parsing <literal>C:\datascript\com\acme\foo.ds</literal>. If
+    <literal>foo.ds</literal> contains the declaration <literal>import
+    com.acme.bar.*</literal>, <literal>rds</literal> will try parsing
+    <literal>C:\datascript\com\acme\bar.ds</literal>.</para>
+
+    <para>Currently, only one source directory can be specified. A list of
+    directories as in the Java <literal>CLASSPATH</literal> is
+    <literal>not</literal> supported.</para>
+
+    <para>Similarly, the <literal>-out</literal> option defines the root
+    directory for the generated Java source files. Specifying <literal>-out
+    C:\java</literal> in our example, we will find the generated code in
+    <literal>C:\java\com\acme\foo</literal> and
+    <literal>C:\java\com\acme\bar</literal>. </para>
+
+    <para>The <literal>-pkg</literal> option specifies the Java package name
+    for types that do not belong to a DataScript package. The files will be
+    created in a subdirectory <emphasis>&lt;output package&gt;</emphasis> of
+    the output path. Any DataScript source file should contain a package
+    declaration, so this option is rather obsolete.</para>
+
+    <para>If the <literal>-doc</literal> option is present, HTML documentation
+    will be generated into a subdirectory <literal>html</literal> of the
+    current working directory.</para>
+
+    <para>If the -c option is present, <literal>rds</literal> checks the
+    structure of its internal syntax tree, which may be useful for
+    <literal>rds</literal> devlopers, but certainly not for
+    <literal>rds</literal> users.</para>
   </section>
 
   <section>
     <title>Building from Source</title>
 
-    <para>The only supported build environment for the dstools project is
-    Eclipse 3.2. Version 3.1.1 also works, but this guide is targeted at 3.2.
-    If you know what you are doing, you will be able to build dstools in other
+    <para>The only supported build environment for the
+    <literal>dstools</literal> project is Eclipse 3.2. Version 3.1.1 also
+    works, but this guide is targeted at 3.2. If you know what you are doing,
+    you will be able to build <literal>dstools</literal> in other
     environments, but Eclipse is the only one that the authors will document
     and support.</para>
 
@@ -211,13 +256,6 @@
             <emphasis>Installed JREs</emphasis> and make sure that your JDK
             1.6.0 VM is listed there.</para>
           </listitem>
-
-          <listitem>
-            <para>Select <emphasis>Window</emphasis> |
-            <emphasis>Preferences</emphasis> | <emphasis>Java</emphasis> |
-            <emphasis>Compiler</emphasis> and set the compiler compliance
-            level to 5.0.</para>
-          </listitem>
         </itemizedlist></para>
     </section>
 
@@ -225,8 +263,10 @@
       <title>Installing the Subclipse plugin</title>
 
       <para>Subclipse is a Subversion client plugin for Eclipse. Using this
-      plugin, you can directly access Subversion repositories from
-      Eclipse.</para>
+      plugin, you can directly access Subversion repositories from Eclipse.
+      This step is recommended if you wish to build rds directly from a given
+      revision in the Subversion repository. Subclipse is not required for
+      building rds from a source package.</para>
 
       <itemizedlist>
         <listitem>
@@ -248,8 +288,9 @@
         </listitem>
 
         <listitem>
-          <para>Select the Subclipse feature and click Next. Accept the
-          license terms and click Next. Click Finish.</para>
+          <para>Select the Subclipse feature and click
+          <emphasis>Next</emphasis>. Accept the license terms and click
+          <emphasis>Next</emphasis>. Click <emphasis>Finish</emphasis>.</para>
         </listitem>
 
         <listitem>
@@ -328,7 +369,7 @@
 
         <listitem>
           <para>Expand the repository tree and select the subnode
-          <literal>trunk/dstools-antlr</literal>.</para>
+          <literal>trunk/rds</literal>.</para>
         </listitem>
 
         <listitem>
@@ -374,20 +415,20 @@
       <itemizedlist>
         <listitem>
           <para><literal>dstools</literal>: Sources for the
-          <literal>dstools-src</literal> package.</para>
+          <literal>dstools-src</literal> package (obsolete).</para>
         </listitem>
 
         <listitem>
-          <para><literal>dstools-antlr</literal>: Sources for the
-          <literal>rds-src</literal> package. The name is obsolete and will be
-          changed to <literal>rds</literal>.</para>
+          <para><literal>rds</literal>: Sources for the
+          <literal>rds-src</literal> package.</para>
         </listitem>
 
         <listitem>
-          <para><literal>www</literal>: Content of the project homepage at
-          <ulink url="???">http://dstools.sourceforge.net</ulink>. Thanks to a
-          cron job running on the Sourceforge server, any commits to this
-          folder will be visible on the homepage within an hour.</para>
+          <para><literal>www</literal>: Content of the <ulink
+          url="http://dstools.sourceforge.net">project homepage</ulink>.
+          Thanks to a cron job running on the Sourceforge server, any commits
+          to this folder will be visible on the homepage within an
+          hour.</para>
         </listitem>
       </itemizedlist>
     </section>
@@ -456,7 +497,7 @@
     </section>
 
     <section>
-      <title>Building the dstools project</title>
+      <title>Building the rds project</title>
 
       <para>Go to the Ant view, open the <literal>rds</literal> node and
       double-click on the <literal>compile</literal> target. This will run an
@@ -470,6 +511,11 @@
 
       <para>The <literal>test.run</literal> target builds and runs JUnit tests
       for the project.</para>
+
+      <para>As the <literal>rds</literal> build process has to compile the JET
+      templates, which depend on the Eclipse runtime environment, the Ant
+      build currently only runs within Eclipse and not as a standalone
+      command-line application.</para>
     </section>
   </section>
 </article>

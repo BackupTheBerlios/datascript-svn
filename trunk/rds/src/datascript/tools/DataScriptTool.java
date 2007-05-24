@@ -73,7 +73,7 @@ import datascript.emit.java.VisitorEmitter;
 
 public class DataScriptTool 
 {
-    private static final String VERSION = "rds 0.8beta (22 May 2007)";
+    private static final String VERSION = "rds 0.8 (24 May 2007)";
     private ToolContext context;
     private TokenAST rootNode = null;
     private Scope globals = null;
@@ -235,6 +235,8 @@ public class DataScriptTool
 
     public void emitHTML(DataScriptEmitter emitter) throws Exception
     {
+        System.out.println("emitting HTML documentation");
+
         // emit HTML documentation
         ContentEmitter htmlEmitter = new ContentEmitter();
         emitter.setEmitter(htmlEmitter);
