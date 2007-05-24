@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<article>
+  <title>Installing and Building Relational DataScript (rds)</title>
+
+  <articleinfo>
+    <author>
+      <firstname>Harald</firstname>
+
+      <surname>Wellmann</surname>
+
+      <email>HWellmann@harmanbecker.com</email>
+    </author>
+
+    <affiliation>
+      <orgname>Harman/Becker Automotive Systems</orgname>
+    </affiliation>
+
+    <revhistory>
+      <revision>
+        <revnumber>0.1</revnumber>
+
+        <date>28 September 2006</date>
+
+        <revdescription>
+          <para>Initial version describing the build process.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.2</revnumber>
+
+        <date>3 December 2006</date>
+
+        <revdescription>
+          <para>Installation description added. Updated the Building from
+          Source section.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.3</revnumber>
+
+        <date>2 February 2007</date>
+
+        <revdescription>
+          <para>Corrected Jar files for Ant build. Additions for Windows XP.
+          Corrected SVN repository URL.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.4</revnumber>
+
+        <date>8 February 2007</date>
+
+        <revdescription>
+          <para>Changes for Java 1.6.0. Added -doc option.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.5</revnumber>
+
+        <date>23 May 2007</date>
+
+        <revdescription>
+          <para>Java 1.6.0 is now default. Adapted to rds 0.8. New command
+          line options. Renamed dstools-antlr to rds. Hints on Linux support.
+          Remark on Eclipse dependency.</para>
+        </revdescription>
+      </revision>
+    </revhistory>
+  </articleinfo>
+
+  <section>
+    <title>Introduction</title>
+
+    <section>
+      <title>Purpose</title>
+
+      <para>This is a short guide for installing and running the DataScript
+      tools, for getting the source from a release package or from Subversion
+      and for building the tools from source.</para>
+    </section>
+
+    <section>
+      <title>Package Overview</title>
+
+      <para>This guide relates to the packages available from the
+      <literal><ulink
+      url="http://dstools.sourceforge.net">dstools</ulink></literal> project
+      at Sourceforge. There are the following packages:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><literal>rds-bin</literal>: Binary distribution of Relational
+          DataScript, our current baseline version for a DataScript parser,
+          including relational extensions and HTML generation.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>rds-src</literal>: The source package corresponding
+          to <literal>rds-bin</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>dstools-bin</literal>: Binary distribution of a
+          DataScript parser and code generator, directly derived from the
+          reference implementation of Godmar Back (obsolete). This was the
+          starting point of the dstools project, which has now been superseded
+          by <literal>rds</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>dstools-src</literal>: The source package
+          corresponding to <emphasis>dstools-bin</emphasis>.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Platform Support</title>
+
+      <para>The development platform for DataScript is Windows XP, but the
+      packages should run on all platforms supporting a Java SE 1.6.0. To use
+      the relational extensions, you need a JDBC driver for SQLite which
+      depends on a platform-specific native library. <literal>rds</literal>
+      itself, however, does not use native code.</para>
+
+      <para>This guide uses Windows syntax for command lines and path names,
+      trusting in the ability of Unix users to silently make the necessary
+      changes.</para>
+
+      <para>Java versions 1.4.x or earlier are not compatible due to the use
+      of generics in the <literal>rds</literal> implementation. The JAR files
+      provided in the <literal>rds-bin</literal> package are compiled with
+      Java SE 1.6.0. <literal>rds</literal> development was started on Java SE
+      1.5.0 and we are not aware of any 1.6.0 dependencies, but we do not
+      check this on a regular basis. </para>
+
+      <para><literal>rds</literal> is also known to run under Linux (SuSE
+      10.0). However, we currently do not guarantee for that, nor do we
+      provide binary packages for Linux.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Installing and Running</title>
+
+    <para>To install the DataScript tools, download the
+    <literal>rds-bin</literal> package and unzip it to an installation
+    directory <literal>%RDS_HOME%</literal>. <literal>rds</literal> is
+    implemented in Java. You need a Java VM 1.6.0 or higher to run it.</para>
+
+    <para><literal>rds.jar</literal> is an executable Java Archive which can
+    be run by</para>
+
+    <programlisting>java -jar %RDS_HOME%\rds.jar 
+[-c] [-doc] [-pkg <emphasis>&lt;output package&gt;</emphasis>] [-out <emphasis>&lt;output path&gt;</emphasis>] [-src <emphasis>&lt;source path&gt;</emphasis>]<emphasis>
+&lt;input file&gt;</emphasis></programlisting>
+
+    <para><emphasis>&lt;input file&gt;</emphasis> is an absolute or relative
+    file name for the top-level DataScript package to be parsed. If this
+    package contains imports, e.g. <literal>import foo.bar.bla.*</literal>,
+    <literal>rds</literal> will convert this package name to a relative path
+    name and try to read the imported package from
+    <literal>foo\bar\bla.ds</literal>.</para>
+
+    <para>The <literal>-src</literal> option defines the root directory for
+    the input file and all imported packages. If this option is missing, the
+    default value is the current working directory. Example: If the source
+    path is <literal>C:\datascript</literal> and the input file is
+    <literal>com\acme\foo.ds</literal>, <literal>rds</literal> will try
+    parsing <literal>C:\datascript\com\acme\foo.ds</literal>. If
+    <literal>foo.ds</literal> contains the declaration <literal>import
+    com.acme.bar.*</literal>, <literal>rds</literal> will try parsing
+    <literal>C:\datascript\com\acme\bar.ds</literal>.</para>
+
+    <para>Currently, only one source directory can be specified. A list of
+    directories as in the Java <literal>CLASSPATH</literal> is
+    <literal>not</literal> supported.</para>
+
+    <para>Similarly, the <literal>-out</literal> option defines the root
+    directory for the generated Java source files. Specifying <literal>-out
+    C:\java</literal> in our example, we will find the generated code in
+    <literal>C:\java\com\acme\foo</literal> and
+    <literal>C:\java\com\acme\bar</literal>. </para>
+
+    <para>The <literal>-pkg</literal> option specifies the Java package name
+    for types that do not belong to a DataScript package. The files will be
+    created in a subdirectory <emphasis>&lt;output package&gt;</emphasis> of
+    the output path. Any DataScript source file should contain a package
+    declaration, so this option is rather obsolete.</para>
+
+    <para>If the <literal>-doc</literal> option is present, HTML documentation
+    will be generated into a subdirectory <literal>html</literal> of the
+    current working directory.</para>
+
+    <para>If the -c option is present, <literal>rds</literal> checks the
+    structure of its internal syntax tree, which may be useful for
+    <literal>rds</literal> devlopers, but certainly not for
+    <literal>rds</literal> users.</para>
+  </section>
+
+  <section>
+    <title>Building from Source</title>
+
+    <para>The only supported build environment for the
+    <literal>dstools</literal> project is Eclipse 3.2. Version 3.1.1 also
+    works, but this guide is targeted at 3.2. If you know what you are doing,
+    you will be able to build <literal>dstools</literal> in other
+    environments, but Eclipse is the only one that the authors will document
+    and support.</para>
+
+    <para>The following instructions refer to the <literal>rds-src</literal>
+    package. For the <literal>dstools-src</literal> package, some path and
+    target names need to be adapted.</para>
+
+    <section>
+      <title>Installing Eclipse</title>
+
+      <para><itemizedlist>
+          <listitem>
+            <para>Install JDK 1.6.0 from
+            <literal>http://java.sun.com</literal>.</para>
+          </listitem>
+
+          <listitem>
+            <para>Install Eclipse 3.2 from
+            <literal>http://www.eclipse.org</literal>.</para>
+          </listitem>
+
+          <listitem>
+            <para>Start Eclipse and set the proxy options in <emphasis>Window
+            | Preferences | Install/Update</emphasis>.</para>
+          </listitem>
+
+          <listitem>
+            <para>Goto <emphasis>Help | Software Updates | Find and
+            Install</emphasis> to install the Eclipse Modelling Framework
+            (EMF). This is required to compile the Java Emitter Templates
+            (JET) used by <literal>rds</literal>.</para>
+          </listitem>
+
+          <listitem>
+            <para>Select <emphasis>Callisto Discovery Site</emphasis>. EMF is
+            in the category <emphasis>Models and Model
+            Development</emphasis>.</para>
+          </listitem>
+
+          <listitem>
+            <para>Select <emphasis>Window</emphasis> |
+            <emphasis>Preferences</emphasis> | <emphasis>Java</emphasis> |
+            <emphasis>Installed JREs</emphasis> and make sure that your JDK
+            1.6.0 VM is listed there.</para>
+          </listitem>
+        </itemizedlist></para>
+    </section>
+
+    <section>
+      <title>Installing the Subclipse plugin</title>
+
+      <para>Subclipse is a Subversion client plugin for Eclipse. Using this
+      plugin, you can directly access Subversion repositories from Eclipse.
+      This step is recommended if you wish to build rds directly from a given
+      revision in the Subversion repository. Subclipse is not required for
+      building rds from a source package.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Goto <emphasis>Help | Software Updates | Find and
+          Install</emphasis>. Select <emphasis>Search for new features to
+          install</emphasis> and click <emphasis>Next</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Click on <emphasis>New Remote Site... </emphasis>Enter name
+          <literal>Subclipse</literal> and URL
+          <literal>http://subclipse.tigris.org/update_1.0.x</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select the Subclipse Site and click
+          <emphasis>Finish</emphasis>. The Search Results should display a
+          feature named <emphasis>Subclipse</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select the Subclipse feature and click
+          <emphasis>Next</emphasis>. Accept the license terms and click
+          <emphasis>Next</emphasis>. Click <emphasis>Finish</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>There will be a warning <emphasis>You are about to install an
+          unsigned feature</emphasis>. Simply click
+          <emphasis>Install</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>You will be prompted to restart the workbench. Click
+          <emphasis>Yes</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select <emphasis>Window | Preferences | Team | SVN</emphasis>
+          and activate <emphasis>SVN Interface SVNKit (Pure
+          Java)</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select <emphasis>Window | Open Perspective | Other... | SVN
+          Repository Exploring</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select <emphasis>Window | Show View | SVN
+          Repository</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>If you are forced to use a proxy for HTTP and HTTPS, you have
+          to edit a configuration file so that Subversion will use your proxy.
+          Using any text editor, open the file <literal>servers</literal> in
+          the folder <literal>%APPDATA%\Subversion</literal>.
+          (<literal>%APPDATA%</literal> is a Windows environment variable
+          referring to a folder with user-dependent application settings,
+          which translates to something like <literal>C:\Dokumente und
+          Einstellungen\HWellmann\Anwendungsdaten</literal>.) If this folder
+          does not exist, make sure you did not miss any of the preceding
+          steps. The folder gets created when you first open the SVN
+          Repository view.</para>
+
+          <para>Go to the <literal>[global]</literal> section at the end of
+          the file, uncomment and edit the lines
+          <literal>http-proxy-host</literal> and
+          <literal>http-proxy-port</literal> to reflect the proxy settings at
+          your site.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Creating a local project from the Subversion repository</title>
+
+      <itemizedlist>
+        <listitem>
+          <para>In Eclipse, go to the SVN Repository view in the SVN
+          Repository Exploring perspective.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select <emphasis>New | Repository Location</emphasis> from the
+          context menu.</para>
+        </listitem>
+
+        <listitem>
+          <para>Fill in the URL
+          <literal>https://dstools.svn.sourceforge.net/svnroot/dstools</literal>.
+          Click <emphasis>Finish</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>When prompted for accepting a digital certificate, click
+          <emphasis>Accept Permanently</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Expand the repository tree and select the subnode
+          <literal>trunk/rds</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select <emphasis>Checkout...</emphasis> from the context menu
+          of this node.</para>
+        </listitem>
+
+        <listitem>
+          <para>Enter a project name. If you are expecting to work on multiple
+          versions in parallel (e.g. trunk and development), make sure to
+          select a meaningful name, e.g. <literal>rds-trunk</literal>. Click
+          <emphasis>Finish</emphasis>.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Repository Structure</title>
+
+      <para>Following Subversion conventions, the repository has the following
+      folders:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><literal>branches</literal>: Development branches for tasks
+          that should not interfer with main-line development on the
+          trunk.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>tags</literal>: Release tags. To create a release, a
+          given version of a trunk subfolder is simply copied to a new
+          subfolder of the tags folder.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>trunk</literal>: The main development line.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>The trunk has the several subfolders or packages:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><literal>dstools</literal>: Sources for the
+          <literal>dstools-src</literal> package (obsolete).</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>rds</literal>: Sources for the
+          <literal>rds-src</literal> package.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>www</literal>: Content of the <ulink
+          url="http://dstools.sourceforge.net">project homepage</ulink>.
+          Thanks to a cron job running on the Sourceforge server, any commits
+          to this folder will be visible on the homepage within an
+          hour.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Setting up the project properties</title>
+
+      <itemizedlist>
+        <listitem>
+          <para>Switch to the Java perspective and select your new project
+          <literal>rds-trunk</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select the Ant build file <literal>build.xml</literal> from
+          the root directory and open <emphasis>Run As | 2 Ant
+          Build...</emphasis> from the context menu. This will open the
+          <emphasis>External tools</emphasis> dialog.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select the <emphasis>Refresh</emphasis> tab and activate the
+          checkbox <emphasis>Refresh resources upon completion</emphasis> and
+          select <emphasis>The project containing the selected
+          resource</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select the <emphasis>Build</emphasis> tab and deactivate
+          <emphasis>Build before launch</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select the <emphasis>Classpath</emphasis> tab and the
+          <emphasis>User Entries</emphasis> tree root. and click <emphasis>Add
+          JARs...</emphasis> Add <literal>lib/junit.jar</literal> and
+          <literal>lib/antlr.jar</literal> from your project
+          <literal>rds-trunk</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select the <emphasis>JRE</emphasis> tab and activate the
+          radiobutton <emphasis>Run in the same JRE as the
+          workspace</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Click <emphasis>Apply</emphasis> and
+          <emphasis>Close</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select <emphasis>Window | Show View | Ant</emphasis>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Goto the Ant view and select <emphasis>Add
+          Buildfiles...</emphasis> from the context menu.</para>
+        </listitem>
+
+        <listitem>
+          <para>Select <literal>rds-trunk/build.xml</literal> and click
+          OK.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Building the rds project</title>
+
+      <para>Go to the Ant view, open the <literal>rds</literal> node and
+      double-click on the <literal>compile</literal> target. This will run an
+      Ant build that writes diagnostic messages to a console tab of the
+      Eclipse workbench.</para>
+
+      <para>The build produces class files in
+      <literal>build/classes</literal>. To build an executable JAR file
+      <literal>datascript.jar</literal> in <literal>build/jar</literal>, use
+      the <filename>jar</filename> target.</para>
+
+      <para>The <literal>test.run</literal> target builds and runs JUnit tests
+      for the project.</para>
+
+      <para>As the <literal>rds</literal> build process has to compile the JET
+      templates, which depend on the Eclipse runtime environment, the Ant
+      build currently only runs within Eclipse and not as a standalone
+      command-line application.</para>
+    </section>
+  </section>
+</article>

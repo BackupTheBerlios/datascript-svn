@@ -1,0 +1,14 @@
+package pkg.top;
+
+import pkg.bottom.*;
+import pkg.middle.*;
+
+
+Top
+{
+    uint8 type = 1;
+    int32 data;
+    Middle middle;
+    Bottom bottom;
+    Colour colour = Colour.RED;
+};
