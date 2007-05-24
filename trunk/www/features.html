@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>DataScript Tools</title>
+    
+     <link rel="stylesheet" type="text/css" href="dstools.css"></head>
+  <body>
+
+  <div>
+    <ul id="Navigation">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="doc.html">Documentation</a></li>
+        <li><a href="http://sourceforge.net/projects/dstools">Download</a></li>
+    </ul>
+  </div>
+
+  <div id="Inhalt" lang="en">
+
+
+
+    <h2>Features</h2>
+
+    <ul>
+     <li>The DataScript dialect implemented in <em>rds</em> is documented in a 
+       <a href="DataScriptLanguageOverview.html">DataScript Language Overview</a>.
+     </li>
+
+     <li>We support arbitrary bit fields that do not have to be byte-aligned.</li>
+       
+     <li><b>Relational DataScript</b> is a language extension that allows storing
+        data in an SQL database, either in base type columns or in blobs. 
+        For the time being, we only support 
+        <a href="http://www.sqlite.org">SQLite</a> via JDBC. An 
+        <a href="http://www.zentus.com/sqlitejdbc/">SQLite JDBC driver</a>
+        with a native DLL for Windows is included in the binary release
+        packages.
+     </li>
+
+     <li>There is an XML exchange format for DataScript modules.
+     </li>
+
+     <li>We can generate HTML documentation à la Javadoc from documentation
+     comments embedded into a DataScript module.
+     </li>
+
+     <li>The DataScript grammar and parser are based on 
+       <a href="http://www.antlr.org">antlr</a>. The parser is complete, the 
+       code generator currently supports read() and write() methods for both 
+       for plain DataScript and for the relational extensions.
+     </li>
+     
+     <li>rds includes a Java code generator which supports read() and write() 
+       methods for both for plain DataScript and for the relational 
+       extensions.</li>
+
+     <li>A C++ code generator has been developed by ADIT. This C++ backend
+       is available to all PSI partners, but is not Open Source.</li>
+    </ul>
+    </div>
+  </body></html>

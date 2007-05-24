@@ -8,6 +8,7 @@
   <div>
     <ul id="Navigation">
         <li><a href="index.html">Home</a></li>
+        <li><a href="features.html">Features</a></li>
         <li><a href="roadmap.html">Roadmap</a></li>
         <li><a href="doc.html">Documentation</a></li>
         <li><a href="http://sourceforge.net/projects/dstools">Download</a></li>
@@ -21,36 +22,27 @@
     <h2>Roadmap</h2>
 
     <ul>
-     <li>We are defining a DataScript dialect supported by our
-       implementation, documented in a <a href="DataScriptLanguageOverview.html">DataScript Language Overview</a>.
+     <li>The relational extensions need to be documented.
      </li>
 
-     <li><b>Relational DataScript</b> is a language extension that allows storing
-        data in an SQL database, either in base type columns or in blobs. 
-        For the time being, we only support 
-        <a href="http://www.sqlite.org">SQLite</a> via JDBC. An 
-        <a href="http://www.zentus.com/sqlitejdbc/">SQLite JDBC driver</a>
-        with a native DLL for Windows is included in the binary release
-        packages.
+     <li>We require a plugin interface for the C++ backend.
      </li>
 
-     <li>There is an XML exchange format for DataScript modules.
+     <li>Parsing of doc comments needs to be cleaned up.
      </li>
 
-     <li>We can generate HTML documentation à la Javadoc from documentation
-     comments embedded into a DataScript module.
+     <li>The parser must be more robust on syntax errors and always log
+     error messages instead of throwing exceptions.
      </li>
 
-     <li>A simpler and more robust parser and code generator has been developed 
-       based on
-       <a href="http://www.antlr.org">antlr</a>. The parser is complete, the 
-       code generator currently supports read() and write() methods for both 
-       for plain DataScript and for the relational extensions.
-       This reimplementation can be downloaded as rds-bin or rds-src package.       
+     <li>We need limited support for functions in order to assign 
+     integer values to compound types, e.g. for variable length integers.
      </li>
 
-     <li>There are plans to develop a C or C++ code generator.
+     <li>Single imports: <code>import com.acme.foo.MySequence</code>.
      </li>
+
+     <li>Subtype constraints.</li>
 
     </ul>
     </div>
