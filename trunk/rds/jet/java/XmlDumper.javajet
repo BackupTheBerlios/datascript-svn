@@ -37,15 +37,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 %>
-<%@ jet package="datascript.jet.xml" 
-        imports="datascript.emit.xml.*" 
+<%@ jet package="datascript.jet.java" 
+        imports="datascript.emit.*" 
         class="XmlDumper" %>
 <% 
     XmlDumperEmitter global = (XmlDumperEmitter) argument;
     String pkg = global.getPackageName();
 %>
 
-<%@include file="../java/FileHeader.inc"%>
+<%@include file="FileHeader.inc"%>
 // DS-Import
 <%=global.getPackageImports()%>
 

@@ -35,7 +35,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.emit.xml;
+package datascript.emit;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
@@ -52,8 +52,8 @@ import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
 import datascript.emit.java.AccessorNameEmitter;
 import datascript.emit.java.DepthFirstVisitorEmitter;
-import datascript.jet.xml.XmlDumper;
-import datascript.jet.xml.XmlDumperEnumeration;
+import datascript.jet.java.XmlDumper;
+import datascript.jet.java.XmlDumperEnumeration;
 
 
 public class XmlDumperEmitter extends DepthFirstVisitorEmitter

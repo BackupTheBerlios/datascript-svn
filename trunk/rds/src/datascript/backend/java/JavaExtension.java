@@ -42,11 +42,11 @@ import antlr.RecognitionException;
 import datascript.antlr.DataScriptEmitter;
 import datascript.ast.TokenAST;
 import datascript.ast.DataScriptException;
+import datascript.emit.XmlDumperEmitter;
 import datascript.emit.java.DepthFirstVisitorEmitter;
 import datascript.emit.java.JavaEmitter;
 import datascript.emit.java.SizeOfEmitter;
 import datascript.emit.java.VisitorEmitter;
-import datascript.emit.xml.XmlDumperEmitter;
 import datascript.tools.Extension;
 import datascript.tools.Parameters;
 
