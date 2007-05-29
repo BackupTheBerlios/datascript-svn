@@ -37,8 +37,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 %> 
-<%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.*" 
+<%@ jet package="datascript.jet.xml" 
+        imports="datascript.ast.* datascript.emit.xml.*" 
         class="XmlDumperEnumeration" %>
 <% 
     XmlDumperEmitter e = (XmlDumperEmitter) argument;
