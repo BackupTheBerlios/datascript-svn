@@ -2,11 +2,13 @@
 
   <property name="build" value="${basedir}/build"/>
   <property name="src" value="${basedir}/src"/>
+  <property name="backend" value="${src}/datascript/backend"/>
   <property name="lib" value="${basedir}/lib"/>
   <property name="test" value="${basedir}/test"/>
   <property name="examples" value="${basedir}/examples"/>
   <property name="gen" value="${build}/gen"/>
   <property name="jar" value="${build}/jar"/>
+  <property name="ext" value="${basedir}/ext"/>
   <property name="jet.timestamp" value="${gen}/jet.ts"/>
   <property name="classes" value="${build}/classes"/>
   <property name="antlr" value="${basedir}/antlr"/>
@@ -19,13 +21,16 @@
   </taskdef>
 
 
-  <target name="clean" description="removes all generated datascript Java sources and classes">
+  <target name="clean" 
+    depends="extensions.clean" 
+  	description="removes all generated datascript Java sources and classes">
     <delete dir="${build}"/>
   </target>
 
   <target name="cleanall" 
     depends="clean, test.clean, examples.clean" 
     description="removes all generated Java sources and classes" />
+
 
   <target name="init">
     <uptodate 
@@ -49,10 +54,12 @@
     <mkdir dir="${build}/examples/gen" />
     <mkdir dir="${gen}" />
     <mkdir dir="${jar}" />
+    <mkdir dir="${ext}" />
     <mkdir dir="${classes}" />
     <mkdir dir="${antlr.out}" />
     <copy  file="${lib}/antlr.jar" todir="${jar}" />
   </target>
+
 
   <target name="antlr.DatascriptParser" depends="prepare">
     <antlr 
@@ -115,11 +122,14 @@
   </target>
 
 
+  <target name="extensions.clean" description="removes all generated extension jar files">
+    <delete dir="${ext}"/>
+  </target>
+
 
   <target name="compile" depends="prepare, antlr, jet" description="Compiles all project files">
     <javac destdir="${classes}" debug="on" target="1.5">
       <classpath>
-        <pathelement path="${classes}"/>
         <pathelement path="lib"/>
       </classpath>
       <src path="${src}" />
@@ -127,11 +137,34 @@
     </javac>
   </target>
 
+  <path id="buildpath.extensions">
+  </path>
+
   <target name="jar" depends="compile" description="Builds the distribution jar file (default)">
-    <jar destfile="${jar}/rds.jar"
-      basedir="${classes}"
-      manifest="${src}/Manifest.txt"
-      includes="**" />
+    <jar destfile="${jar}/rds.jar" basedir="${classes}" 
+  	  manifest="${src}/Manifest.txt"
+      includes="**" 
+      excludes="datascript/backend/**, datascript/jet/**, datascript/runtime/**, datascript/emit/html/**, datascript/emit/java/**" />
+
+  	<jar destfile="${ext}/rds_javaExtension.jar" 
+  	  manifest="${backend}/java/Manifest.txt">
+  		<fileset dir="${classes}"
+  			includes="datascript/backend/java/**, datascript/jet/java/**, datascript/runtime/**, datascript/emit/**"
+  			excludes="datascript/emit/html/**, datascript/emit/xml/**"/>
+		<!-- filename name="datascript/backend/java/**, datascript/jet/java/**, datascript/runtime/**, datascript/emit/**" /-->
+  		<!-- filename name="datascript/emit/java/**" negate="true" /-->
+  	</jar>
+
+  	<jar destfile="${ext}/rds_htmlExtension.jar" basedir="${classes}" 
+      manifest="${backend}/html/Manifest.txt"
+      includes="datascript/backend/html/**, datascript/jet/html/**, datascript/runtime/**, datascript/emit/**" 
+      excludes="datascript/emit/java/**, datascript/emit/xml/**" />
+      <!-- filename name="datascript/emit/html/**" negate="true" / -->
+
+  	<jar destfile="${ext}/rds_xmlExtension.jar" basedir="${classes}" 
+      manifest="${backend}/xml/Manifest.txt"
+      includes="datascript/backend/xml/**, datascript/runtime/**, datascript/emit/**" 
+      excludes="datascript/emit/java/**, datascript/emit/html/**" />
   </target>
 
 
@@ -178,6 +211,7 @@
     <delete dir="${test}/bits" />
   </target>
 
+
   <target name="sqltest.gen" depends="jar" description="Generates parser for test cases"  unless="sqltest.uptodate">
     <java jar="${jar}/rds.jar" dir="${test}" failonerror="true" fork="yes">
       <classpath>
@@ -191,6 +225,7 @@
   <target name="sqltest.clean" description="removes all generated test Java sources and classes">
     <delete dir="${test}/sqltest" />
   </target>
+
 
   <!-- Currently, there are no test units using the code generated here, but at
        least we can test that rds can handle more advanced package relations.
@@ -225,7 +260,6 @@
     <delete dir="${examples}/gif" />
     <delete dir="${build}/examples/classes" />
   </target>
-
 
   <target name="example.gif.gen" depends="jar" description="Generates parser for examples"  unless="gif.uptodate">
     <java jar="${jar}/rds.jar" dir="${examples}" failonerror="true" fork="yes">

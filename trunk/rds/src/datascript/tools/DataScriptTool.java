@@ -38,8 +38,15 @@
 package datascript.tools;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Hashtable;
 
 import antlr.TokenBuffer;
 import antlr.TokenStreamRecognitionException;
@@ -59,30 +66,24 @@ import datascript.ast.Package;
 import datascript.ast.Scope;
 import datascript.ast.TokenAST;
 
-import datascript.emit.XmlDumperEmitter;
-import datascript.emit.html.ContentEmitter;
-import datascript.emit.html.FramesetEmitter;
-import datascript.emit.html.CssEmitter;
-import datascript.emit.html.PackageEmitter;
-import datascript.emit.html.OverviewEmitter;
-import datascript.emit.java.DepthFirstVisitorEmitter;
-import datascript.emit.java.JavaEmitter;
-import datascript.emit.java.SizeOfEmitter;
-import datascript.emit.java.VisitorEmitter;
 
-
-public class DataScriptTool 
+public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.8 (24 May 2007)";
+    private static final String VERSION = "rds 0.9.1 (29 May 2007)";
+    private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
     private TokenAST rootNode = null;
-    private Scope globals = null;
-    private HashSet<String> allPackageFiles = new HashSet<String>();
+    private DataScriptParser parser = null;
+    private Scope globals = new Scope();
+    private final HashSet<String> allPackageFiles = new HashSet<String>();
+
+    private DataScriptEmitter emitter = new DataScriptEmitter();
 
     /* Properties for command line parameters */
+    private final Hashtable<String, String> cmdLineArgs = new Hashtable<String, String>();
     private String defaultPackageName = "";
     private String fileName = null;
-    private String pathName = null;
+    private String srcPathName = null;
     private String outPathName = null;
     private boolean generateDocs = false;
     private boolean checkSyntax = false; 
@@ -92,46 +93,33 @@ public class DataScriptTool
     public DataScriptTool()
     {
         rootNode = new TokenAST(new antlr.Token(DataScriptParserTokenTypes.ROOT));
-        globals = new Scope();
     }
 
 
     public void parseArguments(String[] args) throws DataScriptException
     {
-    	for (int i = 0; i < args.length; i++)
+        int i = 0;
+        while (i < args.length-1)
         {
-            if (args[i].equals("-pkg"))
-            {
-                defaultPackageName = args[++i];
-            }
-            else if (args[i].equals("-doc"))
-            {
-                generateDocs = true;
-            }
-            else if (args[i].equals("-c"))
-            {
-                checkSyntax = true;
-            }
-            else if (args[i].equals("-src"))
-            {
-                pathName = args[++i];
-            }
-            else if (args[i].equals("-out"))
-            {
-                outPathName = args[++i];
-            }
-            else
-            {
-                fileName = args[i];
-            }
+            String key = args[i++];
+            String value = (i < args.length-1)? args[i++] : null;
+            cmdLineArgs.put(key, value);
         }
+        fileName = args[i];
+
+        defaultPackageName = cmdLineArgs.get("-pkg");
+        generateDocs = cmdLineArgs.containsKey("-doc");
+        checkSyntax = cmdLineArgs.containsKey("-c");
+        srcPathName = cmdLineArgs.get("-src");
+        outPathName = cmdLineArgs.get("-out");
+
         if (outPathName == null || outPathName.length() == 0)
         {
             outPathName = ".";
         }
         else
         {
-            int i = outPathName.length();
+            i = outPathName.length();
             while (outPathName.charAt(i-1) == File.separatorChar)
                 --i;
             if (i < outPathName.length())
@@ -164,7 +152,7 @@ public class DataScriptTool
         // components
         context = ToolContext.getInstance();
         context.setFileName(fileName);
-        context.setPathName(pathName);
+        context.setPathName(srcPathName);
 
         allPackageFiles.add(fileName);
         AST unitRoot = (TokenAST) parsePackage();
@@ -201,66 +189,85 @@ public class DataScriptTool
     }
 
 
-    public void emitJava(DataScriptEmitter emitter) throws Exception
+    public void emitDatascript() throws Exception
     {
-        System.out.println("emitting java code");
+        Collection<File> extensionFiles = findExtensionsRecursively(EXT_DIR);
+        if (extensionFiles == null)
+        {
+            System.out.println("No backends in " + EXT_DIR.getAbsolutePath() + " found, nothing emitted.");
+            return;
+        }
+        Collection<URL> urls = toURLs((File[]) extensionFiles.toArray(new File[] {}));
+        ClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[] {}));
 
-        // emit Java code for decoders
-        JavaEmitter javaEmitter = new JavaEmitter(outPathName, defaultPackageName);
-        emitter.setEmitter(javaEmitter);
-        emitter.root(rootNode);
-
-        // emit Java __Visitor interface
-        VisitorEmitter visitorEmitter = new VisitorEmitter(outPathName, defaultPackageName);
-        emitter.setEmitter(visitorEmitter);
-        emitter.root(rootNode);
-
-        // emit Java __DepthFirstVisitor class
-        DepthFirstVisitorEmitter dfVisitorEmitter = 
-            new DepthFirstVisitorEmitter(outPathName, defaultPackageName);
-        emitter.setEmitter(dfVisitorEmitter);
-        emitter.root(rootNode);
-
-        // emit Java __SizeOf class
-        SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(outPathName, defaultPackageName);
-        emitter.setEmitter(sizeOfEmitter);
-        emitter.root(rootNode);
-
-        // emit Java __XmlDumper class
-        XmlDumperEmitter xmlDumper = new XmlDumperEmitter(outPathName, defaultPackageName);
-        emitter.setEmitter(xmlDumper);
-        emitter.root(rootNode);
+        for (File f : extensionFiles)
+        {
+            java.util.jar.JarFile rf = new java.util.jar.JarFile(f);
+            java.util.jar.Manifest m = rf.getManifest();
+            if (m != null)
+            {
+                String mc = m.getMainAttributes().getValue("Main-Class");
+                try
+                {
+                    Class clazz = Class.forName(mc, true, classLoader);
+                    Extension extension = (Extension) clazz.newInstance();
+                    extension.setParameter(this);
+                    extension.generate(emitter, rootNode);
+                }
+                catch (ClassNotFoundException e)
+                {
+                    System.err.println("Extension " + mc + " not found, nothing emitted.");
+                }
+            }
+        }
     }
 
 
-    public void emitHTML(DataScriptEmitter emitter) throws Exception
+    private Collection<File> findExtensionsRecursively(File directory)
     {
-        System.out.println("emitting HTML documentation");
+        if (directory == null || !directory.isDirectory())
+            return null;
+        Collection<File> retVal = new ArrayList<File>();
 
-        // emit HTML documentation
-        ContentEmitter htmlEmitter = new ContentEmitter();
-        emitter.setEmitter(htmlEmitter);
-        emitter.root(rootNode);
+        File[] extensionFiles = directory.listFiles( 
+                new FileFilter()
+                { 
+                    public boolean accept(File file)
+                    {
+                        return file.isDirectory() || 
+                               ( file.getName().endsWith("Extension.jar") &&
+                                 file.getName().startsWith("rds"));
+                    }
+                }
+            );
 
-        // emit frameset
-        FramesetEmitter framesetEmitter = new FramesetEmitter();
-        emitter.setEmitter(framesetEmitter);
-        emitter.root(rootNode);
+        for (File file : extensionFiles)
+        {
+            if (file.isDirectory())
+                retVal.addAll(findExtensionsRecursively(file));
+            if (file.isFile())
+                retVal.add(file);
+        }
+        return retVal;
+    }
 
-        // emit stylesheets
-        CssEmitter cssEmitter = new CssEmitter();
-        emitter.setEmitter(cssEmitter);
-        emitter.root(rootNode);
 
-        // emit list of packages
-        PackageEmitter packageEmitter = new PackageEmitter();
-        emitter.setEmitter(packageEmitter);
-        emitter.root(rootNode);
-
-        // emit list of classes
-        OverviewEmitter overviewEmitter = new OverviewEmitter();
-        emitter.setEmitter(overviewEmitter);
-        emitter.root(rootNode);
+    private Collection<URL> toURLs(File[] files)
+    {
+        Collection<URL> urls = new ArrayList<URL>(files.length);
+        for (File file : files)
+        {
+            try
+            {
+                urls.add(new URL("jar:file:" + file.getPath() + "!/"));
+            }
+            catch (MalformedURLException e)
+            {
+                System.err.println("Could not load " + file.getPath());
+                System.err.println(e.toString());
+            }
+        }
+        return urls;
     }
 
 
@@ -288,6 +295,7 @@ public class DataScriptTool
             }
         }
     }
+    
 
 
     public static String getPackageFile(AST node)
@@ -319,7 +327,7 @@ public class DataScriptTool
         lexer.setFilename(fileName);
         lexer.setTokenObjectClass("datascript.ast.FileNameToken");
         TokenBuffer buffer = new TokenBuffer(lexer);
-        DataScriptParser parser = new DataScriptParser(buffer);
+        parser = new DataScriptParser(buffer);
         parser.setContext(context);
 
         // must call this to see file name in error messages
@@ -338,6 +346,60 @@ public class DataScriptTool
     }
 
 
+    /******** Implementation of Parameters interface ********/
+
+
+    public String getDefaultPackageName()
+    {
+        return defaultPackageName;
+    }
+
+
+    public boolean getGenerateDocs()
+    {
+        return generateDocs;
+    }
+
+
+    public boolean getCheckSyntax()
+    {
+        return checkSyntax;
+    }
+
+
+    public String getPathName()
+    {
+        return srcPathName;
+    }
+
+
+    public String getOutPathName()
+    {
+        return outPathName;
+    }
+
+
+    public String getFileName()
+    {
+        return fileName;
+    }
+
+
+    public DataScriptParser getParser()
+    {
+        return parser;
+    }
+
+
+    public String getCommendlineArg(String key)
+    {
+        return cmdLineArgs.get(key);
+    }
+
+
+    /******** End of Parameters interface ********/
+
+
     public static void main(String[] args)
     {
         System.out.println(VERSION);
@@ -346,13 +408,7 @@ public class DataScriptTool
         {
             dsTool.parseArguments(args);
             dsTool.parseDatascript();
-
-            DataScriptEmitter emitter = new DataScriptEmitter();
-            dsTool.emitJava(emitter);
-            if (dsTool.generateDocs)
-            {
-                dsTool.emitHTML(emitter);
-            }
+            dsTool.emitDatascript();
         }
         catch (DataScriptException exc)
         {

@@ -40,25 +40,8 @@ package datascript.tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringReader;
 import java.util.HashSet;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.XMLFilterImpl;
-
-import antlr.ANTLRException;
 import antlr.TokenBuffer;
 import antlr.collections.AST;
 import antlr.debug.misc.ASTFrame;
@@ -66,17 +49,12 @@ import antlr.debug.misc.ASTFrame;
 import datascript.antlr.DataScriptLexer;
 import datascript.antlr.DataScriptParser;
 import datascript.antlr.DataScriptParserTokenTypes;
-import datascript.antlr.DocCommentLexer;
-import datascript.antlr.DocCommentParser;
-import datascript.antlr.DocCommentParserTokenTypes;
 import datascript.ast.ParserException;
 import datascript.ast.TokenAST;
 
 
-public class DataScriptXmlDumper extends XMLFilterImpl
+public class DataScriptXmlDumper implements Parameters
 {
-    private ContentHandler handler;
-    private AttributesImpl noAttr = new AttributesImpl();
     private TokenAST rootNode = new TokenAST(new antlr.Token(DataScriptParserTokenTypes.ROOT));
     private DataScriptParser parser;
     private ToolContext context;
@@ -156,157 +134,6 @@ public class DataScriptXmlDumper extends XMLFilterImpl
     }
 
 
-    /**************************************************************/
-
-
-    private void startElement(String tag) throws SAXException
-    {
-        handler.startElement("", "", tag, noAttr);
-    }
-
-
-    private void endElement(String tag) throws SAXException
-    {
-        handler.endElement("", "", tag);
-    }
-
-
-    private void text(String s) throws SAXException
-    {
-        handler.characters(s.toCharArray(), 0, s.length());
-    }
-
-
-    private void handleDocNode(AST node) throws SAXException
-    {
-        StringReader is = new StringReader(node.getText());
-        DocCommentLexer lexer = new DocCommentLexer(is);
-        TokenBuffer buffer = new TokenBuffer(lexer);
-        DocCommentParser parser = new DocCommentParser(buffer);
-        try
-        {
-            parser.comment();
-            AST docNode = parser.getAST();
-            startElement("DOC");
-            AST child = docNode.getFirstChild();
-            for (; child != null; child = child.getNextSibling())
-            {
-                switch (child.getType())
-                {
-                    case DocCommentParserTokenTypes.TEXT:
-                    {
-                        startElement("P");
-                        text(child.getText());
-                        AST text = child.getFirstChild();
-                        for (; text != null; text = text.getNextSibling())
-                        {
-                            text(text.getText());
-                        }
-                        endElement("P");
-                        break;
-                    }
-
-                    case DocCommentParserTokenTypes.AT:
-                    {
-                        String tag = child.getText().toUpperCase();
-                        startElement(tag);
-                        AST text = child.getFirstChild();
-                        for (; text != null; text = text.getNextSibling())
-                        {
-                            text(text.getText());
-                        }
-                        endElement(tag);
-                        break;
-                    }
-                }
-            }
-            endElement("DOC");
-        }
-        catch (ANTLRException exc)
-        {
-            System.err.println("XXXX" + node.getText());
-        }
-    }
-
-
-    private void handleDataNode(AST node) throws SAXException
-    {
-        boolean literal = false;
-        String tokenName = parser.getTokenName(node.getType());
-        if (tokenName.charAt(0) == '"')
-        {
-            tokenName = tokenName.substring(1, tokenName.length()-1).toUpperCase();
-            literal = true;
-        }
-        if (node.getFirstChild() == null)
-        {
-            if (literal)
-            {
-                startElement(tokenName);
-                endElement(tokenName);                    
-            }
-            else
-            {
-                startElement(tokenName);
-                text(node.getText());
-                endElement(tokenName);
-            }
-        }
-        else
-        {
-            startElement(tokenName);
-            // print children
-            fireSaxEvents((TokenAST)node.getFirstChild());
-            endElement(tokenName);
-        }
-    }
-
-
-    public void fireSaxEvents(TokenAST ast) throws SAXException
-    {
-        // print out this node and all siblings
-        for (AST node = ast; node != null; node = node.getNextSibling())
-        {
-            switch (node.getType())
-            {
-                case DataScriptParserTokenTypes.DOC:
-                {
-                    try
-                    {
-                        handleDocNode(node);
-                    }
-                    catch (Exception exc)
-                    {
-                        throw new RuntimeException(exc);
-                    }
-                    break;
-                }
-
-                default:
-                {
-                    handleDataNode(node);
-                }
-            }
-        }
-    }
-
-
-    /*
-     * 'main' for xml output
-     * @see org.xml.sax.helpers.XMLFilterImpl#parse(org.xml.sax.InputSource)
-     */
-    public void parse(InputSource is) throws SAXException
-    {
-        handler = getContentHandler();
-        handler.startDocument();
-        fireSaxEvents((TokenAST) rootNode);
-        handler.endDocument();
-    }
-
-
-    /******************************************************************/
-
-
     public static void printXml(TokenAST ast) throws IOException
     {
         // print out this node and all siblings
@@ -336,12 +163,81 @@ public class DataScriptXmlDumper extends XMLFilterImpl
     }
 
 
+    public void emitDatascript() throws Exception
+    {
+        /* if the XML extension is present, generate xml dump */
+        try
+        {
+            Class clazz = Class.forName("datascript.backend.xml.XmlExtension");
+            Extension extension = (Extension) clazz.newInstance();
+            extension.setParameter(this);
+            extension.generate(null, rootNode);
+        }
+        catch (ClassNotFoundException e)
+        {
+            System.err.println("Extension datascript.backend.xml.XmlExtension not found, nothing emitted.");
+        }
+    }
+
+
+    /******** Implementation of Parameters interface ********/
+
+
+    public String getDefaultPackageName()
+    {
+        return null;
+    }
+
+
+    public boolean getGenerateDocs()
+    {
+        return false;
+    }
+
+
+    public boolean getCheckSyntax()
+    {
+        return true;
+    }
+
+
+    public String getPathName()
+    {
+        return ".";
+    }
+
+
+    public String getOutPathName()
+    {
+        return ".";
+    }
+
+
+    public String getFileName()
+    {
+        return ToolContext.getFileName();
+    }
+
+
+    public DataScriptParser getParser()
+    {
+        return parser;
+    }
+
+
+    public String getCommendlineArg(String key)
+    {
+        return null;
+    }
+
+
+    /******** End of Parameters interface ********/
+
+
     public static void main(String[] args)
     {
         try
         {
-            java.io.OutputStream os;
-
             DataScriptXmlDumper dsTool = new DataScriptXmlDumper();
             dsTool.context = ToolContext.getInstance();
             int i = 0;
@@ -350,8 +246,6 @@ public class DataScriptXmlDumper extends XMLFilterImpl
             AST unitRoot = (TokenAST) dsTool.parsePackage();
             dsTool.rootNode.addChild(unitRoot);
             dsTool.parseImportedPackages(unitRoot);
-
-            os = System.out;    // or a file output stream
 
             /*
             OutputStreamWriter osw = new OutputStreamWriter(System.out);
@@ -363,15 +257,7 @@ public class DataScriptXmlDumper extends XMLFilterImpl
 
             ASTFrame frame = new ASTFrame("AST", dsTool.rootNode);
             frame.setVisible(true);
-            
-            TransformerFactory tf = TransformerFactory.newInstance();
-            tf.setAttribute("indent-number", new Integer(2));
-            Transformer t = tf.newTransformer();
-            t.setOutputProperty(OutputKeys.INDENT, "yes");
-            t.setOutputProperty(OutputKeys.METHOD, "xml");
-            Source source = new SAXSource(dsTool, new InputSource());
-            Result result = new StreamResult(new OutputStreamWriter(os));
-            t.transform(source, result);
+            dsTool.emitDatascript();
         }
         catch (Exception exc)
         {
