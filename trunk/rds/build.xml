@@ -144,7 +144,8 @@
     <jar destfile="${jar}/rds.jar" basedir="${classes}" 
   	  manifest="${src}/Manifest.txt"
       includes="**" 
-      excludes="datascript/backend/**, datascript/jet/**, datascript/runtime/**, datascript/emit/html/**, datascript/emit/java/**" />
+      excludes="datascript/backend/**, datascript/jet/html/**, datascript/emit/html/**" />
+    <!-- excludes="datascript/backend/**, datascript/jet/**, datascript/runtime/**, datascript/emit/html/**, datascript/emit/java/**" -->
 
   	<jar destfile="${ext}/rds_javaExtension.jar" 
   	  manifest="${backend}/java/Manifest.txt">
@@ -174,7 +175,7 @@
         <pathelement path="${gen}"/>
         <pathelement path="${lib}/antlr.jar"/>
       </classpath>
-      <arg line="-c -out ${test} -src scripts bits.ds"/>
+      <arg line="-c -out ${test} -ext ${ext} -src scripts bits.ds"/>
     </java>
   </target>
 
@@ -218,7 +219,7 @@
         <pathelement path="${gen}"/>
         <pathelement path="${lib}/antlr.jar"/>
       </classpath>
-      <arg line="-c -out ${test} -src scripts sqltest.ds"/>
+      <arg line="-c -out ${test} -ext ${ext} -src scripts sqltest.ds"/>
     </java>
   </target>
 
@@ -238,14 +239,14 @@
         <pathelement path="${gen}"/>
         <pathelement path="${lib}/antlr.jar"/>
       </classpath>
-      <arg line="-c -out ${test} -src scripts child.ds"/>
+      <arg line="-c -out ${test} -ext ${ext} -src scripts child.ds"/>
     </java>
     <java jar="${jar}/rds.jar" dir="${test}" failonerror="true" fork="yes">
       <classpath>
         <pathelement path="${gen}"/>
         <pathelement path="${lib}/antlr.jar"/>
       </classpath>
-      <arg line="-c -out ${test} -src scripts pkg\top.ds"/>
+      <arg line="-c -out ${test} -ext ${ext} -src scripts pkg\top.ds"/>
     </java>
   </target>
 
@@ -267,7 +268,7 @@
         <pathelement path="${gen}"/>
         <pathelement path="${lib}/antlr.jar"/>
       </classpath>
-      <arg line="-c -out ${examples} gif.ds"/>
+      <arg line="-c -out ${examples} -ext ${ext} gif.ds"/>
     </java>
   </target>
 

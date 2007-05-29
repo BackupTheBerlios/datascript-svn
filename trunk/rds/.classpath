@@ -3,6 +3,7 @@
 	<classpathentry excluding="psi/" kind="src" path="src"/>
 	<classpathentry including="*.java" kind="src" output="examples" path="examples"/>
 	<classpathentry kind="src" path="build/gen"/>
+	<classpathentry excluding="scripts/" kind="src" path="test"/>
 	<classpathentry kind="lib" path="lib/jetc-task.jar"/>
 	<classpathentry kind="lib" path="lib/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>

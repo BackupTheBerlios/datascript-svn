@@ -46,7 +46,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import antlr.TokenBuffer;
 import antlr.TokenStreamRecognitionException;
@@ -80,7 +80,7 @@ public class DataScriptTool implements Parameters
     private DataScriptEmitter emitter = new DataScriptEmitter();
 
     /* Properties for command line parameters */
-    private final Hashtable<String, String> cmdLineArgs = new Hashtable<String, String>();
+    private final HashMap<String, String> cmdLineArgs = new HashMap<String, String>();
     private String defaultPackageName = "";
     private String fileName = null;
     private String srcPathName = null;
@@ -103,6 +103,11 @@ public class DataScriptTool implements Parameters
         {
             String key = args[i++];
             String value = (i < args.length-1)? args[i++] : null;
+            if (value != null && value.startsWith("-"))
+            {
+                value = null;
+                i--;
+            }
             cmdLineArgs.put(key, value);
         }
         fileName = args[i];
@@ -132,10 +137,11 @@ public class DataScriptTool implements Parameters
             final StringBuilder buffer = new StringBuilder();
 
             buffer.append("parameter missing." + NL + NL);
-            buffer.append("rds [-doc] [-c] [-out \"pathname for output\"] [-pkg \"packagename\"] [-src \"pathname\"] \"filename\"" + NL);
+            buffer.append("rds [-doc] [-c] [-ext \"pathname to extensions\"] [-out \"pathname for output\"] [-pkg \"packagename\"] [-src \"pathname\"] \"filename\"" + NL);
             buffer.append("usage: " + NL);
             buffer.append(" -doc\tgenerates Javadoc-style documentation" + NL);
             buffer.append(" -c\tchecks syntax" + NL);
+            buffer.append(" -ext \"pathname to extensions\"\tpath to the plugin-directory" + NL);
             buffer.append(" -out \"pathname\"\tpath to the directory in which the generated code is stored" + NL);
             buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScript package" + NL);
             buffer.append(" -src \"pathname\"\tpath to DataScript source files" + NL);
@@ -191,7 +197,9 @@ public class DataScriptTool implements Parameters
 
     public void emitDatascript() throws Exception
     {
-        Collection<File> extensionFiles = findExtensionsRecursively(EXT_DIR);
+        String extDirName = cmdLineArgs.get("-ext");
+        File myExtDir = (extDirName != null && extDirName.length() > 0)? new File(extDirName) : EXT_DIR;
+        Collection<File> extensionFiles = findExtensionsRecursively(myExtDir);
         if (extensionFiles == null)
         {
             System.out.println("No backends in " + EXT_DIR.getAbsolutePath() + " found, nothing emitted.");

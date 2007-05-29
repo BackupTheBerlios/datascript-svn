@@ -17,15 +17,15 @@ gifFile
 	Signature			signature;
 
 	ScreenDescriptor(
-		(signature.version[0]==0x38 && signature.version[1]==0x37 && signature.version[2]==0x61)? V87A : 
-			(signature.version[0]==0x38 && signature.version[1]==0x39 && signature.version[2]==0x61)? V89A : 
-				VUnknown
+		(signature.version[0]==0x38 && signature.version[1]==0x37 && signature.version[2]==0x61)? GIFVersion.V87A : 
+			(signature.version[0]==0x38 && signature.version[1]==0x39 && signature.version[2]==0x61)? GIFVersion.V89A : 
+				GIFVersion.VUnknown
 	)	screen;
 
 	GIFData(
-		(signature.version[0]==0x38 && signature.version[1]==0x37 && signature.version[2]==0x61)? V87A : 
-			(signature.version[0]==0x38 && signature.version[1]==0x39 && signature.version[2]==0x61)? V89A : 
-				VUnknown
+		(signature.version[0]==0x38 && signature.version[1]==0x37 && signature.version[2]==0x61)? GIFVersion.V87A : 
+			(signature.version[0]==0x38 && signature.version[1]==0x39 && signature.version[2]==0x61)? GIFVersion.V89A : 
+				GIFVersion.VUnknown
 	)	blocks;
 };
 
@@ -47,11 +47,11 @@ GIFData(GIFVersion version)
 	BLOCK_TYPE	tag;
 	union BlockTypes
 	{
-		ExtensionBlock		extension	: tag == EXTENSION_BLOCK;
-		ImageBlock(version)	images		: tag == IMAGE_BLOCK;
+		ExtensionBlock		extension	: tag == BLOCK_TYPE.EXTENSION_BLOCK;
+		ImageBlock(version)	images		: tag == BLOCK_TYPE.IMAGE_BLOCK;
 		BlockData			unknownData;
-	} block								if tag != TERMINATOR_BLOCK;
-	GIFData(version)	nextBlock		if tag != TERMINATOR_BLOCK;
+	} block								if tag != BLOCK_TYPE.TERMINATOR_BLOCK;
+	GIFData(version)	nextBlock		if tag != BLOCK_TYPE.TERMINATOR_BLOCK;
 };
 
 ImageBlock(GIFVersion version)
@@ -73,10 +73,10 @@ ExtensionBlock
 	EXTENSION_TYPE	extensionFunctionCode;
 	union ExtensionTypes
 	{
-		PlainTextExtension		plainTextData	: extensionFunctionCode == PLAINTEXT_EXTENSION;
-		GraphicControlExtension controlData		: extensionFunctionCode == GRAPHICCONTROL_EXTENSION;
-		CommentExtension		commentData		: extensionFunctionCode == COMMENT_EXTENSION;
-		ApplicationExtension	applicationData	: extensionFunctionCode == APPLICATIONEXTENSION;
+		PlainTextExtension		plainTextData	: extensionFunctionCode == EXTENSION_TYPE.PLAINTEXT_EXTENSION;
+		GraphicControlExtension controlData		: extensionFunctionCode == EXTENSION_TYPE.GRAPHICCONTROL_EXTENSION;
+		CommentExtension		commentData		: extensionFunctionCode == EXTENSION_TYPE.COMMENT_EXTENSION;
+		ApplicationExtension	applicationData	: extensionFunctionCode == EXTENSION_TYPE.APPLICATIONEXTENSION;
 		BlockData				data;
 	} extension;
 };
@@ -178,13 +178,13 @@ ScreenDescriptor(GIFVersion version)
 
 	bit:1		globalColorMapFollows;
 	bit:3		bitsOfColorResulution;
-	bit:1		_null1_			if version == V87A	: _null1_ == 0;
-	bit:1		sortFlag		if version == V89A;
+	bit:1		_null1_			if version == GIFVersion.V87A	: _null1_ == 0;
+	bit:1		sortFlag		if version == GIFVersion.V89A;
 	bit:3		bitsPerPixel;
 
 	uint8		bgColor;
-	uint8		_null2_				if version == V87A	: _null2_ == 0;
-	uint8		PixelAspectRatio	if version == V89A;
+	uint8		_null2_				if version == GIFVersion.V87A	: _null2_ == 0;
+	uint8		PixelAspectRatio	if version == GIFVersion.V89A;
 
 	RGBColor	globalColorMap[1 << (bitsPerPixel+1)]	if globalColorMapFollows == 1;
 };
@@ -199,8 +199,8 @@ ImageDescriptor(GIFVersion version)
 
 	bit:1		localColorMapFollows;
 	bit:1		interlacedFormatted;
-	bit:1		_null1_			if version == V87A	: _null1_ == 0;
-	bit:1		sortFlag		if version == V89A;
+	bit:1		_null1_			if version == GIFVersion.V87A	: _null1_ == 0;
+	bit:1		sortFlag		if version == GIFVersion.V89A;
 	bit:2		_null2_	: _null2_ == 0;
 	bit:3		bitsPerPixel;
 
