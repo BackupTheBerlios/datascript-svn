@@ -58,5 +58,5 @@ StringArraySequence
 {
 	string	name;
 	bit:4	byteCount;
-	string	text[byteCount];
+	string	text[byteCount+1];
 };

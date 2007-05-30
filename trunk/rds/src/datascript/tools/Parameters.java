@@ -43,57 +43,70 @@ import datascript.antlr.DataScriptParser;
 public interface Parameters
 {
     /**
-     * 
-     * @return
+     * For historical reason, it was not nessecary to give a package name in the script file
+     * This method gives a default name for a package.
+     * @return  returns the name of the default package, if non is given in a DataScript package
      */
     public String getDefaultPackageName();
 
 
     /**
-     * 
-     * @return
+     * This is nessecary for the html extension. This functions tells the extension 
+     * if the generation of html documentation ist needed.
+     * @return  returns true if the "-doc" flag is set at commandline, false if not
      */
     public boolean getGenerateDocs();
 
 
     /**
      * 
-     * @return
+     * @return  returns true if the "-c" flag is set at commandline, false if not
      */
     public boolean getCheckSyntax();
 
 
     /**
      * 
-     * @return
+     * @return  returns the (relative) pathname to DataScript source files
      */
     public String getPathName();
 
 
     /**
      * 
-     * @return
+     * @return  returns the (relative) pathname to the outputdirectory
      */
     public String getOutPathName();
 
 
     /**
      * 
-     * @return
+     * @return  returns the name of the initial DataScript file
      */
     public String getFileName();
 
 
     /**
-     * 
-     * @return
+     * The xml-extension needs this parser to resolve the name of a node in the AST.
+     * Normally the emitter ist given to process the AST.  
+     * @return  returns a datascript parser
      */
     public DataScriptParser getParser();
 
 
     /**
-     * 
-     * @return
+     * This method tests if a argument exists
+     * @param   key name of the key to test if it exists
+     * @return  true if key is present, fals if not
      */
-    public String getCommandLineArg(String key);
+    public boolean argumentExists(String key);
+
+
+    /**
+     * This method returns the value of a specific commandlineargument
+     * @param   key name of the key to get his value from
+     * @return  returns the value of the argument to a given key
+     * @throws  Exception
+     */
+    public String getCommandlineArg(String key) throws Exception;
 }

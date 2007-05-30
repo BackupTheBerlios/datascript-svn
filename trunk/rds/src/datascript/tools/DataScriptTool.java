@@ -70,7 +70,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.9.1 (29 May 2007)";
+    private static final String VERSION = "rds 0.9.2 (30 May 2007)";
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -400,8 +400,16 @@ public class DataScriptTool implements Parameters
     }
 
 
-    public String getCommandLineArg(String key)
+    public boolean argumentExists(String key)
     {
+        return cmdLineArgs.containsKey(key);
+    }
+
+
+    public String getCommandlineArg(String key) throws Exception
+    {
+        if (!cmdLineArgs.containsKey(key))
+            throw new Exception(key + " is non of the commandline arguments.");
         return cmdLineArgs.get(key);
     }
 

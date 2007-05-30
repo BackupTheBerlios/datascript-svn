@@ -226,7 +226,13 @@ public class DataScriptXmlDumper implements Parameters
     }
 
 
-    public String getCommandLineArg(String key)
+    public boolean argumentExists(String key)
+    {
+        return false;
+    }
+
+
+    public String getCommandlineArg(String key) throws Exception
     {
         return null;
     }
