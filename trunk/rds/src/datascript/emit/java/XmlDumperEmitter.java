@@ -35,7 +35,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.emit;
+package datascript.emit.java;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
@@ -50,8 +50,6 @@ import datascript.ast.StringType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
-import datascript.emit.java.AccessorNameEmitter;
-import datascript.emit.java.DepthFirstVisitorEmitter;
 import datascript.jet.java.XmlDumper;
 import datascript.jet.java.XmlDumperEnumeration;
 

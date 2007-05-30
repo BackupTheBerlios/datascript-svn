@@ -38,7 +38,7 @@
  */
 %> 
 <%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.*" 
+        imports="datascript.ast.* datascript.emit.java.*" 
         class="XmlDumperEnumeration" %>
 <% 
     XmlDumperEmitter e = (XmlDumperEmitter) argument;
