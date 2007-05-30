@@ -43,27 +43,24 @@ import java.util.Collection;
 import java.util.Set;
 
 import antlr.collections.AST;
-
 import datascript.antlr.util.TokenAST;
 import datascript.ast.CompoundType;
 import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
 import datascript.ast.Field;
-import datascript.ast.Package;
 import datascript.ast.SequenceType;
 import datascript.ast.SetType;
+import datascript.ast.SqlDatabaseType;
 import datascript.ast.SqlIntegerType;
 import datascript.ast.SqlMetadataType;
 import datascript.ast.SqlPragmaType;
 import datascript.ast.SqlTableType;
 import datascript.ast.Subtype;
-import datascript.ast.SqlDatabaseType;
 import datascript.ast.TypeInterface;
 import datascript.ast.UnionType;
-
+import datascript.jet.html.Comment;
 import datascript.jet.html.Compound;
 import datascript.jet.html.Enum;
-import datascript.jet.html.Comment;
 
 
 public class ContentEmitter extends DefaultHTMLEmitter
@@ -93,7 +90,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
         for (Pair<String, TokenAST> p : typeMap.values())
         {
             TypeInterface type = (TypeInterface) p.getSecond();
-            setPackageName(p.getFirst());
             if (type instanceof CompoundType)
             {
                 emitCompound((CompoundType) type);

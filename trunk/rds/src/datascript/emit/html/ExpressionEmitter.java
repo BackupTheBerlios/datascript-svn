@@ -331,10 +331,7 @@ public class ExpressionEmitter
         else if (obj instanceof EnumItem)
         {
             EnumItem item = (EnumItem)obj;
-            String type = item.getEnumType().getName();
             String value = item.getName();
-            //buffer.append(type);
-            //buffer.append('.');
             buffer.append(value);
         }
         else

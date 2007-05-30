@@ -5,11 +5,10 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import antlr.collections.AST;
-import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
+import datascript.ast.Package;
 import datascript.ast.TypeInterface;
 import datascript.emit.DefaultEmitter;
-import datascript.ast.Package;
 
 abstract public class DefaultHTMLEmitter extends DefaultEmitter
 {
@@ -42,7 +41,6 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
     protected TypeInterface currentType;
     protected SortedMap<String, Pair<String, TokenAST> > typeMap = 
         new TreeMap<String, Pair<String, TokenAST> >();
-    private String packageName;
     private String currentFolder = "/";
     protected Package currentPackage;
 
@@ -68,12 +66,6 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
     public TypeInterface getCurrentType()
     {
         return currentType;
-    }
-
-
-    public void setPackageName(String packageName)
-    {
-        this.packageName = packageName;
     }
 
 

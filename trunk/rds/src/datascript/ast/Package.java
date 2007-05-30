@@ -161,7 +161,7 @@ public class Package extends Scope
     }
     
     // only for debugging
-    private static void dumpAll()
+    public static void dumpAll()
     {
         for (Package p : nameToPackage.values())
         {

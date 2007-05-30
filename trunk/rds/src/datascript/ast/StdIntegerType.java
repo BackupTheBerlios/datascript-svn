@@ -37,9 +37,9 @@
  */
 package datascript.ast;
 
-import datascript.antlr.DataScriptParser;
-import datascript.antlr.DataScriptParserTokenTypes;
 import java.math.BigInteger;
+
+import datascript.antlr.DataScriptParserTokenTypes;
 
 public class StdIntegerType extends IntegerType
 {
