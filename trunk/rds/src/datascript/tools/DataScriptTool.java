@@ -400,7 +400,7 @@ public class DataScriptTool implements Parameters
     }
 
 
-    public String getCommendlineArg(String key)
+    public String getCommandLineArg(String key)
     {
         return cmdLineArgs.get(key);
     }

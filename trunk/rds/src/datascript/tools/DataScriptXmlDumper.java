@@ -226,7 +226,7 @@ public class DataScriptXmlDumper implements Parameters
     }
 
 
-    public String getCommendlineArg(String key)
+    public String getCommandLineArg(String key)
     {
         return null;
     }

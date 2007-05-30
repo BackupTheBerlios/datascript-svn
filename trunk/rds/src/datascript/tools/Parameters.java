@@ -95,5 +95,5 @@ public interface Parameters
      * 
      * @return
      */
-    public String getCommendlineArg(String key);
+    public String getCommandLineArg(String key);
 }
