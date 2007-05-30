@@ -40,7 +40,8 @@ package datascript.ast;
 import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
-import datascript.tools.ToolContext;
+import datascript.antlr.util.TokenAST;
+import datascript.antlr.util.ToolContext;
 
 public class Subtype extends TokenAST implements TypeInterface
 {

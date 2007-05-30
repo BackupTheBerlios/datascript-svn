@@ -1,10 +1,9 @@
 /**
  * 
  */
-package datascript.ast;
+package datascript.antlr.util;
 
 import antlr.CommonToken;
-import datascript.tools.ToolContext;
 
 /**
  * @author HWellmann

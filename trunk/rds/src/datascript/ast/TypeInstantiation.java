@@ -41,7 +41,8 @@ import java.util.Vector;
 
 import antlr.collections.AST;
 
-import datascript.tools.ToolContext;
+import datascript.antlr.util.TokenAST;
+import datascript.antlr.util.ToolContext;
 
 
 public class TypeInstantiation extends TokenAST implements TypeInterface

@@ -68,12 +68,13 @@ public class StdIntegerType extends IntegerType
         return upperbounds[getType()];
     }
 
+/*
     public String toString()
     {
         // remove double quotes from "uint8"
         return DataScriptParser._tokenNames[getType()];
     }
-    
+*/    
     public boolean equals(Object obj)
     {
         StdIntegerType other = (StdIntegerType)obj;

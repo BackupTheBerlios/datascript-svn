@@ -40,7 +40,7 @@ header
 package datascript.antlr;
 import datascript.ast.*;
 import datascript.ast.Package;  // explicit to override java.lang.Package
-import datascript.tools.ToolContext;
+import datascript.antlr.util.*;
 import java.util.Stack;
 }
 

@@ -37,6 +37,8 @@
  */
 package datascript.ast;
 
+import datascript.antlr.util.TokenAST;
+
 
 public class LineError extends Error
 {

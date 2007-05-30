@@ -43,8 +43,8 @@ import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.DocCommentLexer;
 import datascript.antlr.DocCommentParser;
 import datascript.antlr.DocCommentParserTokenTypes;
+import datascript.antlr.util.TokenAST;
 import datascript.ast.DataScriptException;
-import datascript.ast.TokenAST;
 import datascript.tools.Extension;
 import datascript.tools.Parameters;
 

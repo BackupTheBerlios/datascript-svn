@@ -39,6 +39,7 @@ package datascript.ast;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
+import datascript.antlr.util.TokenAST;
 
 /**
  * @author HWellmann

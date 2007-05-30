@@ -40,8 +40,8 @@ package datascript.emit.java;
 import java.io.PrintStream;
 
 import antlr.collections.AST;
+import datascript.antlr.util.TokenAST;
 import datascript.ast.SqlTableType;
-import datascript.ast.TokenAST;
 import datascript.jet.java.SqlTable;
 
 /**

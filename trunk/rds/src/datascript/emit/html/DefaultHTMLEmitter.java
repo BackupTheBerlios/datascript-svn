@@ -6,8 +6,8 @@ import java.util.TreeMap;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
+import datascript.antlr.util.TokenAST;
 import datascript.ast.TypeInterface;
-import datascript.ast.TokenAST;
 import datascript.emit.DefaultEmitter;
 import datascript.ast.Package;
 

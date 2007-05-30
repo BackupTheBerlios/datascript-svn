@@ -3,6 +3,8 @@
  */
 package datascript.ast;
 
+import datascript.antlr.util.TokenAST;
+
 /**
  * @author HWellmann
  *

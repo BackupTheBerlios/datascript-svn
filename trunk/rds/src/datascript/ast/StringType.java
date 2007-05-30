@@ -37,6 +37,7 @@
  */
 package datascript.ast;
 
+import datascript.antlr.util.TokenAST;
 import antlr.collections.AST;
 
 public class StringType extends TokenAST implements TypeInterface

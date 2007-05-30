@@ -38,7 +38,7 @@
 header
 {
 package datascript.antlr;
-import datascript.tools.ToolContext;
+import datascript.antlr.util.*;
 }
 
 class DataScriptLexer extends Lexer;

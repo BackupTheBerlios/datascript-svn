@@ -38,7 +38,7 @@
 package datascript.tools;
 
 import datascript.antlr.DataScriptEmitter;
-import datascript.ast.TokenAST;
+import datascript.antlr.util.TokenAST;
 
 
 /**

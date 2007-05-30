@@ -44,6 +44,7 @@ import java.util.Set;
 
 import antlr.collections.AST;
 
+import datascript.antlr.util.TokenAST;
 import datascript.ast.CompoundType;
 import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
@@ -58,7 +59,6 @@ import datascript.ast.SqlTableType;
 import datascript.ast.Subtype;
 import datascript.ast.SqlDatabaseType;
 import datascript.ast.TypeInterface;
-import datascript.ast.TokenAST;
 import datascript.ast.UnionType;
 
 import datascript.jet.html.Compound;

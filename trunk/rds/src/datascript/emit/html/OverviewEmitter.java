@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import antlr.collections.AST;
-import datascript.ast.TokenAST;
+import datascript.antlr.util.TokenAST;
 import datascript.ast.TypeInterface;
 import datascript.jet.html.OverviewBegin;
 import datascript.jet.html.OverviewEnd;

@@ -45,7 +45,8 @@ import java.util.Set;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
-import datascript.tools.ToolContext;
+import datascript.antlr.util.TokenAST;
+import datascript.antlr.util.ToolContext;
 
 /**
  * This class represents a DataScript package which provides a separate lexical

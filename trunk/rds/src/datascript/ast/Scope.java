@@ -42,7 +42,8 @@ import java.util.List;
 import java.util.Vector;
 
 import antlr.collections.AST;
-import datascript.tools.ToolContext;
+import datascript.antlr.util.TokenAST;
+import datascript.antlr.util.ToolContext;
 
 /**
  * This class implements the Context interface and thus provides a lexical 

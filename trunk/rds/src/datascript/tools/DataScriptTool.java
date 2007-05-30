@@ -59,12 +59,13 @@ import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.DataScriptWalker;
 import datascript.antlr.ExpressionEvaluator;
 import datascript.antlr.TypeEvaluator;
+import datascript.antlr.util.TokenAST;
+import datascript.antlr.util.ToolContext;
 
 import datascript.ast.DataScriptException;
 import datascript.ast.ParserException;
 import datascript.ast.Package;
 import datascript.ast.Scope;
-import datascript.ast.TokenAST;
 
 
 public class DataScriptTool implements Parameters
@@ -333,7 +334,7 @@ public class DataScriptTool implements Parameters
         FileInputStream is = new FileInputStream(fileName); 
         DataScriptLexer lexer = new DataScriptLexer(is);
         lexer.setFilename(fileName);
-        lexer.setTokenObjectClass("datascript.ast.FileNameToken");
+        lexer.setTokenObjectClass("datascript.antlr.util.FileNameToken");
         TokenBuffer buffer = new TokenBuffer(lexer);
         parser = new DataScriptParser(buffer);
         parser.setContext(context);
@@ -342,7 +343,7 @@ public class DataScriptTool implements Parameters
         parser.setFilename(fileName);
         
         // use custom node class containing line information
-        parser.setASTNodeClass("datascript.ast.TokenAST");
+        parser.setASTNodeClass("datascript.antlr.util.TokenAST");
 
         // parse file and get root node of syntax tree
         parser.translationUnit();

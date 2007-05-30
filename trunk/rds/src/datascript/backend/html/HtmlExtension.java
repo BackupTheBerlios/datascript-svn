@@ -38,8 +38,8 @@
 package datascript.backend.html;
 
 import datascript.antlr.DataScriptEmitter;
+import datascript.antlr.util.TokenAST;
 import datascript.ast.DataScriptException;
-import datascript.ast.TokenAST;
 import datascript.emit.html.ContentEmitter;
 import datascript.emit.html.CssEmitter;
 import datascript.emit.html.FramesetEmitter;

@@ -39,6 +39,8 @@ package datascript.ast;
 
 import java.util.Iterator;
 
+import datascript.antlr.util.TokenAST;
+
 public class EnumType extends SetType
 {
     private TokenAST members;

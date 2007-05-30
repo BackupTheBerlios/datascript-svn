@@ -38,6 +38,7 @@
 package datascript.ast;
 
 import datascript.antlr.DataScriptParserTokenTypes;
+import datascript.antlr.util.TokenAST;
 import antlr.collections.AST;
 
 public class Field extends TokenAST

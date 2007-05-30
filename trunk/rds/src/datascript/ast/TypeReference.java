@@ -39,7 +39,8 @@ package datascript.ast;
 
 import antlr.Token;
 import antlr.collections.AST;
-import datascript.tools.ToolContext;
+import datascript.antlr.util.TokenAST;
+import datascript.antlr.util.ToolContext;
 
 /**
  * Any occurrence of a type name which is not the defining one is a type

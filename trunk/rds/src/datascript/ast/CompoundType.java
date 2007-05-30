@@ -42,6 +42,7 @@ import java.util.Vector;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
+import datascript.antlr.util.TokenAST;
 
 
 abstract public class CompoundType extends TokenAST implements TypeInterface

@@ -49,8 +49,9 @@ import antlr.debug.misc.ASTFrame;
 import datascript.antlr.DataScriptLexer;
 import datascript.antlr.DataScriptParser;
 import datascript.antlr.DataScriptParserTokenTypes;
+import datascript.antlr.util.TokenAST;
+import datascript.antlr.util.ToolContext;
 import datascript.ast.ParserException;
-import datascript.ast.TokenAST;
 
 
 public class DataScriptXmlDumper implements Parameters
@@ -113,7 +114,7 @@ public class DataScriptXmlDumper implements Parameters
         FileInputStream is = new FileInputStream(fileName); 
         DataScriptLexer lexer = new DataScriptLexer(is);
         lexer.setFilename(fileName);
-        lexer.setTokenObjectClass("datascript.ast.FileNameToken");
+        lexer.setTokenObjectClass("datascript.antlr.util.FileNameToken");
         TokenBuffer buffer = new TokenBuffer(lexer);
         parser = new DataScriptParser(buffer);
         parser.setContext(context);
@@ -122,7 +123,7 @@ public class DataScriptXmlDumper implements Parameters
         parser.setFilename(fileName);
 
         // use custom node class containing line information
-        parser.setASTNodeClass("datascript.ast.TokenAST");
+        parser.setASTNodeClass("datascript.antlr.util.TokenAST");
 
         // parse file and get root node of syntax tree
         parser.translationUnit();

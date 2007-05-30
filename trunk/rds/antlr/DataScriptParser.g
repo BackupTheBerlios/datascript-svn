@@ -40,7 +40,7 @@ header
 package datascript.antlr;
 
 import datascript.ast.*;
-import datascript.tools.ToolContext;
+import datascript.antlr.util.*;
 }
 
 class DataScriptParser extends Parser;
