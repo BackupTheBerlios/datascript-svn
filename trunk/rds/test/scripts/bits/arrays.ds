@@ -39,7 +39,7 @@ VarArray
 
 ParamArray
 {
-    uint16                          numItems;
+    uint32                          numItems;	// in java indexes of arrays are type of int. This ist for testing truncating
     uint16		                    size[numItems];
     ParamBlock(size[block$index])   block[numItems];
 };
@@ -48,7 +48,7 @@ ParamArray
 OptionalArraySequence
 {
 	int8	kleinesArray[3];
-	uint16	count;
+	uint32	count;			// in java indexes of arrays are type of int. This ist for testing truncating
 	int16	a[count]    if count > 0;
 	int16	b[1]        if count == 0;
 };

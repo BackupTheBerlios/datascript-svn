@@ -35,7 +35,7 @@ public class OptionalArrayTest extends TestCase
         file.delete();
     }
 
-    private void checkData(OptionalArraySequence oas, int size, int count)
+    private void checkData(OptionalArraySequence oas, int size, long count)
     {        
         ByteArray kleinesArray = oas.getKleinesArray();
         assertEquals(3, kleinesArray.length());
@@ -74,7 +74,7 @@ public class OptionalArrayTest extends TestCase
             os.writeByte(i+1);
         }
 
-        os.writeShort(count);
+        os.writeInt(count);
 
         if (count > 0)
         {

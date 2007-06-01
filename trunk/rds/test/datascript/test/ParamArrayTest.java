@@ -48,7 +48,7 @@ public class ParamArrayTest extends TestCase
         file.delete();
     }
 
-    private void checkArray(ParamArray array, int sizeof, short numItems, byte startValue, short[] size)
+    private void checkArray(ParamArray array, int sizeof, long numItems, byte startValue, short[] size)
     {
         assertEquals(numItems, array.getNumItems());
         UnsignedShortArray sizes = array.getSize();
@@ -67,12 +67,12 @@ public class ParamArrayTest extends TestCase
         assertEquals(sizeof, array.sizeof());
     }
     
-    private int writeArray(short numItems, byte startValue, short[] size) throws IOException
+    private int writeArray(int numItems, byte startValue, short[] size) throws IOException
     {
     	file.delete();
         os = new FileImageOutputStream(file);
 
-        os.writeShort(numItems);
+        os.writeInt(numItems);
         for (int i = 0; i < numItems; i++)
         {
             os.writeShort(size[i]);
