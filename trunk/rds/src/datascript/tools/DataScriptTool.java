@@ -207,7 +207,7 @@ public class DataScriptTool implements Parameters
             return;
         }
         Collection<URL> urls = toURLs((File[]) extensionFiles.toArray(new File[] {}));
-        ClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[] {}));
+        ClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[] {}), this.getClass().getClassLoader());
 
         for (File f : extensionFiles)
         {
