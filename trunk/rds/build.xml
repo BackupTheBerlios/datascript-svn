@@ -52,7 +52,7 @@
   <property name="src" value="${basedir}/src" />
 
   <!-- Sources for JUnit tests. -->
-  <property name="test" value="${basedir}/test" />
+  <property name="test" value="${basedir}/test/src" />
 
   <!-- Example sources -->
   <property name="examples" value="${basedir}/examples" />
@@ -72,6 +72,12 @@
 
   <!-- ANTLR output path. -->
   <property name="antlr.out" value="${gen}/datascript/antlr" />
+
+  <!-- Root for generated Java sources for test cases. -->
+  <property name="test.gen" value="${build}/test/gen" />
+
+  <!-- Root for DataScript sources for test cases. -->
+  <property name="ds.src" value="${basedir}/test/scripts" />
 
 
   <property name="jar" value="${build}/jar" />
@@ -161,7 +167,9 @@
 
 
 
-  <target name="antlr" depends="antlr.ExpressionEvaluator, antlr.DocComment, antlr.DataScriptEmitter" description="builds all ANTLR targets">
+  <target name="antlr" 
+    depends="antlr.ExpressionEvaluator, antlr.DocComment, antlr.DataScriptEmitter" 
+    description="builds all ANTLR targets">
   </target>
 
 
@@ -236,14 +244,15 @@
 
   </target>
 
-
-  <target name="test.gen" description="Generates parser for test cases" unless="bits.uptodate">
-    <java jar="${jar}/rds.jar" dir="${test}" failonerror="true" fork="yes">
+  <!-- End of core rds targets. Now test targets follow. -->
+  
+  <target name="test.gen" depends="jar" description="Generates parser for test cases" unless="bits.uptodate">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
       <classpath>
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test} -ext ${ext} -src scripts bits.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
     </java>
   </target>
 
@@ -252,7 +261,7 @@
       <classpath>
         <pathelement path="${jar}/rds-runtime.jar" />
       </classpath>
-      <src path="${build}/test/gen" />
+      <src path="${test.gen}" />
       <src path="${test}" />
     </javac>
   </target>
@@ -280,17 +289,17 @@
 
 
   <target name="sqltest.gen" depends="jar" description="Generates parser for test cases" unless="sqltest.uptodate">
-    <java jar="${jar}/rds.jar" dir="${test}" failonerror="true" fork="yes">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
       <classpath>
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test} -ext ${ext} -src scripts sqltest.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  sqltest.ds" />
     </java>
   </target>
 
   <target name="sqltest.clean" description="removes all generated test Java sources and classes">
-    <delete dir="${test}/sqltest" />
+    <delete dir="${test.gen}/sqltest" />
   </target>
 
 
@@ -298,19 +307,19 @@
        least we can test that rds can handle more advanced package relations.
   -->
   <target name="pkgtest.gen" depends="jar" description="Generates parser for test cases" unless="pkgtest.uptodate">
-    <java jar="${jar}/rds.jar" dir="${test}" failonerror="true" fork="yes">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
       <classpath>
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test} -ext ${ext} -src scripts child.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  child.ds" />
     </java>
-    <java jar="${jar}/rds.jar" dir="${test}" failonerror="true" fork="yes">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
       <classpath>
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test} -ext ${ext} -src scripts pkg\top.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  pkg/top.ds" />
     </java>
   </target>
 
