@@ -4,6 +4,7 @@
 	<classpathentry including="*.java" kind="src" output="examples" path="examples"/>
 	<classpathentry kind="src" path="build/gen"/>
 	<classpathentry kind="src" path="test/src"/>
+	<classpathentry kind="src" output="build/test/classes" path="build/test/gen"/>
 	<classpathentry kind="lib" path="lib/jetc-task.jar"/>
 	<classpathentry kind="lib" path="lib/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>

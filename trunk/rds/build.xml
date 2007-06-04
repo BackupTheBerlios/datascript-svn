@@ -99,7 +99,7 @@
     <delete dir="${build}" />
   </target>
 
-  <target name="cleanall" depends="clean, test.clean, examples.clean" description="removes all generated Java sources and classes" />
+  <target name="cleanall" depends="clean, test.clean" description="removes all generated Java sources and classes" />
 
 
   <target name="init">
@@ -256,7 +256,7 @@
     </java>
   </target>
 
-  <target name="test.compile" depends="test.gen, sqltest.gen, pkgtest.gen, jar" description="Builds the test cases">
+  <target name="test.compile" depends="test.gen, sqltest.gen, pkgtest.gen, jar, gif.gen" description="Builds the test cases">
     <javac destdir="${build}/test/classes" debug="on" target="1.5">
       <classpath>
         <pathelement path="${jar}/rds-runtime.jar" />
@@ -267,7 +267,7 @@
   </target>
 
   <target name="test.run" depends="test.compile" description="Runs the unit tests">
-    <junit printsummary="no" fork="yes">
+    <junit printsummary="no" fork="yes" dir="${basedir}">
       <jvmarg value="-Djava.library.path=${lib}" />
       <classpath>
         <pathelement path="${build}/test/classes" />
@@ -330,32 +330,17 @@
   </target>
 
 
-  <target name="examples.clean" description="removes all generated test Java sources and classes">
-    <delete dir="${examples}/gif" />
-    <delete dir="${build}/examples/classes" />
-  </target>
-
-  <target name="example.gif.gen" depends="jar" description="Generates parser for examples" unless="gif.uptodate">
-    <java jar="${jar}/rds.jar" dir="${examples}" failonerror="true" fork="yes">
+  <target name="gif.gen" depends="jar" description="Generates parser for examples" unless="gif.uptodate">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
       <classpath>
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${examples} -ext ${ext} gif.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} gif.ds" />
     </java>
   </target>
 
-  <target name="examples.compile" depends="example.gif.gen, jar" description="Builds the examples">
-    <javac destdir="${build}/examples/classes" debug="on" target="1.5">
-      <classpath>
-        <pathelement path="${jar}/rds-runtime.jar" />
-      </classpath>
-      <src path="${build}/examples/gen" />
-      <src path="${examples}" />
-    </javac>
-  </target>
-
-  <target name="example.gif.run" depends="examples.compile" description="Runs the gif-example">
+  <target name="gif.run" depends="test.compile" description="Runs the gif-example">
     <junit printsummary="no" fork="on" dir="${examples}">
       <classpath>
         <pathelement path="${build}/examples/classes" />

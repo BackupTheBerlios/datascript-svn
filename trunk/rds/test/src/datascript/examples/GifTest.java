@@ -13,7 +13,7 @@ import gif.*;
 
 public class GifTest extends TestCase
 {
-    private String fileName = "1pix.gif";
+    private String fileName = "test\\scripts\\1pix.gif";
 
     private String ident;
 
