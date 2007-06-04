@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="psi/" kind="src" path="src"/>
-	<classpathentry including="*.java" kind="src" output="examples" path="examples"/>
 	<classpathentry kind="src" path="build/gen"/>
 	<classpathentry kind="src" path="test/src"/>
 	<classpathentry kind="src" output="build/test/classes" path="build/test/gen"/>
