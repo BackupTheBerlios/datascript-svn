@@ -187,7 +187,8 @@ public class Package extends Scope
             // an exception instead of logging an error.
             if (importedPackage == null)
             {
-                throw new RuntimeException("no package " + importedPackage);
+                //throw new RuntimeException("no package " + importedPackage);
+                ToolContext.logError(this.node, "no package " + importedPackage);
             }
             importedPackages.put(importedName, importedPackage);
         }
@@ -315,6 +316,8 @@ public class Package extends Scope
         {
             for (Package p : importedPackages.values())
             {
+                if (p == null)
+                    continue;
                 TypeInterface externalType = p.getLocalType(name);
                 if (externalType != null)
                 {

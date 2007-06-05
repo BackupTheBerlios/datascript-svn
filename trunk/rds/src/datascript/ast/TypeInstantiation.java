@@ -117,6 +117,12 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
         
         // and it must have a parameter list
         compound = (CompoundType) p;
+        if (compound == null)
+        {
+            ToolContext.logError(refType, "'"+ refType.getName() + 
+            "' has no parameterized types");
+            return;
+        }
         int numParams = compound.getParameterCount();
         if (numParams == 0)
         {

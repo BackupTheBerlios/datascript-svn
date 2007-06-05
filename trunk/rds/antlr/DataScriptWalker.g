@@ -55,12 +55,13 @@ options
     {
         this.context = context;
     }
-    
+
     public void reportError(RecognitionException ex) 
     {
-        System.out.println(ex.toString());
-        throw new RuntimeException(ex);
+        context.logError((TokenAST)getAST(), ex.getMessage());
+        //throw new RuntimeException(ex);
     }
+
 }
 
 root : #(ROOT (translationUnit)+ );

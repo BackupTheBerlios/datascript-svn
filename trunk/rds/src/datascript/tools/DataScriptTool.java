@@ -70,7 +70,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.9.2 (30 May 2007)";
+    private static final String VERSION = "rds 0.9.3 (05 Jun 2007)";
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -281,7 +281,7 @@ public class DataScriptTool implements Parameters
 
 
     private void parseImportedPackages(AST unitNode) throws Exception
-    {        
+    {
         AST node = unitNode.getFirstChild();
         if (node.getType() == DataScriptParserTokenTypes.PACKAGE)
         {
@@ -298,8 +298,11 @@ public class DataScriptTool implements Parameters
                     allPackageFiles.add(fileName);
                     context.setFileName(fileName);
                     AST unitRoot = parsePackage();
-                    rootNode.addChild(unitRoot);
-                    parseImportedPackages(unitRoot);
+                    if (unitRoot != null)
+                    {
+                        rootNode.addChild(unitRoot);
+                        parseImportedPackages(unitRoot);
+                    }
                 }
             }
         }
@@ -331,27 +334,39 @@ public class DataScriptTool implements Parameters
         System.out.println("Parsing " + fileName);
 
         // set up lexer, parser and token buffer
-        FileInputStream is = new FileInputStream(fileName); 
-        DataScriptLexer lexer = new DataScriptLexer(is);
-        lexer.setFilename(fileName);
-        lexer.setTokenObjectClass("datascript.antlr.util.FileNameToken");
-        TokenBuffer buffer = new TokenBuffer(lexer);
-        parser = new DataScriptParser(buffer);
-        parser.setContext(context);
+        try
+        {
+            FileInputStream is = new FileInputStream(fileName); 
+            DataScriptLexer lexer = new DataScriptLexer(is);
+            lexer.setFilename(fileName);
+            lexer.setTokenObjectClass("datascript.antlr.util.FileNameToken");
+            TokenBuffer buffer = new TokenBuffer(lexer);
+            parser = new DataScriptParser(buffer);
+            parser.setContext(context);
 
-        // must call this to see file name in error messages
-        parser.setFilename(fileName);
-        
-        // use custom node class containing line information
-        parser.setASTNodeClass("datascript.antlr.util.TokenAST");
+            // must call this to see file name in error messages
+            parser.setFilename(fileName);
+            
+            // use custom node class containing line information
+            parser.setASTNodeClass("datascript.antlr.util.TokenAST");
 
+        }
+        catch (java.io.FileNotFoundException fnfe)
+        {
+            ToolContext.logError((TokenAST)parser.getAST(), fnfe.getMessage());
+        }
         // parse file and get root node of syntax tree
         parser.translationUnit();
-        if (context.getErrorCount() != 0)
+        AST retVal = parser.getAST();
+        if (context.getErrorCount() != 0 || retVal == null)
             throw new ParserException("Parser errors.");
-        
-        // TODO: Log warning if package name AST does not match file name
-        return parser.getAST();
+
+        String pkgName = ToolContext.getFileName();
+        pkgName = pkgName.substring(0, pkgName.lastIndexOf(".ds"));
+        TokenAST node = (TokenAST)retVal.getFirstChild();
+        if (node.getType() != DataScriptParserTokenTypes.PACKAGE || node.getText().equals(pkgName))
+            ToolContext.logWarning(node, "filename and packeage name do not match!");
+        return retVal;
     }
 
 

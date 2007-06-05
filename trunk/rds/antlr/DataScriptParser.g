@@ -614,8 +614,11 @@ lengthOfOperand!
 postfixExpression!
     :   e:primaryExpression  { #postfixExpression = #e; }
         (o:postfixOperand 
-                          { AST rhs = #o.getFirstChild(); 
-                            #postfixExpression= #(o, postfixExpression, rhs); }
+                          { if (#o != null)
+                          	{
+                          		AST rhs = #o.getFirstChild(); 
+                            	#postfixExpression= #(o, postfixExpression, rhs);
+                          	} }
         )*
     ;
     
