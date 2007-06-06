@@ -28,6 +28,9 @@ CompoundArray
 };
 
 
+/**
+ *
+ */
 MixedArray
 {
     uint16      numItems;

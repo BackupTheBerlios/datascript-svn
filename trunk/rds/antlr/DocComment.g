@@ -55,7 +55,7 @@ tokens
 
 
 comment
-    : "/**"^ (NEWLINE!)* commentBody filler EOC! EOF!
+    : "/**"^ (NEWLINE!)* (commentBody filler)? EOC! EOF!
     ;
     
 strippedComment
