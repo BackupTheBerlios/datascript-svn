@@ -150,7 +150,7 @@ importDeclaration
     ;   
 
 declarationList
-    :   ((d:DOC!)? declaration[#d])*
+    :   ((d:DOC!)? declaration[#d] {#d=null;} )*
         { #declarationList = #([MEMBERS, "MEMBERS"], declarationList); }
     ;
 

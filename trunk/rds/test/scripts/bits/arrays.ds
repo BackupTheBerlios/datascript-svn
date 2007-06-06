@@ -2,6 +2,9 @@ package bits.arrays;
 
 import bits.*;
 
+/**
+ * first meaningless doc 
+ */
 IntegerArray
 {
      uint16             numElems;
@@ -14,6 +17,9 @@ IntegerArray
 };
 
 
+/**
+ * this is for testing if following sequences gets the same doc
+ */
 CompoundArray
 {
     int16       numItems;
