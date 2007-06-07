@@ -19,7 +19,9 @@ sql_database SqlTestDb
         uint8   levelNr      sql "PRIMARY KEY";
         Level   level;
     } levels;
-    
+
+    LevelTable moreLevels;
+
     sql_table TileTable
     {
         uint8    level : level < 16;
@@ -48,3 +50,4 @@ Level
 {
     int64 dummy;
 };
+

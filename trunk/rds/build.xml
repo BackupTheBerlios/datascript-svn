@@ -329,7 +329,19 @@
     <delete dir="${test}/pkg" />
   </target>
 
+  <target name="innerunion.gen" depends="jar" description="Generates parser for test cases">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+      </classpath>
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  innerunion.ds" />
+    </java>
+  </target>
 
+
+  
+  
   <target name="gif.gen" depends="jar" description="Generates parser for examples" unless="gif.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
       <classpath>

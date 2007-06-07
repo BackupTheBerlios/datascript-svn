@@ -357,7 +357,7 @@ sqlTableField
       
 sqlTableDefinition
     : sqlTableDeclaration (ID)? 
-    | #(TYPEREF ID ID )
+    | #(TYPEREF ID) ID 
     ;
 
 sqlTableDeclaration

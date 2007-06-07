@@ -404,7 +404,7 @@ sqlTableDefinition[AST fd]
           				}  
        )? 
        
-    | #(t:TYPEREF ID m:ID )             { 
+    | #(t:TYPEREF ID) m:ID              { 
                                           scope().setSymbol(m, f);
           				  f.setName(m); ct.addField(f);
           				  scope().postLinkAction((TypeReference)t);          				  

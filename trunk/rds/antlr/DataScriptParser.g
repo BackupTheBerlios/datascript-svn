@@ -445,7 +445,6 @@ sqlTableField
 sqlTableDefinition
     : sqlTableDeclaration (ID)? SEMICOLON!
     | sqlTableReference ID SEMICOLON! 
-      {#sqlTableDefinition = #([TYPEREF], #sqlTableDefinition);}
     ;
 
 sqlTableDeclaration
@@ -458,6 +457,7 @@ sqlTableDeclaration
     
 sqlTableReference
     : ID
+      {#sqlTableReference = #([TYPEREF], #sqlTableReference);}
     ;    
     
 sqlFieldDefinition!

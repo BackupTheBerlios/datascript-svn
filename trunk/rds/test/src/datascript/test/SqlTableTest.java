@@ -9,8 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.imageio.stream.FileImageOutputStream;
-
 import junit.framework.TestCase;
 import sqltest.SqlTestDb;
 import datascript.runtime.SqlDatabase.Mode;
@@ -56,7 +54,7 @@ public class SqlTableTest extends TestCase
     
     
     
-    public void testCreation() throws Exception
+    public void testCreationReadOnly() throws Exception
     {
     	SqlTestDb db = new SqlTestDb(fileName, Mode.READONLY);
     	assertTrue(file.exists());
@@ -65,16 +63,34 @@ public class SqlTableTest extends TestCase
     	
     	ResultSet rs = st.executeQuery("select * from levels");
     	assertFalse(rs.next());
+    	st.close();
+    	rs.close();
+    	
+    	rs = st.executeQuery("select * from moreLevels");
+    	assertFalse(rs.next());
+    	st.close();
+    	rs.close();
+
+    	rs = st.executeQuery("select * from tiles");
+    	assertFalse(rs.next());
+    	st.close();
+    	rs.close();
+
     	db.close();    	
     }
 
-    public void testCreation2() throws Exception
+    public void testCreationReadWrite() throws Exception
     {
     	SqlTestDb db = new SqlTestDb(fileName, Mode.WRITE);
     	Connection dbc = db.getConnection();
     	Statement st = dbc.createStatement();
     	
     	ResultSet rs = st.executeQuery("select * from levels");
+    	assertFalse(rs.next());
+    	rs.close();
+    	st.close();
+    	
+    	rs = st.executeQuery("select * from moreLevels");
     	assertFalse(rs.next());
     	rs.close();
     	st.close();
@@ -110,6 +126,21 @@ public class SqlTableTest extends TestCase
     	{
     		assertEquals(exc.getMessage(), "column levelNr is not unique");
     	}
+
+    	db.close();
+    }
+
+    public void testInsertionTableReference() throws Exception
+    {
+    	SqlTestDb db = new SqlTestDb(fileName, Mode.WRITE);
+    	Connection dbc = db.getConnection();
+    	Statement st = dbc.createStatement();
+    	
+        int rows = st.executeUpdate("insert into moreLevels values (1, 'blob1')");
+    	assertEquals(rows, 1);
+
+    	rows = st.executeUpdate("insert into moreLevels values (2, 'blob2')");
+    	assertEquals(rows, 1);
 
     	db.close();
     }
