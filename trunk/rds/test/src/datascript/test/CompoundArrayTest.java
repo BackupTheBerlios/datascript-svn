@@ -95,7 +95,7 @@ public class CompoundArrayTest extends TestCase
         return size;
     }
 
-    public void testArray1() throws IOException
+    public void testArray1() throws Exception
     {
     	int size = writeArray(5, 20, 100000);
 
@@ -109,7 +109,7 @@ public class CompoundArrayTest extends TestCase
         assertTrue(array.equals(array2));
     }
 
-    public void testArray2() throws IOException
+    public void testArray2() throws Exception
     {
         int size = writeArray(5000, 29000, 100000);
 

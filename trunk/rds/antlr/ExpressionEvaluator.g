@@ -396,8 +396,15 @@ sqlIntegerFieldDefinition
 // ------- expressions ----------------------------------------------------
 
 expression
-    : atom
-    | opExpression
+    :   atom
+    |   opExpression
+    |   sumFunction
+    ;
+
+sumFunction
+    : ( #(SUM expression)
+      )
+      { ((Expression)#sumFunction).evaluate(scope()); }
     ;
 
 opExpression

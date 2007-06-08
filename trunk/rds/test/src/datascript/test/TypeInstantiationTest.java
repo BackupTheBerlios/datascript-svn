@@ -74,7 +74,7 @@ public class TypeInstantiationTest extends TestCase
     }
     
     
-    public void testInstantiation() throws IOException
+    public void testInstantiation() throws Exception
     {
         short[] sizes = new short[] { 1, 3, 4 };
         short numBlocks = (short) sizes.length;

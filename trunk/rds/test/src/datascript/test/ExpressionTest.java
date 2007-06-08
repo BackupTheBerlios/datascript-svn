@@ -69,7 +69,7 @@ public class ExpressionTest extends TestCase
         return size;
     }
     
-    public void testCondExpr1() throws IOException
+    public void testCondExpr1() throws Exception
     {
         int tag = 37;
         int size = writeSequence(tag, (tag % 2 == 0) ? 47 : 11);

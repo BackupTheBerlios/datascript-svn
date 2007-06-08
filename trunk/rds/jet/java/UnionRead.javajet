@@ -106,7 +106,7 @@
                     <%=e.readField(field)%>
                     break;
                 } 
-                catch (IOException __exc) 
+                catch (Exception __exc) 
                 {
         	    	__in.setBitPosition(__fpos);
        	        }

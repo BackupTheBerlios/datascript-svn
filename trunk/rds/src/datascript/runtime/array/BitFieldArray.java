@@ -125,6 +125,18 @@ public class BitFieldArray implements Array, SizeOf
         return (numBits * length) / 8;
     }
 
+    public int sum() throws Exception
+    {
+        long retVal = 0;
+        for (BigInteger bi : data)
+        {
+            retVal += bi.longValue();
+        }
+        if (retVal > Integer.MAX_VALUE)
+            throw new Exception("result is too big for an integer");
+        return (int)retVal;
+    }
+
     public Array map(Mapping m)
     {
         BitFieldArray result = new BitFieldArray(length, numBits);

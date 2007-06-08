@@ -87,7 +87,7 @@ Optional
         return size;
     }
     
-    public void testOptional1() throws IOException
+    public void testOptional1() throws Exception
     {
         ItemA ia = new ItemA((short)0, 0);
         
@@ -102,7 +102,7 @@ Optional
         assertTrue(opt.equals(opt2));
     }
 
-    public void testOptional2() throws IOException
+    public void testOptional2() throws Exception
     {
         ItemA ia = new ItemA((short)1, 40000);
         
@@ -117,7 +117,7 @@ Optional
         assertTrue(opt.equals(opt2));
     }
 
-    public void testOptional3() throws IOException
+    public void testOptional3() throws Exception
     {
         ItemA ia = new ItemA((short)0, 0);
         

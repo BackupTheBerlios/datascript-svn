@@ -137,7 +137,7 @@ public class UnsignedArrayTest extends TestCase
         return size;
     }
 
-    public void testArray1() throws IOException
+    public void testArray1() throws Exception
     {
         int size = writeArray(5, 2, 3, 2000, 3000, 200000, 300000);
         IntegerArray array = new IntegerArray(fileName);
@@ -150,7 +150,7 @@ public class UnsignedArrayTest extends TestCase
         assertTrue(array.equals(array2));
     }
 
-    public void testArray2() throws IOException
+    public void testArray2() throws Exception
     {
         int size = writeArray(5, -120, 120, -120, 120, -120, 120);
         IntegerArray array = new IntegerArray(fileName);
@@ -163,7 +163,7 @@ public class UnsignedArrayTest extends TestCase
         assertTrue(array.equals(array2));
     }
 
-    public void testArray3() throws IOException
+    public void testArray3() throws Exception
     {
     	int size = writeArray(5, -120, 120, -32000, 32000, -32000, 32000);
         IntegerArray array = new IntegerArray(fileName);
@@ -176,7 +176,7 @@ public class UnsignedArrayTest extends TestCase
         assertTrue(array.equals(array2));
     }
 
-    public void testArray4() throws IOException
+    public void testArray4() throws Exception
     {
         int size = writeArray(5, -120, 120, -32000, 32000, 0xF0000000, 0x88008800);
         IntegerArray array = new IntegerArray(fileName);
@@ -189,7 +189,7 @@ public class UnsignedArrayTest extends TestCase
         assertTrue(array.equals(array2));
     }
 
-    public void testEmptyArray() throws IOException
+    public void testEmptyArray() throws Exception
     {
         int size = writeArray(0, 0, 0, 0, 0, 0, 0);
         IntegerArray array = new IntegerArray(fileName);

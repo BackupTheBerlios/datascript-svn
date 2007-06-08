@@ -84,7 +84,7 @@ public class ContainmentTest extends TestCase
         return size;
     }
     
-    public void testContainment() throws IOException
+    public void testContainment() throws Exception
     {
         short a = 99;
         short length = 5;

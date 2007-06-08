@@ -75,19 +75,19 @@
 %>
     }
     	
-    public void write(String __filename) throws IOException 
+    public void write(String __filename) throws Exception 
     {
         FileBitStreamWriter __out = new FileBitStreamWriter(__filename);
         write(__out, new CallChain());
         __out.close();
     }
 
-    public void write(BitStreamWriter __out) throws IOException 
+    public void write(BitStreamWriter __out) throws Exception 
     {
     	write(__out, new CallChain());
     }
 
-    public void write(BitStreamWriter __out, CallChain __cc) throws IOException 
+    public void write(BitStreamWriter __out, CallChain __cc) throws Exception 
     {
         try 
         {
@@ -148,7 +148,7 @@
 	}	// end of for (Field field : s.getFields())
 %>
             } 
-            catch (IOException __e1) 
+            catch (Exception __e1) 
             {
                 __out.setBitPosition(__fpos);
                 throw __e1;

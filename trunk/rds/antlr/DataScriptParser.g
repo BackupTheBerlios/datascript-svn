@@ -112,6 +112,7 @@ tokens
     QUESTIONMARK<AST=datascript.ast.Expression>;
     DOT<AST=datascript.ast.Expression>;
     LPAREN<AST=datascript.ast.Expression>;
+    SUM<AST=datascript.ast.Expression>;
     BIG;
     LITTLE;
 	ZIP;
@@ -588,6 +589,7 @@ unaryExpression
     |   unaryOperand
     |   sizeOfOperand
     |   lengthOfOperand
+    |   sumFunction
     ;
 
 unaryOperand!
@@ -609,6 +611,11 @@ sizeOfOperand!
 lengthOfOperand!
     :   "lengthof"^ e:unaryExpression
         { #lengthOfOperand = #([LENGTHOF, "LENGTHOF"], e); }
+    ;
+
+sumFunction
+    :   "sum"  LPAREN! a:functionArgument RPAREN!
+        { #sumFunction = #([SUM, "SUM"], a); }
     ;
 
 postfixExpression!

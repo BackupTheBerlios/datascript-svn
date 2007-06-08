@@ -70,7 +70,7 @@ public class SubtypeTest extends TestCase
         assertEquals(size, u.sizeof());
     }
 
-    public void testUnsigned1() throws IOException
+    public void testUnsigned1() throws Exception
     {
         int size = writeSubtype(200, 12);
         Tile u = new Tile(fileName);
@@ -83,7 +83,7 @@ public class SubtypeTest extends TestCase
         assert(u.equals(u2));
     }
 
-    public void testUnsigned2() throws IOException
+    public void testUnsigned2() throws Exception
     {
         int size = writeSubtype(40000, 0xCAFECAFEL);
         Tile u = new Tile(fileName);
@@ -96,7 +96,7 @@ public class SubtypeTest extends TestCase
         assert(u.equals(u2));
     }
 
-    public void testUnsigned3() throws IOException
+    public void testUnsigned3() throws Exception
     {
         int size = writeSubtype(4, 10000);
         Tile u = new Tile(fileName);

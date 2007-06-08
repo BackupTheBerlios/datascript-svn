@@ -45,7 +45,7 @@
     UnionType u = e.getUnionType();
 %>
 
-    public void write(BitStreamWriter __out, CallChain __cc) throws IOException 
+    public void write(BitStreamWriter __out, CallChain __cc) throws Exception 
     {
     	switch (__choiceTag)
     	{

@@ -38,6 +38,7 @@
 package datascript.runtime.array;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
@@ -128,6 +129,18 @@ public class UnsignedShortArray implements Array, SizeOf
     public int sizeof()
     {
         return 2 * length;
+    }
+
+    public int sum() throws Exception
+    {
+        long retVal = 0;
+        for (int i : data)
+        {
+            retVal += i;
+        }
+        if (retVal > Integer.MAX_VALUE)
+            throw new Exception("result is too big for an integer");
+        return (int)retVal;
     }
 
     public Array map(Mapping m)

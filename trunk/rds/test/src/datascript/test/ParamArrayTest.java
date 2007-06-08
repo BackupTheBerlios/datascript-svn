@@ -94,7 +94,7 @@ public class ParamArrayTest extends TestCase
     /*
      * Test method for 'datascript.library.BitStreamReader.readByte()'
      */
-    public  void testParamArray1() throws IOException
+    public  void testParamArray1() throws Exception
     {
         short[] sizes = new short[] {1, 3, 2};
         

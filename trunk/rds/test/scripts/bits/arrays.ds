@@ -3,6 +3,17 @@ package bits.arrays;
 import bits.*;
 
 /**
+ * Test for sum(array), that computes the sum of all items in an array.
+ */
+LinkTable
+{
+    bit:1         r[8];
+    uint8         numRefsInLevel[sum(r)];
+    bit<sum(r)>   b;
+};
+
+
+/**
  * first meaningless doc 
  */
 IntegerArray

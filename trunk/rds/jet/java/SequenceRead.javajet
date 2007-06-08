@@ -51,24 +51,24 @@
     {
     }
         	
-    public <%=name%>(String __filename<%=formalPar%>) throws IOException 
+    public <%=name%>(String __filename<%=formalPar%>) throws Exception 
     {
         FileBitStreamReader __in = new FileBitStreamReader(__filename);
         read(__in, new CallChain()<%=actualPar%>);
         __in.close();
     }
 
-    public <%=name%>(BitStreamReader __in<%=formalPar%>) throws IOException 
+    public <%=name%>(BitStreamReader __in<%=formalPar%>) throws Exception 
     {
     	read(__in, new CallChain()<%=actualPar%>);
     }
 
-    public <%=name%>(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws IOException 
+    public <%=name%>(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws Exception 
     {
     	read(__in, __cc<%=actualPar%>);
     }
 
-    public void read(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws IOException 
+    public void read(BitStreamReader __in, CallChain __cc<%=formalPar%>) throws Exception 
     {
 <%
 	for (Parameter param : s.getParameters())
@@ -138,7 +138,7 @@
 	}	// end of for (Field field : s.getFields())
 %>
             }
-            catch (IOException __e1)
+            catch (Exception __e1)
             {
                 __in.setBitPosition(__fpos);
                 throw __e1;

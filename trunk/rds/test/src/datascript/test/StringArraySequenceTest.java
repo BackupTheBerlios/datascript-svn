@@ -57,7 +57,7 @@ public class StringArraySequenceTest extends TestCase
         }
     }
 
-    public void testStrings1() throws IOException
+    public void testStrings1() throws Exception
     {
         String testPattern[] = {"", "ABC", "abcdef"};
         

@@ -153,6 +153,11 @@ public class ExpressionEmitter
                 append(expr.op1());
                 buffer.append(".sizeof()");
                 return;
+            case DataScriptParserTokenTypes.SUM:
+                buffer.append("sum(");
+                append(expr.op1());
+                buffer.append(")");
+                return;
             default:
                 throw new UnsupportedOperationException();
         }

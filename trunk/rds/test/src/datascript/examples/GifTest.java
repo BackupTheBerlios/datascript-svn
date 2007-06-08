@@ -183,7 +183,7 @@ public class GifTest extends TestCase
         System.out.println();
     }
     
-    public void testGif() throws IOException
+    public void testGif() throws Exception
     {            
         ident = "";
         gifFile gif = new gifFile(fileName);

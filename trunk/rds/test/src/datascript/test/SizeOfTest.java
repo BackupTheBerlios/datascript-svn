@@ -91,7 +91,7 @@ public class SizeOfTest extends TestCase
         assertEquals(size, as.sizeof());
     }
 
-    public void testArray1() throws IOException
+    public void testArray1() throws Exception
     {
         int size = writeArray(2, 20);
         VarArrayWithSize as = new VarArrayWithSize(fileName);
@@ -103,7 +103,7 @@ public class SizeOfTest extends TestCase
         checkArray(as2, size, 2, 20);
     }
 
-    public void testArray2() throws IOException
+    public void testArray2() throws Exception
     {
         int size = writeArray(10, 2000);
         VarArrayWithSize as = new VarArrayWithSize(fileName);
@@ -115,7 +115,7 @@ public class SizeOfTest extends TestCase
         checkArray(as2, size, 10, 2000);
     }
 
-    public void testArray3() throws IOException
+    public void testArray3() throws Exception
     {
         int size = writeArray(100, 20000);
         VarArrayWithSize as = new VarArrayWithSize(fileName);

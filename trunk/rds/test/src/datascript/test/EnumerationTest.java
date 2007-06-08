@@ -78,7 +78,7 @@ public class EnumerationTest extends TestCase
         assertEquals(size, e.sizeof());
     }
 
-    public void testUnsigned1() throws IOException
+    public void testUnsigned1() throws Exception
     {
         int size = writeEnums(Colour.RED, Colour.BLUE, Dimension.HEIGHT, Dimension.LENGTH);
         Enums e = new Enums(fileName);
@@ -91,7 +91,7 @@ public class EnumerationTest extends TestCase
         assertTrue(e.equals(e2));
     }
 
-    public void testUnsigned2() throws IOException
+    public void testUnsigned2() throws Exception
     {
         int size = writeEnums(Colour.GREEN, Colour.YELLOW, Dimension.WIDTH, Dimension.HEIGHT);
         Enums e = new Enums(fileName);
@@ -104,7 +104,7 @@ public class EnumerationTest extends TestCase
         assertTrue(e.equals(e2));
     }
 
-    public void testUnsigned3() throws IOException
+    public void testUnsigned3() throws Exception
     {
         int size = writeEnums(Colour.YELLOW, Colour.BLUE, Dimension.HEIGHT, Dimension.WIDTH);
         Enums e = new Enums(fileName);
@@ -117,7 +117,7 @@ public class EnumerationTest extends TestCase
         assertTrue(e.equals(e2));
     }
     
-    public void testDuplicateEnum() throws IOException
+    public void testDuplicateEnum() throws Exception
     {
     	DuplicateEnum de = new DuplicateEnum();
     	de.setColour(Colour.RED);

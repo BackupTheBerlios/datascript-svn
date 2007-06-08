@@ -94,7 +94,7 @@ public class OptionalArrayTest extends TestCase
         return size;
     }
     
-    public void testOptionalArray1() throws IOException
+    public void testOptionalArray1() throws Exception
     {
         int size = writeData(5);
         OptionalArraySequence oas = new OptionalArraySequence(fileName);
@@ -107,7 +107,7 @@ public class OptionalArrayTest extends TestCase
         assertTrue(oas.equals(oas2));
     }
     
-    public void testOptionalArray2() throws IOException
+    public void testOptionalArray2() throws Exception
     {
         int size = writeData(0);
         OptionalArraySequence oas = new OptionalArraySequence(fileName);

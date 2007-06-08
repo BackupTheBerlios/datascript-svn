@@ -105,24 +105,7 @@ public class Expression extends TokenAST
             ToolContext.logError(op, "integer type expected");
         }                        
     }
-
-/*    
-    public void evaluate(Scope scope)
-    {
-        this.scope = scope;
-        switch (getType())
-        {
-            case DataScriptParserTokenTypes.ID:
-                evaluateIdentifier();
-                break;
-
-            default:
-                throw new InternalError("illegal operation: type = " + 
-                                        getType());
-                
-        }
-    }
-*/    
+  
     public void evaluate(Scope scope)
     {
         //System.out.println("evaluating " + getText() + " in " + scope.getOwner());
@@ -190,6 +173,10 @@ public class Expression extends TokenAST
 
             case DataScriptParserTokenTypes.SIZEOF:
                 evaluateSizeOfExpression();
+                break;
+
+            case DataScriptParserTokenTypes.SUM:
+                evaluateSumFunction();
                 break;
 
             default:
@@ -466,5 +453,15 @@ public class Expression extends TokenAST
     {
         type = IntegerType.integerType;
         value = null;
+    }
+    
+    private void evaluateSumFunction()
+    {
+        type = IntegerType.integerType;
+        value = null;
+        if (!(op1().getExprType() instanceof ArrayType))
+        {
+            ToolContext.logError(op1(), "sum function requires array type argument");            
+        }
     }
 }

@@ -51,7 +51,7 @@ public class LabelTest extends TestCase
     /*
      * Test method for 'datascript.library.BitStreamReader.readByte()'
      */
-    public  void testLabel1() throws IOException
+    public  void testLabel1() throws Exception
     {
         os = new FileImageOutputStream(file);
         short numItems = 3;

@@ -92,7 +92,7 @@ public class UnionTest extends TestCase
         assertEquals(size, b.sizeof());
     }
 
-    public void testUnion1() throws IOException
+    public void testUnion1() throws Exception
     {
         int size = writeUnion(8, 65);
         BaseTypes b = new BaseTypes(fileName);
@@ -105,7 +105,7 @@ public class UnionTest extends TestCase
         assertTrue(b.equals(b2));
     }
 
-    public void testUnion2() throws IOException
+    public void testUnion2() throws Exception
     {
         int size = writeUnion(16, 2000);
         BaseTypes b = new BaseTypes(fileName);
@@ -118,7 +118,7 @@ public class UnionTest extends TestCase
         assertTrue(b.equals(b2));
     }
 
-    public void testUnion3() throws IOException
+    public void testUnion3() throws Exception
     {
         int size = writeUnion(32, 123123);
         BaseTypes b = new BaseTypes(fileName);

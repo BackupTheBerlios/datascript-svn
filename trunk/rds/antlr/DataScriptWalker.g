@@ -391,6 +391,7 @@ expression
     |   ID
     |   INTEGER_LITERAL 
     |   STRING_LITERAL
+    |   #(SUM expression)
     ;
 
 

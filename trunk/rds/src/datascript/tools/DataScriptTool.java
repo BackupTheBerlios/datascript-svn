@@ -70,7 +70,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.9.6 (07 Jun 2007)";
+    private static final String VERSION = "rds 0.9.7 (08 Jun 2007)";
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -174,7 +174,7 @@ public class DataScriptTool implements Parameters
             walker.setContext(context);
             walker.root(rootNode);
             if (context.getErrorCount() != 0)
-                throw new ParserException("Parser errors.");
+                throw new ParserException("Walker: Parser errors.");
         }
 
         // create name scopes and resolve references
@@ -183,7 +183,7 @@ public class DataScriptTool implements Parameters
         typeEval.pushScope(globals);
         typeEval.root(rootNode);
         if (context.getErrorCount() != 0)
-            throw new ParserException("Parser errors.");
+            throw new ParserException("TypeEvaluator: Parser errors.");
         Package.linkAll();
         
         // check expression types and evaluate constant expressions
@@ -192,7 +192,7 @@ public class DataScriptTool implements Parameters
         exprEval.pushScope(globals);
         exprEval.root(rootNode);
         if (context.getErrorCount() != 0)
-            throw new ParserException("Parser errors.");
+            throw new ParserException("ExpressionEvaluator: Parser errors.");
     }
 
 

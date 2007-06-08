@@ -40,6 +40,7 @@ package datascript.runtime.array;
 import java.io.DataInput;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.math.BigInteger;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
@@ -133,6 +134,18 @@ public class ByteArray implements Array, SizeOf
     public int sizeof()
     {
         return length;
+    }
+
+    public int sum() throws Exception
+    {
+        long retVal = 0;
+        for (byte bi : data)
+        {
+            retVal += bi;
+        }
+        if (retVal > Integer.MAX_VALUE)
+            throw new Exception("result is too big for an integer");
+        return (int)retVal;
     }
 
     /**

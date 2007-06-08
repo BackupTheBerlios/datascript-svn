@@ -39,6 +39,7 @@ package datascript.runtime.array;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.math.BigInteger;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
@@ -104,6 +105,18 @@ public class ShortArray implements Array, SizeOf
     public int length()
     {
         return length;
+    }
+
+    public int sum() throws Exception
+    {
+        long retVal = 0;
+        for (short si : data)
+        {
+            retVal += si;
+        }
+        if (retVal > Integer.MAX_VALUE)
+            throw new Exception("result is too big for an integer");
+        return (int)retVal;
     }
 
     public int sizeof()

@@ -104,7 +104,7 @@ public class ObjectArray<E> implements Array, SizeOf
         return data.size();
     }
 
-    public void write(BitStreamWriter out, CallChain cc) throws IOException
+    public void write(BitStreamWriter out, CallChain cc) throws Exception
     {
         for (int i = 0; i < data.size(); i++)
         {

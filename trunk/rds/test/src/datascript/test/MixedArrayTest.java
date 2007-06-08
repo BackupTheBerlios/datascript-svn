@@ -114,7 +114,7 @@ public class MixedArrayTest extends TestCase
         return size;
     }
 
-    public void testArray1() throws IOException
+    public void testArray1() throws Exception
     {
         int size = writeArray(10, 20);
         MixedArray array = new MixedArray(fileName);
@@ -127,7 +127,7 @@ public class MixedArrayTest extends TestCase
         assertTrue(array.equals(array2));
     }
 
-    public void testArray2() throws IOException
+    public void testArray2() throws Exception
     {
     	int size = writeArray(10, 20);
         MixedArray array = new MixedArray(fileName);
@@ -140,7 +140,7 @@ public class MixedArrayTest extends TestCase
         assertTrue(array.equals(array2));
     }
 
-    public void testArray3() throws IOException
+    public void testArray3() throws Exception
     {
         int size = writeArray(1000, 20000);
         MixedArray array = new MixedArray(fileName);
@@ -153,7 +153,7 @@ public class MixedArrayTest extends TestCase
         assertTrue(array.equals(array2));
     }
 
-    public void testEmptyArray() throws IOException
+    public void testEmptyArray() throws Exception
     {
         int size = writeArray(0, 0);
         MixedArray array = new MixedArray(fileName);
