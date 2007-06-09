@@ -1,0 +1,112 @@
+<%
+/* BSD License
+ *
+ * Copyright (c) 2007, Henrik Wedekind, Harman/Becker Automotive Systems
+ * All rights reserved.
+ * 
+ * This software is derived from previous work
+ * Copyright (c) 2003, Godmar Back.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ * 
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ * 
+ *     * Neither the name of Harman/Becker Automotive Systems or
+ *       Godmar Back nor the names of their contributors may be used to
+ *       endorse or promote products derived from this software without
+ *       specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+%>
+<%@ jet package="datascript.jet.html" 
+        imports="datascript.ast.* datascript.emit.html.*" 
+        class="Enum" %>
+<% 
+    ContentEmitter e = (ContentEmitter) argument;
+    EnumType s = e.getEnum();
+    String typeName = s.getName();
+
+%>
+<html>
+  <head>
+    <title>enum <%=e.getPackageName()%>.<%=typeName%></title>
+    <link rel="stylesheet" type="text/css" href="../webStyles.css">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+
+    <h2><%=e.getPackageName()%></h2>
+    <div class="msgdetail"><i>enum</i> <%=typeName%></div>
+    <p/>
+    <%=e.getDocumentation(s)%>
+
+    <table>
+    <tr><td class="docuCode">
+      <table>
+<%
+	// show the structure of this type
+
+%>
+	  <tr><td colspan=3>enum <%=TypeNameEmitter.getTypeName(s.getBaseType())%> <%=typeName%></td></tr>
+	  <tr><td>{</td><td rowspan="<%=s.size()+1%>">&nbsp;</td><td></td></tr>
+<%
+    java.util.Iterator<EnumItem> enumItems = s.getItems().iterator();
+    while (enumItems.hasNext())
+    {
+        EnumItem i = enumItems.next();
+    	String iName = i.getName();
+        IntegerValue iValue = i.getValue();
+%>
+        <tr>
+        	<td id="tabIdent"><a href="#<%=iName%>" class="fieldLink"><%=iName%></a></td>
+        	<td>= <%=iValue%><%=enumItems.hasNext()? "," : ""%></td>
+	    </tr>
+<%
+    }    
+%>
+	  <tr><td colspan=3>};</td></tr>
+      </table>
+    </td></tr>
+    </table>
+
+
+    <h2>Item Details</h2>
+    
+    <dl>
+<%
+	// show information for each item
+    for (EnumItem i : s.getItems())
+    {
+    	String iName = i.getName();
+    	String doc = e.getDocumentation(i);
+%>
+      <dt class="memberItem"><a name="<%=iName%>"><%=iName%>:</a></dt>  
+      <dd class="memberDetail">
+        <%=doc.equals("")? "&lt;<i>no documentation found</i>&gt;" : doc %>
+      </dd>
+<%
+    }    
+%>    
+    </dl>
+
+  </body>
+</html>

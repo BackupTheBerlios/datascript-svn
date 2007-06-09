@@ -1,0 +1,115 @@
+<%
+/* BSD License
+ *
+ * Copyright (c) 2007, Henrik Wedekind, Harman/Becker Automotive Systems
+ * All rights reserved.
+ * 
+ * This software is derived from previous work
+ * Copyright (c) 2003, Godmar Back.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ * 
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ * 
+ *     * Neither the name of Harman/Becker Automotive Systems or
+ *       Godmar Back nor the names of their contributors may be used to
+ *       endorse or promote products derived from this software without
+ *       specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+%>
+<%@ jet package="datascript.jet.html" 
+        imports="datascript.emit.html.*" 
+        class="PackageBegin" %>
+<% 
+    PackageEmitter e = (PackageEmitter) argument;
+    String pkg = e.getRootPackageName(); 
+%>
+<html>
+  <head>
+    <title>DataScript Package-List</title>
+    <link rel="stylesheet" type="text/css" href="webStyles.css">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script language="JavaScript">
+    	/*
+    	 * returns an array of CSS rules
+    	 */
+    	function getCSS(docToChange, index)
+    	{
+    	return null;
+    		if (!docToChange.styleSheets)
+    			return null;
+
+			var theRules = new Array();
+			var styleSheet = docToChange.styleSheets[index];
+			if (styleSheet.cssRules)
+				theRules = styleSheet.cssRules
+			else if (styleSheet.rules)
+				theRules = styleSheet.rules
+			else
+				return null;
+			return theRules;
+    	}
+
+
+    	function showhidePackage(clickedElement)
+    	{
+	    	clickedElement.style.listStyleType =  
+	    		(clickedElement.style.listStyleType == 'circle')? 'disc' : 'circle';
+
+	   		docToChange = parent.overview.document;
+			theRules = getCSS(docToChange, 0);
+			if (theRules)
+			{
+				styleToChange = theRules[theRules.length-1].style;				
+				styleToChange.display = 
+					(styleToChange.getPropertyValue('display') == 'none')? 'list-item' : 'none';
+			}
+			else
+			{
+    			var styleItemId = "style_" + clickedElement.firstChild.firstChild.data.replace(/\./g, '_');
+		    	var styleElement = docToChange.getElementById(styleItemId);
+<%
+				/* DEBUG: show DOM object browser */
+		   		//parent.obrowser.getObjectBrowser().showProperties(styleElement, "styleElement");
+%>
+				var styleElementSheet = (styleElement.sheet)? styleElement.sheet : styleElement.styleSheet;
+		    	var styleElementRules = (styleElementSheet.rules)? styleElementSheet.rules : styleElementSheet.cssRules;
+		    	var styleElementStyle = styleElementRules[0].style;
+		    	styleElementStyle.display = (styleElementStyle.display == "none")? "list-item" : "none";
+<%
+		    	//var classItems = new Array();
+		    	//classItems = docToChange.getElementById(clickedElement.firstChild.firstChild.data.replace(/\./g, '_'));
+				//displayVal = (classItems[0].style.display == "none")? "list-item" : "none";
+
+				//for (i = 0; i < classItems.length; i++)
+				//{
+				//	classItems[i].style.display = displayVal;
+				//}
+%>
+			}
+    	}
+    </script>
+  </head>
+
+  <body>
+    <h2>DataScript Package: <%=pkg%></h2>
