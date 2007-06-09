@@ -225,19 +225,8 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     private void emitEnumeration(EnumType e)
     {
-        currentType = e;
-        PrintStream indexOut = out;
-        try
-        {
-            openOutputFile(directory, e.getName() + HTML_EXT);
-            String result = enumTmpl.generate(this);
-            out.print(result);
-            out.close();
-        }
-        finally
-        {
-            out = indexOut;
-        }
+    	EnumerationEmitter ee = new EnumerationEmitter();
+    	ee.emit(e);
     }
 
     private void emitSubtype(Subtype s)

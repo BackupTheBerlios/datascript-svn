@@ -63,6 +63,11 @@ public class EnumType extends SetType
         return count;
     }
     
+    public int getNumItems()
+    {
+    	return size();
+    }
+    
     public Iterable<EnumItem> getItems()
     {
         if (members == null)

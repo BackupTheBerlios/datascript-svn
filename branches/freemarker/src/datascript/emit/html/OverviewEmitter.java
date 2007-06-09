@@ -2,16 +2,13 @@ package datascript.emit.html;
 
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
 import antlr.collections.AST;
-import datascript.antlr.util.TokenAST;
 import datascript.ast.DataScriptException;
 import datascript.ast.TypeInterface;
 import freemarker.template.Configuration;
@@ -22,7 +19,6 @@ import freemarker.template.Template;
 public class OverviewEmitter extends DefaultHTMLEmitter
 {
 	protected Configuration cfg = new Configuration();
-	private List<String> packages = new ArrayList<String>();
 	private Map<String, LinkedType> typeMap = new TreeMap<String, LinkedType>();
 
     private HashSet<String> packageNames = new HashSet<String>();
@@ -66,7 +62,6 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     	for (String typeName : currentPackage.getLocalTypeNames())
     	{
     		TypeInterface t = currentPackage.getLocalType(typeName);
-    		//TokenAST type = (TokenAST) t;
     		LinkedType linkedType = new LinkedType(pkgName, t);
     		typeMap.put(typeName, linkedType);
     	}
