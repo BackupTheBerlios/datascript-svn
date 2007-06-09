@@ -81,30 +81,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
     {
     }
     
-    public void endTranslationUnit_()
-    {
-        /* now producing the real content */
-        directory = new File(directory, contentFolder);
-        setCurrentFolder(contentFolder);
-
-        for (Pair<String, TokenAST> p : typeMap.values())
-        {
-            TypeInterface type = (TypeInterface) p.getSecond();
-            if (type instanceof CompoundType)
-            {
-                emitCompound((CompoundType) type);
-            }
-            else if (type instanceof EnumType)
-            {
-                emitEnumeration((EnumType) type);
-            }
-            else if (type instanceof Subtype)
-            {
-                emitSubtype((Subtype) type);
-            }
-        }
-    }
-
 
     public void endPackage(AST p)
     {
