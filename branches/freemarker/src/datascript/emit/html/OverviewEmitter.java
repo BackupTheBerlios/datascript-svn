@@ -18,7 +18,6 @@ import freemarker.template.Template;
 
 public class OverviewEmitter extends DefaultHTMLEmitter
 {
-	protected Configuration cfg = new Configuration();
 	private Map<String, LinkedType> typeMap = new TreeMap<String, LinkedType>();
 
     private HashSet<String> packageNames = new HashSet<String>();
@@ -28,13 +27,6 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     public Set<String> getPackageNames()
     {
         return packageNames;
-    }
-
-    @Override
-    public void beginRoot(AST rootNode)
-    {
-    	cfg.setClassForTemplateLoading(getClass(), "../../..");
-    	cfg.setObjectWrapper(new DefaultObjectWrapper());
     }
 
     @Override

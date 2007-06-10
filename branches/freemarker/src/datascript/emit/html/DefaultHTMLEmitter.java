@@ -9,9 +9,13 @@ import datascript.antlr.util.TokenAST;
 import datascript.ast.Package;
 import datascript.ast.TypeInterface;
 import datascript.emit.DefaultEmitter;
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
 
 abstract public class DefaultHTMLEmitter extends DefaultEmitter
 {
+	protected Configuration cfg = new Configuration();
+	
     protected class Pair<A, B>
     {
         private A first;
@@ -44,7 +48,12 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
     private String currentFolder = "/";
     protected Package currentPackage;
 
-
+    public DefaultHTMLEmitter()
+    {
+    	cfg.setClassForTemplateLoading(getClass(), "../../..");
+    	cfg.setObjectWrapper(new DefaultObjectWrapper());    	
+    }
+    
     public void setCurrentFolder(String currentFolder)
     {
         this.currentFolder = currentFolder;

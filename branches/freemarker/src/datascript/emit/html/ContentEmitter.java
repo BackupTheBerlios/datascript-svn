@@ -60,13 +60,11 @@ import datascript.ast.TypeInterface;
 import datascript.ast.UnionType;
 import datascript.jet.html.Comment;
 import datascript.jet.html.Compound;
-import datascript.jet.html.Enum;
 
 
 public class ContentEmitter extends DefaultHTMLEmitter
 {
     private Compound compoundTmpl = new Compound();
-    private Enum enumTmpl = new Enum();
     private datascript.jet.html.Subtype subtypeTmpl = new datascript.jet.html.Subtype();
 
     /**** implementation of abstract methods ****/
@@ -76,11 +74,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
         directory = new File(directory, contentFolder);
         setCurrentFolder(contentFolder);
     }
-    
-    public void beginTranslationUnit(AST rootNode, AST unitNode)
-    {
-    }
-    
+       
 
     public void endPackage(AST p)
     {

@@ -1,3 +1,4 @@
+<#include "comment.html.ftl">
 <html>
   <head>
     <title>enum ${packageName}.${type.name}</title>
@@ -9,7 +10,7 @@
     <h2>${packageName}</h2>
     <div class="msgdetail"><i>enum</i> ${type.name}</div>
     <p/>
-    ${self.getDocumentation(type)}
+    <@comment foo/>
 
     <table>
     <tr><td class="docuCode">
@@ -35,7 +36,9 @@
 <#list items as item>	  
       <dt class="memberItem"><a name="${item.name}">${item.name}:</a></dt>  
       <dd class="memberDetail">
-        ${self.getDocumentation(item)!"&lt;<i>no documentation found</i>&gt;"}
+<#assign itemdoc = getItemDocumentation(item)>
+      <@comment itemdoc/>
+        <#--if itemdoc?length == 0>&lt;<i>no documentation found</i>&gt;<#else>${itemdoc}</#if-->
       </dd>
 </#list>
     </dl>

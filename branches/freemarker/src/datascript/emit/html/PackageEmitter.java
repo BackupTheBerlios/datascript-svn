@@ -14,16 +14,8 @@ import freemarker.template.Template;
 
 public class PackageEmitter extends DefaultHTMLEmitter
 {
-	protected Configuration cfg = new Configuration();
 	private List<String> packages = new ArrayList<String>();
 
-
-    @Override
-    public void beginRoot(AST rootNode)
-    {
-    	cfg.setClassForTemplateLoading(getClass(), "../../..");
-    	cfg.setObjectWrapper(new DefaultObjectWrapper());
-    }
 
     @Override
     public void endRoot()
