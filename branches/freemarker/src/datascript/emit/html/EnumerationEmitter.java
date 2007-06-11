@@ -62,7 +62,7 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
     	return baseTypeName;
     }
     
-    public Comment getFoo()
+    public Comment getDocumentation()
     {
     	Comment comment = new Comment();
     	String doc = enumeration.getDocumentation();

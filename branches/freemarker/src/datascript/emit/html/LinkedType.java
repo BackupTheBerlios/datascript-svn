@@ -78,7 +78,7 @@ public class LinkedType
             category += "array of ";
         }
 
-    	if (!TypeNameEmitter.isBuildinType(type))
+    	if (!TypeNameEmitter.isBuiltinType(type))
     	{
             // generate styles depends on the fiel type
 
@@ -152,6 +152,6 @@ public class LinkedType
     
     public String getPackageName()
     {
-    	return pkgName.replace('.', '_');
+    	return (pkgName == null)? null : pkgName.replace('.', '_');
     }
 }

@@ -10,7 +10,7 @@
     <h2>${packageName}</h2>
     <div class="msgdetail"><i>enum</i> ${type.name}</div>
     <p/>
-    <@comment foo/>
+    <@comment documentation/>
 
     <table>
     <tr><td class="docuCode">
@@ -19,10 +19,10 @@
 	  <tr><td colspan=3>enum ${baseType} ${type.name}</td></tr>
 	  <tr><td>{</td><td rowspan=${type.numItems+1}">&nbsp;</td><td></td></tr>
 <#list items as item>	  
-        <tr>
-        	<td id="tabIdent"><a href="#${item.name}" class="fieldLink">${item.name}</a></td>
-        	<td>= ${item.value}<#if item_has_next>,</#if></td>
-	    </tr>
+          <tr>
+       	    <td id="tabIdent"><a href="#${item.name}" class="fieldLink">${item.name}</a></td>
+            <td>= ${item.value}<#if item_has_next>,</#if></td>
+	  </tr>
 </#list>
 	  <tr><td colspan=3>};</td></tr>
       </table>
@@ -36,9 +36,7 @@
 <#list items as item>	  
       <dt class="memberItem"><a name="${item.name}">${item.name}:</a></dt>  
       <dd class="memberDetail">
-<#assign itemdoc = getItemDocumentation(item)>
-      <@comment itemdoc/>
-        <#--if itemdoc?length == 0>&lt;<i>no documentation found</i>&gt;<#else>${itemdoc}</#if-->
+      <@comment getItemDocumentation(item)/>
       </dd>
 </#list>
     </dl>

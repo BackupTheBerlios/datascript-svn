@@ -64,7 +64,6 @@ import datascript.jet.html.Compound;
 
 public class ContentEmitter extends DefaultHTMLEmitter
 {
-    private Compound compoundTmpl = new Compound();
     private datascript.jet.html.Subtype subtypeTmpl = new datascript.jet.html.Subtype();
 
     /**** implementation of abstract methods ****/
@@ -200,21 +199,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
         return (TypeInterface) p.getSecond();
     }
     
-    private void emitCompound(CompoundType seq)
+    private void emitCompound(CompoundType ct)
     {
-        currentType = seq;
-        PrintStream indexOut = out;
-        try
-        {
-            openOutputFile(directory, seq.getName() + HTML_EXT);
-            String result = compoundTmpl.generate(this);
-            out.print(result);
-            out.close();
-        }
-        finally
-        {
-            out = indexOut;
-        }
+    	CompoundEmitter ce = new CompoundEmitter();
+    	ce.emit(ct);
     }
 
     private void emitEnumeration(EnumType e)

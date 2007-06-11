@@ -75,7 +75,7 @@ public class TypeNameEmitter
 
     public String getOptionalClause(Field field)
     {
-        String result = null;
+        String result = "";
         Expression expr = field.getOptionalClause();
         if (expr != null)
         {
@@ -105,7 +105,7 @@ public class TypeNameEmitter
     }
 
 
-    public static boolean isBuildinType(TypeInterface t)
+    public static boolean isBuiltinType(TypeInterface t)
     {
         if (t instanceof StdIntegerType ||
             t instanceof BitFieldType ||
@@ -115,7 +115,7 @@ public class TypeNameEmitter
         }
         else if (t instanceof ArrayType)
         {
-            return isBuildinType(((ArrayType)t).getElementType());
+            return isBuiltinType(((ArrayType)t).getElementType());
         }
         
         return false;
