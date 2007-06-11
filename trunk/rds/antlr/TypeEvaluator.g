@@ -158,7 +158,7 @@ parameterDefinition
 enumDeclaration
     : #(e:"enum" builtinType 
         (i:ID                		{ scope().setTypeSymbol(i, e); }
-        )?                              { pushScope(); ((EnumType)e).setScope(scope()); }
+        )?                              { pushScope(); ((EnumType)e).setScope(scope(), pkg); }
         enumMemberList[e])              { popScope(); }
     ;
 
@@ -250,7 +250,7 @@ paramTypeInstantiation
 sequenceDeclaration
     :   #(s:SEQUENCE 
           (i:ID      		{ scope().setTypeSymbol(i, s); }
-          )?			{ pushScope(); ((SequenceType)s).setScope(scope()); }
+          )?			{ pushScope(); ((SequenceType)s).setScope(scope(), pkg); }
           (parameterList)? 	
           memberList)		{ popScope(); 
                                   ((SequenceType)s).storeParameters(); 
@@ -262,7 +262,7 @@ unionDeclaration
     :   #(u:UNION 
     
           (i:ID      		{ scope().setTypeSymbol(i, u); }
-          )?			{ pushScope(); ((UnionType)u).setScope(scope()); }
+          )?			{ pushScope(); ((UnionType)u).setScope(scope(), pkg); }
           (parameterList)? 	
           memberList)		{ popScope(); 
                                   ((UnionType)u).storeParameters();
@@ -334,7 +334,7 @@ integerType
 
 sqlDatabaseDefinition
     : #(s:SQL_DATABASE i:ID              { scope().setTypeSymbol(i, s); pushScope();
-    					   ((CompoundType)s).setScope(scope()); }
+    					   ((CompoundType)s).setScope(scope(), pkg); }
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)? 
         (sqlTableField)+ 
@@ -345,7 +345,7 @@ sqlDatabaseDefinition
     
 sqlPragmaBlock
     : #(p:SQL_PRAGMA                     { pushScope(); 
-                                           ((CompoundType)p).setScope(scope()); }
+                                           ((CompoundType)p).setScope(scope(), pkg); }
         (sqlPragma)+)                    { popScope(); }
     ;
     
@@ -369,7 +369,7 @@ sqlPragmaType
     ;
 
 sqlMetadataBlock
-    : #(m:SQL_METADATA 			{ pushScope(); ((CompoundType)m).setScope(scope()); }
+    : #(m:SQL_METADATA 			{ pushScope(); ((CompoundType)m).setScope(scope(), pkg); }
        (sqlMetadataField)+ )            { popScope(); }  
     ;
     
@@ -413,7 +413,7 @@ sqlTableDefinition[AST fd]
 
 sqlTableDeclaration
     : #(s:SQL_TABLE i:ID                 { scope().setTypeSymbol(i, s); pushScope();
-    	  				   ((CompoundType)s).setScope(scope()); }
+    	  				   ((CompoundType)s).setScope(scope(), pkg); }
         (sqlFieldDefinition)+
         (c:sqlConstraint                   { ((SqlTableType)s).setSqlConstraint(c); } 
         )?
@@ -437,7 +437,7 @@ sqlConstraint
     ;  
     
 sqlIntegerDeclaration
-    : #(i:SQL_INTEGER                    { pushScope(); ((CompoundType)i).setScope(scope()); }
+    : #(i:SQL_INTEGER                    { pushScope(); ((CompoundType)i).setScope(scope(), pkg); }
         (DOC)? (sqlIntegerFieldDefinition)+ )
         				 { popScope(); }
     ;

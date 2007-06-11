@@ -116,4 +116,9 @@ public class Subtype extends TokenAST implements TypeInterface
     {
         return "SUBTYPE";
     }
+
+    public Package getPackage()
+    {
+    	return getBaseType().getPackage();
+    }
 }

@@ -65,7 +65,18 @@ public interface TypeInterface
      */
     Value castFrom(Value val);
 
+    /**
+     * Returns the scope defined by this type. Not supported by
+     * all derived classes.
+     * @return scope
+     */
     Scope getScope();
+    
+    /**
+     * Returns the package in which this type is defined.
+     * @return defining package
+     */
+    Package getPackage();
 
     int getLength();
 

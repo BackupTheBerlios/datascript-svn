@@ -99,4 +99,9 @@ public class StringType extends TokenAST implements TypeInterface
         return "STRING";
     }
 
+    public Package getPackage()
+    {
+    	return Package.BUILTIN;
+    }
+
 }

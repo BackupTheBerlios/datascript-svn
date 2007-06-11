@@ -52,6 +52,7 @@ public class SetType extends TokenAST implements TypeInterface
     protected HashMap items = new HashMap();
 
     protected TypeInterface type;
+    protected Package pkg;
 
     protected String name;
 
@@ -140,6 +141,11 @@ public class SetType extends TokenAST implements TypeInterface
     public Expression getLengthExpression()
     {
         throw new InternalError("not implemented");
+    }
+    
+    public Package getPackage()
+    {
+    	return pkg;
     }
     
 }
