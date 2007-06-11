@@ -178,4 +178,10 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
     {
         throw new InternalError("not implemented");
     }
+
+    public Package getPackage()
+    {
+    	return getBaseType().getPackage();
+    }
+    
 }

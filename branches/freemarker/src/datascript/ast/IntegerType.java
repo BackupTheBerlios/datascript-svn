@@ -98,4 +98,9 @@ public class IntegerType extends TokenAST implements TypeInterface
     {
         throw new InternalError("not implemented");
     }
+
+    public Package getPackage()
+    {
+    	return Package.BUILTIN;
+    }
 }

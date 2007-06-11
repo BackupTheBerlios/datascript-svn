@@ -58,6 +58,8 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     int byteOrder;
 
     private Scope scope;
+    
+    private Package pkg;
 
     private String name;
 
@@ -215,9 +217,10 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         return scope;
     }
 
-    public void setScope(Scope scope)
+    public void setScope(Scope scope, Package pkg)
     {
         this.scope = scope;
+        this.pkg = pkg;
         scope.setOwner(this);
     }
 
@@ -264,5 +267,10 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     public Expression getLengthExpression()
     {
         throw new InternalError("not implemented");
+    }
+
+    public Package getPackage()
+    {
+    	return pkg;
     }
 }

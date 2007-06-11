@@ -93,9 +93,10 @@ public class EnumType extends SetType
         return scope;
     }
     
-    public void setScope(Scope scope)
+    public void setScope(Scope scope, Package pkg)
     {
         this.scope = scope;
+        this.pkg = pkg;
         scope.setOwner(this);
         
     }

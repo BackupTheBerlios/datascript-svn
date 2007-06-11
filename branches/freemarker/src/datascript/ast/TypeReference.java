@@ -192,4 +192,8 @@ public class TypeReference extends TokenAST implements TypeInterface,
         throw new UnsupportedOperationException();
     }
     
+    public Package getPackage()
+    {
+    	return refType.getPackage();
+    }
 }

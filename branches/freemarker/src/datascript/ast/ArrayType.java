@@ -114,4 +114,8 @@ public class ArrayType extends TokenAST implements TypeInterface
         return scope;
     }
     
+    public Package getPackage()
+    {
+    	return getElementType().getPackage();
+    }
 }
