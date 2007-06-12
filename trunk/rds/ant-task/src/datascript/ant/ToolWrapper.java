@@ -99,7 +99,7 @@ public class ToolWrapper {
                         u = "file:"+f+"/";                        
                     }
                     
-                    // System.out.println("add to classpath "+ u);
+                    System.out.println("add to classpath "+ u);
                     urls.add(new URL(u));
                     
                 }catch(MalformedURLException e)
@@ -120,22 +120,36 @@ public class ToolWrapper {
         try
         {
             URL [] urls = getUrls();
-            
-            URLClassLoader classLoader = 
-                new URLClassLoader(urls,this.getClass().getClassLoader());
-            
+
+            // We have to use the PreferLocalClassLoader because running            
+            // ant in eclipse implies certain side effects which harm a
+            // correct execution. Hence we need to force java to look for
+            // classes in our URLClassLoader before any other classLoader
+            // is used.
+            ClassLoader classLoader =            	
+            	new PreferLocalClassLoader(
+            			new URLClassLoader(urls,null),
+            			this.getClass().getClassLoader());
+	                                               
             Class clazz = Class.forName(className,true,classLoader);
             
             // and now this is java magic
             Class [] pTypes = new Class[1];
             pTypes[0] = String[].class;
-            Method main = clazz.getDeclaredMethod("main", pTypes );
+            final Method main = clazz.getDeclaredMethod("main", pTypes );
             
-            Object [] allArgs = new Object[1];
+            final Object [] allArgs = new Object[1];
             allArgs[0] = args;
-            main.invoke(null, allArgs);
             
-        }catch(ClassNotFoundException e)
+			main.invoke(null, allArgs);
+				                        
+        } catch (IllegalAccessException e) {
+            throw new BuildException(
+                    "Failed to exec main on "+ className+": " + e.getMessage(),e);
+        } catch (InvocationTargetException e) {
+            throw new BuildException(
+                    "Failed to exec main on "+ className+": " + e.getMessage(),e);
+		} catch(ClassNotFoundException e)
         {
             throw new BuildException("Loading class "+ className + " failed.",e);
         }
@@ -146,12 +160,6 @@ public class ToolWrapper {
         } catch (IllegalArgumentException e) {
             throw new BuildException(
                     "Failed to exec main on "+ className +": " + e.getMessage(),e);
-        } catch (IllegalAccessException e) {
-            throw new BuildException(
-                    "Failed to exec main on "+ className+": " + e.getMessage(),e);
-        } catch (InvocationTargetException e) {
-            throw new BuildException(
-                    "Failed to exec main on "+ className+": " + e.getMessage(),e);
         }
     }
 }
