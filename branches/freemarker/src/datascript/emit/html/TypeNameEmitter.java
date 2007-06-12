@@ -86,7 +86,7 @@ public class TypeNameEmitter
 
     public String getConstraint(Field field)
     {
-        String result = null;
+        String result = "";
         Expression expr = field.getCondition();
         if (expr != null)
         {

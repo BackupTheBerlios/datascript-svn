@@ -37,6 +37,7 @@
  */
 package datascript.ast;
 
+import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -95,7 +96,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         return (parameters != null) && parameters.contains(param);
     }
 
-    public Iterable<Parameter> getParameters()
+    public List<Parameter> getParameters()
     {
         return parameters;
     }

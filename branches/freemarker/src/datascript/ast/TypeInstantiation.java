@@ -37,10 +37,10 @@
  */
 package datascript.ast;
 
+import java.util.List;
 import java.util.Vector;
 
 import antlr.collections.AST;
-
 import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
 
@@ -164,7 +164,7 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
         }
     }
     
-    public Iterable<Expression> getArguments()
+    public List<Expression> getArguments()
     {
     	return arguments;
     }

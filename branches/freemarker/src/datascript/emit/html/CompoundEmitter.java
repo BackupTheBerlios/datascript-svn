@@ -8,7 +8,7 @@ import java.util.List;
 
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
-import datascript.ast.EnumType;
+import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.SequenceType;
 import datascript.ast.SqlDatabaseType;
@@ -16,6 +16,7 @@ import datascript.ast.SqlIntegerType;
 import datascript.ast.SqlMetadataType;
 import datascript.ast.SqlPragmaType;
 import datascript.ast.SqlTableType;
+import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
@@ -26,6 +27,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
 {
     private CompoundType compound;
     private List<FieldEmitter> fields = new ArrayList<FieldEmitter>();
+    private ExpressionEmitter exprEmitter = new ExpressionEmitter();
     
     public static class FieldEmitter
     {
@@ -47,11 +49,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     	{
             TypeInterface type = field.getFieldType();
             type = TypeReference.resolveType(type);
-            String pkg = null;
-            if (type instanceof CompoundType || type instanceof EnumType)
-            {
-                pkg = type.getScope().getPackage().getPackageName();           	
-            }
+            String pkg = type.getPackage().getPackageName();
             LinkedType linkedType = new LinkedType(pkg, type);
     		return linkedType;
     	}
@@ -78,6 +76,21 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         	if (doc != null && doc.length() > 0)
         		comment.parse(doc);
             return comment;
+    	}
+    	
+    	public List<Expression> getArguments()
+    	{
+            TypeInterface type = field.getFieldType();
+            type = TypeReference.resolveType(type);
+            if (type instanceof TypeInstantiation)
+            {
+            	TypeInstantiation inst = (TypeInstantiation)type;
+            	return inst.getArguments();
+            }
+            else
+            {
+            	return null;
+            }
     	}
     }
 
@@ -204,4 +217,17 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     {
     	return fields;
     }
+    
+	public LinkedType toLinkedType(TypeInterface type1)
+	{        
+        TypeInterface type2 = TypeReference.resolveType(type1);
+        String pkg = type2.getPackage().getPackageName();
+        LinkedType linkedType = new LinkedType(pkg, type2);
+		return linkedType;
+	}
+    
+	public String emitExpression(Expression expr)
+	{
+		return exprEmitter.emit(expr);
+	}
 }

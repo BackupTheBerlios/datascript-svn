@@ -20,11 +20,14 @@
       <tbody id="tabIdent">
         <tr><td colspan=3>${categoryKeyword} ${type.name}<@parameterlist type/></td></tr>
         <tr><td>{</td><td rowspan="${fields?size+1}">&nbsp;</td><td></td></tr>
-<#list fields as field>        
+<#list fields as field>
+  <#assign fname = field.name>
+  <#assign array = field.arrayRange!"">
+  <#assign opt = field.optionalClause>
+  <#assign c = field.constraint>
         <tr>
           <td valign="top" id="tabIdent"><@linkedtype field.type/><@arglist field/></td>
-          <td valign="bottom"><a href="#${field.name}" class="fieldLink">${field.name}</a>${field.arrayRange!""}${field.optionalClause}<#if (field.constraint)??>
- : ${field.constraint}</#if>;</td>
+          <td valign="bottom"><a href="#${fname}" class="fieldLink">${fname}</a>${array}${opt}${c};</td>
         </tr>
 </#list>
         <tr><td colspan=3>};</td></tr>

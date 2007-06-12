@@ -78,9 +78,13 @@ public class LinkedType
             category += "array of ";
         }
 
-    	if (!TypeNameEmitter.isBuiltinType(type))
+    	if (TypeNameEmitter.isBuiltinType(type))
     	{
-            // generate styles depends on the fiel type
+    		style = "noStyle";
+    	}
+    	else
+    	{
+            // generate styles depending on the field type
 
             if (type instanceof SequenceType)
             {
@@ -131,6 +135,10 @@ public class LinkedType
             {
                 style = "referenceLink";
                 category += "TypeReference";
+            }
+            else
+            {
+            	style = "noStyle";
             }
     	}    	
     }

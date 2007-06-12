@@ -38,7 +38,6 @@
 package datascript.emit.html;
 
 import java.io.File;
-import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Set;
 
@@ -59,15 +58,10 @@ import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
 import datascript.ast.UnionType;
 import datascript.jet.html.Comment;
-import datascript.jet.html.Compound;
 
 
 public class ContentEmitter extends DefaultHTMLEmitter
 {
-    private datascript.jet.html.Subtype subtypeTmpl = new datascript.jet.html.Subtype();
-
-    /**** implementation of abstract methods ****/
-
     public void beginRoot(AST root)
     {
         directory = new File(directory, contentFolder);
@@ -213,19 +207,8 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     private void emitSubtype(Subtype s)
     {
-        currentType = s;
-        PrintStream indexOut = out;
-        try
-        {
-            openOutputFile(directory, s.getName() + HTML_EXT);
-            String result = subtypeTmpl.generate(this);
-            out.print(result);
-            out.close();
-        }
-        finally
-        {
-            out = indexOut;
-        }
+    	SubtypeEmitter se = new SubtypeEmitter();
+    	se.emit(s);
     }
 
 
