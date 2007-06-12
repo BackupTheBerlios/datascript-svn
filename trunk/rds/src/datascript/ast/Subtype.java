@@ -47,6 +47,7 @@ public class Subtype extends TokenAST implements TypeInterface
 {
     private String name;
     private TypeInterface baseType;
+    private Package pkg;
     
     public Subtype()
     {
@@ -119,6 +120,11 @@ public class Subtype extends TokenAST implements TypeInterface
 
     public Package getPackage()
     {
-    	return getBaseType().getPackage();
+    	return pkg;
+    }
+    
+    public void setPackage(Package pkg)
+    {
+        this.pkg = pkg;
     }
 }
