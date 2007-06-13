@@ -70,7 +70,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.9.8 (13 Jun 2007)";
+    private static final String VERSION = "rds 0.9.9 (13 Jun 2007)";
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -359,7 +359,7 @@ public class DataScriptTool implements Parameters
         parser.translationUnit();
         AST retVal = parser.getAST();
         if (context.getErrorCount() != 0 || retVal == null)
-            throw new ParserException("Parser errors.");
+            throw new ParserException("DataSciptParser: Parser errors.");
 
         String pkgName = ToolContext.getFileName();
         pkgName = pkgName.substring(0, pkgName.lastIndexOf(".ds"));

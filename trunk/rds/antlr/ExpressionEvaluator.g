@@ -393,15 +393,17 @@ sqlConstraint
     ;  
     
 sqlIntegerDeclaration
+//    : (DOC)? "sql_integer"! ID LCURLY! sqlIntegerFields RCURLY!
     : #(s:SQL_INTEGER                     { pushScope(((CompoundType)s).getScope()); }
-        (DOC)? 
-        (sqlIntegerFieldDefinition)+ )    { popScope(); }   
+        ID
+        (sqlIntegerFieldDefinition)+
+      )                                   { popScope(); }
     ;
     
 sqlIntegerFieldDefinition
     : #(f:FIELD                           { scope().setCurrentField((Field)f); }
-        integerType ID (fieldCondition)? (DOC)? )
-    
+        integerType ID (fieldCondition)? (DOC)?
+       )
     ;    
     
 

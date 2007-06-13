@@ -341,12 +341,11 @@ sqlConstraint
     ;  
     
 sqlIntegerDeclaration
-    : #(SQL_INTEGER (DOC)? (sqlIntegerFieldDefinition)+ )
+    : #(SQL_INTEGER ID (sqlIntegerFieldDefinition)+ )
     ;
     
 sqlIntegerFieldDefinition
     : #(FIELD integerType ID (fieldCondition)? (DOC)? )
-    
     ;    
     
 

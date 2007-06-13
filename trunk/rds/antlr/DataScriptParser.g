@@ -167,7 +167,7 @@ declaration[AST doc]
     |   subtypeDeclaration[doc] SEMICOLON!
     |   sqlDatabaseDefinition[doc]  SEMICOLON!
     |   sqlTableDeclaration  SEMICOLON!
-//    |   sqlIntegerDeclaration  SEMICOLON!
+    |   sqlIntegerDeclaration  SEMICOLON!
     ;
 
 
@@ -238,7 +238,7 @@ bitmaskDeclaration
 
 
 constDeclaration
-    :   "const"^ typeDeclaration ID ASSIGN! typeValue
+    : "const"^ typeDeclaration ID ASSIGN! typeValue
     ;
 
 
@@ -393,10 +393,10 @@ builtinTypeDefaultOrder
     ;
 
 bitField
-    :   "bit"! (  COLON! INTEGER_LITERAL
-               | LT! e:shiftExpression GT!  
-               )
-        { #bitField = #([BIT], #bitField); }       
+    : "bit"! (  COLON! INTEGER_LITERAL
+              | LT! e:shiftExpression GT!  
+             )
+      { #bitField = #([BIT], #bitField); }       
     ;
 
 modifier
@@ -422,7 +422,8 @@ arrayRange
 /*********************************************************************/
 
 sqlDatabaseDefinition[AST doc]
-    : "sql_database"! ID LCURLY! 
+    : "sql_database"! ID 
+      LCURLY! 
       (sqlPragmaBlock)? 
       (sqlMetadataBlock)? 
       (sqlTableField)+ 
@@ -494,15 +495,15 @@ sqlConstraint
       { #sqlConstraint = #([SQL, "SQL_CONSTRAINT"], #sqlConstraint); }
     ;  
     
-sqlIntegerDeclaration!
-    : (d:DOC)? "sql_integer"! LCURLY! s:sqlIntegerFields RCURLY! SEMICOLON!
-      { #sqlIntegerDeclaration = #([SQL_INTEGER], d, s); }
+sqlIntegerDeclaration
+    : "sql_integer"! ID LCURLY! (sqlIntegerFieldDefinition)+ RCURLY! 
+      { #sqlIntegerDeclaration = #([SQL_INTEGER], #sqlIntegerDeclaration); }
     ;
-    
+/*
 sqlIntegerFields
     : (sqlIntegerFieldDefinition)+    
     ;
-    
+*/
 sqlIntegerFieldDefinition!
     : (d:DOC)? t:integerType i:ID (c:fieldCondition)? SEMICOLON!
       { #sqlIntegerFieldDefinition = #([FIELD], t, i, c, d); }
@@ -648,7 +649,8 @@ postfixExpression!
                           	{
                           		AST rhs = #o.getFirstChild(); 
                             	#postfixExpression= #(o, postfixExpression, rhs);
-                          	} }
+                            }
+                          }
         )*
     ;
     

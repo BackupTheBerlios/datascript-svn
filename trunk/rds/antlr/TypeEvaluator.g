@@ -353,7 +353,8 @@ integerType
 
 sqlDatabaseDefinition
     : #(s:SQL_DATABASE i:ID              { scope().setTypeSymbol(i, s); pushScope();
-                                           ((CompoundType)s).setScope(scope(), pkg); }
+                                           ((CompoundType)s).setScope(scope(), pkg);
+                                         }
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)? 
         (sqlTableField)+ 
@@ -364,13 +365,15 @@ sqlDatabaseDefinition
     
 sqlPragmaBlock
     : #(p:SQL_PRAGMA                     { pushScope(); 
-                                           ((CompoundType)p).setScope(scope(), pkg); }
+                                           ((CompoundType)p).setScope(scope(), pkg);
+                                         }
         (sqlPragma)+)                    { popScope(); }
     ;
     
 sqlPragma
     : #(FIELD                            { Field f = (Field)#FIELD; 
-                                           CompoundType ct = (CompoundType) scope().getOwner(); }
+                                           CompoundType ct = (CompoundType) scope().getOwner();
+                                         }
         (DOC)? 
         t:sqlPragmaType n:ID             { scope().setSymbol(n, f);
                                            f.setName(n);
@@ -394,7 +397,8 @@ sqlMetadataBlock
     
 sqlMetadataField
     : #(FIELD typeReference             { Field f = (Field)#FIELD; 
-                                          CompoundType ct = (CompoundType) scope().getOwner(); }
+                                          CompoundType ct = (CompoundType) scope().getOwner();
+                                        }
         n:ID                            { scope().setSymbol(n, f);
                                           f.setName(n);
                                           ct.addField(f);
@@ -413,40 +417,40 @@ sqlTableField
     ;
       
 sqlTableDefinition[AST fd]
-        { Field f = (Field)#fd;  
-          CompoundType ct = (CompoundType) scope().getOwner(); 
-        }
+    { Field f = (Field)#fd;  
+      CompoundType ct = (CompoundType) scope().getOwner(); 
+    }
     : sqlTableDeclaration
-      (n:ID                             {
-                                          scope().setSymbol(n, f);
+      (n:ID                             { scope().setSymbol(n, f);
                                           f.setName(n); ct.addField(f);
-                                        }   
-       )? 
-       
-    | #(t:TYPEREF ID) m:ID              { 
-                                          scope().setSymbol(m, f);
+                                        }  
+      )?
+
+    | #(t:TYPEREF ID) m:ID              { scope().setSymbol(m, f);
                                           f.setName(m); ct.addField(f);
-                                          scope().postLinkAction((TypeReference)t);                           
+                                          scope().postLinkAction((TypeReference)t);          				  
                                         }
     ;
 
 sqlTableDeclaration
-    : #(s:SQL_TABLE i:ID                 { scope().setTypeSymbol(i, s); pushScope();
-                                           ((CompoundType)s).setScope(scope(), pkg); }
+    : #(s:SQL_TABLE i:ID                { scope().setTypeSymbol(i, s); pushScope();
+                                          ((CompoundType)s).setScope(scope(), pkg);
+                                        }
         (sqlFieldDefinition)+
-        (c:sqlConstraint                   { ((SqlTableType)s).setSqlConstraint(c); } 
+        (c:sqlConstraint                { ((SqlTableType)s).setSqlConstraint(c); } 
         )?
-      )                                  { popScope(); }
+      )                                 { popScope(); }
     ;
     
 sqlFieldDefinition
-    : #(FIELD definedType                { Field f = (Field)#FIELD; 
-                                           CompoundType ct = (CompoundType) scope().getOwner(); }
-        n:ID                             { scope().setSymbol(n, f);
-                                           f.setName(n);
-                                           ct.addField(f);
-                                         }
-        (c:fieldCondition)?              { f.setCondition(c); }
+    : #(FIELD definedType               { Field f = (Field)#FIELD; 
+                                          CompoundType ct = (CompoundType) scope().getOwner();
+                                        }
+        n:ID                            { scope().setSymbol(n, f);
+                                          f.setName(n);
+                                          ct.addField(f);
+                                        }
+        (c:fieldCondition)?             { f.setCondition(c); }
         (SQL_KEY)? (sqlConstraint)? 
         (DOC)?)
     ;
@@ -456,14 +460,18 @@ sqlConstraint
     ;  
     
 sqlIntegerDeclaration
-    : #(i:SQL_INTEGER                    { pushScope(); ((CompoundType)i).setScope(scope(), pkg); }
-        (DOC)? (sqlIntegerFieldDefinition)+ )
-                                         { popScope(); }
+    : #(s:SQL_INTEGER i:ID              { scope().setTypeSymbol(i, s);
+    	                                  pushScope(); 
+    	                                  ((CompoundType)s).setScope(scope(), pkg);
+    	                                }
+        (sqlIntegerFieldDefinition)+
+       )                                { popScope(); }
     ;
     
 sqlIntegerFieldDefinition
     : #(FIELD                            { Field f = (Field)#FIELD; 
-                                           CompoundType ct = (CompoundType) scope().getOwner(); }
+                                           CompoundType ct = (CompoundType) scope().getOwner();
+                                         }
         t:integerType n:ID               { scope().setSymbol(n, f);
                                            f.setName(n);
                                            ct.addField(f);

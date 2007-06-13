@@ -11,6 +11,10 @@ import datascript.runtime.io.FileBitStreamWriter;
 import junit.framework.TestCase;
 import bits.arrays.LinkTable;
 
+/**
+ * @author HWedekind
+ *
+ */
 public class LinkTableTest extends TestCase
 {
     private FileBitStreamWriter os;

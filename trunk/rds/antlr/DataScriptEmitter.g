@@ -401,14 +401,13 @@ sqlConstraint
     
 sqlIntegerDeclaration
     : #(i:SQL_INTEGER              { em.beginSqlInteger(i); }
-        (DOC)? 
+        ID
         (sqlIntegerFieldDefinition)+ 
-        )		           { em.endSqlInteger(i); }
+        )                          { em.endSqlInteger(i); }
     ;
     
 sqlIntegerFieldDefinition
     : #(FIELD integerType ID (fieldCondition)? (DOC)? )
-    
     ;    
     
 

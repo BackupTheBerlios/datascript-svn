@@ -13,9 +13,18 @@ public class SqlIntegerType extends CompoundType
 {
     private TokenAST sqlConstraint;
     
+    public SqlIntegerType()
+    {        
+    }
+    
     public void setSqlConstraint(TokenAST s)
     {
         sqlConstraint = s;
+    }
+    
+    public TokenAST getSqlConstraint()
+    {
+        return sqlConstraint;
     }
 
     public IntegerValue sizeof(Context ctxt)

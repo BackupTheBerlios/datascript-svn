@@ -1,7 +1,18 @@
 package sqltest;
 
+/**
+ *	Doc for testing
+ */
+sql_integer TileId
+{
+    uint8  level : level < 16;
+    uint32 tileId;
+};
 
 
+/**
+ *	another doc for testing
+ */
 sql_database SqlTestDb
 {
     sql_pragma
@@ -24,13 +35,12 @@ sql_database SqlTestDb
 
     sql_table TileTable
     {
-        uint8    level : level < 16;
-        uint16   tileId;
+    	TileId   tileid;
         Tile     tile;
-        sql "primary key (level, tileId)";
+        sql "primary key (tileid)";
     } tiles;
     
-    sql "CREATE INDEX tilesIndex (level, tileId) ON tiles;";
+    sql "CREATE INDEX tilesIndex (tileid) ON tiles;";
 };
 
 

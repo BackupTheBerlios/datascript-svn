@@ -40,7 +40,10 @@ package datascript.ast;
 import datascript.antlr.util.TokenAST;
 import antlr.collections.AST;
 
-
+/**
+ * @author HWellmann
+ *
+ */
 public class SqlTableType extends CompoundType
 {
     private TokenAST sqlConstraint;
@@ -58,7 +61,6 @@ public class SqlTableType extends CompoundType
     {
         return sqlConstraint;
     }
-
 
     public IntegerValue sizeof(Context ctxt)
     {
