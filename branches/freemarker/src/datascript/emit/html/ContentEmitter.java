@@ -44,11 +44,8 @@ import java.util.Set;
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
 import datascript.ast.CompoundType;
-import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
-import datascript.ast.Field;
 import datascript.ast.SequenceType;
-import datascript.ast.SetType;
 import datascript.ast.SqlDatabaseType;
 import datascript.ast.SqlIntegerType;
 import datascript.ast.SqlMetadataType;
@@ -57,8 +54,6 @@ import datascript.ast.SqlTableType;
 import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
 import datascript.ast.UnionType;
-import datascript.jet.html.Comment;
-
 
 public class ContentEmitter extends DefaultHTMLEmitter
 {
@@ -67,14 +62,13 @@ public class ContentEmitter extends DefaultHTMLEmitter
         directory = new File(directory, contentFolder);
         setCurrentFolder(contentFolder);
     }
-       
 
     public void endPackage(AST p)
     {
-    	for (String typeName : currentPackage.getLocalTypeNames())
-    	{
-    		TypeInterface t = currentPackage.getLocalType(typeName);
-    		TokenAST type = (TokenAST) t;
+        for (String typeName : currentPackage.getLocalTypeNames())
+        {
+            TypeInterface t = currentPackage.getLocalType(typeName);
+            TokenAST type = (TokenAST) t;
             if (type instanceof CompoundType)
             {
                 emitCompound((CompoundType) type);
@@ -87,102 +81,15 @@ public class ContentEmitter extends DefaultHTMLEmitter
             {
                 emitSubtype((Subtype) type);
             }
-    	}
+        }
     }
 
-
-
-/**** end of implementation of abstract methods ****/
-    
-    public String getCategoryPlainText()
-    {
-        if (currentType instanceof SequenceType)
-        {
-            return "Sequence";
-        }
-        else if (currentType instanceof UnionType)
-        {
-            return "Union";
-        }
-        else if (currentType instanceof SqlDatabaseType)
-        {
-            return "SQL Database";
-        }
-        else if (currentType instanceof SqlMetadataType)
-        {
-            return "SQL Matadata";
-        }
-        else if (currentType instanceof SqlTableType)
-        {
-            return "SQL Table";
-        }
-        else if (currentType instanceof SqlPragmaType)
-        {
-            return "SQL Pragma";
-        }
-        else if (currentType instanceof SqlIntegerType)
-        {
-            return "SQL Integer";
-        }
-        throw new RuntimeException("unknown category " 
-                  + currentType.getClass().getName());
-    }
-
-    public String getCategoryKeyword()
-    {
-        if (currentType instanceof SequenceType)
-        {
-            return "";
-        }
-        else if (currentType instanceof UnionType)
-        {
-            return "union ";
-        }
-        else if (currentType instanceof SqlDatabaseType)
-        {
-            return "sql_database ";
-        }
-        else if (currentType instanceof SqlMetadataType)
-        {
-            return "sql_metadata ";
-        }
-        else if (currentType instanceof SqlTableType)
-        {
-            return "sql_table ";
-        }
-        else if (currentType instanceof SqlPragmaType)
-        {
-            return "sql_pragma ";
-        }
-        else if (currentType instanceof SqlIntegerType)
-        {
-            return "sql_integer ";
-        }
-        throw new RuntimeException("unknown category " 
-                  + currentType.getClass().getName());
-    }
-
-    public EnumType getEnum()
-    {
-        return (EnumType)currentType;
-    }
-
-    public Subtype getSubtype()
-    {
-        return (Subtype)currentType;
-    }
-    
-    public CompoundType getCompound()
-    {
-        return (CompoundType)currentType;
-    }
-    
     public Set<String> getTypeNames()
     {
         return typeMap.keySet();
     }
 
-    public Collection< Pair<String, TokenAST> > getTypes()
+    public Collection<Pair<String, TokenAST>> getTypes()
     {
         return typeMap.values();
     }
@@ -192,58 +99,23 @@ public class ContentEmitter extends DefaultHTMLEmitter
         Pair<String, TokenAST> p = typeMap.get(typeName);
         return (TypeInterface) p.getSecond();
     }
-    
+
     private void emitCompound(CompoundType ct)
     {
-    	CompoundEmitter ce = new CompoundEmitter();
-    	ce.emit(ct);
+        CompoundEmitter ce = new CompoundEmitter();
+        ce.emit(ct);
     }
 
     private void emitEnumeration(EnumType e)
     {
-    	EnumerationEmitter ee = new EnumerationEmitter();
-    	ee.emit(e);
+        EnumerationEmitter ee = new EnumerationEmitter();
+        ee.emit(e);
     }
 
     private void emitSubtype(Subtype s)
     {
-    	SubtypeEmitter se = new SubtypeEmitter();
-    	se.emit(s);
+        SubtypeEmitter se = new SubtypeEmitter();
+        se.emit(s);
     }
 
-
-    public String getDocumentation(CompoundType compound)
-    {
-        return getDocumentation(compound.getDocumentation());
-    }
-    
-    public String getDocumentation(SetType settype)
-    {
-        return getDocumentation(settype.getDocumentation());
-    }
-    
-    public String getDocumentation(EnumItem item)
-    {
-        return getDocumentation(item.getDocumentation());
-    }
-    
-    public String getDocumentation(Subtype subtype)
-    {
-        return getDocumentation(subtype.getDocumentation());
-    }
-    
-    public String getDocumentation(Field field)
-    {
-        String doc = field.getDocumentation();
-        return (doc == null)? "" : getDocumentation(doc);
-    }
-    
-    private String getDocumentation(String doc)
-    {
-        if (doc.equals(""))
-            return doc;
-
-        Comment commentGenerator = new Comment();
-        return commentGenerator.generate(doc);
-    }
 }

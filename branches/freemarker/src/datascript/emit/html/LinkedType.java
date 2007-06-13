@@ -49,41 +49,42 @@ import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
 
-
 /**
  * @author HWellmann
  * 
  */
 public class LinkedType
 {
-	private String pkgName;
-	private TypeInterface type;
-	
-	private String style;
-	private String category = "";
-	
+    private String pkgName;
+
+    private TypeInterface type;
+
+    private String style;
+
+    private String category = "";
+
     public LinkedType(String pkgName, TypeInterface type)
     {
-    	this.pkgName = pkgName;
-    	this.type = type;
-    	init();
-    }    
-    
+        this.pkgName = pkgName;
+        this.type = type;
+        init();
+    }
+
     private void init()
     {
         while (type instanceof ArrayType)
         {
-            type = ((ArrayType)type).getElementType();
+            type = ((ArrayType) type).getElementType();
             style = "arrayLink";
             category += "array of ";
         }
 
-    	if (TypeNameEmitter.isBuiltinType(type))
-    	{
-    		style = "noStyle";
-    	}
-    	else
-    	{
+        if (TypeNameEmitter.isBuiltinType(type))
+        {
+            style = "noStyle";
+        }
+        else
+        {
             // generate styles depending on the field type
 
             if (type instanceof SequenceType)
@@ -98,8 +99,8 @@ public class LinkedType
             }
             else if (type instanceof EnumType)
             {
-    	        style = "enumLink";
-    	        category += "Enum";
+                style = "enumLink";
+                category += "Enum";
             }
             else if (type instanceof datascript.ast.Subtype)
             {
@@ -138,28 +139,28 @@ public class LinkedType
             }
             else
             {
-            	style = "noStyle";
+                style = "noStyle";
             }
-    	}    	
+        }
     }
 
     public String getName()
     {
-    	return TypeNameEmitter.getTypeName(type);
+        return TypeNameEmitter.getTypeName(type);
     }
-    
+
     public String getStyle()
     {
-    	return style;
+        return style;
     }
-    
+
     public String getCategory()
     {
-    	return category;
+        return category;
     }
-    
+
     public String getPackageName()
     {
-    	return (pkgName == null)? null : pkgName.replace('.', '_');
+        return (pkgName == null) ? null : pkgName.replace('.', '_');
     }
 }

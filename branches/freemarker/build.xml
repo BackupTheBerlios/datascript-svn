@@ -181,7 +181,7 @@
   -->
   <target name="jet" depends="prepare" unless="jet.uptodate">
     <jetc destdir="${gen}">
-      <fileset dir="${basedir}" includes="jet/java/*.*jet jet/html/*.htmljet" />
+      <fileset dir="${basedir}" includes="jet/java/*.*jet" />
     </jetc>
     <touch file="${jet.timestamp}" />
   </target>
