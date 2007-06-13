@@ -21,28 +21,28 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
     
     public void emit(EnumType e)
     {
-    	this.enumeration = e;
-    	items.clear();
-    	for (EnumItem item : e.getItems())
-    	{
-    		items.add(item);
-    	}
-    	try
-    	{
-    		Template tpl = cfg.getTemplate("html/enumeration.html.ftl");
+        this.enumeration = e;
+        items.clear();
+        for (EnumItem item : e.getItems())
+        {
+            items.add(item);
+        }
+        try
+        {
+            Template tpl = cfg.getTemplate("html/enumeration.html.ftl");
 
-    		directory = new File(directory, contentFolder);
-            setCurrentFolder(contentFolder);        	
-    		openOutputFile(directory, e.getName() + HTML_EXT);
+            directory = new File(directory, contentFolder);
+            setCurrentFolder(contentFolder);
+            openOutputFile(directory, e.getName() + HTML_EXT);
 
-    		Writer writer = new PrintWriter(out);
-    		tpl.process(this, writer);
-    		writer.close();
-    	}
-    	catch (Exception exc)
-    	{
-    		throw new DataScriptException(exc);
-    	}
+            Writer writer = new PrintWriter(out);
+            tpl.process(this, writer);
+            writer.close();
+        }
+        catch (Exception exc)
+        {
+            throw new DataScriptException(exc);
+        }
     }
 
     public String getPackageName()

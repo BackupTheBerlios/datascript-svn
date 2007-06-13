@@ -69,19 +69,16 @@ public class HtmlExtension implements Extension
 
         System.out.println("emitting html documentation");
 
-        // emit HTML documentation
         ContentEmitter htmlEmitter = new ContentEmitter();
-        emitter.setEmitter(htmlEmitter);
-        emitter.root(rootNode);
-
+        
         // emit frameset
-        FramesetEmitter framesetEmitter = new FramesetEmitter();
-        emitter.setEmitter(framesetEmitter);
-        emitter.root(rootNode);
+        htmlEmitter.emitFrameset();
 
         // emit stylesheets
-        CssEmitter cssEmitter = new CssEmitter();
-        emitter.setEmitter(cssEmitter);
+        htmlEmitter.emitStylesheet();
+        
+        // emit HTML documentation
+        emitter.setEmitter(htmlEmitter);
         emitter.root(rootNode);
 
         // emit list of packages
