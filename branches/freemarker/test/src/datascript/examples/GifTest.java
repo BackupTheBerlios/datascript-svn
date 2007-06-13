@@ -13,7 +13,12 @@ import gif.*;
 
 public class GifTest extends TestCase
 {
-    private String fileName = "test\\scripts\\1pix.gif";
+    private static String fileName;
+    static
+    {
+        String sep = File.separator;
+        fileName = "test" + sep + "scripts" + sep + "1pix.gif";
+    }
 
     private String ident;
 

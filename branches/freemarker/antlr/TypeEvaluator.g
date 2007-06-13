@@ -281,6 +281,7 @@ definedType
 subtypeDeclaration
     : #(s:SUBTYPE definedType i:ID (expression)? (DOC)?)
                                 { scope().setTypeSymbol(i, s); 
+                                  ((Subtype)s).setPackage(pkg);
                                   //((TypeReference)s).resolve(scope()); 
                                 }
     ;
