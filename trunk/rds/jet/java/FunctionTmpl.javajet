@@ -42,7 +42,7 @@
         class="FunctionTmpl" %>
 <% 
     FunctionEmitter e = (FunctionEmitter) argument;
-    Function func = e.getFunction();
+    FunctionType func = e.getFunction();
     String result = e.getResult();
     
 %>

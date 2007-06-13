@@ -256,7 +256,7 @@
     </java>
   </target>
 
-  <target name="test.compile" depends="test.gen, sqltest.gen, pkgtest.gen, jar, gif.gen" description="Builds the test cases">
+  <target name="test.compile" depends="test.gen, sqltest.gen, pkgtest.gen, functest.gen, jar, gif.gen" description="Builds the test cases">
     <javac destdir="${build}/test/classes" debug="on" target="1.5">
       <classpath>
         <pathelement path="${jar}/rds-runtime.jar" />
@@ -299,6 +299,21 @@
   </target>
 
   <target name="sqltest.clean" description="removes all generated test Java sources and classes">
+    <delete dir="${test.gen}/sqltest" />
+  </target>
+
+
+  <target name="functest.gen" depends="jar" description="Generates parser for test cases" unless="sqltest.uptodate">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+      </classpath>
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  func.ds" />
+    </java>
+  </target>
+
+  <target name="functest.clean" description="removes all generated test Java sources and classes">
     <delete dir="${test.gen}/sqltest" />
   </target>
 

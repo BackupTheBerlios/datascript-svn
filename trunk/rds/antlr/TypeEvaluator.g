@@ -283,7 +283,7 @@ functionList
 function
     :   #(f:FUNCTION i:ID integerType functionBody) 
         { CompoundType ct = (CompoundType) scope().getOwner();
-          ct.addFunction(f); ((Function)f).setOwner(ct);
+          ct.addFunction(f); ((FunctionType)f).setOwner(ct);
           scope().setSymbol(i, f);
         }
     ;
