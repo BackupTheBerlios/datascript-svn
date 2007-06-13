@@ -232,6 +232,9 @@
         <include name="datascript/jet/html/**" />
         <include name="datascript/emit/html/**" />
       </fileset>
+      <fileset dir="${basedir}/freemarker">
+        <include name="html/**.ftl" />
+      </fileset>
     </jar>
 
     <jar destfile="${ext}/rds_xmlExtension.jar" manifest="${backend}/xml/Manifest.txt">

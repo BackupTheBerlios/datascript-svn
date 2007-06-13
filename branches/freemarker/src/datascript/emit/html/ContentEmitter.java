@@ -38,22 +38,13 @@
 package datascript.emit.html;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Set;
 
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
 import datascript.ast.CompoundType;
 import datascript.ast.EnumType;
-import datascript.ast.SequenceType;
-import datascript.ast.SqlDatabaseType;
-import datascript.ast.SqlIntegerType;
-import datascript.ast.SqlMetadataType;
-import datascript.ast.SqlPragmaType;
-import datascript.ast.SqlTableType;
 import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
-import datascript.ast.UnionType;
 
 public class ContentEmitter extends DefaultHTMLEmitter
 {
@@ -82,22 +73,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
                 emitSubtype((Subtype) type);
             }
         }
-    }
-
-    public Set<String> getTypeNames()
-    {
-        return typeMap.keySet();
-    }
-
-    public Collection<Pair<String, TokenAST>> getTypes()
-    {
-        return typeMap.values();
-    }
-
-    public TypeInterface getType(String typeName)
-    {
-        Pair<String, TokenAST> p = typeMap.get(typeName);
-        return (TypeInterface) p.getSecond();
     }
 
     private void emitCompound(CompoundType ct)

@@ -3,11 +3,8 @@ package datascript.emit.html;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import antlr.collections.AST;
-import datascript.antlr.util.TokenAST;
 import datascript.ast.DataScriptException;
 import datascript.ast.Package;
 import datascript.ast.TypeInterface;
@@ -20,35 +17,10 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
 {
     protected Configuration cfg = new Configuration();
 	
-    protected class Pair<A, B>
-    {
-        private A first;
-        private B second;
-
-        Pair(A a, B b)
-        {
-            first = a;
-            second = b;
-        }
-        
-        public A getFirst()
-        {
-            return first;
-        }
-        
-        public B getSecond()
-        {
-            return second;
-        }
-    }
-
-
     public static final String contentFolder = "content";
     protected static final String HTML_EXT = ".html";
     protected File directory = new File("html");
     protected TypeInterface currentType;
-    protected SortedMap<String, Pair<String, TokenAST> > typeMap = 
-        new TreeMap<String, Pair<String, TokenAST> >();
     private String currentFolder = "/";
     protected Package currentPackage;
 
@@ -67,18 +39,6 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
     public String getCurrentFolder()
     {
         return currentFolder;
-    }
-
-
-    public void setCurrentType(TypeInterface type)
-    {
-        currentType = type;
-    }
-
-
-    public TypeInterface getCurrentType()
-    {
-        return currentType;
     }
 
 
