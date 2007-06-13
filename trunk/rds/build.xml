@@ -90,10 +90,15 @@
   <!-- task definition for compiling JET templates -->
   <taskdef name="jetc" classname="ch.paranor.epla.structure.JETCTask">
     <classpath>
-      <pathelement location="${basedir}/lib/jetc-task.jar" />
+      <pathelement location="${lib}/jetc-task.jar" />
     </classpath>
   </taskdef>
 
+  <taskdef name="rds" classname="datascript.ant.RdsTask">
+    <classpath>
+      <pathelement path="${lib}/rds-ant.jar" />
+    </classpath>
+  </taskdef>
 
   <target name="clean" depends="extensions.clean" description="removes all generated datascript Java sources and classes">
     <delete dir="${build}" />
@@ -247,13 +252,26 @@
   <!-- End of core rds targets. Now test targets follow. -->
   
   <target name="test.gen" depends="jar" description="Generates parser for test cases" unless="bits.uptodate">
-    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+    <rds 
+        path="${ds.src}"
+        pkg="ds"
+        out="${test.gen}"
+        srcfile="bits.ds"
+        ext="${ext}">
+      <classpath>
+        <pathelement path="${jar}/rds.jar"/>
+        <pathelement path="${jar}/rds-runtime.jar"/>
+        <pathelement path="${jar}/antlr.jar"/>
+      </classpath>
+    </rds>
+
+    <!--java jar="${jar}/rds.jar" failonerror="true" fork="yes">
       <classpath>
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
-    </java>
+    </java-->
   </target>
 
   <target name="test.compile" depends="test.gen, sqltest.gen, pkgtest.gen, functest.gen, jar, gif.gen" description="Builds the test cases">
