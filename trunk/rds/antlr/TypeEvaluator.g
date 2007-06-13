@@ -70,13 +70,13 @@ options
     
     private void pushScope()
     {
-    	Scope inner = new Scope(scope());
-    	scopeStack.push(inner);
+        Scope inner = new Scope(scope());
+        scopeStack.push(inner);
     }
     
     public void pushScope(Scope s)
     {
-    	scopeStack.push(s);
+        scopeStack.push(s);
     }
     
     private void popScope()
@@ -106,7 +106,7 @@ importDeclaration
     :   #(i:IMPORT (ID)+)
         { pkg.addPackageImport(i); }
     ;
-        	
+            
 members
     :   #(MEMBERS (declaration)*)
     ;
@@ -157,7 +157,7 @@ parameterDefinition
 
 enumDeclaration
     : #(e:"enum" builtinType 
-        (i:ID                		{ scope().setTypeSymbol(i, e); }
+        (i:ID                           { scope().setTypeSymbol(i, e); }
         )?                              { pushScope(); ((EnumType)e).setScope(scope(), pkg); }
         enumMemberList[e])              { popScope(); }
     ;
@@ -182,22 +182,23 @@ constDeclaration
 
 fieldDefinition
     :   #(FIELD                         { Field f = (Field)#FIELD; 
-    					  CompoundType ct = (CompoundType) scope().getOwner(); }
+                                          CompoundType ct = (CompoundType) 
+                                          scope().getOwner(); }
           typeReference
-          (i:ID 			{ scope().setSymbol(i, f);
-          				  f.setName(i);
-          				  ct.addField(f);
-          				}
+          (i:ID                         { scope().setSymbol(i, f);
+                                          f.setName(i);
+                                          ct.addField(f);
+                                        }
           )? 
-          (in:fieldInitializer		{f.setInitializer(in); }
+          (in:fieldInitializer          {f.setInitializer(in); }
           )?
           (o:fieldOptionalClause        {f.setOptionalClause(o); }
           )?
-          (c:fieldCondition		{ f.setCondition(c); }
+          (c:fieldCondition             { f.setCondition(c); }
           )? 
-          (d:DOC			{ f.setDocumentation(d); }
+          (d:DOC                        { f.setDocumentation(d); }
           )? 
-          (l:label			{ f.setLabel(l); }
+          (l:label                      { f.setLabel(l); }
           )?
           ) 
     ;
@@ -249,10 +250,11 @@ paramTypeInstantiation
     
 sequenceDeclaration
     :   #(s:SEQUENCE 
-          (i:ID      		{ scope().setTypeSymbol(i, s); }
-          )?			{ pushScope(); ((SequenceType)s).setScope(scope(), pkg); }
-          (parameterList)? 	
-          memberList)		{ popScope(); 
+          (i:ID                 { scope().setTypeSymbol(i, s); }
+          )?                    { pushScope(); ((SequenceType)s).setScope(scope(), pkg); }
+          (parameterList)?  
+          memberList
+          (functionList)?)      { popScope(); 
                                   ((SequenceType)s).storeParameters(); 
                                   }
           
@@ -261,10 +263,11 @@ sequenceDeclaration
 unionDeclaration
     :   #(u:UNION 
     
-          (i:ID      		{ scope().setTypeSymbol(i, u); }
-          )?			{ pushScope(); ((UnionType)u).setScope(scope(), pkg); }
-          (parameterList)? 	
-          memberList)		{ popScope(); 
+          (i:ID                 { scope().setTypeSymbol(i, u); }
+          )?                    { pushScope(); ((UnionType)u).setScope(scope(), pkg); }
+          (parameterList)?  
+          memberList
+          (functionList)?)      { popScope(); 
                                   ((UnionType)u).storeParameters();
                                 }
     ;
@@ -273,6 +276,22 @@ memberList
     :    #(MEMBERS (declaration)*)
     ;
 
+functionList
+    :   #(FUNCTIONS (function)+)
+    ;
+    
+function
+    :   #(f:FUNCTION i:ID integerType functionBody) 
+        { CompoundType ct = (CompoundType) scope().getOwner();
+          ct.addFunction(f); ((Function)f).setOwner(ct);
+          scope().setSymbol(i, f);
+        }
+    ;
+    
+functionBody
+    :   #(RETURN expression)
+    ;        
+    
 definedType
     :  #(t:TYPEREF ID (DOT ID)*) { scope().postLinkAction((TypeReference)t); }
     |   builtinType
@@ -282,7 +301,6 @@ subtypeDeclaration
     : #(s:SUBTYPE definedType i:ID (expression)? (DOC)?)
                                 { scope().setTypeSymbol(i, s); 
                                   ((Subtype)s).setPackage(pkg);
-                                  //((TypeReference)s).resolve(scope()); 
                                 }
     ;
 
@@ -298,8 +316,8 @@ builtinTypeDefaultOrder
     ;
 
 stringType
-	:	STRING
-	;
+    :   STRING
+    ;
 
 bitField
     :   #(BIT expression)
@@ -335,7 +353,7 @@ integerType
 
 sqlDatabaseDefinition
     : #(s:SQL_DATABASE i:ID              { scope().setTypeSymbol(i, s); pushScope();
-    					   ((CompoundType)s).setScope(scope(), pkg); }
+                                           ((CompoundType)s).setScope(scope(), pkg); }
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)? 
         (sqlTableField)+ 
@@ -352,12 +370,12 @@ sqlPragmaBlock
     
 sqlPragma
     : #(FIELD                            { Field f = (Field)#FIELD; 
-    					  CompoundType ct = (CompoundType) scope().getOwner(); }
+                                           CompoundType ct = (CompoundType) scope().getOwner(); }
         (DOC)? 
         t:sqlPragmaType n:ID             { scope().setSymbol(n, f);
-          				   f.setName(n);
-          				   ct.addField(f);
-          				 }
+                                           f.setName(n);
+                                           ct.addField(f);
+                                         }
         (i:fieldInitializer              { f.setInitializer(i); }
         )? 
         (c:fieldCondition                { f.setCondition(c); }
@@ -370,20 +388,20 @@ sqlPragmaType
     ;
 
 sqlMetadataBlock
-    : #(m:SQL_METADATA 			{ pushScope(); ((CompoundType)m).setScope(scope(), pkg); }
+    : #(m:SQL_METADATA                  { pushScope(); ((CompoundType)m).setScope(scope(), pkg); }
        (sqlMetadataField)+ )            { popScope(); }  
     ;
     
 sqlMetadataField
     : #(FIELD typeReference             { Field f = (Field)#FIELD; 
-    					  CompoundType ct = (CompoundType) scope().getOwner(); }
-        n:ID                              { scope().setSymbol(n, f);
-          				   f.setName(n);
-          				   ct.addField(f);
-          				 }
-        (i:fieldInitializer              { f.setInitializer(i); }
+                                          CompoundType ct = (CompoundType) scope().getOwner(); }
+        n:ID                            { scope().setSymbol(n, f);
+                                          f.setName(n);
+                                          ct.addField(f);
+                                        }
+        (i:fieldInitializer             { f.setInitializer(i); }
         )? 
-        (c:fieldCondition                { f.setCondition(c); }
+        (c:fieldCondition               { f.setCondition(c); }
         )?
         (DOC)?
       )
@@ -401,20 +419,20 @@ sqlTableDefinition[AST fd]
     : sqlTableDeclaration
       (n:ID                             {
                                           scope().setSymbol(n, f);
-          				  f.setName(n); ct.addField(f);
-          				}  
+                                          f.setName(n); ct.addField(f);
+                                        }   
        )? 
        
     | #(t:TYPEREF ID) m:ID              { 
                                           scope().setSymbol(m, f);
-          				  f.setName(m); ct.addField(f);
-          				  scope().postLinkAction((TypeReference)t);          				  
+                                          f.setName(m); ct.addField(f);
+                                          scope().postLinkAction((TypeReference)t);                           
                                         }
     ;
 
 sqlTableDeclaration
     : #(s:SQL_TABLE i:ID                 { scope().setTypeSymbol(i, s); pushScope();
-    	  				   ((CompoundType)s).setScope(scope(), pkg); }
+                                           ((CompoundType)s).setScope(scope(), pkg); }
         (sqlFieldDefinition)+
         (c:sqlConstraint                   { ((SqlTableType)s).setSqlConstraint(c); } 
         )?
@@ -423,11 +441,11 @@ sqlTableDeclaration
     
 sqlFieldDefinition
     : #(FIELD definedType                { Field f = (Field)#FIELD; 
-    					  CompoundType ct = (CompoundType) scope().getOwner(); }
+                                           CompoundType ct = (CompoundType) scope().getOwner(); }
         n:ID                             { scope().setSymbol(n, f);
-          				   f.setName(n);
-          				   ct.addField(f);
-          				 }
+                                           f.setName(n);
+                                           ct.addField(f);
+                                         }
         (c:fieldCondition)?              { f.setCondition(c); }
         (SQL_KEY)? (sqlConstraint)? 
         (DOC)?)
@@ -440,16 +458,16 @@ sqlConstraint
 sqlIntegerDeclaration
     : #(i:SQL_INTEGER                    { pushScope(); ((CompoundType)i).setScope(scope(), pkg); }
         (DOC)? (sqlIntegerFieldDefinition)+ )
-        				 { popScope(); }
+                                         { popScope(); }
     ;
     
 sqlIntegerFieldDefinition
     : #(FIELD                            { Field f = (Field)#FIELD; 
-    					  CompoundType ct = (CompoundType) scope().getOwner(); }
+                                           CompoundType ct = (CompoundType) scope().getOwner(); }
         t:integerType n:ID               { scope().setSymbol(n, f);
-          				   f.setName(n);
-          				   ct.addField(f);
-          				 }
+                                           f.setName(n);
+                                           ct.addField(f);
+                                         }
         (c:fieldCondition                { f.setCondition(c); }
         )? 
         (DOC)? )
@@ -557,6 +575,7 @@ expression
     |   ARRAYELEM
     |   INST
     |   LPAREN
+    |   FUNCTIONCALL
     |   "is"
     |   INDEX
     |   ID

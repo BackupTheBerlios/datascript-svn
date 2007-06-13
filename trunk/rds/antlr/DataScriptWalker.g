@@ -81,7 +81,7 @@ importDeclaration
 members
     :   #(MEMBERS (declaration)*)
     ;
-    
+
 declaration
     :   fieldDefinition 
     //|   conditionDefinition
@@ -199,17 +199,29 @@ paramTypeInstantiation
     ;
     
 sequenceDeclaration
-    :   #(SEQUENCE (ID)? (parameterList)? memberList)
+    :   #(SEQUENCE (ID)? (parameterList)? memberList  (functionList)?)
     ;
 
 unionDeclaration
-    :   #(UNION (ID)? (parameterList)? memberList)
+    :   #(UNION (ID)? (parameterList)? memberList (functionList)?)
     ;
 
 memberList
     :    #(MEMBERS (declaration)*)
     ;
 
+functionList
+    :   #(FUNCTIONS (function)+)
+    ;
+    
+function
+    :   #(FUNCTION ID integerType functionBody) 
+    ;
+    
+functionBody
+    :   #(RETURN expression)
+    ;        
+    
 definedType
     :  #(TYPEREF ID (DOT ID)*) 
     |   builtinType
@@ -386,6 +398,7 @@ expression
     |   #(ARRAYELEM expression expression)
     |   #(INST (expression)+)
     |   #(LPAREN expression)
+    |   #(FUNCTIONCALL expression)
     |   #("is" ID)
     |   #(INDEX ID)
     |   ID

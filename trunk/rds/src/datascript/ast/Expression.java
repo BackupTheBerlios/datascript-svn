@@ -179,6 +179,10 @@ public class Expression extends TokenAST
                 evaluateSumFunction();
                 break;
 
+            case DataScriptParserTokenTypes.FUNCTIONCALL:
+                evaluateFunctionCallExpression();
+                break;
+
             default:
                 throw new InternalError("illegal operation: type = " + 
                                         getType() + toStringTree() + ", " 
@@ -292,6 +296,10 @@ public class Expression extends TokenAST
         {
             Field field = (Field)obj;
             type = TypeReference.resolveType(field.getFieldType());
+        }
+        else if (obj instanceof FunctionType)
+        {
+            type = (FunctionType)obj;
         }
         else if (obj instanceof CompoundType)
         {
@@ -462,6 +470,19 @@ public class Expression extends TokenAST
         if (!(op1().getExprType() instanceof ArrayType))
         {
             ToolContext.logError(op1(), "sum function requires array type argument");            
+        }
+    }
+
+    private void evaluateFunctionCallExpression()
+    {
+        if (op1().getExprType() instanceof FunctionType)
+        {
+            type = IntegerType.integerType;
+            value = null;
+        }
+        else
+        {
+            ToolContext.logError(op1(), "cannot invoke a non-function member");
         }
     }
 }

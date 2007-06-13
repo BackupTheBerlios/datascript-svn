@@ -69,7 +69,7 @@ options
     
     public void pushScope(Scope s)
     {
-    	scopeStack.push(s);
+        scopeStack.push(s);
     }
     
     private void popScope()
@@ -97,7 +97,7 @@ packageDeclaration
 importDeclaration
     :   #(IMPORT (ID)+)
     ;
-        	
+                
 members
     :   #(MEMBERS (declaration)*)
     ;
@@ -163,7 +163,7 @@ enumItem[IntegerValue last]
 returns [IntegerValue self]
 { self = last.add(new IntegerValue(1)); }
     : #(f:ITEM (DOC)? i:ID
-        (e:expression   		{ self = (IntegerValue)((Expression)e).getValue(); }
+        (e:expression                   { self = (IntegerValue)((Expression)e).getValue(); }
          )?
        )
       { ((EnumItem)f).setValue(self); }
@@ -237,21 +237,35 @@ sequenceDeclaration
     :   #(s:SEQUENCE              { pushScope(((SequenceType)s).getScope()); }
           (i:ID)? 
           (parameterList)? 
-          memberList)		{ popScope(); }
+          memberList
+          (functionList)?)        { popScope(); }
           
     ;
 
 unionDeclaration
-    :   #(u:UNION 		{ pushScope(((UnionType)u).getScope()); }
+    :   #(u:UNION               { pushScope(((UnionType)u).getScope()); }
           (i:ID)? 
           (parameterList)? 
-          memberList)		{  popScope(); }
+          memberList
+          (functionList)?)        { popScope(); }
     ;
 
 memberList
     :    #(MEMBERS (declaration)*)
     ;
 
+functionList
+    :   #(FUNCTIONS (function)+)
+    ;
+    
+function
+    :   #(FUNCTION ID integerType functionBody) 
+    ;
+    
+functionBody
+    :   #(RETURN expression)
+    ;        
+    
 definedType
     :  #(t:TYPEREF ID (DOT ID)*) 
     |   builtinType
@@ -283,8 +297,8 @@ integerType
     ;
 
 stringType
-	:	STRING
-	;
+        :       STRING
+        ;
 
 bitField
     :   #(BIT expression)
@@ -322,7 +336,7 @@ sqlDatabaseDefinition
     
 sqlPragmaBlock
     : #(p:SQL_PRAGMA                    { pushScope(((CompoundType)p).getScope()); }
-        (sqlPragma)+) 			{ popScope(); }   
+        (sqlPragma)+)                   { popScope(); }   
     ;
     
 sqlPragma
@@ -338,7 +352,7 @@ sqlPragmaType
     ;
 
 sqlMetadataBlock
-    : #(m:SQL_METADATA 			{ pushScope(((CompoundType)m).getScope()); }
+    : #(m:SQL_METADATA                  { pushScope(((CompoundType)m).getScope()); }
         (sqlMetadataField)+ )           { popScope(); }   
     ;
     
@@ -451,22 +465,23 @@ opExpression
     |   #(ARRAYELEM expression expression)
     |   #(INST (expression)+)
     |   #(LPAREN expression)
+    |   #(FUNCTIONCALL expression)
     |   #("is" identifier)
     |   #(INDEX identifier)
       )
       { ((Expression)#opExpression).evaluate(scope()); }
-    ;	
+    ;   
 
 atom
-    :   id:ID 			{ ((Expression)id).evaluate(scope()); }
-    |   il:INTEGER_LITERAL 	{ ((IntegerExpression)il).evaluate(scope()); }	
+    :   id:ID                   { ((Expression)id).evaluate(scope()); }
+    |   il:INTEGER_LITERAL      { ((IntegerExpression)il).evaluate(scope()); }  
     |   sl:STRING_LITERAL
     ;
 
 identifier
-    :   id:ID 			{ ((Expression)id).evaluate(scope()); }
+    :   id:ID                   { ((Expression)id).evaluate(scope()); }
     ;
 
 integerExpression
-    : e:expression		{ ((Expression)e).checkInteger(); }
+    : e:expression              { ((Expression)e).checkInteger(); }
     ;

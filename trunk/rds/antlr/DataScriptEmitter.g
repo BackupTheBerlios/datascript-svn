@@ -229,6 +229,7 @@ sequenceDeclaration
            (ID)? 
            (parameterList)? 
            memberList
+           (functionList)?
          )
          { em.endSequence(s); }
     ;
@@ -238,6 +239,7 @@ unionDeclaration
            (ID)? 
            (parameterList)? 
            memberList
+           (functionList)?
          )
          { em.endUnion(u); }
     ;
@@ -246,6 +248,20 @@ memberList
     :   #(MEMBERS (declaration)*)
     ;
 
+functionList
+    :   #(FUNCTIONS (function)+)
+    ;
+    
+function
+    :   #(f:FUNCTION                   { em.beginFunction(f); }
+          ID integerType functionBody) 
+        { em.endFunction(f); }  
+    ;
+    
+functionBody
+    :   #(RETURN expression)
+    ;        
+    
 definedType
     :	#(TYPEREF ID (DOT ID)*) 
     |   builtinType
@@ -442,6 +458,7 @@ expression
     |   #(ARRAYELEM expression)
     |   #(INST (expression)+)
     |   #(LPAREN expression)
+    |   #(FUNCTIONCALL expression)
     |   #("is" ID)
     |   ID
     |   INTEGER_LITERAL 

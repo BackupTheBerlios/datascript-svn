@@ -43,6 +43,7 @@ import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
+import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
 import datascript.ast.Scope;
 import datascript.ast.TypeInterface;
@@ -156,6 +157,10 @@ public class ExpressionEmitter
                 emitCompoundPrefix();
                 append(expr.op1());
                 buffer.append(".sum()");
+                return;
+            case DataScriptParserTokenTypes.FUNCTIONCALL:
+                append(expr.op1());
+                buffer.append("()");
                 return;
             default:
                 throw new UnsupportedOperationException();
@@ -307,6 +312,12 @@ public class ExpressionEmitter
         {
             EnumType enumeration = (EnumType) obj;
             buffer.append(enumeration.getName());                
+        }
+        else if (obj instanceof FunctionType)
+        {
+            CompoundType compound = ((FunctionType)obj).getOwner();
+            emitCompoundPrefix();
+            buffer.append(symbol);
         }
         else if (obj instanceof TypeInterface)
         {

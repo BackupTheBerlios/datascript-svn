@@ -37,6 +37,7 @@
  */
 package datascript.ast;
 
+import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -48,7 +49,7 @@ import datascript.antlr.util.TokenAST;
 abstract public class CompoundType extends TokenAST implements TypeInterface
 {
     protected Vector<Field> fields = new Vector<Field>();
-
+    private Vector<FunctionType> functions = new Vector<FunctionType>();
     private Vector<Parameter> parameters = new Vector<Parameter>();
 
     // / set of compound types that can contain this type
@@ -191,7 +192,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     }
 
 
-    public Iterable<Field> getFields()
+    public List<Field> getFields()
     {
         return fields;
     }
@@ -272,5 +273,15 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     public Package getPackage()
     {
     	return pkg;
+    }
+    
+    public void addFunction(AST function)
+    {
+        functions.add((FunctionType) function);
+    }
+    
+    public List<FunctionType> getFunctions()
+    {
+        return functions;
     }
 }

@@ -158,6 +158,10 @@ public class ExpressionEmitter
                 append(expr.op1());
                 buffer.append(")");
                 return;
+            case DataScriptParserTokenTypes.FUNCTIONCALL:
+                append(expr.op1());
+                buffer.append("()");
+                return;
             default:
                 throw new UnsupportedOperationException();
         }

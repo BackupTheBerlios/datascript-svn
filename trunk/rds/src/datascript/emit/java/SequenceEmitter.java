@@ -41,6 +41,7 @@ import java.io.PrintStream;
 
 import datascript.ast.CompoundType;
 import datascript.ast.Field;
+import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
 import datascript.ast.SequenceType;
 import datascript.jet.java.SequenceBegin;
@@ -52,6 +53,7 @@ public class SequenceEmitter extends CompoundEmitter
 {
     private SequenceType seq;
     private SequenceFieldEmitter fieldEmitter;
+    private FunctionEmitter functionEmitter;
     private SequenceBegin beginTmpl = new SequenceBegin();
     private SequenceEnd endTmpl = new SequenceEnd();
     private SequenceRead readTmpl = new SequenceRead();
@@ -63,6 +65,7 @@ public class SequenceEmitter extends CompoundEmitter
         super(j);
         seq = sequence;
         fieldEmitter = new SequenceFieldEmitter(this);
+        functionEmitter = new FunctionEmitter(this);
     }
 
 
@@ -104,6 +107,10 @@ public class SequenceEmitter extends CompoundEmitter
         for (Parameter param : seq.getParameters())
         {
             paramEmitter.emit(param);
+        }
+        for (FunctionType function : seq.getFunctions())
+        {
+            functionEmitter.emit(function);
         }
         result = readTmpl.generate(this);
         out.print(result);

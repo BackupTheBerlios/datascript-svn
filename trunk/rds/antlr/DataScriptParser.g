@@ -53,7 +53,7 @@ options
 
 tokens
 {
-	ENUM;
+    ENUM;
     FIELD<AST=datascript.ast.Field>;
     SEQUENCE<AST=datascript.ast.SequenceType>;
     UNION<AST=datascript.ast.UnionType>;
@@ -115,7 +115,11 @@ tokens
     SUM<AST=datascript.ast.Expression>;
     BIG;
     LITTLE;
-	ZIP;
+    ZIP;
+    FUNCTIONS;
+    FUNCTION<AST=datascript.ast.FunctionType>;
+    RETURN;
+    FUNCTIONCALL<AST=datascript.ast.Expression>;
     
     SQL;
     SQL_DATABASE<AST=datascript.ast.SqlDatabaseType>;
@@ -309,7 +313,7 @@ sequenceDeclaration!
         (u:"union")? 
         (n:ID)?
         (p:parameterList)? 
-        m:memberList
+        m:memberList        
         { if (u == null)
           {
               #sequenceDeclaration = #([SEQUENCE], n, p, m);
@@ -322,9 +326,28 @@ sequenceDeclaration!
     ;
 
 memberList
-    :   LCURLY! declarationList RCURLY!
-        // { #memberList = #([MEMBERS], #memberList); }
+    :   LCURLY! declarationList (f:functionList)? RCURLY!
     ;
+    
+functionList
+    : functionDefinition (SEMICOLON! functionDefinition)*
+      { #functionList = #([FUNCTIONS, "FUNCTIONS"], #functionList); }
+    ;
+    
+functionDefinition!
+    : "function"! t:integerType n:ID functionParamList b:functionBody
+      { #functionDefinition = #([FUNCTION, "FUNCTION"], n, t, b); }
+    ;
+    
+functionParamList
+    : LPAREN! RPAREN!
+    ;
+    
+functionBody
+    : LCURLY! "return"! expression SEMICOLON! RCURLY!
+      { #functionBody = #([RETURN], #functionBody); }
+    ;    
+            
 
 definedType
     :   typeSymbol    {#definedType = #([TYPEREF], #definedType);}
@@ -648,7 +671,7 @@ arrayOperand!
 
 functionArgumentList
     :   LPAREN! (functionArgument (COMMA! functionArgument)* )? RPAREN!
-        { #functionArgumentList = #([INST, "INST"], functionArgumentList); }
+        { #functionArgumentList = #([FUNCTIONCALL, "FUNCTIONCALL"], functionArgumentList); }
     ;
 
 dotOperand

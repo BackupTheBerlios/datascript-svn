@@ -84,6 +84,8 @@ public class DefaultEmitter implements Emitter
 
     public void beginField(AST f) {}
     public void endField(AST f) {}
+    public void beginFunction(AST f) {}
+    public void endFunction(AST f) {}
 
     public void beginEnumeration(AST e) {}
     public void endEnumeration(AST e) {}
