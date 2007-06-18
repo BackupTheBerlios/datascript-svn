@@ -20,6 +20,8 @@
 
 
     <h2>Features</h2>
+    
+    <h3>Core</h3>
 
     <ul>
      <li>The DataScript dialect implemented in <em>rds</em> is documented in a 
@@ -37,13 +39,6 @@
         packages.
      </li>
 
-     <li>There is an XML exchange format for DataScript modules.
-     </li>
-
-     <li>We can generate HTML documentation à la Javadoc from documentation
-     comments embedded into a DataScript module.
-     </li>
-
      <li>The DataScript grammar and parser are based on 
        <a href="http://www.antlr.org">antlr</a>. The parser is complete, the 
        code generator currently supports read() and write() methods for both 
@@ -54,8 +49,29 @@
        methods for both for plain DataScript and for the relational 
        extensions.</li>
 
+     <li>There is a simple plug-in interface for backends, i.e. code generators
+       for various languages.</li>
+    </ul>
+    
+    
+    <h3>Extensions</h3>
+
+    <ul>
+     <li>There is an XML exchange format for DataScript modules.
+     </li>
+
+     <li>We can generate HTML documentation à la Javadoc from documentation
+     comments embedded into a DataScript module.
+     </li>
+
+     <li>An editor plug-in for <a href="http://www.sqlite.org">Eclipse</a> provides syntax highlighting.
+     </li>
+
      <li>A C++ code generator has been developed by ADIT. This C++ backend
        is available to all PSI partners, but is not Open Source.</li>
-    </ul>
+   </ul>
+     
+	
+    
     </div>
   </body></html>
