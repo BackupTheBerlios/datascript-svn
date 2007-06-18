@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Datascript Editor Plug-in
+Bundle-SymbolicName: datascript.eclipse.editor;singleton:=true
+Bundle-Version: 0.2.0
+Bundle-Activator: datascript.eclipse.editor.Activator
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.jface.text,
+ org.eclipse.ui.editors
+Eclipse-LazyStart: true
+Bundle-Vendor: Harman/Becker
