@@ -1,50 +1,35 @@
 package datascript.emit.html;
 
 import java.io.File;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.io.PrintWriter;
+import java.io.Writer;
 
 import antlr.collections.AST;
-import datascript.antlr.util.TokenAST;
+import datascript.ast.DataScriptException;
 import datascript.ast.Package;
 import datascript.ast.TypeInterface;
 import datascript.emit.DefaultEmitter;
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.Template;
 
 abstract public class DefaultHTMLEmitter extends DefaultEmitter
 {
-    protected class Pair<A, B>
-    {
-        private A first;
-        private B second;
-
-        Pair(A a, B b)
-        {
-            first = a;
-            second = b;
-        }
-        
-        public A getFirst()
-        {
-            return first;
-        }
-        
-        public B getSecond()
-        {
-            return second;
-        }
-    }
-
-
+    protected Configuration cfg = new Configuration();
+	
     public static final String contentFolder = "content";
     protected static final String HTML_EXT = ".html";
     protected File directory = new File("html");
     protected TypeInterface currentType;
-    protected SortedMap<String, Pair<String, TokenAST> > typeMap = 
-        new TreeMap<String, Pair<String, TokenAST> >();
     private String currentFolder = "/";
     protected Package currentPackage;
 
-
+    public DefaultHTMLEmitter()
+    {
+    	cfg.setClassForTemplateLoading(getClass(), "../../..");
+    	cfg.setObjectWrapper(new DefaultObjectWrapper());    	
+    }
+    
     public void setCurrentFolder(String currentFolder)
     {
         this.currentFolder = currentFolder;
@@ -54,18 +39,6 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
     public String getCurrentFolder()
     {
         return currentFolder;
-    }
-
-
-    public void setCurrentType(TypeInterface type)
-    {
-        currentType = type;
-    }
-
-
-    public TypeInterface getCurrentType()
-    {
-        return currentType;
     }
 
 
@@ -84,4 +57,30 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
     	currentPackage = Package.lookup(p);
     }    
     
+    public void emitStylesheet()
+    {
+        emit("html/webStyles.css.ftl", "webStyles.css");
+    }
+
+    public void emitFrameset()
+    {
+        emit("html/index.html.ftl", "index.html");
+    }
+
+    public void emit(String template, String outputName)
+    {
+        try
+        {
+            Template tpl = cfg.getTemplate(template);
+            openOutputFile(directory, outputName);
+
+            Writer writer = new PrintWriter(out);
+            tpl.process(this, writer);
+            writer.close();
+        }
+        catch (Exception exc)
+        {
+            throw new DataScriptException(exc);
+        }
+    }    
 }

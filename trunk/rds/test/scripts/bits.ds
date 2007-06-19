@@ -75,10 +75,23 @@ union AnyItem
     ItemC c;        
 };
 
+/**
+ * This is the first paragraph of a doc comment,
+ * extending over two lines.
+ *
+ * A new paragraph is started after a blank line.
+ *
+ * @todo add some more documentation.
+ * @param none   We have no parameters.
+ * @see Coord
+ */
 enum uint16 Colour
 {
+    /** Red. */
     RED = 1,
+    /** Green. */
     GREEN,
+    /** Yellow. */
     YELLOW,
     BLUE = 7
 };

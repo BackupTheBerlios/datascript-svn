@@ -1,38 +1,44 @@
 package datascript.emit.html;
 
-import antlr.collections.AST;
-import datascript.jet.html.PackageBegin;
-import datascript.jet.html.PackageEnd;
-import datascript.jet.html.PackageItem;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
+import antlr.collections.AST;
+import datascript.ast.DataScriptException;
+import freemarker.template.Template;
 
 public class PackageEmitter extends DefaultHTMLEmitter
 {
-    private PackageBegin beginTmpl = new PackageBegin();
-    private PackageItem itemTmpl = new PackageItem();
-    private PackageEnd endTmpl = new PackageEnd();
-
-
-    @Override
-    public void beginRoot(AST rootNode)
-    {
-        //setPackageName(rootNode.getFirstChild().getFirstChild());
-
-        openOutputFile(directory, "packages" + HTML_EXT);
-        out.print(beginTmpl.generate(this));
-    }
+    private List<String> packages = new ArrayList<String>();
 
     @Override
     public void endRoot()
     {
-        out.print(endTmpl.generate(this));
-        out.close();
+        try
+        {
+            Template tpl = cfg.getTemplate("html/package.html.ftl");
+            openOutputFile(directory, "packages" + HTML_EXT);
+            Writer writer = new PrintWriter(out);
+            tpl.process(this, writer);
+            writer.close();
+        }
+        catch (Exception exc)
+        {
+            throw new DataScriptException(exc);
+        }
     }
 
     @Override
     public void endPackage(AST p)
     {
-        out.print(itemTmpl.generate(this));
+        packages.add(getPackageName());
+    }
+
+    public List<String> getPackages()
+    {
+        return packages;
     }
 
 }

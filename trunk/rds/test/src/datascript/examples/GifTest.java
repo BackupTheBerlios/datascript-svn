@@ -1,19 +1,5 @@
 package datascript.examples;
 
-import gif.ApplicationExtension;
-import gif.BLOCK_TYPE;
-import gif.CommentExtension;
-import gif.ExtensionBlock;
-import gif.GIFData;
-import gif.ImageBlock;
-import gif.ImageDescriptor;
-import gif.PlainTextExtension;
-import gif.RGBColor;
-import gif.RasterData;
-import gif.SubBlock;
-import gif.ZippedSubBlock;
-import gif.gifFile;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -21,15 +7,17 @@ import junit.framework.TestCase;
 import datascript.runtime.array.ObjectArray;
 import datascript.runtime.array.UnsignedByteArray;
 
+import gif.*;
+
 
 public class GifTest extends TestCase
 {
-	private static String fileName;
-	static
-	{
-		String sep = File.separator;
-		fileName = "test" + sep + "scripts" + sep + "1pix.gif";
-	}
+    private static String fileName;
+    static
+    {
+        String sep = File.separator;
+        fileName = "test" + sep + "scripts" + sep + "1pix.gif";
+    }
 
     private String ident;
 

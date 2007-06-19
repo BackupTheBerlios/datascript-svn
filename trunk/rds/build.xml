@@ -186,7 +186,7 @@
   -->
   <target name="jet" depends="prepare" unless="jet.uptodate">
     <jetc destdir="${gen}">
-      <fileset dir="${basedir}" includes="jet/java/*.*jet jet/html/*.htmljet" />
+      <fileset dir="${basedir}" includes="jet/java/*.*jet" />
     </jetc>
     <touch file="${jet.timestamp}" />
   </target>
@@ -200,7 +200,7 @@
   <target name="compile" depends="prepare, antlr, jet" description="Compiles all project files">
     <javac destdir="${classes}" debug="on" target="1.5">
       <classpath>
-        <pathelement path="lib" />
+        <pathelement path="lib/freemarker.jar" />
       </classpath>
       <src path="${src}" />
       <src path="${gen}" />
@@ -236,6 +236,9 @@
         <include name="datascript/backend/html/**" />
         <include name="datascript/jet/html/**" />
         <include name="datascript/emit/html/**" />
+      </fileset>
+      <fileset dir="${basedir}/freemarker">
+        <include name="html/**.ftl" />
       </fileset>
     </jar>
 
