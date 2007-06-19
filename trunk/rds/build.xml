@@ -255,7 +255,7 @@
   <!-- End of core rds targets. Now test targets follow. -->
   
   <target name="test.gen" depends="jar" description="Generates parser for test cases" unless="bits.uptodate">
-    <rds 
+    <!--rds 
         path="${ds.src}"
         pkg="ds"
         out="${test.gen}"
@@ -266,15 +266,15 @@
         <pathelement path="${jar}/rds-runtime.jar"/>
         <pathelement path="${jar}/antlr.jar"/>
       </classpath>
-    </rds>
+    </rds-->
 
-    <!--java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
       <classpath>
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
-    </java-->
+    </java>
   </target>
 
   <target name="test.compile" depends="test.gen, sqltest.gen, pkgtest.gen, functest.gen, jar, gif.gen" description="Builds the test cases">
