@@ -77,7 +77,7 @@ public class SequenceType extends CompoundType
     {
         // do something like
         // if val.getType() == this
-        throw new ComputeError("isMember not implemented");
+        throw new ComputeError("isMember() not implemented in " + this.getClass().getName());
     }
 
     public String toString()

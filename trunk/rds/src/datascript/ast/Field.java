@@ -63,7 +63,6 @@ public class Field extends TokenAST
 
     public Field()
     {
-        
     }
     
 
@@ -73,6 +72,7 @@ public class Field extends TokenAST
         {
             throw new Error("sizeof cannot be applied to optional field");
         }
+        type = getFieldType();
         return type.sizeof(ctxt);
     }
 

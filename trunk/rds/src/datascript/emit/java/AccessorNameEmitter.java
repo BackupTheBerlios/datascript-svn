@@ -35,10 +35,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
+
 
 import datascript.ast.Field;
 import datascript.ast.Parameter;
+
+
 
 public class AccessorNameEmitter
 {
@@ -46,12 +51,14 @@ public class AccessorNameEmitter
     public AccessorNameEmitter()
     {
     }
-   
-    public String getCheckerName(Field field)
+
+
+    public static String getCheckerName(Field field)
     {
         StringBuffer result = new StringBuffer("is");
         return appendAccessorTail(result, field);
     }
+
 
     public static String getIndicatorName(Field field)
     {
@@ -59,34 +66,40 @@ public class AccessorNameEmitter
         return appendAccessorTail(result, field);
     }
 
+
     public static String getGetterName(Field field)
     {
         StringBuffer result = new StringBuffer("get");
         return appendAccessorTail(result, field);
     }
 
-    public String getSetterName(Field field)
+
+    public static String getSetterName(Field field)
     {
         StringBuffer result = new StringBuffer("set");
         return appendAccessorTail(result, field);
     }
-    
+
+
     public static String getSetterName(Parameter param)
     {
         StringBuffer result = new StringBuffer("set");
         return appendAccessorTail(result, param.getName());
     }
-    
+
+
     public static String getVisitorName(Field field)
     {
         StringBuffer result = new StringBuffer("visit");
-        return appendAccessorTail(result, field);        
+        return appendAccessorTail(result, field);
     }
+
 
     private static String appendAccessorTail(StringBuffer buffer, Field field)
     {
         return appendAccessorTail(buffer, field.getName());
     }
+
 
     private static String appendAccessorTail(StringBuffer buffer, String name)
     {

@@ -5,6 +5,7 @@ package sqltest;
  */
 sql_integer TileId
 {
+//	int8	nu1;
     uint8  level : level < 16;
     uint32 tileId;
 };

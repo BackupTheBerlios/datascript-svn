@@ -315,7 +315,7 @@ public class ExpressionEmitter
         }
         else if (obj instanceof FunctionType)
         {
-            CompoundType compound = ((FunctionType)obj).getOwner();
+            //CompoundType compound = ((FunctionType)obj).getOwner();
             emitCompoundPrefix();
             buffer.append(symbol);
         }

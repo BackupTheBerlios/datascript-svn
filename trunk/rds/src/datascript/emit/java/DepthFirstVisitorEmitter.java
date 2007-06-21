@@ -46,6 +46,7 @@ import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
 import datascript.ast.SequenceType;
+import datascript.ast.SqlIntegerType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
@@ -53,6 +54,7 @@ import datascript.jet.java.DepthFirstEnumeration;
 import datascript.jet.java.DepthFirstSequence;
 import datascript.jet.java.DepthFirstUnion;
 import datascript.jet.java.DepthFirstVisitor;
+import datascript.jet.java.DepthFirstSqlInteger;
 import datascript.jet.java.SequenceEnd;
 
 
@@ -64,9 +66,11 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 
     protected DepthFirstUnion unionTmpl = new DepthFirstUnion();
     protected DepthFirstSequence sequenceTmpl = new DepthFirstSequence();
+    protected DepthFirstSqlInteger sqlintegerTmpl = new DepthFirstSqlInteger();
     protected SequenceType sequence;
     protected UnionType union;
     protected EnumType enumeration;
+    protected SqlIntegerType sqlinteger;
     protected ExpressionEmitter exprEmitter = new ExpressionEmitter();
 
 
@@ -134,6 +138,19 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    public void beginSqlInteger(AST s)
+    {
+        sqlinteger = (SqlIntegerType) s;
+        String result = sqlintegerTmpl.generate(this);
+        out.print(result);
+    }
+
+
+    public void endSqlInteger(AST s)
+    {
+    }
+
+
 /********************************************************************/
 
 
@@ -150,6 +167,11 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     public EnumType getEnumerationType()
     {
         return enumeration;
+    }
+    
+    public SqlIntegerType getSqlIntegerType()
+    {
+        return sqlinteger;
     }
     
     public String getOptionalClause(Field field)

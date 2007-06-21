@@ -232,7 +232,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
 
     public Value castFrom(Value val)
     {
-        throw new Error("casting compounds not implemented");
+        throw new Error("casting compounds not implemented in " + this.getClass().getName());
     }
 
     
@@ -262,12 +262,12 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     
     public int getLength()
     {
-        throw new InternalError("not implemented");
+        throw new InternalError("getLength() not implemented in " + this.getClass().getName());
     }
     
     public Expression getLengthExpression()
     {
-        throw new InternalError("not implemented");
+        throw new InternalError("getLengthExpression() not implemented in " + this.getClass().getName());
     }
 
     public Package getPackage()

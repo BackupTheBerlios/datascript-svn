@@ -77,18 +77,43 @@ public class <%=name%>
         Statement st = dbc.createStatement();
         StringBuilder query = new StringBuilder("CREATE TABLE ");
         query.append(__tableName);
-        query.append("(");
 <%
     int fieldCount = 0;
     for (Field f : table.getFields())
     {
-        String comma = (fieldCount == 0) ? "" : ", ";
-        String fname = f.getName();
-        String sqlType = SqlTypeNameEmitter.getTypeName(f.getFieldType());
         String sql = f.getSqlConstraint();
-%>    
-        query.append("<%=comma%><%=fname%> <%=sqlType%>  NOT NULL <%=sql%>");
+        String comma = (fieldCount == 0) ? "( " : ", ";
+        String fname = f.getName();
+		TypeInterface ftype = TypeReference.resolveType(f.getFieldType());
+
+        if ((ftype instanceof SqlIntegerType) || (ftype instanceof IntegerType))
+        {
+            int typeSize = f.sizeof(null).integerValue().intValue();
+            if (typeSize <= 8)
+                typeSize = 8;
+            else if (typeSize <= 16)
+                typeSize = 16;
+            else if (typeSize <= 24)
+                typeSize = 24;
+            else if (typeSize <= 32)
+                typeSize = 32;
+            else if (typeSize <= 48)
+                typeSize = 48;
+            else if (typeSize <= 64)
+                typeSize = 64;
+            else /* if (totalTypeSize > 64) */
+                throw new RuntimeException("size of type '" + fname + "' in '" + name + "' exceed 64 bits");
+%>
+        query.append("<%=comma%><%=fname%> INTEGER(<%=typeSize/8%>)  NOT NULL <%=sql%>");
 <%
+        }
+        else
+        {
+            //String sqlType = SqlTypeNameEmitter.getTypeName(f.getFieldType());
+%>
+        query.append("<%=comma%><%=fname%> BLOB  NOT NULL <%=sql%>");
+<%
+        }
         fieldCount++;
     }
     String constraint = e.getSqlConstraint();

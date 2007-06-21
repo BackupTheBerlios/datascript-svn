@@ -35,21 +35,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
+
 
 import antlr.collections.AST;
 import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
 import datascript.ast.UnionType;
+import datascript.ast.SqlIntegerType;
 import datascript.jet.java.SequenceEnd;
 import datascript.jet.java.Visitor;
+
 
 
 public class VisitorEmitter extends JavaDefaultEmitter
 {
     private Visitor visitorTmpl = new Visitor();
     private SequenceEnd endTmpl = new SequenceEnd();
-
 
 
     public VisitorEmitter(String outPathName, String defaultPackageName)
@@ -111,6 +115,19 @@ public class VisitorEmitter extends JavaDefaultEmitter
 
 
     public void endEnumeration(AST e)
+    {
+    }
+
+
+    public void beginSqlInteger(AST s)
+    {
+        SqlIntegerType integerType = (SqlIntegerType) s;
+        String typeName = getTypeName(integerType);
+        emitVisitor(typeName);
+    }
+
+
+    public void endSqlInteger(AST s)
     {
     }
 

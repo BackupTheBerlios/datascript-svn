@@ -35,10 +35,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.backend.java;
 
-import antlr.RecognitionException;
 
+import antlr.RecognitionException;
+import datascript.ast.ComputeError;
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.util.TokenAST;
 import datascript.ast.DataScriptException;
@@ -51,12 +54,17 @@ import datascript.tools.Extension;
 import datascript.tools.Parameters;
 
 
+
 public class JavaExtension implements Extension
 {
     private Parameters params = null;
 
-    /* (non-Javadoc)
-     * @see datascript.tools.Extension#generate(datascript.antlr.DataScriptEmitter, datascript.ast.TokenAST)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see datascript.tools.Extension#generate(datascript.antlr.DataScriptEmitter,
+     *      datascript.ast.TokenAST)
      */
     public void generate(DataScriptEmitter emitter, TokenAST rootNode)
             throws DataScriptException, RecognitionException
@@ -65,36 +73,54 @@ public class JavaExtension implements Extension
             throw new DataScriptException("No parameters set for JavaBackend!");
 
         System.out.println("emitting java code");
+        try
+        {
+            // emit Java code for decoders
+            JavaEmitter javaEmitter = new JavaEmitter(params.getOutPathName(),
+                    params.getDefaultPackageName());
+            emitter.setEmitter(javaEmitter);
+            emitter.root(rootNode);
 
-        // emit Java code for decoders
-        JavaEmitter javaEmitter = new JavaEmitter(params.getOutPathName(), params.getDefaultPackageName());
-        emitter.setEmitter(javaEmitter);
-        emitter.root(rootNode);
+            // emit Java __Visitor interface
+            VisitorEmitter visitorEmitter = new VisitorEmitter(params
+                    .getOutPathName(), params.getDefaultPackageName());
+            emitter.setEmitter(visitorEmitter);
+            emitter.root(rootNode);
 
-        // emit Java __Visitor interface
-        VisitorEmitter visitorEmitter = new VisitorEmitter(params.getOutPathName(), params.getDefaultPackageName());
-        emitter.setEmitter(visitorEmitter);
-        emitter.root(rootNode);
+            // emit Java __DepthFirstVisitor class
+            DepthFirstVisitorEmitter dfVisitorEmitter = new DepthFirstVisitorEmitter(
+                    params.getOutPathName(), params.getDefaultPackageName());
+            emitter.setEmitter(dfVisitorEmitter);
+            emitter.root(rootNode);
 
-        // emit Java __DepthFirstVisitor class
-        DepthFirstVisitorEmitter dfVisitorEmitter = 
-            new DepthFirstVisitorEmitter(params.getOutPathName(), params.getDefaultPackageName());
-        emitter.setEmitter(dfVisitorEmitter);
-        emitter.root(rootNode);
+            // emit Java __SizeOf class
+            SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(params
+                    .getOutPathName(), params.getDefaultPackageName());
+            emitter.setEmitter(sizeOfEmitter);
+            emitter.root(rootNode);
 
-        // emit Java __SizeOf class
-        SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(params.getOutPathName(), params.getDefaultPackageName());
-        emitter.setEmitter(sizeOfEmitter);
-        emitter.root(rootNode);
-
-        // emit Java __XmlDumper class
-        XmlDumperEmitter xmlDumper = new XmlDumperEmitter(params.getOutPathName(), params.getDefaultPackageName());
-        emitter.setEmitter(xmlDumper);
-        emitter.root(rootNode);
+            // emit Java __XmlDumper class
+            XmlDumperEmitter xmlDumper = new XmlDumperEmitter(params
+                    .getOutPathName(), params.getDefaultPackageName());
+            emitter.setEmitter(xmlDumper);
+            emitter.root(rootNode);
+        }
+        catch (RuntimeException e)
+        {
+            System.err.println("emitter error in '" + params.getFileName()
+                    + "': " + e.getMessage());
+        }
+        catch (ComputeError e)
+        {
+            System.err.println("emitter error in '" + params.getFileName()
+                    + "': " + e.getMessage());
+        }
     }
 
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see datascript.tools.Extension#setParameter(datascript.tools.Parameters)
      */
     public void setParameter(Parameters params)

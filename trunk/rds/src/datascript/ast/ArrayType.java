@@ -35,10 +35,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import datascript.antlr.util.TokenAST;
 import antlr.collections.AST;
+
 
 
 public class ArrayType extends TokenAST implements TypeInterface
@@ -47,9 +51,11 @@ public class ArrayType extends TokenAST implements TypeInterface
     private int length;
     private Expression lengthExpr;
 
+
     public ArrayType()
     {
     }
+
 
     public int getLength()
     {
@@ -57,6 +63,7 @@ public class ArrayType extends TokenAST implements TypeInterface
         length = (value == null) ? 0 : value.integerValue().intValue();
         return length;
     }
+
 
     public String getName()
     {
@@ -67,7 +74,8 @@ public class ArrayType extends TokenAST implements TypeInterface
         }
         return null;
     }
-    
+
+
     public Expression getLengthExpression()
     {
         if (lengthExpr == null)
@@ -76,7 +84,8 @@ public class ArrayType extends TokenAST implements TypeInterface
         }
         return lengthExpr;
     }
-    
+
+
     public boolean isVariable()
     {
         return getFirstChild().getNextSibling() == null;
@@ -85,37 +94,48 @@ public class ArrayType extends TokenAST implements TypeInterface
 
     public IntegerValue sizeof(Context ctxt)
     {
-        throw new ComputeError("sizeof array not known");
+        // throw new ComputeError("sizeof() not implemented in " +
+        // this.getClass().getName());
+        IntegerValue eight = new IntegerValue(8);
+        IntegerValue size = ((TypeReference) getFirstChild()).sizeof(ctxt);
+        return size.multiply(new IntegerValue(getLength())).divide(eight);
     }
+
 
     public boolean isMember(Context ctxt, Value val)
     {
-        throw new ComputeError("ArrayType.isMember not implemented");
+        throw new ComputeError("isMember() not implemented in "
+                + this.getClass().getName());
     }
+
 
     public Value castFrom(Value val)
     {
         throw new ComputeError("cannot cast " + val + " into " + this);
     }
 
+
     public TypeInterface getElementType()
-    {        
-        TypeInterface type =(TypeInterface) getFirstChild();
+    {
+        TypeInterface type = (TypeInterface) getFirstChild();
         return TypeReference.resolveType(type);
     }
+
 
     public String toString()
     {
         return "array of " + getElementType();
     }
 
+
     public Scope getScope()
     {
         return scope;
     }
-    
+
+
     public Package getPackage()
     {
-    	return getElementType().getPackage();
+        return getElementType().getPackage();
     }
 }

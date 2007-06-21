@@ -66,7 +66,6 @@ abstract public class CompoundEmitter
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
     private ArrayRead arrayReadTmpl = new ArrayRead();
     private ArrayWrite arrayWriteTmpl = new ArrayWrite();
-    private AccessorNameEmitter ane = new AccessorNameEmitter();
     private StringBuilder buffer;
     private String formalParams;
     private String actualParams;
@@ -155,7 +154,7 @@ abstract public class CompoundEmitter
 
     private void readIntegerField(Field field, IntegerType type)
     {
-        buffer.append(ane.getSetterName(field));
+        buffer.append(AccessorNameEmitter.getSetterName(field));
         buffer.append("(");
         readIntegerValue(field, type);
         buffer.append(");");
@@ -240,14 +239,14 @@ abstract public class CompoundEmitter
 
     private void readStringField(Field field, StringType type)
     {
-        buffer.append(ane.getSetterName(field));
+        buffer.append(AccessorNameEmitter.getSetterName(field));
         buffer.append("(__in.readString());");
     }
 
 
     private void readCompoundField(Field field, CompoundType type) 
     {
-        buffer.append(ane.getSetterName(field));
+        buffer.append(AccessorNameEmitter.getSetterName(field));
         buffer.append("(new ");
         buffer.append(type.getName());
         buffer.append("(__in, __cc));");
@@ -258,7 +257,7 @@ abstract public class CompoundEmitter
     {
         CompoundType compound = inst.getBaseType();
         
-        buffer.append(ane.getSetterName(field));
+        buffer.append(AccessorNameEmitter.getSetterName(field));
         buffer.append("(new ");
         buffer.append(compound.getName());
         buffer.append("(__in, __cc");
@@ -335,7 +334,7 @@ abstract public class CompoundEmitter
         else
         {
             Expression length = array.getLengthExpression();
-            buffer.append(ane.getSetterName(field));
+            buffer.append(AccessorNameEmitter.getSetterName(field));
             buffer.append("(new ");
             buffer.append(elTypeJavaName);
             buffer.append("(__in, (int)(");
@@ -357,7 +356,7 @@ abstract public class CompoundEmitter
     private void readEnumField(Field field, EnumType type)
     {
         IntegerType baseType = (IntegerType) type.getBaseType();
-        buffer.append(ane.getSetterName(field));
+        buffer.append(AccessorNameEmitter.getSetterName(field));
         buffer.append("(");
         buffer.append(type.getName());
         buffer.append(".toEnum(");

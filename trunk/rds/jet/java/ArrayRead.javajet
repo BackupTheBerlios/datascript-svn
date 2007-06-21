@@ -43,10 +43,9 @@
 %><%
     ArrayEmitter e = (ArrayEmitter) argument;
     ArrayType array = e.getArrayType();
-    AccessorNameEmitter ane = new AccessorNameEmitter();
     String elType = e.getElementTypeName();
     Field field  = e.getField();
-    String setter = ane.getSetterName(field);
+    String setter = AccessorNameEmitter.getSetterName(field);
     String actPar = e.getActualParameterList();
     //System.out.println("elType = " + elType + ", param = " + actPar);
 

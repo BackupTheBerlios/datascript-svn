@@ -46,10 +46,9 @@
     String type = TypeNameEmitter.getTypeName(field.getFieldType());
     String cls  = TypeNameEmitter.getClassName(field.getFieldType());
     String fname = field.getName();
-    AccessorNameEmitter ane = new AccessorNameEmitter();
     String getter = AccessorNameEmitter.getGetterName(field);
-    String setter = ane.getSetterName(field);
-    String checker = ane.getCheckerName(field);
+    String setter = AccessorNameEmitter.getSetterName(field);
+    String checker = AccessorNameEmitter.getCheckerName(field);
 %>
     public boolean <%=checker%>() 
     { 

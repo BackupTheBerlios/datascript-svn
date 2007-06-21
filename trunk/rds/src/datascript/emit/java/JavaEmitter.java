@@ -43,6 +43,7 @@ import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
 import datascript.ast.SqlDatabaseType;
 import datascript.ast.SqlTableType;
+import datascript.ast.SqlIntegerType;
 import datascript.ast.UnionType;
 
 
@@ -157,6 +158,23 @@ public class JavaEmitter extends JavaDefaultEmitter
 
 
     public void endSqlTable(AST s)
+    {
+        out.close();
+    }
+
+
+    public void beginSqlInteger(AST s)
+    {
+        SqlIntegerType integerType = (SqlIntegerType)s;
+        String typeName = getTypeName(integerType);
+        openOutputFile(dir, typeName + JAVA_EXT);
+        SqlIntegerEmitter integerEmitter = new SqlIntegerEmitter(this, integerType);
+        integerEmitter.setOutputStream(out);
+        integerEmitter.emit(integerType);
+    }
+
+
+    public void endSqlInteger(AST s)
     {
         out.close();
     }

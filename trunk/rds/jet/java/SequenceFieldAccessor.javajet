@@ -44,9 +44,8 @@
     SequenceFieldEmitter e = (SequenceFieldEmitter) argument;
     Field field = e.getField();
     String type =  TypeNameEmitter.getTypeName(field.getFieldType());
-    AccessorNameEmitter ane = new AccessorNameEmitter();
     String getter = AccessorNameEmitter.getGetterName(field);
-    String setter = ane.getSetterName(field);
+    String setter = AccessorNameEmitter.getSetterName(field);
     String indicator = AccessorNameEmitter.getIndicatorName(field);
     SequenceEmitter se = (SequenceEmitter)e.getCompoundEmitter();
     String constraint = se.getOptionalClause(field);

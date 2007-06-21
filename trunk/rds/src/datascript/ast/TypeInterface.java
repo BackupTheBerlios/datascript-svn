@@ -78,6 +78,9 @@ public interface TypeInterface
      */
     Package getPackage();
 
+    /**
+     * @return  Returns size of an array type
+     */
     int getLength();
 
     String getName();
