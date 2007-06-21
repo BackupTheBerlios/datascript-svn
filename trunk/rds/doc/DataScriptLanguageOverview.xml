@@ -97,7 +97,7 @@
       our implementation called <literal>rds</literal> (short for Relational
       DataScript), which is available from SourceForge <xref linkend="rds" />
       under a BSD License. This Language Overview is more of a User's Manual
-      than a formal language specification. </para>
+      than a formal language specification.</para>
     </section>
 
     <section>
@@ -110,10 +110,10 @@
       specification.</para>
 
       <para><literal>rds</literal> and the DataScript dialect defined in this
-      document are a spin-off of the Physical Storage Format Standardization
-      Initiative (PSI), a joint effort of about 20 partner companies in the
-      automotive industry to standardize a car navigation database format.
-      </para>
+      document are a spin-off of the <emphasis>Physical Storage Format
+      Standardization Initiative</emphasis> (PSI), a joint effort of about 20
+      partner companies in the automotive industry to standardize a car
+      navigation database format.</para>
 
       <para>After evaluating different data modelling languages and toolsets,
       including ASN.1, CSN.1, UML, XML Schema and others, DataScript was
@@ -124,7 +124,7 @@
       language extensions were desirable to better support our specific
       requirements. For this reason, we branched off our own DataScript Tools
       or <literal>dstools</literal> project from Back's reference
-      implementation. </para>
+      implementation.</para>
 
       <para>As a major addition to the DataScript language, we introduced
       relational extensions, which permit the definition of hybrid data
@@ -270,7 +270,7 @@
     enumeration type, but may be reused in other contexts with different
     meanings. Referring to the example, any other enumeration type
     <literal>Foo</literal> may also contain a member named
-    <literal>NONE</literal>. </para>
+    <literal>NONE</literal>.</para>
 
     <para>In expressions outside of the defining type, enumeration members
     must always be prefixed by the type name and a dot, e.g.
@@ -1114,6 +1114,156 @@ import common.featuretypes.*;</programlisting>
       import relations between packages are supported but should be avoided.
       The DataScript parser takes care to parse each source file just
       once.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Relational Extensions</title>
+
+    <section>
+      <title>Motivation</title>
+
+      <para>WIth its basic language features presented in the previous
+      sections, DataScript provides a rich language for modelling binary data
+      streams, which are intended to be parsed sequentially. Direct access to
+      members in the stream is usually not possible, except for labels
+      specifying the offset of a given member. Navigation methods between
+      semantically related members at different positions in the stream cannot
+      be expressed at the stream level. Member insertions or updates are not
+      supported.. </para>
+
+      <para>All in all, the stream model is not an adequate approach for
+      updatable databases in the gigabyte size range with lots of internal
+      cross-references where fast access to individual members is required. In
+      a desktop or server environment, it would be a natural approach to model
+      such a database as a relational database using SQL.</para>
+
+      <para>However, in an embedded environment with limited storage space and
+      processing resources, a full-fledged relational schema is not a viable
+      approach. To have the best of both worlds, i.e. compact storage on the
+      one hand and direct member access including updates on the other hand,
+      one can adopt a hybrid data model: In this hybrid model, the high-level
+      access structures are strictly relational, but most of the low-level
+      data are stored in binary large objects (BLOBs), where the internal
+      structure of each BLOB is modelled in DataScript.</para>
+
+      <para>For example, we can model a digital map database as a collection
+      of tiles resulting from a rectangular grid where the tiles are numbered
+      row-wise. The database has a rather trivial schema:</para>
+
+      <programlisting>CREATE TABLE europe (
+  tileNum INT NOT NULL PRIMARY KEY,
+  tile BLOB NOT NULL);</programlisting>
+
+      <para>Accessing or updating any given tile can simply be delegated to
+      the relational DBMS. Assuming that the tile BLOBs have a reasonable
+      size, each tile can be decoded on the fly to access the individual
+      members within the tile.</para>
+
+      <para>For seamless modelling of this hybrid approach, we decided to add
+      relational extensions to DataScript. Some SQL concepts have been
+      translated to DataScript, others are transparent to DataScript and can
+      be embedded as literal strings to be passed to the SQL backend. Since it
+      is hard to find a natural border between native DataScript and embedded
+      SQL, the relational extensions of DataScript should be regarded as
+      preliminary.</para>
+    </section>
+
+    <section>
+      <title>SQL Tables</title>
+
+      <para>An SQL table type is a special case of a compound type, where the
+      members of the type correspond to the columns of a relational table.
+      Members of integer or string type translate to the corresponding SQL
+      column types. Members of compound or array type correspond to BLOB
+      columns. In Relational DataScript, we can express the above example as
+      follows:</para>
+
+      <programlisting>sql_table GeoMap
+{
+  int32   tileId sql "PRIMARY KEY";
+  Tile    tile;
+};
+
+
+GeoMap europe;
+GeoMap america;</programlisting>
+
+      <para>It is important to note that the <literal>GeoMap</literal> is a
+      table <emphasis>type</emphasis> and not a table. A table is defined by
+      the instance <literal><literal>europe</literal></literal> of type
+      <literal>GeoMap</literal>. Table types have no direct equivalent in SQL.
+      They can be used to create tables with identical structure and column
+      names. Each instance of an
+      <literal><literal>sql_table</literal></literal> type in DataScript
+      translates to an SQL table where the table name in SQL is equal to the
+      instance name in DataScript. A member definition may include an SQL
+      constraint introduced by the keyword <literal>sql</literal>, followed by
+      a literal string which is passed transparently to the SQL engine.</para>
+
+      <para>Thus, the DataScript instance <literal>america</literal> gives
+      rise to the following SQL table:</para>
+
+      <para><programlisting>CREATE TABLE america (
+  tileNum INT NOT NULL PRIMARY KEY,
+  tile BLOB NOT NULL);</programlisting></para>
+
+      <remark>Note: The current definition of sql_tables is not consistent
+      with the abstract data type and value semantics of plain DataScript.
+      Actually, a table instance is itself a composite type, represented by a
+      set of rows, and each row item is an instance of the corresponding
+      column type. To model this more adequately and to avoid embedded SQL for
+      the primary key property, we are planning to change our
+      definitions.</remark>
+
+      <remark> An SQL table is a map container type mapping (primary) keys to
+      values: sql_map&lt;int32, Tile&gt; GeoMap is a container type. An
+      instance of this type is an SQL table. A map entry is realized as a
+      table row, corresponding to a key-value pair. Both key and value may be
+      composed of one or more columns.</remark>
+    </section>
+
+    <section>
+      <title>SQL Databases</title>
+
+      <para>Since an SQL table is always contained in an SQL database, we
+      introduce an <literal>sql_database</literal> type in DataScript to model
+      databases. <literal>sql_table</literal> instances may only be created as
+      members of an <literal>sql_database</literal>.</para>
+
+      <para><programlisting>sql_table GeoMap
+{
+  // see above
+};
+
+sql_database TheWorld
+{
+  GeoMap europe;
+  GeoMap america;
+};</programlisting></para>
+    </section>
+
+    <section>
+      <title>SQL Integers</title>
+
+      <para>Some SQL engines internally always use an integer key or rowid. If
+      the user-defined primary key is an integer, it can be used as row id. If
+      the primary key is composite, it is mapped internally to an integer
+      rowid. To avoid this indirection which requires additional storage space
+      and increases access times, we introduce SQL integer types. An
+      <literal>sql_integer</literal> is a sequence type whose members are of
+      integer base type such that the total size of the
+      <literal>sql_integer</literal> type does not exceed 64 bits. Members of
+      an <literal>sql_integer</literal> may not be optional.</para>
+
+      <para><programlisting>sql_integer TileId
+{
+  uint8  levelNr;
+  int32  tileNr;
+};</programlisting></para>
+
+      <para>In this example, the value used as SQL key is <literal>(levelNr
+      &lt;&lt; 32 + (uint32) tileNr)</literal>.</para>
     </section>
   </section>
 
