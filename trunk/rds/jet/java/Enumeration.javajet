@@ -45,8 +45,10 @@
     String pkg = e.getGlobal().getPackageName(); 
     EnumType en = e.getEnumerationType();
     String name = en.getName();
-    String baseType = e.getBaseType();
-    String cast = baseType.equals("int") ? "" : ("(" + baseType + ")");
+    TypeInterface baseType = en.getBaseType();
+    IntegerValue maxVal = new IntegerValue(1).shiftLeft(baseType.sizeof(null));
+    String baseTypeName = e.getBaseType();
+    String cast = baseTypeName.equals("int") ? "" : ("(" + baseTypeName + ")");
 %>
 <%@include file="FileHeader.inc"%>
 // DS-Import
@@ -55,31 +57,33 @@
 
 public enum <%=name%> implements SizeOf
 {
-    <%
-       for (EnumItem item : en.getItems()) 
-       {
-           String iname = item.getName();
-           int value = item.getValue().integerValue().intValue();
-    %>
+<%
+    for (EnumItem item : en.getItems()) 
+    {
+        String iname = item.getName();
+        if (maxVal.compareTo(item.getValue()) != 1)
+            throw new RuntimeException("typeconflict with enum item " + iname + ", value " + item.getValue() + " will not fit in enumtype of " + baseTypeName);
+        int value = item.getValue().integerValue().intValue();
+%>
     <%=iname%>(<%=cast%><%=value%>),
     <%
-       }
-    %>   
+   }
+%>   
     __INVALID(<%=cast%>-1);
 
-    private <%=baseType%> value;
+    private <%=baseTypeName%> value;
 
-    <%=name%>(<%=baseType%> value)
+    <%=name%>(<%=baseTypeName%> value)
     {
         this.value = value;
     }
 
-    public <%=baseType%> getValue()
+    public <%=baseTypeName%> getValue()
     {
         return value;
     }
 
-    public static <%=name%> toEnum(<%=baseType%> v)
+    public static <%=name%> toEnum(<%=baseTypeName%> v)
     {
         switch (v)
         {

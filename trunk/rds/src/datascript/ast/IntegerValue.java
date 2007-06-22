@@ -123,6 +123,18 @@ public class IntegerValue extends Value implements Comparable
         return new IntegerValue(ival.negate());
     }
 
+    /**
+     * Compares this IntegerValue with the specified IntegerValue. This method
+     * is provided in preference to individual methods for each of the six
+     * boolean comparison operators (<, ==, >, >=, !=, <=). The suggested idiom
+     * for performing these comparisons is: (x.compareTo(y) <op> 0), where <op>
+     * is one of the six comparison operators.
+     * 
+     * @param val -
+     *            BigInteger to which this BigInteger is to be compared.
+     * @return -1, 0 or 1 as this BigInteger is numerically less than, equal to,
+     *         or greater than val.
+     */
     public int compareTo(Object obj)
     {
         IntegerValue ivalobject = (IntegerValue) obj;
