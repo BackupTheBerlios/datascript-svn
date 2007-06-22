@@ -85,7 +85,7 @@ public class BitFieldType extends IntegerType
 
     public IntegerValue sizeof(Context ctxt)
     {
-        return new IntegerValue(length);
+        return new IntegerValue(getLength());
     }
 
     public boolean isMember(Context ctxt, Value val)
