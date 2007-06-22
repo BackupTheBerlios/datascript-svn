@@ -4,6 +4,9 @@ import bits.arrays.*;
 
 
 
+/**
+ * Testcase for bugreport 1732604, unions containing bitfields lead to incompilable code
+ */
 union BitField
 {
     bit:8 value1 : 1 == 2;
