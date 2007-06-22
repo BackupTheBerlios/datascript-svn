@@ -170,7 +170,6 @@ public class TypeNameEmitter
     protected static String getTypeName(ArrayType array)
     {
         TypeInterface elType = array.getElementType();
-        String elTypeName = getTypeName(elType);
         if (elType instanceof IntegerType)
         {
             IntegerType intType = (IntegerType) elType;
@@ -208,6 +207,7 @@ public class TypeNameEmitter
         {
             return "StringArray";
         }
+        String elTypeName = getTypeName(elType);
         return "ObjectArray<" + elTypeName +  ">";        
     }
 
@@ -219,6 +219,10 @@ public class TypeNameEmitter
         if (t instanceof StdIntegerType)
         {
             result = getClassName((StdIntegerType) t);
+        }
+        else if (t instanceof BitFieldType)
+        {
+            result = getClassName((BitFieldType) t);
         }
         else
         {
@@ -253,5 +257,23 @@ public class TypeNameEmitter
             default:
                 throw new UnsupportedOperationException();
         }        
+    }
+
+
+    protected static String getClassName(BitFieldType t)
+    {
+        int length = t.getLength();
+        if (length == 0)
+            return "BigInteger";
+        else if (length < 8)
+            return "Byte";
+        else if (length < 16)
+            return "Short";
+        else if (length < 32)
+            return "Integer";
+        else if (length < 64)
+            return "Long";
+        else
+            return "BigInteger";
     }
 }

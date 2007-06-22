@@ -3,6 +3,14 @@ package bits;
 import bits.arrays.*;
 
 
+
+union BitField
+{
+    bit:8 value1 : 1 == 2;
+    bit:16 value2 : 2 == 2;
+};
+
+
 /**
  * Comment for Unsigned.
  */
