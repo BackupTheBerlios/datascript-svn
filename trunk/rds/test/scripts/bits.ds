@@ -4,6 +4,18 @@ import bits.arrays.*;
 
 
 
+TestForBug1732604 
+{
+	ByteAlignedBitField(5) data;
+};
+
+
+ByteAlignedBitField(uint16 numBits)
+{
+      bit<8*((numBits+7)/8)>    mask;
+};
+
+
 /**
  * Testcase for bugreport 1730746, unions containing bitfields lead to incompilable code
  */

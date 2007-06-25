@@ -74,6 +74,13 @@ public class AccessorNameEmitter
     }
 
 
+    public static String getGetterName(Parameter param)
+    {
+        StringBuffer result = new StringBuffer("get");
+        return appendAccessorTail(result, param.getName());
+    }
+
+
     public static String getSetterName(Field field)
     {
         StringBuffer result = new StringBuffer("set");

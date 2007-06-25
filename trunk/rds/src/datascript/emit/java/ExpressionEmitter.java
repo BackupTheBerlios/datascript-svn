@@ -299,7 +299,6 @@ public class ExpressionEmitter
     {
         append(expr.op1());
         buffer.append('.');
-        
         append(expr.op2());        
     }
     
@@ -341,10 +340,10 @@ public class ExpressionEmitter
         else if (obj instanceof Parameter)
         {
             Parameter param = (Parameter)obj;
-            String pName = param.getName();
-            if (scope.getSymbolFromThis(pName) == null)
+            String getter = AccessorNameEmitter.getGetterName(param);
+            if (scope.getSymbolFromThis(symbol) == null)
             {
-                CompoundType def = scope.getDefiningType(pName);
+                CompoundType def = scope.getDefiningType(symbol);
                 String defName = def.getName();
                 buffer.append("((");
                 buffer.append(defName);
@@ -353,13 +352,13 @@ public class ExpressionEmitter
                 buffer.append("__cc.find(\"");
                 buffer.append(defName);
                 buffer.append("\")).");
-                buffer.append(param.getName());
             }
             else
             {
                 emitCompoundPrefix();
-                buffer.append(param.getName());
             }
+            buffer.append(getter);
+            buffer.append("()");
         }
         else if (obj instanceof Field)
         {

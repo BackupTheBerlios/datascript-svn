@@ -46,11 +46,17 @@
     String type =  TypeNameEmitter.getTypeName(param.getType());    
     String pname = param.getName();
     String setter = AccessorNameEmitter.getSetterName(param);
+    String getter = AccessorNameEmitter.getGetterName(param);
 %>
     <%=type%> <%=pname%>;
-    
+
     public void <%=setter%>(<%=type%> <%=pname%>) 
     { 
         this.<%=pname%> = <%=pname%>; 
+    }
+
+    public <%=type%> <%=getter%>() 
+    { 
+        return <%=pname%>; 
     }
 
