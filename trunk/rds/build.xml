@@ -126,6 +126,7 @@
     <mkdir dir="${classes}" />
     <mkdir dir="${antlr.out}" />
     <copy file="${lib}/antlr.jar" todir="${jar}" />
+    <copy file="${lib}/freemarker.jar" todir="${jar}" />
   </target>
 
 
@@ -314,8 +315,9 @@
       <classpath>
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
+        <pathelement path="${lib}/freemarker.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  sqltest.ds" />
+      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src  ${ds.src}  sqltest.ds" />
     </java>
   </target>
 
