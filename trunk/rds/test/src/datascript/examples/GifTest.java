@@ -16,7 +16,7 @@ public class GifTest extends TestCase
     static
     {
         String sep = File.separator;
-        fileName = "test" + sep + "scripts" + sep + "1pix.gif";
+        fileName = ".." + sep + "test" + sep + "scripts" + sep + "1pix.gif";
     }
 
     private String ident;

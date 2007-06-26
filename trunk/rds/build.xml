@@ -289,7 +289,7 @@
   </target>
 
   <target name="test.run" depends="test.compile" description="Runs the unit tests">
-    <junit printsummary="no" fork="yes" dir="${basedir}">
+    <junit printsummary="no" fork="yes" dir="${build}">
       <jvmarg value="-Djava.library.path=${lib}" />
       <classpath>
         <pathelement path="${build}/test/classes" />
