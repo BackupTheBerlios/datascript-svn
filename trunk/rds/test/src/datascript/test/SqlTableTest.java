@@ -196,4 +196,30 @@ public class SqlTableTest extends TestCase
 
         db.close();
     }
+    
+    private void packAndUnpackSqlInteger(short level, long tileNum) throws Exception
+    {
+        TileId id = new TileId(level, tileNum);
+        assertEquals(id.getLevel(), level);
+        assertEquals(id.getTileId(), tileNum);
+        
+        long packed = id.pack();
+        TileId id2 = new TileId(packed);
+        assertTrue(id.equals(id2));
+        assertEquals(id2.getLevel(), level);
+        assertEquals(id2.getTileId(), tileNum);
+    }
+
+    public void testSqlInteger1() throws Exception
+    {
+        packAndUnpackSqlInteger((short)10, 123456);
+    }
+
+    public void testSqlInteger2() throws Exception
+    {
+        // now use unsigned values outside of the signed range
+        packAndUnpackSqlInteger((short)150, 0xCAFEBABE);
+    }
+    
+    // TODO: Add test cases for sql_integers with more than 2 members.
 }

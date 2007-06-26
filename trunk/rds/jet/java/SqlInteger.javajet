@@ -127,8 +127,8 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
     }
 
 <%
-		//String setter = ane.getSetterName(field);
-    	String setter = AccessorNameEmitter.getSetterName(field);
+        //String setter = ane.getSetterName(field);
+        String setter = AccessorNameEmitter.getSetterName(field);
 %>
     public void <%=setter%>(<%=type%> <%=field%>) 
     { 
@@ -154,7 +154,7 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
 
     public <%=fittingType%> pack()
     {
-		return (<%=fittingType%>)<%=e.emitEncoding()%>;
+        return (<%=fittingType%>)<%=e.emitEncoding()%>;
     }
 
 
@@ -164,13 +164,13 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
 %>
     public <%=name%>(<%=fittingType%> __in<%=formalPar%>) throws Exception 
     {
-    	read(__in, new CallChain()<%=actualPar%>);
+        read(__in, new CallChain()<%=actualPar%>);
     }
 
 
     public <%=name%>(<%=fittingType%> __in, CallChain __cc<%=formalPar%>) throws Exception 
     {
-    	read(__in, __cc<%=actualPar%>);
+        read(__in, __cc<%=actualPar%>);
     }
 
 
