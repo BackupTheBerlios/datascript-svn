@@ -70,7 +70,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.9.14 (25 Jun 2007)";
+    private static final String VERSION = "rds 0.9.15 (26 Jun 2007)";
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -111,7 +111,7 @@ public class DataScriptTool implements Parameters
             }
             cmdLineArgs.put(key, value);
         }
-        fileName = args[i];
+        fileName = new File(args[i]).getPath();
 
         defaultPackageName = cmdLineArgs.get("-pkg");
         generateDocs = cmdLineArgs.containsKey("-doc");

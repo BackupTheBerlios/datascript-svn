@@ -1,5 +1,7 @@
 package pkg.bottom;
 
+import pkg.top.*;	// test for parsing cyclic depending files
+
 
 Bottom
 {
