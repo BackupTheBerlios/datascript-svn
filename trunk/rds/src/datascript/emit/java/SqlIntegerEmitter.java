@@ -42,6 +42,7 @@ package datascript.emit.java;
 
 import java.io.PrintStream;
 import java.util.List;
+import java.util.ListIterator;
 
 import datascript.ast.CompoundType;
 import datascript.ast.Field;
@@ -104,33 +105,5 @@ public class SqlIntegerEmitter extends CompoundEmitter
     {
         String result = integerTmpl.generate(this);
         out.print(result);
-    }
-
-
-    public String emitEncoding()
-    {
-        final StringBuffer stringBuffer = new StringBuffer();
-        final int fieldCount = getFields().size();
-        for (int i = 1; i < fieldCount; i++)
-        {
-            stringBuffer.append('(');
-        }
-        boolean isFirst = true;
-        for (Field field : getFields())
-        {
-            if (isFirst)
-            {
-                stringBuffer.append(field);
-                isFirst = false;
-            }
-            else
-            {
-                stringBuffer.append(" << ");
-                stringBuffer.append(field.getFieldType().sizeof(null));
-                stringBuffer.append(") + ");
-                stringBuffer.append(field);
-            }
-        }
-        return stringBuffer.toString();
     }
 }

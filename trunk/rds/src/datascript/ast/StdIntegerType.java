@@ -74,12 +74,18 @@ public class StdIntegerType extends IntegerType
         // remove double quotes from "uint8"
         return DataScriptParser._tokenNames[getType()];
     }
-*/    
+*/
+
     public boolean equals(Object obj)
     {
-        StdIntegerType other = (StdIntegerType)obj;
-        return other.getType() == getType();
+        if (obj instanceof StdIntegerType)
+        {
+            StdIntegerType other = (StdIntegerType)obj;
+            return other.getType() == getType();
+        }
+        return super.equals(obj);
     }
+
 
     public IntegerValue sizeof(Context ctxt)
     {

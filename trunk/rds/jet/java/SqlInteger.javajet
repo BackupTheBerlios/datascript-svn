@@ -38,7 +38,7 @@
  */
 %>
 <%@ jet package="datascript.jet.java" 
-        imports="datascript.ast.* datascript.emit.java.* java.util.ListIterator" 
+        imports="datascript.ast.* datascript.emit.java.* java.util.List java.util.ListIterator" 
         class="SqlInteger" %>
 <% 
     SqlIntegerEmitter e = (SqlIntegerEmitter) argument;
@@ -74,6 +74,59 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
     }
 
 
+    public boolean equals(Object obj)
+    {
+    	if (obj instanceof <%=name%>)
+    	{
+    		<%=name%> that = (<%=name%>) obj;
+    		return 
+<%
+    SqlIntegerType s = e.getSqlIntegerType();
+    for (Field field : s.getFields())    
+    {
+		String optional = e.getOptionalClause(field);
+%>
+				(<%=(optional != null)? "(!("+optional+"))? true : " : ""%>(<%
+
+    	String fieldName = field.getName();
+        TypeInterface type = field.getFieldType();
+        type = TypeReference.resolveType(type);
+        if (type instanceof EnumType)
+		{
+			%>this.<%=fieldName%>.getValue() == that.<%=fieldName%>.getValue()<%
+		}
+		else if (type instanceof BitFieldType && ((BitFieldType)type).getLength() == 0)
+		{
+			%>this.<%=fieldName%>.compareTo(that.<%=fieldName%>) == 0<%
+		}
+		/*
+		else if (type instanceof SequenceType ||
+				 type instanceof UnionType ||
+				 type instanceof ArrayType ||
+				 type instanceof TypeInstantiation ||
+				 type instanceof StringType ||
+				 (type instanceof StdIntegerType && 
+				 	((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
+				 )
+		*/
+		else if (type instanceof StdIntegerType && 
+				 	((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
+    	{
+			%>this.<%=fieldName%>.equals(that.<%=fieldName%>)<%
+		}
+		else
+		{
+			%>this.<%=fieldName%> == that.<%=fieldName%><%
+		}
+		%>)) && /* <%=type.getClass().getCanonicalName()%>*/<%
+    }
+%> 
+				true;
+		}
+		return super.equals(obj);
+    }
+
+
     public <%=name%>()
     {
     }
@@ -82,14 +135,13 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
 	// Contructor for <%=name%> 
     public <%=name%>(
 <%
-    SqlIntegerType s = e.getSqlIntegerType();
     int fieldCount = 0;
     int numFields = s.getNumFields();
     for (Field field : s.getFields())    
     {
-    	String fieldName = field.getName();
-    	String fieldType = TypeNameEmitter.getTypeName(field.getFieldType());
-    	String sep = (fieldCount == numFields-1) ? "" : ", ";
+        String fieldName = field.getName();
+        String fieldType = TypeNameEmitter.getTypeName(field.getFieldType());
+        String sep = (fieldCount == numFields-1) ? "" : ", ";
 %>
         <%=fieldType%> <%=fieldName%><%=sep%> 
 <%
@@ -101,9 +153,12 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
 <%
     for (Field field : s.getFields())    
     {
-    	String fieldName = field.getName();
+        int bitSize = field.getFieldType().sizeof(null).integerValue().intValue();
+        long bitmask = (1L << bitSize) - 1L;
+        String fieldName = field.getName();
 %>
         this.<%=fieldName%> = <%=fieldName%>;
+        this.<%=fieldName%> &= <%=bitmask%>L;
 <%
     }
 %>
@@ -127,7 +182,6 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
     }
 
 <%
-        //String setter = ane.getSetterName(field);
         String setter = AccessorNameEmitter.getSetterName(field);
 %>
     public void <%=setter%>(<%=type%> <%=field%>) 
@@ -154,7 +208,28 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
 
     public <%=fittingType%> pack()
     {
-        return (<%=fittingType%>)<%=e.emitEncoding()%>;
+        <%=fittingType%> retValue = 0;
+<%
+        {
+            List<Field> list = e.getFields();
+            ListIterator<Field> li = list.listIterator(list.size());
+            int bitSize = 0;
+            int shiftBits = 0;
+            while (li.hasPrevious())
+            {
+                Field field = li.previous();
+
+        	    String type =  TypeNameEmitter.getTypeName(field.getFieldType());
+                bitSize = field.getFieldType().sizeof(null).integerValue().intValue();
+                long bitmask = (1L << bitSize) - 1L;
+%>
+        retValue |= ((<%=fittingType%>)<%=field%> & <%=bitmask%>L) << <%=shiftBits%>;
+<%
+                shiftBits += bitSize;
+            }
+        }
+%>
+        return retValue;
     }
 
 
@@ -177,9 +252,8 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
     public void read(<%=fittingType%> __in, CallChain __cc<%=formalPar%>) throws Exception 
     {
 <%
-        ListIterator<Field> li = e.getFields().listIterator();
-        // Don't know how to reverse this list, no reverseitreator available
-        while (li.hasNext()) li.next();
+        List<Field> list = e.getFields();
+        ListIterator<Field> li = list.listIterator(list.size());
         int bitSize = 0;
         int shiftBits = 0;
         while (li.hasPrevious())

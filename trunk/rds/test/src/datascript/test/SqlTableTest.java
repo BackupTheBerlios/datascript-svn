@@ -59,7 +59,7 @@ public class SqlTableTest extends TestCase
     {
         if (file.exists())
         {
-            //file.delete();
+            // file.delete();
         }
     }
 
@@ -106,8 +106,8 @@ public class SqlTableTest extends TestCase
         rs.close();
         st.close();
 
-        PreparedStatement pst = 
-            dbc.prepareStatement("insert into tiles values (?, ?)");
+        PreparedStatement pst = dbc
+                .prepareStatement("insert into tiles values (?, ?)");
         long longVal = (1L << 32) + 123456L;
         pst.setLong(1, longVal);
         pst.setString(2, "blob1");
@@ -196,30 +196,35 @@ public class SqlTableTest extends TestCase
 
         db.close();
     }
-    
-    private void packAndUnpackSqlInteger(short level, long tileNum) throws Exception
+
+
+    private void packAndUnpackSqlInteger(byte nu1, short level, long tileNum)
+            throws Exception
     {
-        TileId id = new TileId(level, tileNum);
+        TileId id = new TileId(nu1, level, tileNum);
+        assertEquals(id.getNu1(), nu1);
         assertEquals(id.getLevel(), level);
         assertEquals(id.getTileId(), tileNum);
-        
+
         long packed = id.pack();
         TileId id2 = new TileId(packed);
         assertTrue(id.equals(id2));
+        assertEquals(id2.getNu1(), nu1);
         assertEquals(id2.getLevel(), level);
         assertEquals(id2.getTileId(), tileNum);
     }
 
+
     public void testSqlInteger1() throws Exception
     {
-        packAndUnpackSqlInteger((short)10, 123456);
+        packAndUnpackSqlInteger((byte) 5, (short) 10, 123456);
     }
+
 
     public void testSqlInteger2() throws Exception
     {
         // now use unsigned values outside of the signed range
-        packAndUnpackSqlInteger((short)150, 0xCAFEBABE);
+        packAndUnpackSqlInteger((byte) -5, (short) 150, 0x00CAFEBABEL);
     }
-    
-    // TODO: Add test cases for sql_integers with more than 2 members.
+
 }
