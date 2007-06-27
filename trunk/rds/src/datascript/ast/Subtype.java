@@ -76,7 +76,7 @@ public class Subtype extends TokenAST implements TypeInterface
 
     public IntegerValue sizeof(Context ctx)
     {
-        return baseType.sizeof(ctx);
+        return getBaseType().sizeof(ctx);
     }
 
     public Scope getScope()
@@ -94,12 +94,12 @@ public class Subtype extends TokenAST implements TypeInterface
     }
     public boolean isMember(Context ctxt, Value val)
     {
-        return baseType.isMember(ctxt, val);
+        return getBaseType().isMember(ctxt, val);
     }
 
     public Value castFrom(Value val)
     {
-        return baseType.castFrom(val);
+        return getBaseType().castFrom(val);
     }
 
     public String getDocumentation()

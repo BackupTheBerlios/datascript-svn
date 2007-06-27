@@ -109,6 +109,7 @@ public class JavaExtension implements Extension
         {
             System.err.println("emitter error in '" + params.getFileName()
                     + "': " + e.getMessage());
+            e.printStackTrace();
         }
         catch (ComputeError e)
         {
