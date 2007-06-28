@@ -44,10 +44,11 @@
     FunctionEmitter e = (FunctionEmitter) argument;
     FunctionType func = e.getFunction();
     String result = e.getResult();
+    String returnType = e.getReturnType();
     
 %>
     
-    public long <%=func.getName()%>() 
+    public <%=returnType%> <%=func.getName()%>() 
     { 
         return <%=result%>; 
     }

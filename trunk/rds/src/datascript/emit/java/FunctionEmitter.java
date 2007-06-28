@@ -38,12 +38,14 @@
 package datascript.emit.java;
 
 import datascript.ast.FunctionType;
+import datascript.ast.TypeInterface;
 import datascript.jet.java.FunctionTmpl;
 
 public class FunctionEmitter
 {    
     private CompoundEmitter ce;
     private FunctionType function;
+    
     public FunctionEmitter(CompoundEmitter ce)
     {
         this.ce = ce;
@@ -67,5 +69,12 @@ public class FunctionEmitter
         ExpressionEmitter ee = new ExpressionEmitter();
         String result = ee.emit(function.getResult());
         return result;
+    }
+    
+    public String getReturnType()
+    {
+        TypeInterface returnType = function.getReturnType();
+        String javaType = TypeNameEmitter.getTypeName(returnType);
+        return javaType;
     }
 }
