@@ -156,7 +156,7 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
             paramType = TypeReference.resolveType(paramType);
             
             // Types must be compatible.
-            if (!IntegerType.checkCompatibility(paramType, arg.getExprType()))
+            if (!Expression.checkCompatibility(paramType, arg.getExprType()))
             {
                 ToolContext.logError(arg, "type mismatch in argument " + 
                         (paramIndex+1));

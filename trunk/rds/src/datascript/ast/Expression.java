@@ -356,7 +356,7 @@ public class Expression extends TokenAST
         Expression op2 = op2();
         Expression op3 = op3();
         checkBooleanOperand(op1);
-        if (! IntegerType.checkCompatibility(op2.type, op3.type))
+        if (! Expression.checkCompatibility(op2.type, op3.type))
         {
             ToolContext.logError(op2, "types in conditional expression are incompatible");
         }
@@ -377,7 +377,7 @@ public class Expression extends TokenAST
     {
         Expression op1 = op1();
         Expression op2 = op2();
-        if (! IntegerType.checkCompatibility(op1.type, op2.type))
+        if (! Expression.checkCompatibility(op1.type, op2.type))
         {
             ToolContext.logError(op1, "types in arithmetic expression are incompatible");
         }
@@ -391,7 +391,7 @@ public class Expression extends TokenAST
     {
         Expression op1 = op1();
         Expression op2 = op2();
-        if (! IntegerType.checkCompatibility(op1.type, op2.type))
+        if (! Expression.checkCompatibility(op1.type, op2.type))
         {
             ToolContext.logError(op1, "types in relational expression are incompatible");
         }
@@ -483,6 +483,30 @@ public class Expression extends TokenAST
         else
         {
             ToolContext.logError(op1(), "cannot invoke a non-function member");
+        }
+    }
+
+    /**
+     * Checks compatibility of two types for assignment or argument passing
+     * @param type1 left hand side type
+     * @param type2 right hand side type
+     * @return true if types are compatible
+     */
+    public static boolean checkCompatibility(TypeInterface type1, TypeInterface type2)
+    {
+        if (type1 instanceof IntegerType && (type2 instanceof IntegerType))
+        {
+            return true;
+        }
+        else if (type2 instanceof TypeInstantiation)
+        {
+            TypeInstantiation inst = (TypeInstantiation) type2;
+            CompoundType base = inst.getBaseType();
+            return type1.equals(base);
+        }
+        else
+        {
+            return type1.equals(type2);
         }
     }
 }

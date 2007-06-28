@@ -80,23 +80,6 @@ public class IntegerType extends TokenAST implements TypeInterface
         throw new InternalError("not implemented");
     }
     
-    public static boolean checkCompatibility(TypeInterface type1, TypeInterface type2)
-    {
-        if (type1 instanceof IntegerType && (type2 instanceof IntegerType))
-        {
-            return true;
-        }
-        else if (type2 instanceof TypeInstantiation)
-        {
-            TypeInstantiation inst = (TypeInstantiation) type2;
-            CompoundType base = inst.getBaseType();
-            return type1.equals(base);
-        }
-        else
-        {
-            return type1.equals(type2);
-        }
-    }
     public int getLength()
     {
         throw new InternalError("not implemented");

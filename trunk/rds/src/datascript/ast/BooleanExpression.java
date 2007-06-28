@@ -102,7 +102,7 @@ public class BooleanExpression extends Expression
         // but not equal.
         TypeInterface type1 = op1.getExprType();
         TypeInterface type2 = op2.getExprType();
-        if (!IntegerType.checkCompatibility(type1, type2))
+        if (!Expression.checkCompatibility(type1, type2))
         {
             ToolContext.logError(this, "type mismatch in comparison");            
         }
