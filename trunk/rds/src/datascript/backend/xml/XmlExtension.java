@@ -37,6 +37,28 @@
  */
 package datascript.backend.xml;
  
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringReader;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.XMLFilterImpl;
+
+import antlr.ANTLRException;
+import antlr.TokenBuffer;
+import antlr.collections.AST;
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.DataScriptParser;
 import datascript.antlr.DataScriptParserTokenTypes;
@@ -47,28 +69,6 @@ import datascript.antlr.util.TokenAST;
 import datascript.ast.DataScriptException;
 import datascript.tools.Extension;
 import datascript.tools.Parameters;
-
-import java.io.OutputStreamWriter;
-import java.io.FileOutputStream;
-import java.io.StringReader;
-
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.Source;
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.XMLFilterImpl;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import antlr.ANTLRException;
-import antlr.TokenBuffer;
-import antlr.collections.AST;
 
 
 public class XmlExtension extends XMLFilterImpl implements Extension
@@ -88,11 +88,19 @@ public class XmlExtension extends XMLFilterImpl implements Extension
     {
         if (params == null)
             throw new DataScriptException("No parameters set for XmlBackend!");
+        if (!params.argumentExists("-xml"))
+            return;
 
         System.out.println("emitting xml");
-
+        
+        String fileName = params.getCommandlineArg("-xml");
+        if (fileName == null)
+        {
+            fileName = "datascript.xml";
+        }
+        File outputFile = new File(params.getOutPathName(), fileName);
         this.rootNode = rootNode;
-        FileOutputStream os = new FileOutputStream(params.getOutPathName() + "/XmlDump.xml");    // or a file output stream
+        FileOutputStream os = new FileOutputStream(outputFile);
 
         TransformerFactory tf = TransformerFactory.newInstance();
         tf.setAttribute("indent-number", new Integer(2));

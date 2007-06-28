@@ -68,6 +68,17 @@
           global to local. More background in introduction.</para>
         </revdescription>
       </revision>
+
+      <revision>
+        <revnumber>0.6</revnumber>
+
+        <date>28 June 2007</date>
+
+        <revdescription>
+          <para>New sum operator. Functions. New section on Relational
+          Extensions.</para>
+        </revdescription>
+      </revision>
     </revhistory>
   </articleinfo>
 
@@ -365,6 +376,34 @@
       <para>Optional members are a more compact and convenient alternative to
       a union with two branches one of which is empty.</para>
     </section>
+
+    <section>
+      <title>Functions</title>
+
+      <para>A compound type may contain functions:</para>
+
+      <programlisting>ItemCount
+{
+    uint8    count8;
+    uint16   count16  if count8 == 0xFF;
+
+    function uint16 getValue()
+    {
+        return (count8 == 0xFF) ? count16 : count8;
+    }
+};</programlisting>
+
+      <para>The return type of a function has to be a standard integer type,
+      and the function parameter list must be empty. The function body may
+      contain nothing but a return statement with an arithmetic expression of
+      integer type.</para>
+
+      <para>Functions are intended to provide no more than simple "convert to
+      integer" semantics. There are no plans to add more advanced type
+      conversion or even procedural logic to DataScript. (For complex logic,
+      it would be more sensible to bind native functions to
+      DataScript.)</para>
+    </section>
   </section>
 
   <section>
@@ -596,6 +635,15 @@ Database::stringOffset:
         branch names of that union. The expression is true if and only if the
         decoder has selected branch y for the union.</para>
       </section>
+
+      <section>
+        <title>sum Operator</title>
+
+        <para>The <literal>sum</literal> operator is defined for arrays with
+        integer element type (this includes bit fields).
+        <literal>sum(a)</literal> evaluates to the sum of all elements of the
+        array <literal>a</literal>.</para>
+      </section>
     </section>
 
     <section>
@@ -707,7 +755,7 @@ Database::stringOffset:
         </listitem>
 
         <listitem>
-          <para><literal>sizeof lengthof</literal></para>
+          <para><literal>sizeof lengthof sum</literal></para>
         </listitem>
 
         <listitem>
@@ -1123,14 +1171,14 @@ import common.featuretypes.*;</programlisting>
     <section>
       <title>Motivation</title>
 
-      <para>WIth its basic language features presented in the previous
+      <para>With its basic language features presented in the previous
       sections, DataScript provides a rich language for modelling binary data
       streams, which are intended to be parsed sequentially. Direct access to
       members in the stream is usually not possible, except for labels
-      specifying the offset of a given member. Navigation methods between
-      semantically related members at different positions in the stream cannot
-      be expressed at the stream level. Member insertions or updates are not
-      supported.. </para>
+      specifying the offset of a given member. Navigation between semantically
+      related members at different positions in the stream cannot be expressed
+      at the stream level. Member insertions or updates are not
+      supported..</para>
 
       <para>All in all, the stream model is not an adequate approach for
       updatable databases in the gigabyte size range with lots of internal
@@ -1139,13 +1187,13 @@ import common.featuretypes.*;</programlisting>
       such a database as a relational database using SQL.</para>
 
       <para>However, in an embedded environment with limited storage space and
-      processing resources, a full-fledged relational schema is not a viable
-      approach. To have the best of both worlds, i.e. compact storage on the
-      one hand and direct member access including updates on the other hand,
-      one can adopt a hybrid data model: In this hybrid model, the high-level
-      access structures are strictly relational, but most of the low-level
-      data are stored in binary large objects (BLOBs), where the internal
-      structure of each BLOB is modelled in DataScript.</para>
+      processing resources, a full-fledged relational schema is too
+      heavy-weight. To have the best of both worlds, i.e. compact storage on
+      the one hand and direct member access including updates on the other
+      hand, one can adopt a hybrid data model: In this hybrid model, the
+      high-level access structures are strictly relational, but most of the
+      low-level data are stored in binary large objects (BLOBs), where the
+      internal structure of each BLOB is modelled in DataScript.</para>
 
       <para>For example, we can model a digital map database as a collection
       of tiles resulting from a rectangular grid where the tiles are numbered

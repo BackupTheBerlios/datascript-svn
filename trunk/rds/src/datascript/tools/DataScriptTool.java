@@ -70,7 +70,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.9.17 (28 Jun 2007)";
+    private static final String VERSION = "rds 0.10 (28 Jun 2007)";
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -150,8 +150,8 @@ public class DataScriptTool implements Parameters
         buffer.append("parameter missing." + NL + NL);
         buffer.append("rds [-doc] [-c] [-ext \"pathname to extensions\"] [-out \"pathname for output\"] [-pkg \"packagename\"] [-src \"pathname\"] \"filename\"" + NL);
         buffer.append("usage: " + NL);
-        buffer.append(" -doc\tgenerates Javadoc-style documentation" + NL);
-        buffer.append(" -c\tchecks syntax" + NL);
+        buffer.append(" -doc\t\t\tgenerate Javadoc-style documentation" + NL);
+        buffer.append(" -c\t\t\tcheck syntax" + NL);
         buffer.append(" -ext \"pathname\"\tpath to the extension directory" + NL);
         buffer.append(" -out \"pathname\"\tpath to the directory in which the generated code is stored" + NL);
         buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScript package" + NL);

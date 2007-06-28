@@ -71,6 +71,16 @@
           Remark on Eclipse dependency.</para>
         </revdescription>
       </revision>
+
+      <revision>
+        <revnumber>0.6</revnumber>
+
+        <date>28 Jun 2007</date>
+
+        <revdescription>
+          <para>Added new options -ext and -xml.</para>
+        </revdescription>
+      </revision>
     </revhistory>
   </articleinfo>
 
@@ -138,7 +148,7 @@
       provided in the <literal>rds-bin</literal> package are compiled with
       Java SE 1.6.0. <literal>rds</literal> development was started on Java SE
       1.5.0 and we are not aware of any 1.6.0 dependencies, but we do not
-      check this on a regular basis. </para>
+      check this on a regular basis.</para>
 
       <para><literal>rds</literal> is also known to run under Linux (SuSE
       10.0). However, we currently do not guarantee for that, nor do we
@@ -158,7 +168,8 @@
     be run by</para>
 
     <programlisting>java -jar %RDS_HOME%\rds.jar 
-[-c] [-doc] [-pkg <emphasis>&lt;output package&gt;</emphasis>] [-out <emphasis>&lt;output path&gt;</emphasis>] [-src <emphasis>&lt;source path&gt;</emphasis>]<emphasis>
+[-c] [-doc] [-ext <emphasis>&lt;extension path&gt;</emphasis>] [-pkg <emphasis>&lt;output package&gt;</emphasis>] [-xml [<emphasis>&lt;file name&gt;</emphasis>]]
+[-out <emphasis>&lt;output path&gt;</emphasis>] [-src <emphasis>&lt;source path&gt;</emphasis>] <emphasis>
 &lt;input file&gt;</emphasis></programlisting>
 
     <para><emphasis>&lt;input file&gt;</emphasis> is an absolute or relative
@@ -186,7 +197,7 @@
     directory for the generated Java source files. Specifying <literal>-out
     C:\java</literal> in our example, we will find the generated code in
     <literal>C:\java\com\acme\foo</literal> and
-    <literal>C:\java\com\acme\bar</literal>. </para>
+    <literal>C:\java\com\acme\bar</literal>.</para>
 
     <para>The <literal>-pkg</literal> option specifies the Java package name
     for types that do not belong to a DataScript package. The files will be
@@ -198,21 +209,37 @@
     will be generated into a subdirectory <literal>html</literal> of the
     current working directory.</para>
 
+    <para>If the <literal>-xml</literal> option is present,
+    <literal>rds</literal> will dump an XML representation of the syntax tree
+    of all input files to <emphasis>&lt;output
+    path&gt;</emphasis><literal>\datascript.xml</literal>. The default name of
+    this output file can be overridden by supplying a file name argument to
+    the <literal>-xml</literal> option.</para>
+
     <para>If the -c option is present, <literal>rds</literal> checks the
     structure of its internal syntax tree, which may be useful for
     <literal>rds</literal> devlopers, but certainly not for
     <literal>rds</literal> users.</para>
+
+    <para>The <literal>-ext</literal> option specifies the path for
+    <literal>rds</literal> extension libraries. <literal>rds</literal> will
+    load and execute all extensions in this directory. The default value of
+    this option is <literal>ext</literal>. If you do not run
+    <literal>rds</literal> from <literal>%RDS_HOME%</literal>, you will have
+    to set <literal>-ext</literal> explicitly. Each code generator (for Java,
+    HTML, XML and optionally C++) is implemented as an extension. If
+    <literal>rds</literal> cannot find any extensions, it will not do anything
+    except parsing the input.</para>
   </section>
 
   <section>
     <title>Building from Source</title>
 
-    <para>The only supported build environment for the
-    <literal>dstools</literal> project is Eclipse 3.2. Version 3.1.1 also
-    works, but this guide is targeted at 3.2. If you know what you are doing,
-    you will be able to build <literal>dstools</literal> in other
-    environments, but Eclipse is the only one that the authors will document
-    and support.</para>
+    <para>The build environment for the <literal>dstools</literal> project is
+    Eclipse 3.2. Version 3.1.1 also works, but this guide is targeted at 3.2.
+    If you know what you are doing, you will be able to build
+    <literal>dstools</literal> in other environments, but Eclipse is the only
+    one that the authors will document and support.</para>
 
     <para>The following instructions refer to the <literal>rds-src</literal>
     package. For the <literal>dstools-src</literal> package, some path and
