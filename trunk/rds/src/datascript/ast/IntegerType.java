@@ -86,8 +86,16 @@ public class IntegerType extends TokenAST implements TypeInterface
         {
             return true;
         }
-        else 
+        else if (type2 instanceof TypeInstantiation)
+        {
+            TypeInstantiation inst = (TypeInstantiation) type2;
+            CompoundType base = inst.getBaseType();
+            return type1.equals(base);
+        }
+        else
+        {
             return type1.equals(type2);
+        }
     }
     public int getLength()
     {
