@@ -111,7 +111,10 @@ public class DataScriptTool implements Parameters
             }
             cmdLineArgs.put(key, value);
         }
-        fileName = new File(args[i]).getPath();
+        if (i < args.length)
+        {
+            fileName = new File(args[i]).getPath();
+        }
 
         defaultPackageName = cmdLineArgs.get("-pkg");
         generateDocs = cmdLineArgs.containsKey("-doc");
@@ -134,22 +137,28 @@ public class DataScriptTool implements Parameters
 
         if (fileName == null)
         {
-            final String NL = System.getProperties().getProperty("line.separator");
-            final StringBuilder buffer = new StringBuilder();
-
-            buffer.append("parameter missing." + NL + NL);
-            buffer.append("rds [-doc] [-c] [-ext \"pathname to extensions\"] [-out \"pathname for output\"] [-pkg \"packagename\"] [-src \"pathname\"] \"filename\"" + NL);
-            buffer.append("usage: " + NL);
-            buffer.append(" -doc\tgenerates Javadoc-style documentation" + NL);
-            buffer.append(" -c\tchecks syntax" + NL);
-            buffer.append(" -ext \"pathname to extensions\"\tpath to the plugin-directory" + NL);
-            buffer.append(" -out \"pathname\"\tpath to the directory in which the generated code is stored" + NL);
-            buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScript package" + NL);
-            buffer.append(" -src \"pathname\"\tpath to DataScript source files" + NL);
-            buffer.append(" \"filename\"\tmain DataScript source file" + NL);
-
-            throw new DataScriptException(buffer.toString());
+            printUsage();
         }
+    }
+
+
+    private void printUsage()
+    {
+        final String NL = System.getProperties().getProperty("line.separator");
+        final StringBuilder buffer = new StringBuilder();
+
+        buffer.append("parameter missing." + NL + NL);
+        buffer.append("rds [-doc] [-c] [-ext \"pathname to extensions\"] [-out \"pathname for output\"] [-pkg \"packagename\"] [-src \"pathname\"] \"filename\"" + NL);
+        buffer.append("usage: " + NL);
+        buffer.append(" -doc\tgenerates Javadoc-style documentation" + NL);
+        buffer.append(" -c\tchecks syntax" + NL);
+        buffer.append(" -ext \"pathname\"\tpath to the extension directory" + NL);
+        buffer.append(" -out \"pathname\"\tpath to the directory in which the generated code is stored" + NL);
+        buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScript package" + NL);
+        buffer.append(" -src \"pathname\"\tpath to DataScript source files" + NL);
+        buffer.append(" \"filename\"\t\tmain DataScript source file" + NL);
+
+        throw new DataScriptException(buffer.toString());
     }
 
 
@@ -454,6 +463,6 @@ public class DataScriptTool implements Parameters
         {
             exc.printStackTrace();
         }
-        System.out.println("finished");
+        System.out.println("done.");
     }
 }
