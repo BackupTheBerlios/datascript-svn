@@ -1,0 +1,64 @@
+package sqltest;
+
+/**
+ *	Doc for testing
+ */
+sql_integer TileId
+{
+	int8    nu1;
+    uint8   level : level < 16;
+    uint32  tileId;
+};
+
+
+/**
+ *	another doc for testing
+ */
+sql_database SqlTestDb
+{
+    sql_pragma
+    {
+        uint16 page_size = 2048;
+    };
+    
+    sql_metadata
+    {
+        uint16 version = 1;
+    };
+    
+    sql_table LevelTable
+    {
+        uint8   levelNr      sql "PRIMARY KEY";
+        Level   level;
+    } levels;
+
+    LevelTable moreLevels;
+
+    sql_table TileTable
+    {
+    	TileId   tileid;
+        Tile     tile;
+        sql "primary key (tileid)";
+    } tiles;
+    
+    sql "CREATE INDEX tilesIndex (tileid) ON tiles;";
+};
+
+
+
+Tile
+{
+    uint16       numFeatures;
+    Feature      features[numFeatures];
+};
+
+Feature
+{
+    int32 dummy;
+};
+
+Level
+{
+    int64 dummy;
+};
+

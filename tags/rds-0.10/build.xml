@@ -1,0 +1,408 @@
+<!--
+/* BSD License
+ *
+ * Copyright (c) 2007, Harald Wellmann, Harman/Becker Automotive Systems
+ * All rights reserved.
+ * 
+ * This software is derived from previous work
+ * Copyright (c) 2003, Godmar Back.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ * 
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ * 
+ *     * Neither the name of Harman/Becker Automotive Systems or
+ *       Godmar Back nor the names of their contributors may be used to
+ *       endorse or promote products derived from this software without
+ *       specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+-->
+
+<!-- Ant build file for rds 
+
+     NOTE: Due to dependency on JET, this build script needs to be run within 
+     Eclipse and cannot be used in a stand-alone Ant build on the command-line.
+-->
+<project name="rds" default="jar" basedir=".">
+
+
+  <!-- Define properties for various paths -->
+
+  <!-- Java sources for rds, except generated stuff and test code. -->
+  <property name="src" value="${basedir}/src" />
+
+  <!-- Sources for JUnit tests. -->
+  <property name="test" value="${basedir}/test/src" />
+
+  <!-- Example sources -->
+  <property name="examples" value="${basedir}/examples" />
+
+
+  <!-- All products of the build go here. -->
+  <property name="build" value="${basedir}/build" />
+
+  <!-- Third party JARs required for the build. -->
+  <property name="lib" value="${basedir}/lib" />
+
+  <!-- Root for generated Java sources. -->
+  <property name="gen" value="${build}/gen" />
+
+  <!-- ANTLR input path. -->
+  <property name="antlr" value="${basedir}/antlr" />
+
+  <!-- ANTLR output path. -->
+  <property name="antlr.out" value="${gen}/datascript/antlr" />
+
+  <!-- Root for generated Java sources for test cases. -->
+  <property name="test.gen" value="${build}/test/gen" />
+
+  <!-- Root for DataScript sources for test cases. -->
+  <property name="ds.src" value="${basedir}/test/scripts" />
+
+
+  <property name="jar" value="${build}/jar" />
+  <property name="jet.timestamp" value="${gen}/jet.ts" />
+  <property name="classes" value="${build}/classes" />
+  <property name="backend" value="${src}/datascript/backend" />
+  <property name="ext" value="${basedir}/ext" />
+
+
+  <!-- task definition for compiling JET templates -->
+  <taskdef name="jetc" classname="ch.paranor.epla.structure.JETCTask">
+    <classpath>
+      <pathelement location="${lib}/jetc-task.jar" />
+    </classpath>
+  </taskdef>
+
+  <taskdef name="rds" classname="datascript.ant.RdsTask">
+    <classpath>
+      <pathelement path="${lib}/rds-ant.jar" />
+    </classpath>
+  </taskdef>
+
+  <target name="clean" depends="extensions.clean" description="removes all generated datascript Java sources and classes">
+    <delete dir="${build}" />
+  </target>
+
+  <target name="cleanall" depends="clean, test.clean" description="removes all generated Java sources and classes" />
+
+
+  <target name="init">
+    <uptodate property="jet.uptodate" targetfile="${jet.timestamp}">
+      <srcfiles dir="${basedir}" includes="jet/java/* jet/html/*" />
+    </uptodate>
+  </target>
+
+  <!-- Create output directories. -->
+  <target name="prepare" depends="init">
+    <mkdir dir="${build}" />
+    <mkdir dir="${build}/test/classes" />
+    <mkdir dir="${build}/test/gen" />
+    <mkdir dir="${build}/examples/classes" />
+    <mkdir dir="${build}/examples/gen" />
+    <mkdir dir="${gen}" />
+    <mkdir dir="${jar}" />
+    <mkdir dir="${ext}" />
+    <mkdir dir="${classes}" />
+    <mkdir dir="${antlr.out}" />
+    <copy file="${lib}/antlr.jar" todir="${jar}" />
+    <copy file="${lib}/freemarker.jar" todir="${jar}" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- ANTLR targets
+       DataScriptParser must be built first, as most of the others depend
+       on its token types. -->
+  <!-- ==================================================================== -->
+
+  <target name="antlr.DatascriptParser" depends="prepare">
+    <antlr target="${antlr}/DataScriptParser.g" outputdirectory="${antlr.out}">
+    </antlr>
+  </target>
+
+  <target name="antlr.DatascriptLexer" depends="antlr.DatascriptParser">
+    <antlr target="${antlr}/DataScriptLexer.g" outputdirectory="${antlr.out}">
+    </antlr>
+  </target>
+
+  <target name="antlr.DatascriptWalker" depends="antlr.DatascriptLexer">
+    <antlr target="${antlr}/DataScriptWalker.g" outputdirectory="${antlr.out}">
+    </antlr>
+  </target>
+
+  <target name="antlr.TypeEvaluator" depends="antlr.DatascriptWalker">
+    <antlr target="${antlr}/TypeEvaluator.g" outputdirectory="${antlr.out}">
+    </antlr>
+  </target>
+
+  <target name="antlr.ExpressionEvaluator" depends="antlr.TypeEvaluator">
+    <antlr target="${antlr}/ExpressionEvaluator.g" outputdirectory="${antlr.out}">
+    </antlr>
+  </target>
+
+  <target name="antlr.DocComment">
+    <antlr target="${antlr}/DocComment.g" outputdirectory="${antlr.out}">
+    </antlr>
+  </target>
+
+  <target name="antlr.DataScriptEmitter" depends="antlr.DatascriptParser">
+    <antlr target="${antlr}/DataScriptEmitter.g" outputdirectory="${antlr.out}">
+    </antlr>
+  </target>
+
+
+
+  <target name="antlr" 
+    depends="antlr.ExpressionEvaluator, antlr.DocComment, antlr.DataScriptEmitter" 
+    description="builds all ANTLR targets">
+  </target>
+
+
+  <!-- Generate Java sources from JET templates.
+       Unfortunately, the jetc task does not check timestamps and always
+       compiles everything.
+       Hence, we create a timestamp file whenever the task is run and set the
+       jet.uptodate property if the timestamp is newer than all templates.
+  -->
+  <target name="jet" depends="prepare" unless="jet.uptodate">
+    <jetc destdir="${gen}">
+      <fileset dir="${basedir}" includes="jet/java/*.*jet" />
+    </jetc>
+    <touch file="${jet.timestamp}" />
+  </target>
+
+
+  <target name="extensions.clean" description="removes all generated extension jar files">
+    <delete dir="${ext}" />
+  </target>
+
+
+  <target name="compile" depends="prepare, antlr, jet" description="Compiles all project files">
+    <javac destdir="${classes}" debug="on" target="1.5">
+      <classpath>
+        <pathelement path="lib/freemarker.jar" />
+      </classpath>
+      <src path="${src}" />
+      <src path="${gen}" />
+    </javac>
+  </target>
+
+  <target name="jar" depends="compile" description="Builds the distribution jar file (default)">
+    <jar destfile="${jar}/rds.jar" manifest="${src}/Manifest.txt">
+      <fileset dir="${classes}">
+        <include name="datascript/antlr/**" />
+        <include name="datascript/ast/**" />
+        <include name="datascript/emit/*" />
+        <include name="datascript/tools/**" />
+      </fileset>
+    </jar>
+
+    <jar destfile="${jar}/rds-runtime.jar" manifest="${src}/Manifest.txt">
+      <fileset dir="${classes}">
+        <include name="datascript/runtime/**" />
+      </fileset>
+    </jar>
+
+    <jar destfile="${ext}/rds_javaExtension.jar" manifest="${backend}/java/Manifest.txt">
+      <fileset dir="${classes}">
+        <include name="datascript/backend/java/**" />
+        <include name="datascript/jet/java/**" />
+        <include name="datascript/emit/java/**" />
+      </fileset>
+    </jar>
+
+    <jar destfile="${ext}/rds_htmlExtension.jar" manifest="${backend}/html/Manifest.txt">
+      <fileset dir="${classes}">
+        <include name="datascript/backend/html/**" />
+        <include name="datascript/jet/html/**" />
+        <include name="datascript/emit/html/**" />
+      </fileset>
+      <fileset dir="${basedir}/freemarker">
+        <include name="html/**.ftl" />
+      </fileset>
+    </jar>
+
+    <jar destfile="${ext}/rds_xmlExtension.jar" manifest="${backend}/xml/Manifest.txt">
+      <fileset dir="${classes}">
+        <include name="datascript/backend/xml/**" />
+        <include name="datascript/jet/xml/**" />
+        <include name="datascript/emit/xml/**" />
+      </fileset>
+    </jar>
+
+  </target>
+
+  <!-- End of core rds targets. Now test targets follow. -->
+  
+  <target name="test.gen" depends="jar" description="Generates parser for test cases" unless="bits.uptodate">
+    <!--rds 
+        path="${ds.src}"
+        pkg="ds"
+        out="${test.gen}"
+        srcfile="bits.ds"
+        ext="${ext}">
+      <classpath>
+        <pathelement path="${jar}/rds.jar"/>
+        <pathelement path="${jar}/rds-runtime.jar"/>
+        <pathelement path="${jar}/antlr.jar"/>
+      </classpath>
+    </rds-->
+
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+      </classpath>
+      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
+    </java>
+  </target>
+
+  <target name="test.compile" depends="test.gen, sqltest.gen, pkgtest.gen, functest.gen, jar, gif.gen" description="Builds the test cases">
+    <javac destdir="${build}/test/classes" debug="on" target="1.5">
+      <classpath>
+        <pathelement path="${jar}/rds-runtime.jar" />
+      </classpath>
+      <src path="${test.gen}" />
+      <src path="${test}" />
+    </javac>
+  </target>
+
+  <target name="test.run" depends="test.compile" description="Runs the unit tests">
+    <junit printsummary="no" fork="yes" dir="${build}">
+      <jvmarg value="-Djava.library.path=${lib}" />
+      <classpath>
+        <pathelement path="${build}/test/classes" />
+        <pathelement path="${jar}/rds-runtime.jar" />
+        <pathelement path="${lib}/sqlitejdbc.jar" />
+      </classpath>
+      <batchtest>
+        <fileset dir="${test}">
+          <include name="**/*Test.java" />
+        </fileset>
+        <formatter type="plain" usefile="false" />
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="test.clean" description="removes all generated test Java sources and classes">
+    <delete dir="${test}/bits" />
+  </target>
+
+
+  <target name="sqltest.gen" depends="jar" description="Generates parser for test cases" unless="sqltest.uptodate">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+        <pathelement path="${lib}/freemarker.jar" />
+      </classpath>
+      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src  ${ds.src}  sqltest.ds" />
+    </java>
+  </target>
+
+  <target name="sqltest.clean" description="removes all generated test Java sources and classes">
+    <delete dir="${test.gen}/sqltest" />
+  </target>
+
+
+  <target name="functest.gen" depends="jar" description="Generates parser for test cases" unless="sqltest.uptodate">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+      </classpath>
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  func.ds" />
+    </java>
+  </target>
+
+  <target name="functest.clean" description="removes all generated test Java sources and classes">
+    <delete dir="${test.gen}/sqltest" />
+  </target>
+
+
+  <!-- Currently, there are no test units using the code generated here, but at
+       least we can test that rds can handle more advanced package relations.
+  -->
+  <target name="pkgtest.gen" depends="jar" description="Generates parser for test cases" unless="pkgtest.uptodate">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+      </classpath>
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  child.ds" />
+    </java>
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+      </classpath>
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  pkg/top.ds" />
+    </java>
+  </target>
+
+  <target name="pkgtest.clean" description="removes all generated test Java sources and classes">
+    <delete dir="${test}/parent" />
+    <delete dir="${test}/child" />
+    <delete dir="${test}/pkg" />
+  </target>
+
+  <target name="innerunion.gen" depends="jar" description="Generates parser for test cases">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+      </classpath>
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  innerunion.ds" />
+    </java>
+  </target>
+
+
+  
+  
+  <target name="gif.gen" depends="jar" description="Generates parser for examples" unless="gif.uptodate">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+      </classpath>
+      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} gif.ds" />
+    </java>
+  </target>
+
+  <target name="gif.run" depends="test.compile" description="Runs the gif-example">
+    <junit printsummary="no" fork="on" dir="${examples}">
+      <classpath>
+        <pathelement path="${build}/examples/classes" />
+        <pathelement path="${jar}/rds-runtime.jar" />
+      </classpath>
+      <batchtest>
+        <fileset dir="${examples}">
+          <include name="**/GifTest.java" />
+        </fileset>
+        <formatter type="plain" usefile="false" />
+      </batchtest>
+    </junit>
+  </target>
+
+</project>
