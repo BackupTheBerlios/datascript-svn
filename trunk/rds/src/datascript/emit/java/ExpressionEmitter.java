@@ -44,6 +44,7 @@ import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.FunctionType;
+import datascript.ast.ConstType;
 import datascript.ast.Parameter;
 import datascript.ast.Scope;
 import datascript.ast.TypeInterface;
@@ -111,7 +112,6 @@ public class ExpressionEmitter
                 break;
 
             case DataScriptParserTokenTypes.ID:
-                //buffer.append(expr.getText());
                 appendIdentifier(expr);
                 break;
 
@@ -311,6 +311,12 @@ public class ExpressionEmitter
         {
             EnumType enumeration = (EnumType) obj;
             buffer.append(enumeration.getName());                
+        }
+        else if (obj instanceof ConstType)
+        {
+            ConstType constantType = (ConstType)obj;
+            String value = constantType.getValue().toString();
+            buffer.append(value);
         }
         else if (obj instanceof FunctionType)
         {

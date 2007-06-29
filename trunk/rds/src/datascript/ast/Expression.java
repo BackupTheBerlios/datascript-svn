@@ -219,6 +219,10 @@ public class Expression extends TokenAST
         {
             type = (EnumType)obj;
         }
+        else if (obj instanceof ConstType)
+        {
+            type = (ConstType)obj;
+        }
         else if (obj instanceof IntegerType)
         {
             type = (IntegerType)obj;
@@ -494,19 +498,30 @@ public class Expression extends TokenAST
      */
     public static boolean checkCompatibility(TypeInterface type1, TypeInterface type2)
     {
-        if (type1 instanceof IntegerType && (type2 instanceof IntegerType))
+        TypeInterface t1, t2;
+
+        if (type1 instanceof ConstType)
+            t1 = ((ConstType) type1).getBaseType();
+        else
+            t1 = type1;
+        if (type2 instanceof ConstType)
+            t2 = ((ConstType) type2).getBaseType();
+        else
+            t2 = type2;
+
+        if (t1 instanceof IntegerType && (t2 instanceof IntegerType))
         {
             return true;
         }
-        else if (type2 instanceof TypeInstantiation)
+        else if (t2 instanceof TypeInstantiation)
         {
-            TypeInstantiation inst = (TypeInstantiation) type2;
+            TypeInstantiation inst = (TypeInstantiation) t2;
             CompoundType base = inst.getBaseType();
-            return type1.equals(base);
+            return t1.equals(base);
         }
         else
         {
-            return type1.equals(type2);
+            return t1.equals(t2);
         }
     }
 }

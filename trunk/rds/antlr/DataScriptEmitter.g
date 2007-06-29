@@ -166,7 +166,7 @@ bitmaskDeclaration
     ;
 
 constDeclaration
-    : #("const" typeReference ID expression)
+    : #("const" builtinType ID expression)
     ;
 
 fieldDefinition
@@ -335,19 +335,19 @@ typeValue
 /*********************************************************************/
 
 sqlDatabaseDefinition
-    : #(d:SQL_DATABASE          { em.beginSqlDatabase(d); }
+    : #(d:SQL_DATABASE             { em.beginSqlDatabase(d); }
         ID 
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)? 
         (sqlTableField)+ 
         (sqlConstraint)?
         (DOC)? 
-       )                        { em.endSqlDatabase(d); }
+       )                           { em.endSqlDatabase(d); }
     ;
     
-sqlPragmaBlock			{ em.beginSqlPragma(p); }
+sqlPragmaBlock                     { em.beginSqlPragma(p); }
     : #(p:SQL_PRAGMA 
-        (sqlPragma)+)           { em.endSqlPragma(p); }
+        (sqlPragma)+)              { em.endSqlPragma(p); }
     ;
     
 sqlPragma
@@ -360,8 +360,8 @@ sqlPragmaType
     ;
 
 sqlMetadataBlock
-    : #(m:SQL_METADATA          { em.beginSqlMetadata(m); }
-        (sqlMetadataField)+ )   { em.endSqlMetadata(m); }
+    : #(m:SQL_METADATA             { em.beginSqlMetadata(m); }
+        (sqlMetadataField)+ )      { em.endSqlMetadata(m); }
     ;
     
 sqlMetadataField
@@ -383,11 +383,11 @@ sqlTableDefinition
     ;
 
 sqlTableDeclaration
-    : #(t:SQL_TABLE               { em.beginSqlTable(t); }
+    : #(t:SQL_TABLE                { em.beginSqlTable(t); }
         ID
         (sqlFieldDefinition)+
         (sqlConstraint)?
-      )                           { em.endSqlTable(t); }
+       )                           { em.endSqlTable(t); }
     ;
     
 sqlFieldDefinition
@@ -403,7 +403,7 @@ sqlIntegerDeclaration
     : #(i:SQL_INTEGER              { em.beginSqlInteger(i); }
         ID
         (sqlIntegerFieldDefinition)+ 
-        )                          { em.endSqlInteger(i); }
+       )                           { em.endSqlInteger(i); }
     ;
     
 sqlIntegerFieldDefinition

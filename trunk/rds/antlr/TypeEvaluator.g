@@ -177,22 +177,25 @@ bitmaskDeclaration
     ;
 
 constDeclaration
-    : #("const" typeReference ID expression)
+    : #(c:"const" t:builtinType i:ID expression )
+                                        { scope().setTypeSymbol(i, c); 
+                                          ((ConstType)c).setPackage(pkg);
+                                        }
     ;
 
 fieldDefinition
     :   #(FIELD                         { Field f = (Field)#FIELD; 
-                                          CompoundType ct = (CompoundType) 
-                                          scope().getOwner(); }
+                                          CompoundType ct = (CompoundType)scope().getOwner();
+                                        }
           typeReference
           (i:ID                         { scope().setSymbol(i, f);
                                           f.setName(i);
                                           ct.addField(f);
                                         }
           )? 
-          (in:fieldInitializer          {f.setInitializer(in); }
+          (in:fieldInitializer          { f.setInitializer(in); }
           )?
-          (o:fieldOptionalClause        {f.setOptionalClause(o); }
+          (o:fieldOptionalClause        { f.setOptionalClause(o); }
           )?
           (c:fieldCondition             { f.setCondition(c); }
           )? 

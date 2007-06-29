@@ -46,7 +46,6 @@ import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
 import datascript.ast.SequenceType;
-import datascript.ast.SqlIntegerType;
 import datascript.ast.StringType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
@@ -98,14 +97,6 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
     {
         enumeration = (EnumType) e;
         String result = enumerationTmpl.generate(this);
-        out.print(result);
-    }
-
-
-    public void beginSqlInteger(AST s)
-    {
-        sqlinteger = (SqlIntegerType) s;
-        String result = sqlintegerTmpl.generate(this);
         out.print(result);
     }
 

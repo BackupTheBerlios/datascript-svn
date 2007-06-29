@@ -35,28 +35,34 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
-import datascript.antlr.util.ToolContext;
+
+
 
 public class Subtype extends TokenAST implements TypeInterface
 {
     private String name;
-    private TypeInterface baseType;
     private Package pkg;
-    
+
+
     public Subtype()
     {
     }
+
 
     public Subtype(Token token)
     {
         super(token);
     }
+
 
     public String getName()
     {
@@ -68,39 +74,49 @@ public class Subtype extends TokenAST implements TypeInterface
         return name;
     }
 
+
     public TypeInterface getBaseType()
     {
-        return (TypeInterface)getFirstChild();
+        return (TypeInterface) getFirstChild();
     }
-    
+
 
     public IntegerValue sizeof(Context ctx)
     {
         return getBaseType().sizeof(ctx);
     }
 
+
     public Scope getScope()
     {
-        throw new UnsupportedOperationException("TypeReference.getScope() not implemented");
-    }    
+        throw new UnsupportedOperationException(
+                "TypeReference.getScope() not implemented");
+    }
+
+
     public int getLength()
     {
         throw new UnsupportedOperationException("not implemented");
     }
-    
+
+
     public Expression getLengthExpression()
     {
         throw new UnsupportedOperationException("not implemented");
     }
+
+
     public boolean isMember(Context ctxt, Value val)
     {
         return getBaseType().isMember(ctxt, val);
     }
 
+
     public Value castFrom(Value val)
     {
         return getBaseType().castFrom(val);
     }
+
 
     public String getDocumentation()
     {
@@ -113,16 +129,19 @@ public class Subtype extends TokenAST implements TypeInterface
         return result;
     }
 
+
     public String toString()
     {
         return "SUBTYPE";
     }
 
+
     public Package getPackage()
     {
-    	return pkg;
+        return pkg;
     }
-    
+
+
     public void setPackage(Package pkg)
     {
         this.pkg = pkg;

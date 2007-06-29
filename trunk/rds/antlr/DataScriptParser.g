@@ -238,7 +238,11 @@ bitmaskDeclaration
 
 
 constDeclaration
-    : "const"^ typeDeclaration ID ASSIGN! typeValue
+    : "const"^<AST=datascript.ast.ConstType> 
+      builtinType 
+      ID 
+      ASSIGN! 
+      typeValue
     ;
 
 

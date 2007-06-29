@@ -149,8 +149,7 @@ parameterDefinition
 enumDeclaration
     : #(e:"enum"                        { pushScope(((EnumType)e).getScope()); }
         builtinType 
-        (i:ID                
-        )? 
+        (i:ID)? 
         enumMemberList)                 { popScope(); }
     ;
 
@@ -174,7 +173,7 @@ bitmaskDeclaration
     ;
 
 constDeclaration
-    : #("const" typeReference ID expression)
+    : #("const" builtinType ID expression)
     ;
 
 fieldDefinition
@@ -243,7 +242,7 @@ sequenceDeclaration
     ;
 
 unionDeclaration
-    :   #(u:UNION               { pushScope(((UnionType)u).getScope()); }
+    :   #(u:UNION                 { pushScope(((UnionType)u).getScope()); }
           (i:ID)? 
           (parameterList)? 
           memberList
