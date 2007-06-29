@@ -166,7 +166,9 @@ bitmaskDeclaration
     ;
 
 constDeclaration
-    : #("const" builtinType ID expression)
+    : #(c:"const"        { em.beginConst(c); } 
+        builtinType ID expression
+       )                 { em.endConst(c); }
     ;
 
 fieldDefinition

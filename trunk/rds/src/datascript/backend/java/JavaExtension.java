@@ -45,6 +45,7 @@ import datascript.ast.ComputeError;
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.util.TokenAST;
 import datascript.ast.DataScriptException;
+import datascript.emit.java.ConstEmitter;
 import datascript.emit.java.DepthFirstVisitorEmitter;
 import datascript.emit.java.JavaEmitter;
 import datascript.emit.java.SizeOfEmitter;
@@ -97,6 +98,12 @@ public class JavaExtension implements Extension
             SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(params
                     .getOutPathName(), params.getDefaultPackageName());
             emitter.setEmitter(sizeOfEmitter);
+            emitter.root(rootNode);
+
+            // emit Java __Const class
+            ConstEmitter constEmitter = new ConstEmitter(params
+                    .getOutPathName(), params.getDefaultPackageName());
+            emitter.setEmitter(constEmitter);
             emitter.root(rootNode);
 
             // emit Java __XmlDumper class

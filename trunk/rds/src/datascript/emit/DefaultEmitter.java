@@ -73,6 +73,9 @@ public class DefaultEmitter implements Emitter
     public void beginImport(AST i) {}
     public void endImport() {}
 
+    public void beginConst(AST c) {}
+    public void endConst(AST c) {}
+
     public void beginMembers() {}
     public void endMembers() {}
 

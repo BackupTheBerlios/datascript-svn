@@ -66,11 +66,15 @@ public interface Emitter
     public void beginImport(AST i);
     public void endImport();
 
+    public void beginConst(AST c);
+    public void endConst(AST c);
+
     public void beginMembers();
     public void endMembers();
 
     public void beginField(AST f);
     public void endField(AST f);
+
     public void beginFunction(AST f);
     public void endFunction(AST f);
 
