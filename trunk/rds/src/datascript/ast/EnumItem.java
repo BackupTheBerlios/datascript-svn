@@ -37,6 +37,7 @@
  */
 package datascript.ast;
 
+import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
@@ -73,10 +74,10 @@ public class EnumItem extends TokenAST
     public String getDocumentation()
     {
         String result = "";
-        AST n = getFirstChild();
-        if (n != null && n.getType() == DataScriptParserTokenTypes.DOC)
+        Token t = getHiddenBefore();
+        if (t != null && t.getType() == DataScriptParserTokenTypes.DOC)
         {
-            result = n.getText();
+            result = t.getText();
         }
         return result;
     }

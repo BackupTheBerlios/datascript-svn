@@ -37,9 +37,10 @@
  */
 package datascript.ast;
 
+import antlr.Token;
+import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
-import antlr.collections.AST;
 
 public class Field extends TokenAST
 {
@@ -57,7 +58,7 @@ public class Field extends TokenAST
 
     private TokenAST fieldOptionalClause;
 
-    private TokenAST documentation;
+    private Token documentation;
 
 
 
@@ -173,12 +174,12 @@ public class Field extends TokenAST
 
     public String getDocumentation()
     {
-        return (documentation == null) ? null : documentation.getText();
+        return (documentation == null) ? "" : documentation.getText();
     }
     
-    public void setDocumentation(AST doc)
+    public void setDocumentation(Token doc)
     {
-        documentation = (TokenAST)doc;
+        documentation = doc;
     }
     
     public String getSqlConstraint()

@@ -41,9 +41,16 @@ union BitField
  */
 Unsigned
 {
+    /** Comment for u8. */
     uint8       u8;
+
+    /** Comment for u16. */
     uint16      u16;
+
+    /** Comment for u32. */
     uint32      u32;
+
+    /** Comment for u64. */
     uint64      u64;
 };
 

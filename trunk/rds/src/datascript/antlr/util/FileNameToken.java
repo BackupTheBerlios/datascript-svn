@@ -3,13 +3,13 @@
  */
 package datascript.antlr.util;
 
-import antlr.CommonToken;
+import antlr.CommonHiddenStreamToken;
 
 /**
  * @author HWellmann
  *
  */
-public class FileNameToken extends CommonToken
+public class FileNameToken extends CommonHiddenStreamToken
 {
     private String fileName;
     public FileNameToken()

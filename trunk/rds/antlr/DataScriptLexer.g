@@ -148,14 +148,13 @@ WS	:	(	' '
 			)
 			{ newline(); }
 		)+
-		{ _ttype = Token.SKIP; }
 	;
 
 // Single-line comments
 SL_COMMENT
 	:	"//"
 		(~('\n'|'\r'))* ('\n'|'\r'('\n')?)?
-		{$setType(Token.SKIP); newline();}
+		{ $setType(COMMENT); newline();}
 	;
 
 
@@ -163,7 +162,7 @@ COMMENT
     : "/*" 
       ( "*/" {$setType(Token.SKIP);}
       | {LA(2) != '/'}? "*" PLAIN_COMMENT_CONTENT "*/" {$setType(DOC);}
-      | ~'*' PLAIN_COMMENT_CONTENT "*/" {$setType(Token.SKIP);}
+      | ~'*' PLAIN_COMMENT_CONTENT "*/"
       )
 		
     ;

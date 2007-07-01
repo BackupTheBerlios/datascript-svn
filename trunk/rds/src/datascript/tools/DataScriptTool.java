@@ -45,13 +45,13 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
 
-import antlr.TokenBuffer;
+import antlr.Token;
+import antlr.TokenStreamHiddenTokenFilter;
 import antlr.TokenStreamRecognitionException;
 import antlr.collections.AST;
-
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.DataScriptLexer;
 import datascript.antlr.DataScriptParser;
@@ -59,12 +59,12 @@ import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.DataScriptWalker;
 import datascript.antlr.ExpressionEvaluator;
 import datascript.antlr.TypeEvaluator;
+import datascript.antlr.util.FileNameToken;
 import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
-
 import datascript.ast.DataScriptException;
-import datascript.ast.ParserException;
 import datascript.ast.Package;
+import datascript.ast.ParserException;
 import datascript.ast.Scope;
 
 
@@ -93,7 +93,8 @@ public class DataScriptTool implements Parameters
 
     public DataScriptTool()
     {
-        rootNode = new TokenAST(new antlr.Token(DataScriptParserTokenTypes.ROOT));
+    	Token token = new FileNameToken(DataScriptParserTokenTypes.ROOT, "ROOT");
+        rootNode = new TokenAST(token);
     }
 
 
@@ -349,8 +350,11 @@ public class DataScriptTool implements Parameters
             DataScriptLexer lexer = new DataScriptLexer(is);
             lexer.setFilename(fileName);
             lexer.setTokenObjectClass("datascript.antlr.util.FileNameToken");
-            TokenBuffer buffer = new TokenBuffer(lexer);
-            parser = new DataScriptParser(buffer);
+            TokenStreamHiddenTokenFilter filter = new TokenStreamHiddenTokenFilter(lexer);
+            filter.discard(DataScriptParserTokenTypes.WS);
+            filter.discard(DataScriptParserTokenTypes.COMMENT);
+            filter.hide(DataScriptParserTokenTypes.DOC);
+            parser = new DataScriptParser(filter);
             parser.setContext(context);
 
             // must call this to see file name in error messages

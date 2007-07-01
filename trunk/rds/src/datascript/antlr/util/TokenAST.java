@@ -37,8 +37,7 @@
  */
 package datascript.antlr.util;
 
-import antlr.BaseAST;
-import antlr.CommonToken;
+import antlr.CommonASTWithHiddenTokens;
 import antlr.Token;
 import antlr.collections.AST;
 
@@ -46,69 +45,53 @@ import antlr.collections.AST;
  * @author HWellmann
  *
  */
-public class TokenAST extends BaseAST
+public class TokenAST extends CommonASTWithHiddenTokens
 {
-    private Token token;
-
+	private FileNameToken token;
+	
     public TokenAST() 
     {
+    	token = new FileNameToken();
     }
 
     public TokenAST(Token tok) 
     {
-        token = tok;
+        super(tok);
+    	this.token = (FileNameToken) tok;
     }
 
     public void initialize(int t, String txt)
     {
         token = new FileNameToken(t, txt);
+        super.initialize(token);
     }
 
-    public void initialize(AST t)
-    {
-        token = ((TokenAST)t).token;
-    }
-
-    public void initialize(Token t)
-    {
-        token = (FileNameToken) t;
-    }
 ///////////////////////////////
     
-    public int getLine()
-    {
-        return token.getLine();
-    }
-    
-    public int getColumn()
-    {
-        return token.getColumn();
-    }
-    
     public String getFileName()
-    {
+    {    	
         return token.getFilename();
     }
 
-    /** Get the token text for this node */
-    public String getText() {
-        return token.getText();
-    }
-
-    /** Get the token type for this node */
-    public int getType() {
-        return token.getType();
-    }
-
-    /** Set the token text for this node */
-    public void setText(String text) {
-        token.setText(text);
-    }
-
-    /** Set the token type for this node */
-    public void setType(int ttype) {
-        token.setType(ttype);
-    }
+//    /** Get the token text for this node */
+//    public String getText() {
+//        return token.getText();
+//    }
+//
+//    /** Get the token type for this node */
+//    public int getType() {
+//        return token.getType();
+//    }
+//
+//    /** Set the token text for this node */
+//    public void setText(String text) {
+//        token.setText(text);
+//    }
+//
+//    /** Set the token type for this node */
+//    public void setType(int ttype) {
+//        token.setType(ttype);
+//    }
     
     public AST findFirstChildOfType(int type)
     {
@@ -121,9 +104,7 @@ public class TokenAST extends BaseAST
             }
         }
         return null;
-    }    
-
-    
+    }      
 }
 
 

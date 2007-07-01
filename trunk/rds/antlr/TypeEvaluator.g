@@ -199,7 +199,7 @@ fieldDefinition
           )?
           (c:fieldCondition             { f.setCondition(c); }
           )? 
-          (d:DOC                        { f.setDocumentation(d); }
+          (d:DOC
           )? 
           (l:label                      { f.setLabel(l); }
           )?

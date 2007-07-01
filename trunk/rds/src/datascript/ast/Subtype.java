@@ -121,10 +121,10 @@ public class Subtype extends TokenAST implements TypeInterface
     public String getDocumentation()
     {
         String result = "";
-        AST n = findFirstChildOfType(DataScriptParserTokenTypes.DOC);
-        if (n != null)
+        Token t = getHiddenBefore();
+        if (t != null && t.getType() == DataScriptParserTokenTypes.DOC)
         {
-            result = n.getText();
+            result = t.getText();
         }
         return result;
     }

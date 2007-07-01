@@ -3,10 +3,10 @@
 	<classpathentry excluding="psi/" kind="src" path="src"/>
 	<classpathentry kind="src" path="freemarker"/>
 	<classpathentry kind="src" path="build/gen"/>
-	<classpathentry kind="src" output="build/test/classes" path="test/src"/>
-	<classpathentry kind="src" output="build/test/classes" path="build/test/gen"/>
+	<classpathentry output="build/test/classes" kind="src" path="test/src"/>
+	<classpathentry output="build/test/classes" kind="src" path="build/test/gen"/>
 	<classpathentry kind="lib" path="lib/jetc-task.jar"/>
-	<classpathentry kind="lib" path="lib/antlr.jar"/>
+	<classpathentry sourcepath="/home/hwe/work/antlr-2.7.6" kind="lib" path="lib/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc.jar"/>
 	<classpathentry kind="lib" path="lib/rds-ant.jar"/>

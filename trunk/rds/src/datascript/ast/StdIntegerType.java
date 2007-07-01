@@ -41,9 +41,16 @@ import java.math.BigInteger;
 
 import datascript.antlr.DataScriptParserTokenTypes;
 
+/**
+ * This class models the built-in signed and unsigned integer types.
+ * All types are big-endian. Little-endian types are not currently supported.
+ *
+ * @author HWellmann
+ *
+ */
 public class StdIntegerType extends IntegerType
 {
-    boolean isSigned()
+    public boolean isSigned()
     {
         switch (getType())
         {
@@ -58,12 +65,12 @@ public class StdIntegerType extends IntegerType
         }
     }
 
-    BigInteger getLowerBound()
+    public BigInteger getLowerBound()
     {
         return lowerbounds[getType()];
     }
 
-    BigInteger getUpperBound()
+    public BigInteger getUpperBound()
     {
         return upperbounds[getType()];
     }
@@ -122,7 +129,9 @@ public class StdIntegerType extends IntegerType
 
     static
     {
-        int n = DataScriptParserTokenTypes.INT64+1;
+    	// Warning: We rely on the fact the the token types are ordered
+    	// alphabetically to compute array length.
+        int n = DataScriptParserTokenTypes.UINT8+1;
         lowerbounds = new BigInteger[n];
         upperbounds = new BigInteger[n];
         lowerbounds[DataScriptParserTokenTypes.UINT8] = BigInteger.ZERO;
@@ -169,34 +178,8 @@ public class StdIntegerType extends IntegerType
         lowerbounds[DataScriptParserTokenTypes.LEINT32] = upperbounds[DataScriptParserTokenTypes.INT32].not();
         lowerbounds[DataScriptParserTokenTypes.LEINT64] = upperbounds[DataScriptParserTokenTypes.INT64].not();
 */
-        /*
-        builtinTypes = new BuiltinType[n];
-        builtinTypes[DataScriptParserTokenTypes.INT8] = new BuiltinType(DataScriptParserTokenTypes.INT8);
-        builtinTypes[DataScriptParserTokenTypes.INT16] = new BuiltinType(DataScriptParserTokenTypes.INT16);
-        builtinTypes[DataScriptParserTokenTypes.INT32] = new BuiltinType(DataScriptParserTokenTypes.INT32);
-        builtinTypes[DataScriptParserTokenTypes.INT64] = new BuiltinType(DataScriptParserTokenTypes.INT64);
-        builtinTypes[DataScriptParserTokenTypes.UINT8] = new BuiltinType(DataScriptParserTokenTypes.UINT8);
-        builtinTypes[DataScriptParserTokenTypes.UINT16] = new BuiltinType(DataScriptParserTokenTypes.UINT16);
-        builtinTypes[DataScriptParserTokenTypes.UINT32] = new BuiltinType(DataScriptParserTokenTypes.UINT32);
-        builtinTypes[DataScriptParserTokenTypes.UINT64] = new BuiltinType(DataScriptParserTokenTypes.UINT64);
-        builtinTypes[DataScriptParserTokenTypes.LEINT16] = new BuiltinType(DataScriptParserTokenTypes.LEINT16);
-        builtinTypes[DataScriptParserTokenTypes.LEINT32] = new BuiltinType(DataScriptParserTokenTypes.LEINT32);
-        builtinTypes[DataScriptParserTokenTypes.LEINT64] = new BuiltinType(DataScriptParserTokenTypes.LEINT64);
-        builtinTypes[DataScriptParserTokenTypes.LEUINT16] = new BuiltinType(
-                DataScriptParserTokenTypes.LEUINT16);
-        builtinTypes[DataScriptParserTokenTypes.LEUINT32] = new BuiltinType(
-                DataScriptParserTokenTypes.LEUINT32);
-        builtinTypes[DataScriptParserTokenTypes.LEUINT64] = new BuiltinType(
-                DataScriptParserTokenTypes.LEUINT64);
-*/
     }
 
-/*
-    static BuiltinType getTypeByTokenKind(int k)
-    {
-        return builtinTypes[k];
-    }
-*/
     /**
      * for builtin types, membership test amounts to testing whether it's an
      * integer (via integerValue()) and then a simple range comparison
@@ -216,14 +199,7 @@ public class StdIntegerType extends IntegerType
 
     public Value castFrom(Value val)
     {
-        return null;
-        /* TODO:
-        if (isMember(null, val))
-        {
-            return val;
-        }
-        throw new CastError("cannot cast " + val + " to " + this);
-        */
+    	throw new UnsupportedOperationException();
     }
 
     static StdIntegerType getBuiltinType(TypeInterface ftype)

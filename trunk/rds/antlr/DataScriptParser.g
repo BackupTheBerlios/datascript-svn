@@ -51,82 +51,87 @@ options
     buildAST=true;
 }
 
+// Keep the token list sorted alphabetically.
 tokens
-{
-    ENUM;
-    FIELD<AST=datascript.ast.Field>;
-    SEQUENCE<AST=datascript.ast.SequenceType>;
-    UNION<AST=datascript.ast.UnionType>;
-    PARAM;
-    PARAMLIST;
-    INST<AST=datascript.ast.TypeInstantiation>;
+{    
+    AND<AST=datascript.ast.IntegerExpression>;
     ARRAY<AST=datascript.ast.ArrayType>;
-    INDEX<AST=datascript.ast.Expression>;
-    LABEL;
+    ARRAYELEM<AST=datascript.ast.Expression>;
+    BANG<AST=datascript.ast.BooleanExpression>;
+    BIG="big";
+    BIT<AST=datascript.ast.BitFieldType>;
     BLOCK;
     CAST;
-    ROOT;
-    TRANSLATION_UNIT;
-    MEMBERS;
-    PACKAGE;
-    IMPORT;
-    STRING<AST=datascript.ast.StringType>;
-    TYPEREF<AST=datascript.ast.TypeReference>;
-    SUBTYPE<AST=datascript.ast.Subtype>;
-    UPLUS<AST=datascript.ast.IntegerExpression>;
-    UMINUS<AST=datascript.ast.IntegerExpression>;
-    ITEM<AST=datascript.ast.EnumItem>;
-    BIT<AST=datascript.ast.BitFieldType>;
-    UINT8<AST=datascript.ast.StdIntegerType>;
-    UINT16<AST=datascript.ast.StdIntegerType>;
-    UINT32<AST=datascript.ast.StdIntegerType>;
-    UINT64<AST=datascript.ast.StdIntegerType>;
-    INT8<AST=datascript.ast.StdIntegerType>;
-    INT16<AST=datascript.ast.StdIntegerType>;
-    INT32<AST=datascript.ast.StdIntegerType>;
-    INT64<AST=datascript.ast.StdIntegerType>;
-    ARRAYELEM<AST=datascript.ast.Expression>;
-    INTEGER_LITERAL<AST=datascript.ast.IntegerExpression>;
-    PLUS<AST=datascript.ast.IntegerExpression>;
-    MINUS<AST=datascript.ast.IntegerExpression>;
-    MULTIPLY<AST=datascript.ast.IntegerExpression>;
+    COMMENT;
+    CONST="const"<AST=datascript.ast.ConstType>;
     DIVIDE<AST=datascript.ast.IntegerExpression>;
-    MODULO<AST=datascript.ast.IntegerExpression>;
-    LSHIFT<AST=datascript.ast.IntegerExpression>;
-    RSHIFT<AST=datascript.ast.IntegerExpression>;
-    OR<AST=datascript.ast.IntegerExpression>;
-    XOR<AST=datascript.ast.IntegerExpression>;
-    AND<AST=datascript.ast.IntegerExpression>;
-    TILDE<AST=datascript.ast.IntegerExpression>;
-    LENGTHOF<AST=datascript.ast.IntegerExpression>;
-    SIZEOF<AST=datascript.ast.IntegerExpression>;
+    DOC;
+    DOT<AST=datascript.ast.Expression>;
+    ENUM="enum"<AST=datascript.ast.EnumType>;
     EQ<AST=datascript.ast.BooleanExpression>;
-    NE<AST=datascript.ast.BooleanExpression>;
-    LT<AST=datascript.ast.BooleanExpression>;
-    LE<AST=datascript.ast.BooleanExpression>;
+    FIELD<AST=datascript.ast.Field>;
+    FUNCTION="function"<AST=datascript.ast.FunctionType>;
+    FUNCTIONCALL<AST=datascript.ast.Expression>;
+    FUNCTIONS;
     GE<AST=datascript.ast.BooleanExpression>;
     GT<AST=datascript.ast.BooleanExpression>;
-    LOGICALOR<AST=datascript.ast.BooleanExpression>;
+    IF="if";
+    IMPORT="import";
+    INDEX<AST=datascript.ast.Expression>;
+    INST<AST=datascript.ast.TypeInstantiation>;
+    INT16="int16"<AST=datascript.ast.StdIntegerType>;
+    INT32="int32"<AST=datascript.ast.StdIntegerType>;
+    INT64="int64"<AST=datascript.ast.StdIntegerType>;
+    INT8="int8"<AST=datascript.ast.StdIntegerType>;
+    INTEGER_LITERAL<AST=datascript.ast.IntegerExpression>;
+    ITEM<AST=datascript.ast.EnumItem>;
+    LABEL;
+    LE<AST=datascript.ast.BooleanExpression>;
+    LENGTHOF<AST=datascript.ast.IntegerExpression>;
+    LITTLE="little";
     LOGICALAND<AST=datascript.ast.BooleanExpression>;
-    BANG<AST=datascript.ast.BooleanExpression>;
-    QUESTIONMARK<AST=datascript.ast.Expression>;
-    DOT<AST=datascript.ast.Expression>;
+    LOGICALOR<AST=datascript.ast.BooleanExpression>;
     LPAREN<AST=datascript.ast.Expression>;
-    SUM<AST=datascript.ast.Expression>;
-    BIG;
-    LITTLE;
-    ZIP;
-    FUNCTIONS;
-    FUNCTION<AST=datascript.ast.FunctionType>;
-    RETURN;
-    FUNCTIONCALL<AST=datascript.ast.Expression>;
-    
+    LSHIFT<AST=datascript.ast.IntegerExpression>;
+    LT<AST=datascript.ast.BooleanExpression>;
+    MEMBERS;
+    MINUS<AST=datascript.ast.IntegerExpression>;
+    MODULO<AST=datascript.ast.IntegerExpression>;
+    MULTIPLY<AST=datascript.ast.IntegerExpression>;
+    NE<AST=datascript.ast.BooleanExpression>;
+    OR<AST=datascript.ast.IntegerExpression>;
+    PACKAGE="package";
+    PARAM;
+    PARAMLIST;
+    PLUS<AST=datascript.ast.IntegerExpression>;
+    QUESTIONMARK<AST=datascript.ast.Expression>;
+    RETURN="return";
+    ROOT;
+    RSHIFT<AST=datascript.ast.IntegerExpression>;
+    SEQUENCE<AST=datascript.ast.SequenceType>;
+    SIZEOF<AST=datascript.ast.IntegerExpression>;
     SQL;
     SQL_DATABASE<AST=datascript.ast.SqlDatabaseType>;
-    SQL_PRAGMA<AST=datascript.ast.SqlPragmaType>;
-    SQL_METADATA<AST=datascript.ast.SqlMetadataType>;
-    SQL_TABLE<AST=datascript.ast.SqlTableType>;
     SQL_INTEGER<AST=datascript.ast.SqlIntegerType>;
+    SQL_METADATA<AST=datascript.ast.SqlMetadataType>;
+    SQL_PRAGMA<AST=datascript.ast.SqlPragmaType>;
+    SQL_TABLE<AST=datascript.ast.SqlTableType>;
+    STRING<AST=datascript.ast.StringType>;
+    SUBTYPE<AST=datascript.ast.Subtype>;
+    SUM<AST=datascript.ast.Expression>;
+    TILDE<AST=datascript.ast.IntegerExpression>;
+    TRANSLATION_UNIT;
+    TYPEREF<AST=datascript.ast.TypeReference>;
+    UINT16="uint16"<AST=datascript.ast.StdIntegerType>;
+    UINT32="uint32"<AST=datascript.ast.StdIntegerType>;
+    UINT64="uint64"<AST=datascript.ast.StdIntegerType>;
+    UINT8="uint8"<AST=datascript.ast.StdIntegerType>;
+    UMINUS<AST=datascript.ast.IntegerExpression>;
+    UNION<AST=datascript.ast.UnionType>;
+    UPLUS<AST=datascript.ast.IntegerExpression>;
+    WS;
+    XOR<AST=datascript.ast.IntegerExpression>;
+    ZIP="zip";
 }
 
 {
@@ -145,13 +150,11 @@ translationUnit
     ;    
 
 packageDeclaration
-    : "package"! ID (DOT! ID)* SEMICOLON!
-      { #packageDeclaration = #([PACKAGE, "PACKAGE"], packageDeclaration); }
+    : PACKAGE^ ID (DOT! ID)* SEMICOLON!
     ;
     
 importDeclaration
-    : "import"! ID (DOT! ID)* DOT! MULTIPLY! SEMICOLON!
-      { #importDeclaration = #([IMPORT, "IMPORT"], importDeclaration); }
+    : IMPORT^ ID (DOT! ID)* DOT! MULTIPLY! SEMICOLON!
     ;   
 
 declarationList
@@ -214,10 +217,7 @@ conditionExpression
 /******************* begin of enumerator stuff *****************/
 
 enumDeclaration
-    : "enum"^<AST=datascript.ast.EnumType> 
-      builtinType 
-      (ID)? 
-      enumMemberList
+    : ENUM^ builtinType (ID)? enumMemberList
     ;
 
 enumMemberList
@@ -238,11 +238,7 @@ bitmaskDeclaration
 
 
 constDeclaration
-    : "const"^<AST=datascript.ast.ConstType> 
-      builtinType 
-      ID 
-      ASSIGN! 
-      typeValue
+    : CONST^ builtinType ID ASSIGN! typeValue
     ;
 
 
@@ -268,7 +264,29 @@ fieldDefinition![AST d]
         (i:fieldInitializer)? 
         (o:fieldOptionalClause)?
         (c:fieldCondition)?
-        { #fieldDefinition = #([FIELD], t, f, i, o, c, d, l, z); }
+        { 
+            #fieldDefinition = #([FIELD], t, f, i, o, c, d, l, z); 
+            AST doc = #t;
+            if (#l != null)
+            {
+                doc = #l;
+            }
+            else if (#z != null)
+            {
+                doc = #z;
+            }
+            else if (#t.getType() == TYPEREF)
+            {
+                doc = #t.getFirstChild();
+            }
+            Token docToken = null;
+            if (doc != null)
+            {
+                docToken = ((TokenAST)doc).getHiddenBefore();
+            }
+            Field field = (Field) #fieldDefinition;
+            field.setDocumentation(docToken);
+        }
     ;
 
 typeArgumentList
@@ -281,7 +299,7 @@ fieldInitializer
     ;
 
 fieldOptionalClause
-    :   "if"^ expression
+    :   IF^ expression
     ;
 
 fieldCondition
@@ -321,10 +339,18 @@ sequenceDeclaration!
         { if (u == null)
           {
               #sequenceDeclaration = #([SEQUENCE], n, p, m);
+              SequenceType s = (SequenceType) #sequenceDeclaration;
+              FileNameToken id = (FileNameToken) n;
+              Token t = id.getHiddenBefore();
+              s.setDocumentation(t);              
           }
           else
           {
               #sequenceDeclaration = #([UNION], n, p, m); 
+              UnionType s = (UnionType) #sequenceDeclaration;
+              FileNameToken first = (FileNameToken) u;
+              Token t = first.getHiddenBefore();
+              s.setDocumentation(t);              
           }
         } 
     ;
@@ -375,20 +401,20 @@ builtinType
     :   (byteOrderModifier)? builtinTypeDefaultOrder
     ;
 
-integerType!
-    :   "uint8"      {#integerType = #[UINT8];}
-    |   "uint16"     {#integerType = #[UINT16];}
-    |   "uint32"     {#integerType = #[UINT32];}
-    |   "uint64"     {#integerType = #[UINT64];}
-    |   "int8"       {#integerType = #[INT8];}
-    |   "int16"      {#integerType = #[INT16];}
-    |   "int32"      {#integerType = #[INT32];}
-    |   "int64"      {#integerType = #[INT64];}
+integerType
+    :   UINT8
+    |   UINT16
+    |   UINT32
+    |   UINT64
+    |   INT8
+    |   INT16
+    |   INT32
+    |   INT64
     ;
 
 stringType
-	:	"string"!     {#stringType = #[STRING];}
-	;
+    :	"string"!     {#stringType = #[STRING];}
+    ;
 
 builtinTypeDefaultOrder
     :   integerType
@@ -404,13 +430,13 @@ bitField
     ;
 
 modifier
-	:	byteOrderModifier
-	|	zipModifier
-	;
+    :	byteOrderModifier
+    |	zipModifier
+    ;
 
 zipModifier
-	:	"zip"! { #zipModifier = #([ZIP, "ZIP"], #zipModifier); }
-	;
+    :	"zip"! { #zipModifier = #([ZIP, "ZIP"], #zipModifier); }
+    ;
 
 byteOrderModifier
     :   "big"!
@@ -503,11 +529,7 @@ sqlIntegerDeclaration
     : "sql_integer"! ID LCURLY! (sqlIntegerFieldDefinition)+ RCURLY! 
       { #sqlIntegerDeclaration = #([SQL_INTEGER], #sqlIntegerDeclaration); }
     ;
-/*
-sqlIntegerFields
-    : (sqlIntegerFieldDefinition)+    
-    ;
-*/
+
 sqlIntegerFieldDefinition!
     : (d:DOC)? t:integerType i:ID (c:fieldCondition)? SEMICOLON!
       { #sqlIntegerFieldDefinition = #([FIELD], t, i, c, d); }

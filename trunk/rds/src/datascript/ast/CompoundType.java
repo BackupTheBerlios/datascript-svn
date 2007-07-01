@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
+import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
@@ -65,6 +66,8 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     private String name;
 
     private CompoundType parent;
+    
+    private Token doc;
 
     abstract public IntegerValue sizeof(Context ctxt);
 
@@ -137,12 +140,16 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     public String getDocumentation()
     {
         String result = "";
-        AST n = getNextSibling();
-        if (n != null && n.getType() == DataScriptParserTokenTypes.DOC)
+        if (doc != null && doc.getType() == DataScriptParserTokenTypes.DOC)
         {
-            result = n.getText();
+            result = doc.getText();
         }
         return result;
+    }
+    
+    public void setDocumentation(Token t)
+    {
+    	doc = t;
     }
 
     public void addContainer(CompoundType f)
