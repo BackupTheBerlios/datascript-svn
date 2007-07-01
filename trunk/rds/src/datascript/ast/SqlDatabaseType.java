@@ -3,9 +3,10 @@
  */
 package datascript.ast;
 
+import antlr.Token;
+import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
-import antlr.collections.AST;
 
 /**
  * @author HWellmann
@@ -45,10 +46,10 @@ public class SqlDatabaseType extends CompoundType
     public String getDocumentation()
     {
         String result = "";
-        AST n = findFirstChildOfType(DataScriptParserTokenTypes.DOC);
-        if (n != null)
+        Token t = getHiddenBefore();
+        if (t != null)
         {
-            result = n.getText();
+            result = t.getText();
         }
         return result;
     }

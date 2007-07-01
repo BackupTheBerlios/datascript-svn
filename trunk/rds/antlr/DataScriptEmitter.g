@@ -155,8 +155,7 @@ enumMemberList
 
 enumItem
     : #(i:ITEM 			{ em.beginEnumItem(i); }
-        (DOC)? ID 
-        (expression)?
+        ID (expression)?
        )
        { em.endEnumItem(i); }
     ;
@@ -178,7 +177,7 @@ fieldDefinition
     	   (i:ID					{ em.beginField(f); })? 
            (fieldInitializer)?
            (fieldOptionalClause)?
-           (fieldCondition)? (DOC)? (label)?
+           (fieldCondition)? (label)?
          )
          { if (i != null) em.endField(f); }
     ;
@@ -274,7 +273,6 @@ subtypeDeclaration
            definedType 
            ID 
            (expression)? 
-           (DOC)?
          )
          { em.endSubtype(s); }
     ;
@@ -343,7 +341,6 @@ sqlDatabaseDefinition
         (sqlMetadataBlock)? 
         (sqlTableField)+ 
         (sqlConstraint)?
-        (DOC)? 
        )                           { em.endSqlDatabase(d); }
     ;
     
@@ -353,7 +350,7 @@ sqlPragmaBlock                     { em.beginSqlPragma(p); }
     ;
     
 sqlPragma
-    : #(FIELD (DOC)? sqlPragmaType ID (fieldInitializer)? (fieldCondition)?)
+    : #(FIELD sqlPragmaType ID (fieldInitializer)? (fieldCondition)?)
     ;    
 
 sqlPragmaType
@@ -371,12 +368,11 @@ sqlMetadataField
         ID
         (fieldInitializer)? 
         (fieldCondition)?
-        (DOC)?
       )
     ;    
 
 sqlTableField
-    : #(FIELD (DOC)? sqlTableDefinition)
+    : #(FIELD sqlTableDefinition)
     ;
       
 sqlTableDefinition
@@ -394,7 +390,8 @@ sqlTableDeclaration
     
 sqlFieldDefinition
     : #(FIELD definedType ID (fieldCondition)? 
-        (SQL_KEY)? (sqlConstraint)? (DOC)?)
+        (SQL_KEY)? (sqlConstraint)?
+      )
     ;
     
 sqlConstraint
@@ -409,7 +406,7 @@ sqlIntegerDeclaration
     ;
     
 sqlIntegerFieldDefinition
-    : #(FIELD integerType ID (fieldCondition)? (DOC)? )
+    : #(FIELD integerType ID (fieldCondition)?)
     ;    
     
 

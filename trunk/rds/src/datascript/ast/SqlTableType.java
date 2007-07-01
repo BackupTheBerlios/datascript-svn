@@ -38,6 +38,7 @@
 package datascript.ast;
 
 import datascript.antlr.util.TokenAST;
+import antlr.Token;
 import antlr.collections.AST;
 
 /**
@@ -76,4 +77,15 @@ public class SqlTableType extends CompoundType
     {
         return "SQL_TABLE";
     }
+    
+    public String getDocumentation()
+    {
+        String result = "";
+        Token t = getHiddenBefore();
+        if (t != null)
+        {
+            result = t.getText();
+        }
+        return result;
+    }    
 }

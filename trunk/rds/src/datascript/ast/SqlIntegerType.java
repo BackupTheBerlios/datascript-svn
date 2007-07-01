@@ -3,6 +3,7 @@
  */
 package datascript.ast;
 
+import antlr.Token;
 import datascript.antlr.util.TokenAST;
 
 /**
@@ -65,4 +66,15 @@ public class SqlIntegerType extends CompoundType
     {
         return "SQL_INTEGER";
     }
+
+    public String getDocumentation()
+    {
+        String result = "";
+        Token t = getHiddenBefore();
+        if (t != null)
+        {
+            result = t.getText();
+        }
+        return result;
+    }    
 }

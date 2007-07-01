@@ -167,7 +167,7 @@ enumMemberList[AST e]
     ;
 
 enumItem[AST e]
-    : #(f:ITEM (DOC)? i:ID (expression)?)
+    : #(f:ITEM i:ID (expression)?)
       { scope().setSymbol(i, f); 
         ((EnumItem)f).setEnumType((EnumType)e); }
     ;
@@ -198,8 +198,6 @@ fieldDefinition
           (o:fieldOptionalClause        { f.setOptionalClause(o); }
           )?
           (c:fieldCondition             { f.setCondition(c); }
-          )? 
-          (d:DOC
           )? 
           (l:label                      { f.setLabel(l); }
           )?
@@ -301,7 +299,7 @@ definedType
     ;
 
 subtypeDeclaration
-    : #(s:SUBTYPE definedType i:ID (expression)? (DOC)?)
+    : #(s:SUBTYPE definedType i:ID (expression)?)
                                 { scope().setTypeSymbol(i, s); 
                                   ((Subtype)s).setPackage(pkg);
                                 }
@@ -362,7 +360,6 @@ sqlDatabaseDefinition
         (sqlMetadataBlock)? 
         (sqlTableField)+ 
         (sqlConstraint)?                 { popScope(); }
-        (DOC)? 
        )
     ;
     
@@ -377,7 +374,6 @@ sqlPragma
     : #(FIELD                            { Field f = (Field)#FIELD; 
                                            CompoundType ct = (CompoundType) scope().getOwner();
                                          }
-        (DOC)? 
         t:sqlPragmaType n:ID             { scope().setSymbol(n, f);
                                            f.setName(n);
                                            ct.addField(f);
@@ -410,13 +406,11 @@ sqlMetadataField
         )? 
         (c:fieldCondition               { f.setCondition(c); }
         )?
-        (DOC)?
       )
     ;    
 
 sqlTableField
-    : #(f:FIELD                           
-        (DOC)? sqlTableDefinition[f])
+    : #(f:FIELD sqlTableDefinition[f])
     ;
       
 sqlTableDefinition[AST fd]
@@ -454,8 +448,8 @@ sqlFieldDefinition
                                           ct.addField(f);
                                         }
         (c:fieldCondition)?             { f.setCondition(c); }
-        (SQL_KEY)? (sqlConstraint)? 
-        (DOC)?)
+        (SQL_KEY)? (sqlConstraint)?
+      )
     ;
     
 sqlConstraint
@@ -481,7 +475,7 @@ sqlIntegerFieldDefinition
                                          }
         (c:fieldCondition                { f.setCondition(c); }
         )? 
-        (DOC)? )
+      )
     
     ;    
     

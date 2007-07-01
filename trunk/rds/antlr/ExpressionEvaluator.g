@@ -161,7 +161,7 @@ enumMemberList
 enumItem[IntegerValue last]
 returns [IntegerValue self]
 { self = last.add(new IntegerValue(1)); }
-    : #(f:ITEM (DOC)? i:ID
+    : #(f:ITEM i:ID
         (e:expression                   { self = (IntegerValue)((Expression)e).getValue(); }
          )?
        )
@@ -183,7 +183,6 @@ fieldDefinition
           (in:fieldInitializer)?
           (o:fieldOptionalClause)?
           (c:fieldCondition)? 
-          (DOC)? 
           (l:label)?
           ) 
     ;
@@ -271,7 +270,7 @@ definedType
     ;
 
 subtypeDeclaration
-    : #(SUBTYPE definedType ID (expression)? (DOC)?)
+    : #(SUBTYPE definedType ID (expression)?)
     ;
 
 builtinType
@@ -329,7 +328,6 @@ sqlDatabaseDefinition
         (sqlMetadataBlock)?   
         (sqlTableField)+ 
         (sqlConstraint)?
-        (DOC)? 
        )                                { popScope(); }   
     ;
     
@@ -340,7 +338,7 @@ sqlPragmaBlock
     
 sqlPragma
     : #(f:FIELD                         { scope().setCurrentField((Field)f); }
-        (DOC)? sqlPragmaType ID 
+        sqlPragmaType ID 
         (fieldInitializer)? 
         (fieldCondition)?)
     ;    
@@ -360,12 +358,11 @@ sqlMetadataField
         ID
         (fieldInitializer)? 
         (fieldCondition)?
-        (DOC)?
       )
     ;    
 
 sqlTableField
-    : #(FIELD (DOC)? sqlTableDefinition)
+    : #(FIELD sqlTableDefinition)
     ;
       
 sqlTableDefinition
@@ -384,7 +381,7 @@ sqlTableDeclaration
 sqlFieldDefinition
     : #(f:FIELD                           { scope().setCurrentField((Field)f); }
         definedType ID (fieldCondition)? 
-        (SQL_KEY)? (sqlConstraint)? (DOC)?)
+        (SQL_KEY)? (sqlConstraint)?)
     ;
     
 sqlConstraint
@@ -392,7 +389,6 @@ sqlConstraint
     ;  
     
 sqlIntegerDeclaration
-//    : (DOC)? "sql_integer"! ID LCURLY! sqlIntegerFields RCURLY!
     : #(s:SQL_INTEGER                     { pushScope(((CompoundType)s).getScope()); }
         ID
         (sqlIntegerFieldDefinition)+
@@ -401,7 +397,7 @@ sqlIntegerDeclaration
     
 sqlIntegerFieldDefinition
     : #(f:FIELD                           { scope().setCurrentField((Field)f); }
-        integerType ID (fieldCondition)? (DOC)?
+        integerType ID (fieldCondition)?
        )
     ;    
     

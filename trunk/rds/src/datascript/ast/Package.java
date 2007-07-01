@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
@@ -68,18 +67,19 @@ import datascript.antlr.util.ToolContext;
  */
 public class Package extends Scope
 {
-	public static Package BUILTIN;
-	public static Package DEFAULT;
-	
-	static
-	{
-		BUILTIN = new Package();
-		BUILTIN.packagePath = new ArrayList<String>();
-		BUILTIN.packagePath .add("__builtin__");
-		DEFAULT = new Package();
-		DEFAULT.packagePath = new ArrayList<String>();
-		DEFAULT.packagePath .add("__default__");
-	}
+    public static Package BUILTIN;
+
+    public static Package DEFAULT;
+
+    static
+    {
+        BUILTIN = new Package();
+        BUILTIN.packagePath = new ArrayList<String>();
+        BUILTIN.packagePath.add("__builtin__");
+        DEFAULT = new Package();
+        DEFAULT.packagePath = new ArrayList<String>();
+        DEFAULT.packagePath.add("__default__");
+    }
 	
     /** Map of all packages in the project. */
     private static Map<String, Package> nameToPackage = new HashMap<String, Package>();

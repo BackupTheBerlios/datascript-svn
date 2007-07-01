@@ -134,7 +134,7 @@ enumMemberList
     ;
 
 enumItem
-    : #(ITEM (DOC)? ID (expression)?)
+    : #(ITEM ID (expression)?)
     ;
 
 bitmaskDeclaration
@@ -149,7 +149,7 @@ fieldDefinition
     :   #(FIELD typeReference (ID)? 
           (fieldInitializer)?
           (fieldOptionalClause)?
-          (fieldCondition)? (DOC)? (label)?
+          (fieldCondition)? (label)?
           ) 
     ;
 
@@ -228,7 +228,7 @@ definedType
     ;
 
 subtypeDeclaration
-    :  #(SUBTYPE definedType ID (expression)? (DOC)?)
+    :  #(SUBTYPE definedType ID (expression)?)
     ;
 
 
@@ -285,7 +285,6 @@ sqlDatabaseDefinition
         (sqlMetadataBlock)? 
         (sqlTableField)+ 
         (sqlConstraint)?
-        (DOC)? 
        )
     ;
     
@@ -294,7 +293,7 @@ sqlPragmaBlock
     ;
     
 sqlPragma
-    : #(FIELD (DOC)? sqlPragmaType ID (fieldInitializer)? (fieldCondition)?)
+    : #(FIELD sqlPragmaType ID (fieldInitializer)? (fieldCondition)?)
     ;    
 
 sqlPragmaType
@@ -311,12 +310,11 @@ sqlMetadataField
         ID
         (fieldInitializer)? 
         (fieldCondition)?
-        (DOC)?
       )
     ;    
 
 sqlTableField
-    : #(FIELD (DOC)? sqlTableDefinition)
+    : #(FIELD sqlTableDefinition)
     ;
       
 sqlTableDefinition
@@ -333,7 +331,7 @@ sqlTableDeclaration
     
 sqlFieldDefinition
     : #(FIELD definedType ID (fieldCondition)? 
-        (SQL_KEY)? (sqlConstraint)? (DOC)?)
+        (SQL_KEY)? (sqlConstraint)?)
     ;
     
 sqlConstraint
@@ -345,7 +343,7 @@ sqlIntegerDeclaration
     ;
     
 sqlIntegerFieldDefinition
-    : #(FIELD integerType ID (fieldCondition)? (DOC)? )
+    : #(FIELD integerType ID (fieldCondition)?)
     ;    
     
 
