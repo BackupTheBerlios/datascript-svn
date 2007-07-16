@@ -346,10 +346,15 @@ sequenceDeclaration!
         { if (u == null)
           {
               #sequenceDeclaration = #([SEQUENCE], n, p, m);
-              SequenceType s = (SequenceType) #sequenceDeclaration;
-              FileNameToken id = (FileNameToken) n;
-              Token t = id.getHiddenBefore();
-              s.setDocumentation(t);              
+              if (n == null)
+                  ToolContext.logError((TokenAST)#u, "no identifier for structure given");
+              else
+              {
+                  SequenceType s = (SequenceType) #sequenceDeclaration;
+                  FileNameToken id = (FileNameToken) n;
+                  Token t = id.getHiddenBefore();
+                  s.setDocumentation(t);
+              }
           }
           else
           {

@@ -27,6 +27,15 @@ ByteAlignedBitField(uint16 numBits)
 
 
 /**
+ * test for structures without names
+ *
+{
+	uint8 bla;
+};
+*/
+
+
+/**
  * Testcase for bugreport 1730746, unions containing bitfields lead to incompilable code
  */
 union BitField
