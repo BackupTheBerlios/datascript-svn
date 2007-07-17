@@ -1,6 +1,6 @@
 /* BSD License
  *
- * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
+ * Copyright (c) 2007, Henrik Wedekind, Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -35,9 +35,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.html;
 
+
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
@@ -46,13 +51,31 @@ import datascript.ast.EnumType;
 import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
 
+
+
 public class ContentEmitter extends DefaultHTMLEmitter
 {
+    private CompoundEmitter ce;
+    private EnumerationEmitter ee;
+    private SubtypeEmitter se;
+
+
+    public ContentEmitter() throws IOException, URISyntaxException
+    {
+        super();
+
+        ce = new CompoundEmitter();
+        ee = new EnumerationEmitter();
+        se = new SubtypeEmitter();
+    }
+
+
     public void beginRoot(AST root)
     {
         directory = new File(directory, contentFolder);
         setCurrentFolder(contentFolder);
     }
+
 
     public void endPackage(AST p)
     {
@@ -62,35 +85,17 @@ public class ContentEmitter extends DefaultHTMLEmitter
             TokenAST type = (TokenAST) t;
             if (type instanceof CompoundType)
             {
-                emitCompound((CompoundType) type);
+                ce.emit((CompoundType) type);
             }
             else if (type instanceof EnumType)
             {
-                emitEnumeration((EnumType) type);
+                ee.emit((EnumType) type);
             }
             else if (type instanceof Subtype)
             {
-                emitSubtype((Subtype) type);
+                se.emit((Subtype) type);
             }
         }
-    }
-
-    private void emitCompound(CompoundType ct)
-    {
-        CompoundEmitter ce = new CompoundEmitter();
-        ce.emit(ct);
-    }
-
-    private void emitEnumeration(EnumType e)
-    {
-        EnumerationEmitter ee = new EnumerationEmitter();
-        ee.emit(e);
-    }
-
-    private void emitSubtype(Subtype s)
-    {
-        SubtypeEmitter se = new SubtypeEmitter();
-        se.emit(s);
     }
 
 }
