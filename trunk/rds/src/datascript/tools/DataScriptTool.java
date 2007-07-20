@@ -362,12 +362,12 @@ public class DataScriptTool implements Parameters
             
             // use custom node class containing line information
             parser.setASTNodeClass("datascript.antlr.util.TokenAST");
-
         }
         catch (java.io.FileNotFoundException fnfe)
         {
             ToolContext.logError((TokenAST)parser.getAST(), fnfe.getMessage());
         }
+
         // parse file and get root node of syntax tree
         parser.translationUnit();
         AST retVal = parser.getAST();

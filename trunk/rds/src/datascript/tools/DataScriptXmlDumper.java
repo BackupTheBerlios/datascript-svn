@@ -35,31 +35,45 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.tools;
+
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashSet;
 
+import antlr.Token;
 import antlr.TokenBuffer;
+import antlr.TokenStreamHiddenTokenFilter;
 import antlr.collections.AST;
 import antlr.debug.misc.ASTFrame;
 
 import datascript.antlr.DataScriptLexer;
 import datascript.antlr.DataScriptParser;
 import datascript.antlr.DataScriptParserTokenTypes;
+import datascript.antlr.util.FileNameToken;
 import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
 import datascript.ast.ParserException;
 
 
+
 public class DataScriptXmlDumper implements Parameters
 {
-    private TokenAST rootNode = new TokenAST(new antlr.Token(DataScriptParserTokenTypes.ROOT));
+    private TokenAST rootNode = null;
     private DataScriptParser parser;
     private ToolContext context;
     private HashSet<String> allPackageFiles = new HashSet<String>();
+
+
+    public DataScriptXmlDumper()
+    {
+        Token token = new FileNameToken(DataScriptParserTokenTypes.ROOT, "ROOT");
+        rootNode = new TokenAST(token);
+    }
 
 
     private void parseImportedPackages(AST unitNode) throws Exception
@@ -70,8 +84,8 @@ public class DataScriptXmlDumper implements Parameters
             while (true)
             {
                 node = node.getNextSibling();
-                if (node == null || 
-                    node.getType() != DataScriptParserTokenTypes.IMPORT)
+                if (node == null
+                        || node.getType() != DataScriptParserTokenTypes.IMPORT)
                     break;
 
                 String fileName = getPackageFile(node);
@@ -80,8 +94,11 @@ public class DataScriptXmlDumper implements Parameters
                     allPackageFiles.add(fileName);
                     context.setFileName(fileName);
                     AST unitRoot = parsePackage();
-                    rootNode.addChild(unitRoot);
-                    parseImportedPackages(unitRoot);
+                    if (unitRoot != null)
+                    {
+                        rootNode.addChild(unitRoot);
+                        parseImportedPackages(unitRoot);
+                    }
                 }
             }
         }
@@ -98,7 +115,7 @@ public class DataScriptXmlDumper implements Parameters
             sibling = sibling.getNextSibling();
             if (sibling == null)
                 break;
-            
+
             file = new File(file, sibling.getText());
         }
         return file.getPath() + ".ds";
@@ -111,27 +128,42 @@ public class DataScriptXmlDumper implements Parameters
         System.out.println("Parsing " + fileName);
 
         // set up lexer, parser and token buffer
-        FileInputStream is = new FileInputStream(fileName); 
-        DataScriptLexer lexer = new DataScriptLexer(is);
-        lexer.setFilename(fileName);
-        lexer.setTokenObjectClass("datascript.antlr.util.FileNameToken");
-        TokenBuffer buffer = new TokenBuffer(lexer);
-        parser = new DataScriptParser(buffer);
-        parser.setContext(context);
-
-        // must call this to see file name in error messages
-        parser.setFilename(fileName);
-
-        // use custom node class containing line information
-        parser.setASTNodeClass("datascript.antlr.util.TokenAST");
+        try
+        {
+            FileInputStream is = new FileInputStream(fileName);
+            DataScriptLexer lexer = new DataScriptLexer(is);
+            lexer.setFilename(fileName);
+            lexer.setTokenObjectClass("datascript.antlr.util.FileNameToken");
+            TokenStreamHiddenTokenFilter filter = new TokenStreamHiddenTokenFilter(lexer);
+            filter.discard(DataScriptParserTokenTypes.WS);
+            filter.discard(DataScriptParserTokenTypes.COMMENT);
+            filter.hide(DataScriptParserTokenTypes.DOC);
+            parser = new DataScriptParser(filter);
+            parser.setContext(context);
+    
+            // must call this to see file name in error messages
+            parser.setFilename(fileName);
+    
+            // use custom node class containing line information
+            parser.setASTNodeClass("datascript.antlr.util.TokenAST");
+        }
+        catch (java.io.FileNotFoundException fnfe)
+        {
+            ToolContext.logError((TokenAST)parser.getAST(), fnfe.getMessage());
+        }
 
         // parse file and get root node of syntax tree
         parser.translationUnit();
-        if (context.getErrorCount() != 0)
-            throw new ParserException("Parser errors.");
+        AST retVal = parser.getAST();
+        if (context.getErrorCount() != 0 || retVal == null)
+            throw new ParserException("DataSciptParser: Parser errors.");
 
-        // TODO: Log warning if package name AST does not match file name
-        return parser.getAST();
+        String pkgName = ToolContext.getFileName();
+        pkgName = pkgName.substring(0, pkgName.lastIndexOf(".ds"));
+        TokenAST node = (TokenAST)retVal.getFirstChild();
+        if (node.getType() != DataScriptParserTokenTypes.PACKAGE || node.getText().equals(pkgName))
+            ToolContext.logWarning(node, "filename and packeage name do not match!");
+        return retVal;
     }
 
 
@@ -148,17 +180,17 @@ public class DataScriptXmlDumper implements Parameters
             else
             {
                 String text = node.getText();
-                if (! Character.isLetter(text.charAt(0)))
+                if (!Character.isLetter(text.charAt(0)))
                 {
                     text = "op";
                 }
-                System.out.println("<"+ text + ">");
+                System.out.println("<" + text + ">");
 
                 // print children
                 printXml((TokenAST) node.getFirstChild());
 
                 // print end tag
-                System.out.println("</"+ node.getText() + ">");
+                System.out.println("</" + node.getText() + ">");
             }
         }
     }
@@ -176,13 +208,13 @@ public class DataScriptXmlDumper implements Parameters
         }
         catch (ClassNotFoundException e)
         {
-            System.err.println("Extension datascript.backend.xml.XmlExtension not found, nothing emitted.");
+            System.err
+                    .println("Extension datascript.backend.xml.XmlExtension not found, nothing emitted.");
         }
     }
 
 
-    /******** Implementation of Parameters interface ********/
-
+    /** ****** Implementation of Parameters interface ******* */
 
     public String getDefaultPackageName()
     {
@@ -238,8 +270,7 @@ public class DataScriptXmlDumper implements Parameters
     }
 
 
-    /******** End of Parameters interface ********/
-
+    /** ****** End of Parameters interface ******* */
 
     public static void main(String[] args)
     {
@@ -248,19 +279,18 @@ public class DataScriptXmlDumper implements Parameters
             DataScriptXmlDumper dsTool = new DataScriptXmlDumper();
             dsTool.context = ToolContext.getInstance();
             int i = 0;
-            //dsTool.context.setPathName(args[i++]);
+            // dsTool.context.setPathName(args[i++]);
             dsTool.context.setFileName(args[i++]);
             AST unitRoot = (TokenAST) dsTool.parsePackage();
             dsTool.rootNode.addChild(unitRoot);
             dsTool.parseImportedPackages(unitRoot);
 
             /*
-            OutputStreamWriter osw = new OutputStreamWriter(System.out);
-            dsTool.rootNode.xmlSerialize(osw);
-            os.flush();
-            printXml(dsTool.rootNode);
-            System.out.println(dsTool.rootNode.toStringList());
-            //*/
+             * OutputStreamWriter osw = new OutputStreamWriter(System.out);
+             * dsTool.rootNode.xmlSerialize(osw); os.flush();
+             * printXml(dsTool.rootNode);
+             * System.out.println(dsTool.rootNode.toStringList()); //
+             */
 
             ASTFrame frame = new ASTFrame("AST", dsTool.rootNode);
             frame.setVisible(true);
