@@ -43,6 +43,7 @@ package datascript.tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.HashSet;
 
 import antlr.Token;
@@ -180,11 +181,14 @@ public class DataScriptXmlDumper implements Parameters
             else
             {
                 String text = node.getText();
-                if (!Character.isLetter(text.charAt(0)))
+                if (text.length() > 0)
                 {
-                    text = "op";
+                    if (!Character.isLetter(text.charAt(0)))
+                    {
+                        text = "op";
+                    }
+                    System.out.println("<" + text + ">");
                 }
-                System.out.println("<" + text + ">");
 
                 // print children
                 printXml((TokenAST) node.getFirstChild());
@@ -286,11 +290,12 @@ public class DataScriptXmlDumper implements Parameters
             dsTool.parseImportedPackages(unitRoot);
 
             /*
-             * OutputStreamWriter osw = new OutputStreamWriter(System.out);
-             * dsTool.rootNode.xmlSerialize(osw); os.flush();
-             * printXml(dsTool.rootNode);
-             * System.out.println(dsTool.rootNode.toStringList()); //
-             */
+             OutputStreamWriter osw = new OutputStreamWriter(System.out);
+             dsTool.rootNode.xmlSerialize(osw);
+             osw.flush();
+             printXml(dsTool.rootNode);
+             //System.out.println(dsTool.rootNode.toStringList());
+             //*/
 
             ASTFrame frame = new ASTFrame("AST", dsTool.rootNode);
             frame.setVisible(true);
