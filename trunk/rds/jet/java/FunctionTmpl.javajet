@@ -50,6 +50,6 @@
     
     public <%=returnType%> <%=func.getName()%>() 
     { 
-        return <%=result%>; 
+        return (<%=returnType%>)(<%=result%>); 
     }
     
