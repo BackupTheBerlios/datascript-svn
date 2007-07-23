@@ -40,10 +40,6 @@
 package datascript.emit.html;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
 import datascript.ast.CompoundType;
@@ -60,7 +56,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
     private SubtypeEmitter se;
 
 
-    public ContentEmitter() throws IOException, URISyntaxException
+    public ContentEmitter()
     {
         super();
 
@@ -72,7 +68,6 @@ public class ContentEmitter extends DefaultHTMLEmitter
 
     public void beginRoot(AST root)
     {
-        directory = new File(directory, contentFolder);
         setCurrentFolder(contentFolder);
     }
 

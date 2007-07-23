@@ -36,14 +36,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 package datascript.emit.html;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +69,13 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     private CompoundType compound;
     private List<FieldEmitter> fields = new ArrayList<FieldEmitter>();
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
+
+
+    public CompoundEmitter()
+    {
+        super();
+        directory = new File(directory, contentFolder);
+    }
 
     public static class FieldEmitter
     {
@@ -144,13 +150,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     }
 
 
-    public CompoundEmitter() throws IOException, URISyntaxException
-    {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-
     public void emit(CompoundType compound)
     {
         this.compound = compound;
@@ -164,7 +163,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         {
             Template tpl = cfg.getTemplate("html/compound.html.ftl");
 
-            directory = new File(directory, contentFolder);
             setCurrentFolder(contentFolder);
             openOutputFile(directory, compound.getName() + HTML_EXT);
 

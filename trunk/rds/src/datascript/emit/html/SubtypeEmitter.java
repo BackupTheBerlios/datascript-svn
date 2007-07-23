@@ -41,10 +41,8 @@ package datascript.emit.html;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.net.URISyntaxException;
 
 import datascript.ast.DataScriptException;
 import datascript.ast.Subtype;
@@ -58,10 +56,10 @@ public class SubtypeEmitter extends DefaultHTMLEmitter
     private Subtype subtype;
 
 
-    public SubtypeEmitter() throws IOException, URISyntaxException
+    public SubtypeEmitter()
     {
         super();
-        // TODO Auto-generated constructor stub
+        directory = new File(directory, contentFolder);
     }
 
 
@@ -72,7 +70,6 @@ public class SubtypeEmitter extends DefaultHTMLEmitter
         {
             Template tpl = cfg.getTemplate("html/subtype.html.ftl");
 
-            directory = new File(directory, contentFolder);
             setCurrentFolder(contentFolder);
             openOutputFile(directory, s.getName() + HTML_EXT);
 

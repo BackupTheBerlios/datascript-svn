@@ -36,14 +36,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 package datascript.emit.html;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,10 +61,10 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
     private List<EnumItem> items = new ArrayList<EnumItem>();
 
 
-    public EnumerationEmitter() throws IOException, URISyntaxException
+    public EnumerationEmitter()
     {
         super();
-        // TODO Auto-generated constructor stub
+        directory = new File(directory, contentFolder);
     }
 
 
@@ -81,7 +80,6 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
         {
             Template tpl = cfg.getTemplate("html/enumeration.html.ftl");
 
-            directory = new File(directory, contentFolder);
             setCurrentFolder(contentFolder);
             openOutputFile(directory, e.getName() + HTML_EXT);
 
