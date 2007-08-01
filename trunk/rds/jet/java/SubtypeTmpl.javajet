@@ -46,6 +46,7 @@
     Subtype s = se.getSubtype();
     String className = s.getName();
     String superClassName = TypeNameEmitter.getTypeName(s.getBaseType()); //"Object";
+    String rdsVersion = se.getGlobal().getRDSVersion();
 %>
 <%@include file="FileHeader.inc"%>
 // DS-Import

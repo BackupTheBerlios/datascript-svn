@@ -35,7 +35,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -47,16 +50,19 @@ import datascript.antlr.DataScriptParserTokenTypes;
 
 import antlr.collections.AST;
 
+
+
 /**
- * Implements the Emitter interface and does nothing.
- * Saves some typing for derived classes that only need to 
- * implement a few of the emitter actions.
+ * Implements the Emitter interface and does nothing. Saves some typing for
+ * derived classes that only need to implement a few of the emitter actions.
+ * 
  * @author HWellmann
  */
 public class DefaultEmitter implements Emitter
 {
     protected PrintStream out = null;
     protected AST curUnitNode = null;
+    private String RDS_VERSION = null;
 
 
     /**** implementation of interface methods ****/
@@ -117,6 +123,19 @@ public class DefaultEmitter implements Emitter
 
     /**** end implementation of interface methods ****/
 
+
+    public void setRDSVersion(String version)
+    {
+        RDS_VERSION = version;
+    }
+
+
+    public String getRDSVersion()
+    {
+        return RDS_VERSION;
+    }
+
+
     public Set<String> getImportNameList()
     {
         HashSet<String> retval = new HashSet<String>();
@@ -131,19 +150,22 @@ public class DefaultEmitter implements Emitter
         return retval;
     }
 
+
     protected static Set<String> getPackageNameList(AST in, Set<String> retval)
     {
         return getName(in, retval, DataScriptParserTokenTypes.PACKAGE);
     }
 
-    protected static Set<String> getName(AST in, Set<String> retval, int tokenType)
+
+    protected static Set<String> getName(AST in, Set<String> retval,
+            int tokenType)
     {
-        if (in == null || in.getType() != tokenType)
-            return retval;
+        if (in == null || in.getType() != tokenType) return retval;
 
         retval.add(getIDName(in.getFirstChild()));
         return getName(in.getNextSibling(), retval, tokenType);
     }
+
 
     protected static String getIDName(AST in)
     {
@@ -151,8 +173,7 @@ public class DefaultEmitter implements Emitter
             return null;
 
         String name = getIDName(in.getNextSibling());
-        if (name == null)
-            return in.getText();
+        if (name == null) return in.getText();
 
         return in.getText() + '.' + name;
     }
@@ -160,7 +181,7 @@ public class DefaultEmitter implements Emitter
 
     protected void openOutputFile(File directory, String fileName)
     {
-        if (! directory.exists())
+        if (!directory.exists())
         {
             directory.mkdirs();
             // TODO: handle false result

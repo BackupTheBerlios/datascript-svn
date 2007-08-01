@@ -40,17 +40,18 @@
 <%@ jet package="datascript.jet.java" 
         imports="datascript.ast.* datascript.emit.java.*" 
         class="SqlTable" %>
-<% 
+<%
     SqlTableEmitter e = (SqlTableEmitter) argument;
     String pkg = e.getGlobal().getPackageName();
     SqlTableType table = e.getSqlTableType();
     String name = table.getName();
-    
+
     String q = "?";
     for (int i = 1; i < table.getNumFields(); i++)
     {
         q += ",?";
     }
+    String rdsVersion = e.getGlobal().getRDSVersion();
 %>
 <%@include file="FileHeader.inc"%>
 // DS-Import

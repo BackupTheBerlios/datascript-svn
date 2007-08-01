@@ -79,36 +79,42 @@ public class JavaExtension implements Extension
             // emit Java code for decoders
             JavaEmitter javaEmitter = new JavaEmitter(params.getOutPathName(),
                     params.getDefaultPackageName());
+            javaEmitter.setRDSVersion(params.getVersion());
             emitter.setEmitter(javaEmitter);
             emitter.root(rootNode);
 
             // emit Java __Visitor interface
             VisitorEmitter visitorEmitter = new VisitorEmitter(params
                     .getOutPathName(), params.getDefaultPackageName());
+            visitorEmitter.setRDSVersion(params.getVersion());
             emitter.setEmitter(visitorEmitter);
             emitter.root(rootNode);
 
             // emit Java __DepthFirstVisitor class
             DepthFirstVisitorEmitter dfVisitorEmitter = new DepthFirstVisitorEmitter(
                     params.getOutPathName(), params.getDefaultPackageName());
+            dfVisitorEmitter.setRDSVersion(params.getVersion());
             emitter.setEmitter(dfVisitorEmitter);
             emitter.root(rootNode);
 
             // emit Java __SizeOf class
             SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(params
                     .getOutPathName(), params.getDefaultPackageName());
+            sizeOfEmitter.setRDSVersion(params.getVersion());
             emitter.setEmitter(sizeOfEmitter);
             emitter.root(rootNode);
 
             // emit Java __Const class
             ConstEmitter constEmitter = new ConstEmitter(params
                     .getOutPathName(), params.getDefaultPackageName());
+            constEmitter.setRDSVersion(params.getVersion());
             emitter.setEmitter(constEmitter);
             emitter.root(rootNode);
 
             // emit Java __XmlDumper class
             XmlDumperEmitter xmlDumper = new XmlDumperEmitter(params
                     .getOutPathName(), params.getDefaultPackageName());
+            xmlDumper.setRDSVersion(params.getVersion());
             emitter.setEmitter(xmlDumper);
             emitter.root(rootNode);
         }

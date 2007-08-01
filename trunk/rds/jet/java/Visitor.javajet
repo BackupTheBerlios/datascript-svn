@@ -43,6 +43,7 @@
 <% 
     VisitorEmitter global = (VisitorEmitter) argument;
     String pkg = global.getPackageName();
+    String rdsVersion = global.getRDSVersion();
 %>
 
 <%@include file="FileHeader.inc"%>

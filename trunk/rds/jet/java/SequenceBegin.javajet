@@ -44,7 +44,8 @@
     SequenceEmitter e = (SequenceEmitter) argument;
     SequenceType s = e.getSequenceType();
     String name = s.getName();
-    String pkg = e.getGlobal().getPackageName(); 
+    String pkg = e.getGlobal().getPackageName();
+    String rdsVersion = e.getGlobal().getRDSVersion();
 %>
 
 <%@include file="FileHeader.inc"%>

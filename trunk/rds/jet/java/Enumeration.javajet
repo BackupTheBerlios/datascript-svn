@@ -49,6 +49,7 @@
     IntegerValue maxVal = new IntegerValue(1).shiftLeft(baseType.sizeof(null));
     String baseTypeName = e.getBaseType();
     String cast = baseTypeName.equals("int") ? "" : ("(" + baseTypeName + ")");
+    String rdsVersion = e.getGlobal().getRDSVersion();
 %>
 <%@include file="FileHeader.inc"%>
 // DS-Import

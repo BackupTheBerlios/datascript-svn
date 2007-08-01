@@ -44,7 +44,8 @@
     SqlTableEmitter e = (SqlTableEmitter) argument;
     String pkg = e.getGlobal().getPackageName();
     SqlTableType table = e.getSqlTableType();
-    String name = table.getName(); 
+    String name = table.getName();
+    String rdsVersion = e.getGlobal().getRDSVersion();
 %>
 <%@include file="FileHeader.inc"%>
 

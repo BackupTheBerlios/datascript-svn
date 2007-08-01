@@ -220,6 +220,13 @@ public class DataScriptXmlDumper implements Parameters
 
     /** ****** Implementation of Parameters interface ******* */
 
+
+    public String getVersion()
+    {
+        return null;
+    }
+
+
     public String getDefaultPackageName()
     {
         return null;

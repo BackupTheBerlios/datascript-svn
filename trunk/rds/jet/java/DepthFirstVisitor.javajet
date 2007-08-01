@@ -42,7 +42,8 @@
         class="DepthFirstVisitor" %>
 <% 
     DepthFirstVisitorEmitter global = (DepthFirstVisitorEmitter) argument;
-    String pkg = global.getPackageName(); 
+    String pkg = global.getPackageName();
+    String rdsVersion = global.getRDSVersion();
 %>
 
 <%@include file="FileHeader.inc"%>

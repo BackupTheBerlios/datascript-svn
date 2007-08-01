@@ -44,7 +44,8 @@
     UnionEmitter e = (UnionEmitter) argument;
     String pkg = e.getGlobal().getPackageName();
     UnionType u = e.getUnionType();
-    String name = u.getName(); 
+    String name = u.getName();
+    String rdsVersion = e.getGlobal().getRDSVersion();
 %>
 <%@include file="FileHeader.inc"%>
 // DS-Import

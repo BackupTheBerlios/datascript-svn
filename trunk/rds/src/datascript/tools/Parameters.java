@@ -43,6 +43,12 @@ import datascript.antlr.DataScriptParser;
 public interface Parameters
 {
     /**
+     * @return retuns String object with the version information of the rds tool
+     */
+    public String getVersion();
+
+
+    /**
      * For historical reason, it was not nessecary to give a package name in the script file
      * This method gives a default name for a package.
      * @return  returns the name of the default package, if non is given in a DataScript package

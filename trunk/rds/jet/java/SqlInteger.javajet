@@ -45,12 +45,13 @@
     String pkg = e.getGlobal().getPackageName();
     SqlIntegerType integerType = e.getSqlIntegerType();
     String name = integerType.getName();
-    
+
     String q = "?";
     for (int i = 1; i < integerType.getNumFields(); i++)
     {
         q += ",?";
     }
+    String rdsVersion = e.getGlobal().getRDSVersion();
 %>
 <%@include file="FileHeader.inc"%>
 // DS-Import
