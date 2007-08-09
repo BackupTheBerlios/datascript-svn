@@ -35,72 +35,89 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
+
 
 import java.io.PrintStream;
 
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
+import datascript.ast.CompoundType;
+import datascript.ast.Parameter;
 import datascript.ast.SqlTableType;
 import datascript.jet.java.SqlTable;
+
+
 
 /**
  * @author HWellmann
  * 
  */
-public class SqlTableEmitter
+public class SqlTableEmitter extends CompoundEmitter
 {
-    private JavaEmitter global;
     private SqlTableType tableType;
-    private PrintStream out;
     private SqlTable tableTmpl;
-    
+    //private ParameterEmitter paramEmitter = new ParameterEmitter(this);
+
+
     public SqlTableEmitter(JavaEmitter j, SqlTableType table)
     {
-        this.global = j;
+        super(j);
         this.tableType = table;
         tableTmpl = new SqlTable();
     }
-    public JavaEmitter getGlobal()
+
+
+    public CompoundType getCompoundType()
     {
-        return global;
+        return tableType;
     }
 
-    
+
     public String getName()
     {
         return tableType.getName();
     }
-    
+
+
     public SqlTableType getSqlTableType()
     {
         return tableType;
     }
-    
+
+
     public void setOutputStream(PrintStream out)
     {
-        this.out = out;
+        super.setOutputStream(out);
+        paramEmitter.setOutputStream(out);
     }
-    
+
+
     public void emit(SqlTableType SqlTableType)
     {
         String result = tableTmpl.generate(this);
+//        for (Parameter param : tableType.getParameters())
+//        {
+//            paramEmitter.emit(param);
+//        }
         out.print(result);
     }
-    
+
+
     public String getSqlConstraint()
     {
         TokenAST constraint = tableType.getSqlConstraint();
         if (constraint == null)
             return null;
-        
-        ;
+
         StringBuilder result = new StringBuilder();
-        for (AST node = constraint.getFirstChild(); 
-             node != null; node = node.getNextSibling())
+        for (AST node = constraint.getFirstChild(); node != null; 
+            node = node.getNextSibling())
         {
             String text = node.getText();
-            result.append(text.substring(1, text.length()-1));
+            result.append(text.substring(1, text.length() - 1));
         }
         return result.toString();
     }

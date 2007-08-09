@@ -75,4 +75,15 @@ public class ParameterEmitter
     {
         return parameter;
     }
+
+    /**
+     * @param param
+     * @return
+     */
+    public String generate(Parameter p)
+    {
+        parameter = p;
+        ParameterAccessor template = new ParameterAccessor();
+        return template.generate(this);
+    }
 }

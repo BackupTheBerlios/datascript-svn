@@ -377,19 +377,20 @@ sqlTableField
       
 sqlTableDefinition
     : sqlTableDeclaration (ID)? 
+    | paramTypeInstantiation ID 
     | #(TYPEREF ID) ID
     ;
 
 sqlTableDeclaration
     : #(t:SQL_TABLE                { em.beginSqlTable(t); }
-        ID
+        ID (parameterList)? 
         (sqlFieldDefinition)+
         (sqlConstraint)?
        )                           { em.endSqlTable(t); }
     ;
     
 sqlFieldDefinition
-    : #(FIELD definedType ID (fieldCondition)? 
+    : #(FIELD typeReference ID (fieldCondition)? 
         (SQL_KEY)? (sqlConstraint)?
       )
     ;

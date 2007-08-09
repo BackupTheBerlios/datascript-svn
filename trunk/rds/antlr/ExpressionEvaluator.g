@@ -37,10 +37,10 @@
  */
 header
 {
-package datascript.antlr;
-import datascript.ast.*;
-import datascript.antlr.util.*;
-import java.util.Stack;
+    package datascript.antlr;
+    import datascript.ast.*;
+    import datascript.antlr.util.*;
+    import java.util.Stack;
 }
 
 class ExpressionEvaluator extends TreeParser;
@@ -53,82 +53,83 @@ options
 {
     private Stack<Scope> scopeStack = new Stack();
     private ToolContext context;
-    
+
+
     public void setContext(ToolContext context)
     {
         this.context = context;
     }
-    
-    
+
+
     public void reportError(RecognitionException ex) 
     {
         System.out.println(ex.toString());
         //throw new RuntimeException(ex);
     }
-    
-    
+
+
     public void pushScope(Scope s)
     {
         scopeStack.push(s);
     }
-    
+
+
     private void popScope()
     {
         scopeStack.pop();
     }
-    
+
+
     private Scope scope()
     {
         return scopeStack.peek();
     }
 }
 
-root : #(ROOT (translationUnit)+ );
+
+root
+    : #(ROOT (translationUnit)+ )
+    ;
 
 translationUnit
-    :   #(TRANSLATION_UNIT (packageDeclaration)? (importDeclaration)* members)
+    : #(TRANSLATION_UNIT (packageDeclaration)? (importDeclaration)* members)
     ;    
 
-
 packageDeclaration
-    :   #(PACKAGE (ID)+)
-    ;
-    
-importDeclaration
-    :   #(IMPORT (ID)+)
-    ;
-                
-members
-    :   #(MEMBERS (declaration)*)
-    ;
-    
-declaration
-    :   fieldDefinition 
-    //|   conditionDefinition
-    |   constDeclaration 
-    |   subtypeDeclaration
-    |   sqlDatabaseDefinition
-    |   sqlTableDeclaration
-    |   sqlIntegerDeclaration
+    : #(PACKAGE (ID)+)
     ;
 
+importDeclaration
+    : #(IMPORT (ID)+)
+    ;
+
+members
+    : #(MEMBERS (declaration)*)
+    ;
+
+declaration
+    : fieldDefinition 
+    //| conditionDefinition
+    | constDeclaration 
+    | subtypeDeclaration
+    | sqlDatabaseDefinition
+    | sqlTableDeclaration
+    | sqlIntegerDeclaration
+    ;
 
 label
-    :   #(LABEL expression (expression)?)
+    : #(LABEL expression (expression)?)
     ;
 
 /*
-
-
 conditionDefinition
-    :   "condition"^ ID parameterList conditionBlock
+    : "condition"^ ID parameterList conditionBlock
     ;
 
 conditionBlock!
-    :   LCURLY^ (e:conditionExpression SEMICOLON!)* RCURLY!
-        { #conditionBlock = #([BLOCK, "BLOCK"], e); }
+    : LCURLY^ (e:conditionExpression SEMICOLON!)* RCURLY!
+      { #conditionBlock = #([BLOCK, "BLOCK"], e); }
     ;
-
 
 conditionExpression
     : expression
@@ -136,21 +137,23 @@ conditionExpression
 */
 
 parameterList 
-    :   #(PARAMLIST (parameterDefinition)+)
+    : #(PARAMLIST (parameterDefinition)+)
     ;
 
 parameterDefinition
-    :   #(PARAM definedType ID)
+    : #(PARAM definedType ID)
     ;
+
 
 
 /******************* begin of enumerator stuff *****************/
 
 enumDeclaration
-    : #(e:"enum"                        { pushScope(((EnumType)e).getScope()); }
+    : #(e:"enum"                   { pushScope(((EnumType)e).getScope()); }
         builtinType 
-        (i:ID)? 
-        enumMemberList)                 { popScope(); }
+        (ID)? 
+        enumMemberList
+      )                            { popScope(); }
     ;
 
 enumMemberList
@@ -161,11 +164,11 @@ enumMemberList
 enumItem[IntegerValue last]
 returns [IntegerValue self]
 { self = last.add(new IntegerValue(1)); }
-    : #(f:ITEM i:ID
-        (e:expression                   { self = (IntegerValue)((Expression)e).getValue(); }
-         )?
-       )
-      { ((EnumItem)f).setValue(self); }
+    : #(f:ITEM 
+        ID
+        (e:expression              { self = (IntegerValue)((Expression)e).getValue(); }
+        )?
+      )                            { ((EnumItem)f).setValue(self); }
     ;
 
 bitmaskDeclaration
@@ -177,96 +180,99 @@ constDeclaration
     ;
 
 fieldDefinition
-    :   #(f:FIELD                       { scope().setCurrentField((Field)f); }
-          typeReference 
-          (i:ID)? 
-          (in:fieldInitializer)?
-          (o:fieldOptionalClause)?
-          (c:fieldCondition)? 
-          (l:label)?
-          ) 
+    : #(f:FIELD                    { scope().setCurrentField((Field)f); }
+        typeReference 
+        (ID)? 
+        (fieldInitializer)?
+        (fieldOptionalClause)?
+        (fieldCondition)? 
+        (label)?
+      ) 
     ;
 
 typeArgumentList
-    :   (expression)+
+    : (expression)+
     ;
 
-
 fieldInitializer
-    :   #(ASSIGN typeValue)
+    : #(ASSIGN typeValue)
     ;
 
 fieldOptionalClause
-    :   #("if" expression)
+    : #("if" expression)
     ;
 
 fieldCondition
-    :   #(COLON expression)
+    : #(COLON expression)
     ;
 
 typeDeclaration
-    :   sequenceDeclaration
-    |   unionDeclaration
-    |   enumDeclaration
-    |   bitmaskDeclaration
-    |   arrayType
+    : sequenceDeclaration
+    | unionDeclaration
+    | enumDeclaration
+    | bitmaskDeclaration
+    | arrayType
     ;
 
 typeReference
-    :   sequenceDeclaration
-    |   unionDeclaration
-    |   definedType
-    |   enumDeclaration
-    |   bitmaskDeclaration
-    |   arrayType
-    |   paramTypeInstantiation
+    : sequenceDeclaration
+    | unionDeclaration
+    | definedType
+    | enumDeclaration
+    | bitmaskDeclaration
+    | arrayType
+    | paramTypeInstantiation
     ;
 
 arrayType
-    :  #(ARRAY typeReference arrayRange)
+    : #(ARRAY typeReference arrayRange)
     ;
 
 paramTypeInstantiation
-    : #(INST definedType typeArgumentList)
-      { ((TypeInstantiation)#INST).checkArguments(); }
+    : #(INST 
+        definedType 
+        typeArgumentList
+       )                           { ((TypeInstantiation)#INST).checkArguments(); }
     ;
-    
+
 sequenceDeclaration
-    :   #(s:SEQUENCE              { pushScope(((SequenceType)s).getScope()); }
-          (i:ID)? 
-          (parameterList)? 
-          memberList
-          (functionList)?)        { popScope(); }
+    : #(s:SEQUENCE                 { pushScope(((SequenceType)s).getScope()); }
+        (ID)? 
+        (parameterList)? 
+        memberList
+        (functionList)?
+      )                            { popScope(); }
           
     ;
 
 unionDeclaration
-    :   #(u:UNION                 { pushScope(((UnionType)u).getScope()); }
-          (i:ID)? 
-          (parameterList)? 
-          memberList
-          (functionList)?)        { popScope(); }
+    : #(u:UNION                    { pushScope(((UnionType)u).getScope()); }
+        (ID)? 
+        (parameterList)? 
+        memberList
+        (functionList)?
+      )                            { popScope(); }
     ;
 
 memberList
-    :    #(MEMBERS (declaration)*)
+    : #(MEMBERS (declaration)*)
     ;
 
 functionList
-    :   #(FUNCTIONS (function)+)
+    : #(FUNCTIONS (function)+)
     ;
-    
+
 function
-    :   #(FUNCTION ID integerType functionBody) 
+    : #(FUNCTION ID integerType functionBody) 
     ;
-    
+
 functionBody
-    :   #(RETURN expression)
+    : #(RETURN expression)
     ;        
-    
+
 definedType
-    :  #(t:TYPEREF ID (DOT ID)*) 
-    |   builtinType
+    : #(TYPEREF ID (DOT ID)*) 
+    | builtinType
     ;
 
 subtypeDeclaration
@@ -274,47 +280,47 @@ subtypeDeclaration
     ;
 
 builtinType
-    :   (byteOrderModifier)? builtinTypeDefaultOrder
+    : (byteOrderModifier)? builtinTypeDefaultOrder
     ;
 
 builtinTypeDefaultOrder
-    :   integerType
-    |   stringType
-    |   bitField
+    : integerType
+    | stringType
+    | bitField
     ;
 
 integerType
-    :   UINT8
-    |   UINT16
-    |   UINT32
-    |   UINT64
-    |   INT8
-    |   INT16
-    |   INT32
-    |   INT64
+    : UINT8
+    | UINT16
+    | UINT32
+    | UINT64
+    | INT8
+    | INT16
+    | INT32
+    | INT64
     ;
 
 stringType
-        :       STRING
-        ;
+    : STRING
+    ;
 
 bitField
-    :   #(BIT expression)
+    : #(BIT expression)
     ;
 
 
 byteOrderModifier
-    :   "big"
-    |   "little"
+    : "big"
+    | "little"
     ;
 
 arrayRange
-    :   (integerExpression (integerExpression)?)?
+    : (integerExpression (integerExpression)?)?
     ;
 
 typeValue
-    :   expression
-    |   #(LCURLY (typeValue)+)
+    : expression
+    | #(LCURLY (typeValue)+)
     ;
 
 
@@ -322,39 +328,44 @@ typeValue
 /*********************************************************************/
 
 sqlDatabaseDefinition
-    : #(d:SQL_DATABASE                  { pushScope(((CompoundType)d).getScope()); }
+    : #(d:SQL_DATABASE             { pushScope(((CompoundType)d).getScope()); }
         ID 
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)?   
         (sqlTableField)+ 
         (sqlConstraint)?
-       )                                { popScope(); }   
+       )                           { popScope(); }   
     ;
-    
+
 sqlPragmaBlock
-    : #(p:SQL_PRAGMA                    { pushScope(((CompoundType)p).getScope()); }
-        (sqlPragma)+)                   { popScope(); }   
+    : #(p:SQL_PRAGMA               { pushScope(((CompoundType)p).getScope()); }
+        (sqlPragma)+
+      )                            { popScope(); }   
     ;
-    
+
 sqlPragma
-    : #(f:FIELD                         { scope().setCurrentField((Field)f); }
-        sqlPragmaType ID 
+    : #(f:FIELD                    { scope().setCurrentField((Field)f); }
+        sqlPragmaType 
+        ID 
         (fieldInitializer)? 
-        (fieldCondition)?)
+        (fieldCondition)?
+      )
     ;    
 
 sqlPragmaType
-    :   integerType
-    |   "string"     
+    : integerType
+    | "string"     
     ;
 
 sqlMetadataBlock
-    : #(m:SQL_METADATA                  { pushScope(((CompoundType)m).getScope()); }
-        (sqlMetadataField)+ )           { popScope(); }   
+    : #(m:SQL_METADATA             { pushScope(((CompoundType)m).getScope()); }
+        (sqlMetadataField)+
+      )                            { popScope(); }   
     ;
-    
+
 sqlMetadataField
-    : #(f:FIELD typeReference           { scope().setCurrentField((Field)f); }
+    : #(f:FIELD                    { scope().setCurrentField((Field)f); }
+        typeReference
         ID
         (fieldInitializer)? 
         (fieldCondition)?
@@ -364,121 +375,126 @@ sqlMetadataField
 sqlTableField
     : #(FIELD sqlTableDefinition)
     ;
-      
+
 sqlTableDefinition
     : sqlTableDeclaration (ID)? 
+    | paramTypeInstantiation ID 
     | #(TYPEREF ID) ID 
     ;
 
 sqlTableDeclaration
-    : #(t:SQL_TABLE                       { pushScope(((CompoundType)t).getScope()); }
+    : #(t:SQL_TABLE                { pushScope(((CompoundType)t).getScope()); }
         ID
+        (parameterList)? 
         (sqlFieldDefinition)+
         (sqlConstraint)? 
-      )                                   { popScope(); }   
+      )                            { popScope(); }   
     ;
-    
+
 sqlFieldDefinition
-    : #(f:FIELD                           { scope().setCurrentField((Field)f); }
-        definedType ID (fieldCondition)? 
-        (SQL_KEY)? (sqlConstraint)?)
+    : #(f:FIELD                    { scope().setCurrentField((Field)f); }
+        typeReference
+        ID 
+        (fieldCondition)? 
+        (SQL_KEY)? 
+        (sqlConstraint)?
+      )
     ;
-    
+
 sqlConstraint
     : #(SQL (STRING_LITERAL)+)
     ;  
-    
+
 sqlIntegerDeclaration
-    : #(s:SQL_INTEGER                     { pushScope(((CompoundType)s).getScope()); }
+    : #(s:SQL_INTEGER              { pushScope(((CompoundType)s).getScope()); }
         ID
         (sqlIntegerFieldDefinition)+
-      )                                   { popScope(); }
+      )                            { popScope(); }
     ;
-    
+
 sqlIntegerFieldDefinition
-    : #(f:FIELD                           { scope().setCurrentField((Field)f); }
-        integerType ID (fieldCondition)?
+    : #(f:FIELD                    { scope().setCurrentField((Field)f); }
+        integerType 
+        ID 
+        (fieldCondition)?
        )
     ;    
-    
-
 
 
 // ------- expressions ----------------------------------------------------
 
 expression
-    :   atom
-    |   opExpression
-    |   sumFunction
+    : atom
+    | opExpression
+    | sumFunction
     ;
 
 sumFunction
-    : ( #(SUM expression)
-      )
+    : ( #(SUM expression))
       { ((Expression)#sumFunction).evaluate(scope()); }
     ;
 
 opExpression
     : ( #(COMMA expression expression)
-    |   #(ASSIGN expression expression)
-    |   #(MULTASSIGN expression expression)
-    |   #(DIVASSIGN expression expression)
-    |   #(MODASSIGN expression expression)
-    |   #(PLUSASSIGN expression expression)
-    |   #(MINUSASSIGN expression expression)
-    |   #(LSHIFTASSIGN expression expression)
-    |   #(RSHIFTASSIGN expression expression)
-    |   #(ANDASSIGN expression expression)
-    |   #(XORASSIGN expression expression)
-    |   #(ORASSIGN expression expression)
-    |   #("forall" expression expression expression)
-    |   #(QUESTIONMARK expression expression expression)
-    |   #(LOGICALOR expression expression)
-    |   #(LOGICALAND expression expression)
-    |   #(OR expression expression)
-    |   #(XOR expression expression)
-    |   #(AND expression expression)
-    |   #(EQ expression expression)
-    |   #(NE expression expression)
-    |   #(LT expression expression)
-    |   #(GT expression expression)
-    |   #(LE expression expression)
-    |   #(GE expression expression)
-    |   #(LSHIFT expression expression)
-    |   #(RSHIFT expression expression)
-    |   #(PLUS expression expression)
-    |   #(MINUS expression expression)
-    |   #(MULTIPLY expression expression)
-    |   #(DIVIDE expression expression)
-    |   #(MODULO expression expression)
-    |   #(CAST definedType expression)
-    |   #(UPLUS expression)
-    |   #(UMINUS expression)
-    |   #(TILDE expression)
-    |   #(BANG expression)
-    |   #(SIZEOF expression)
-    |   #(LENGTHOF expression)
-    |   #(DOT expression ID)    
-    |   #(ARRAYELEM expression expression)
-    |   #(INST (expression)+)
-    |   #(LPAREN expression)
-    |   #(FUNCTIONCALL expression)
-    |   #("is" identifier)
-    |   #(INDEX identifier)
+      | #(ASSIGN expression expression)
+      | #(MULTASSIGN expression expression)
+      | #(DIVASSIGN expression expression)
+      | #(MODASSIGN expression expression)
+      | #(PLUSASSIGN expression expression)
+      | #(MINUSASSIGN expression expression)
+      | #(LSHIFTASSIGN expression expression)
+      | #(RSHIFTASSIGN expression expression)
+      | #(ANDASSIGN expression expression)
+      | #(XORASSIGN expression expression)
+      | #(ORASSIGN expression expression)
+      | #("forall" expression expression expression)
+      | #(QUESTIONMARK expression expression expression)
+      | #(LOGICALOR expression expression)
+      | #(LOGICALAND expression expression)
+      | #(OR expression expression)
+      | #(XOR expression expression)
+      | #(AND expression expression)
+      | #(EQ expression expression)
+      | #(NE expression expression)
+      | #(LT expression expression)
+      | #(GT expression expression)
+      | #(LE expression expression)
+      | #(GE expression expression)
+      | #(LSHIFT expression expression)
+      | #(RSHIFT expression expression)
+      | #(PLUS expression expression)
+      | #(MINUS expression expression)
+      | #(MULTIPLY expression expression)
+      | #(DIVIDE expression expression)
+      | #(MODULO expression expression)
+      | #(CAST definedType expression)
+      | #(UPLUS expression)
+      | #(UMINUS expression)
+      | #(TILDE expression)
+      | #(BANG expression)
+      | #(SIZEOF expression)
+      | #(LENGTHOF expression)
+      | #(DOT expression ID)    
+      | #(ARRAYELEM expression expression)
+      | #(INST (expression)+)
+      | #(LPAREN expression)
+      | #(FUNCTIONCALL expression)
+      | #("is" identifier)
+      | #(INDEX identifier)
       )
       { ((Expression)#opExpression).evaluate(scope()); }
     ;   
 
 atom
-    :   id:ID                   { ((Expression)id).evaluate(scope()); }
-    |   il:INTEGER_LITERAL      { ((IntegerExpression)il).evaluate(scope()); }  
-    |   sl:STRING_LITERAL
+    : id:ID                        { ((Expression)id).evaluate(scope()); }
+    | il:INTEGER_LITERAL           { ((IntegerExpression)il).evaluate(scope()); }  
+    | sl:STRING_LITERAL
     ;
 
 identifier
-    :   id:ID                   { ((Expression)id).evaluate(scope()); }
+    : id:ID                        { ((Expression)id).evaluate(scope()); }
     ;
 
 integerExpression
-    : e:expression              { ((Expression)e).checkInteger(); }
+    : e:expression                 { ((Expression)e).checkInteger(); }
     ;

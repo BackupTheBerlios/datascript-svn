@@ -502,14 +502,16 @@ sqlTableField
           field.setDocumentation(t);              
       }
     ;
-      
+
 sqlTableDefinition
     : sqlTableDeclaration (ID)? SEMICOLON!
+    | paramTypeInstantiation ID SEMICOLON! 
     | sqlTableReference ID SEMICOLON! 
     ;
 
 sqlTableDeclaration
-    : SQL_TABLE^ ID LCURLY! 
+    : SQL_TABLE^ ID (parameterList)? 
+      LCURLY! 
       (sqlFieldDefinition)+
       (sqlConstraint SEMICOLON!)?
       RCURLY!
@@ -521,7 +523,12 @@ sqlTableReference
     ;    
     
 sqlFieldDefinition!
-    : t:definedType i:ID (c:fieldCondition)? (k:"sql_key")? (s:sqlConstraint)? SEMICOLON!
+    : t:typeReference 
+      i:ID 
+      (c:fieldCondition)? 
+      (k:"sql_key")? 
+      (s:sqlConstraint)? 
+      SEMICOLON!
       { 
           #sqlFieldDefinition = #([FIELD], t, i, c, k, s); 
           
@@ -539,11 +546,11 @@ sqlFieldDefinition!
           field.setDocumentation(docToken);
       }
     ;
-    
+
 sqlConstraint
     : SQL^ STRING_LITERAL (COMMA! STRING_LITERAL)*     
     ;  
-    
+
 sqlIntegerDeclaration
     : SQL_INTEGER^ ID LCURLY! (sqlIntegerFieldDefinition)+ RCURLY! 
     ;
@@ -557,7 +564,7 @@ sqlIntegerFieldDefinition!
           field.setDocumentation(docToken);
       }
     ;    
-    
+
 /*********************************************************************/
 
 
@@ -570,7 +577,6 @@ assignmentExpression // options { k=3;}
                                                 { #assignmentExpression = #(op, l, r); }
     |   quantifiedExpression
     ;
-
 
 assignmentOperator
     :   ASSIGN
@@ -597,7 +603,6 @@ quantifier
 conditionalExpression
     :   logicalOrExpression (QUESTIONMARK^ expression COLON! conditionalExpression)?
     ;
-
 
 constantExpression
     :   conditionalExpression
@@ -702,7 +707,7 @@ postfixExpression!
                           }
         )*
     ;
-    
+
 postfixOperand
     :   arrayOperand 
     |   functionArgumentList 

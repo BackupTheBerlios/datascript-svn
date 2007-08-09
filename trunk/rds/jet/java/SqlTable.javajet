@@ -65,12 +65,21 @@ public class <%=name%>
     private SqlDatabase db;
     private String tableName;
     private PreparedStatement insertRow;
-    
+
+
+<%
+    ParameterEmitter paramEmitter = new ParameterEmitter(e);
+    for (Parameter param : e.getSqlTableType().getParameters())
+    {
+        stringBuffer.append(paramEmitter.generate(param));
+    }
+%>
     public <%=name%>(SqlDatabase db) throws SQLException
     {
         this.db = db;
     }
-    
+
+
     public void createTable(String __tableName) throws SQLException
     {
         Connection dbc = db.getConnection();
@@ -123,8 +132,8 @@ public class <%=name%>
         query.append("<%=sql%>)");
         st.executeUpdate(query.toString());        
     }
-    
-    
+
+
     public void write(BitStreamWriter __out) throws SQLException, IOException
     {
         throw new RuntimeException("write() method is not yet implemented");

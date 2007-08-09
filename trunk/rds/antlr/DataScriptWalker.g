@@ -318,19 +318,20 @@ sqlTableField
     ;
       
 sqlTableDefinition
-    : sqlTableDeclaration (ID)?  
+    : sqlTableDeclaration (ID)? 
+    | paramTypeInstantiation ID 
     | #(TYPEREF ID) ID
     ;
 
 sqlTableDeclaration
-    : #(SQL_TABLE ID
+    : #(SQL_TABLE ID (parameterList)? 
         (sqlFieldDefinition)+
         (sqlConstraint)? 
       )
     ;
     
 sqlFieldDefinition
-    : #(FIELD definedType ID (fieldCondition)? 
+    : #(FIELD typeReference ID (fieldCondition)? 
         (SQL_KEY)? (sqlConstraint)?)
     ;
     

@@ -283,7 +283,7 @@
     </java>
   </target>
 
-  <target name="test.compile" depends="test.gen, sqltest.gen, pkgtest.gen, functest.gen, jar, gif.gen" description="Builds the test cases">
+  <target name="test.compile" depends="test.gen, sqlParamTest.gen, sqltest.gen, pkgtest.gen, functest.gen, jar, gif.gen" description="Builds the test cases">
     <javac destdir="${build}/test/classes" debug="on" target="1.5">
       <classpath>
         <pathelement path="${jar}/rds-runtime.jar" />
@@ -328,6 +328,22 @@
 
   <target name="sqltest.clean" description="removes all generated test Java sources and classes">
     <delete dir="${test.gen}/sqltest" />
+  </target>
+
+
+  <target name="sqlParamTest.gen" depends="jar" description="Generates parser for test cases" unless="sqlparamtest.uptodate">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+        <pathelement path="${lib}/freemarker.jar" />
+      </classpath>
+      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src ${ds.src} sqlParameter.ds" />
+    </java>
+  </target>
+
+  <target name="sqlParamTest.clean" description="removes all generated test Java sources and classes">
+    <delete dir="${test.gen}/sqlParameter" />
   </target>
 
 
@@ -409,5 +425,34 @@
       </batchtest>
     </junit>
   </target>
+
+	<!--target name="gen-rds" depends="init" description="delete this. This generates PSI-JavaCode">
+    <rds 
+       path="${ds.src}"
+       pkg="psi/common"
+       out="${test.gen}"
+       srcfile="psi\routing\routing.ds"
+       ext="${ext}"   
+       clean="false">
+
+        <dependencies>
+            <fileset dir="${ds.src}">
+                <include name="**/*.ds"/>   
+            </fileset>   
+        </dependencies>   
+
+        <output>
+            <fileset dir="${test.gen}">
+                <include name="**/*.java"/>
+            </fileset>   
+        </output>   
+
+        <classpath>
+          <pathelement path="${jar}/rds.jar"/>
+          <pathelement path="${jar}/rds-runtime.jar"/>
+          <pathelement path="${jar}/antlr.jar"/>
+        </classpath>
+    </rds>
+    </target-->
 
 </project>
