@@ -41,18 +41,13 @@ package datascript.emit.html;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 import antlr.collections.AST;
 import datascript.ast.DataScriptException;
 import datascript.ast.Package;
 import datascript.ast.TypeInterface;
-import datascript.backend.html.HtmlExtension;
 import datascript.emit.DefaultEmitter;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -74,45 +69,11 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
 
     public DefaultHTMLEmitter()
     {
-        if (cfg != null) return;
+        if (cfg != null) 
+            return;
 
         cfg = new Configuration();
-        Class c = HtmlExtension.class;
-        // URL url = c.getResource("");
-        // if (url.getProtocol().startsWith("jar:"))
-        // url = new URL(url, "/");
-        // else
-        // url = new URL(url, "../../../../../freemarker");
-        URL url = c.getResource("/");
-        if (url == null)
-        {
-            cfg.setClassForTemplateLoading(c, "/");
-        }
-        else
-        {
-            try
-            {
-                url = new URL(url, "../../../freemarker");
-                System.out.println("Using directory '" + url.toString()
-                        + "' for template files.");
-                cfg.setDirectoryForTemplateLoading(new File(url.toURI()));
-            }
-            catch (MalformedURLException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            catch (IOException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            catch (URISyntaxException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+        cfg.setClassForTemplateLoading(DefaultHTMLEmitter.class, "/");
         cfg.setObjectWrapper(new DefaultObjectWrapper());
     }
 

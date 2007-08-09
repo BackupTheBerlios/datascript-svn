@@ -127,6 +127,11 @@
     <mkdir dir="${antlr.out}" />
     <copy file="${lib}/antlr.jar" todir="${jar}" />
     <copy file="${lib}/freemarker.jar" todir="${jar}" />
+    <copy todir="${classes}">
+      <fileset dir="${basedir}/freemarker">
+        <include name="html/**.ftl" />
+      </fileset>
+    </copy>
   </target>
 
 
@@ -274,7 +279,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
+      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
     </java>
   </target>
 
