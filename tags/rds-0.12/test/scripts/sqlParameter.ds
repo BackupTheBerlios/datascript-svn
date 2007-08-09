@@ -1,0 +1,19 @@
+package sqlParameter;
+
+sql_database SqlTestDb
+{
+    sql_table Foo(uint8 p1, uint8 p2)
+    {
+        uint16 id;
+        MyBlob(p1, p2) data;
+    };
+
+    Foo(2,3) foo1;
+    Foo(6,2) foo2;
+};
+
+MyBlob(uint8 p1, uint8 p2)
+{
+    bit<p1> flags[p2];
+};
+
