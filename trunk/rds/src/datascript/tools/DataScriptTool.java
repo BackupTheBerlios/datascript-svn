@@ -70,7 +70,8 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.12 (9 Aug 2007)";
+    private static final String VERSION = "rds 0.121 (13 Aug 2007)";
+
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -195,6 +196,8 @@ public class DataScriptTool implements Parameters
         if (context.getErrorCount() != 0)
             throw new ParserException("TypeEvaluator: Parser errors.");
         Package.linkAll();
+        if (ToolContext.getInstance().getErrorCount() != 0)
+            throw new ParserException("TypeEvaluator: Linker errors.");
         
         // check expression types and evaluate constant expressions
         ExpressionEvaluator exprEval = new ExpressionEvaluator();
