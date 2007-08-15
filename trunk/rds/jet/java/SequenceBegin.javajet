@@ -73,44 +73,95 @@ public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
     	if (obj instanceof <%=name%>)
     	{
     		<%=name%> that = (<%=name%>) obj;
+<%
+    boolean equalsCanThrowExceptions = e.getGlobal().getThrowsException();
+    if (equalsCanThrowExceptions)
+    {
+        for (Field field : s.getFields())
+        {
+            String optional = e.getOptionalClause(field);
+%>
+            if (<%=(optional != null)? "(!("+optional+"))? false : " : ""%>(<%
+
+            String fieldName = field.getName();
+            TypeInterface type = field.getFieldType();
+            type = TypeReference.resolveType(type);
+            if (type instanceof EnumType)
+            {
+                %>this.<%=fieldName%>.getValue() != that.<%=fieldName%>.getValue()<%
+            }
+            else if (type instanceof BitFieldType && ((BitFieldType)type).getLength() == 0)
+            {
+                %>this.<%=fieldName%>.compareTo(that.<%=fieldName%>) != 0<%
+            }
+            else if (type instanceof SequenceType ||
+                     type instanceof UnionType ||
+                     type instanceof ArrayType ||
+                     type instanceof TypeInstantiation ||
+                     type instanceof StringType ||
+                     (type instanceof StdIntegerType && 
+                       ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
+                     )
+            {
+                %>!this.<%=fieldName%>.equals(that.<%=fieldName%>)<%
+            }
+            else
+            {
+                %>this.<%=fieldName%> != that.<%=fieldName%><%
+            }
+        %>))  /* <%=type.getClass().getCanonicalName()%>*/<%
+%>
+                throw new RuntimeException("Field '<%=fieldName%>' is not equal!");
+<%
+        }
+%>
+            return true;
+<%
+    }
+    else
+    {
+%>
     		return 
 <%
-    for (Field field : s.getFields())    
-    {
-		String optional = e.getOptionalClause(field);
+        for (Field field : s.getFields())
+        {
+            String optional = e.getOptionalClause(field);
 %>
 				(<%=(optional != null)? "(!("+optional+"))? true : " : ""%>(<%
 
-    	String fieldName = field.getName();
-        TypeInterface type = field.getFieldType();
-        type = TypeReference.resolveType(type);
-        if (type instanceof EnumType)
-		{
-			%>this.<%=fieldName%>.getValue() == that.<%=fieldName%>.getValue()<%
-		}
-		else if (type instanceof BitFieldType && ((BitFieldType)type).getLength() == 0)
-		{
-			%>this.<%=fieldName%>.compareTo(that.<%=fieldName%>) == 0<%
-		}
-		else if (type instanceof SequenceType ||
-				 type instanceof UnionType ||
-				 type instanceof ArrayType ||
-				 type instanceof TypeInstantiation ||
-				 type instanceof StringType ||
-				 (type instanceof StdIntegerType && 
-				 	((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
-				 )
-    	{
-			%>this.<%=fieldName%>.equals(that.<%=fieldName%>)<%
-		}
-		else
-		{
-			%>this.<%=fieldName%> == that.<%=fieldName%><%
-		}
-		%>)) && /* <%=type.getClass().getCanonicalName()%>*/<%
-    }
-%> 
+            String fieldName = field.getName();
+            TypeInterface type = field.getFieldType();
+            type = TypeReference.resolveType(type);
+            if (type instanceof EnumType)
+            {
+                %>this.<%=fieldName%>.getValue() == that.<%=fieldName%>.getValue()<%
+            }
+            else if (type instanceof BitFieldType && ((BitFieldType)type).getLength() == 0)
+            {
+                %>this.<%=fieldName%>.compareTo(that.<%=fieldName%>) == 0<%
+            }
+            else if (type instanceof SequenceType ||
+                     type instanceof UnionType ||
+                     type instanceof ArrayType ||
+                     type instanceof TypeInstantiation ||
+                     type instanceof StringType ||
+                     (type instanceof StdIntegerType && 
+                       ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
+                     )
+            {
+                %>this.<%=fieldName%>.equals(that.<%=fieldName%>)<%
+            }
+            else
+            {
+                %>this.<%=fieldName%> == that.<%=fieldName%><%
+            }
+        %>)) && /* <%=type.getClass().getCanonicalName()%>*/<%
+        }
+%>
 				true;
+<%
+    }
+%>
 		}
 		return super.equals(obj);
     }

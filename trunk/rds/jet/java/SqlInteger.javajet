@@ -77,54 +77,109 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
 
     public boolean equals(Object obj)
     {
-    	if (obj instanceof <%=name%>)
-    	{
-    		<%=name%> that = (<%=name%>) obj;
-    		return 
+        if (obj instanceof <%=name%>)
+        {
+            <%=name%> that = (<%=name%>) obj;
 <%
     SqlIntegerType s = e.getSqlIntegerType();
-    for (Field field : s.getFields())    
+    boolean equalsCanThrowExceptions = e.getGlobal().getThrowsException();
+    if (equalsCanThrowExceptions)
     {
-		String optional = e.getOptionalClause(field);
+        for (Field field : s.getFields())
+        {
+            String optional = e.getOptionalClause(field);
 %>
-				(<%=(optional != null)? "(!("+optional+"))? true : " : ""%>(<%
+            if (<%=(optional != null)? "(!("+optional+"))? false : " : ""%>(<%
 
-    	String fieldName = field.getName();
-        TypeInterface type = field.getFieldType();
-        type = TypeReference.resolveType(type);
-        if (type instanceof EnumType)
-		{
-			%>this.<%=fieldName%>.getValue() == that.<%=fieldName%>.getValue()<%
-		}
-		else if (type instanceof BitFieldType && ((BitFieldType)type).getLength() == 0)
-		{
-			%>this.<%=fieldName%>.compareTo(that.<%=fieldName%>) == 0<%
-		}
-		/*
-		else if (type instanceof SequenceType ||
-				 type instanceof UnionType ||
-				 type instanceof ArrayType ||
-				 type instanceof TypeInstantiation ||
-				 type instanceof StringType ||
-				 (type instanceof StdIntegerType && 
-				 	((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
-				 )
-		*/
-		else if (type instanceof StdIntegerType && 
-				 	((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
-    	{
-			%>this.<%=fieldName%>.equals(that.<%=fieldName%>)<%
-		}
-		else
-		{
-			%>this.<%=fieldName%> == that.<%=fieldName%><%
-		}
-		%>)) && /* <%=type.getClass().getCanonicalName()%>*/<%
+            String fieldName = field.getName();
+            TypeInterface type = field.getFieldType();
+            type = TypeReference.resolveType(type);
+            if (type instanceof EnumType)
+            {
+                %>this.<%=fieldName%>.getValue() != that.<%=fieldName%>.getValue()<%
+            }
+            else if (type instanceof BitFieldType && ((BitFieldType)type).getLength() == 0)
+            {
+                %>this.<%=fieldName%>.compareTo(that.<%=fieldName%>) != 0<%
+            }
+            /*
+            else if (type instanceof SequenceType ||
+                     type instanceof UnionType ||
+                     type instanceof ArrayType ||
+                     type instanceof TypeInstantiation ||
+                     type instanceof StringType ||
+                     (type instanceof StdIntegerType && 
+                         ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
+                    )
+            */
+            else if (type instanceof StdIntegerType && 
+                        ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
+            {
+                %>!this.<%=fieldName%>.equals(that.<%=fieldName%>)<%
+            }
+            else
+            {
+                %>this.<%=fieldName%> != that.<%=fieldName%><%
+            }
+            %>))  /* <%=type.getClass().getCanonicalName()%>*/<%
+%>
+                throw new RuntimeException("Field '<%=fieldName%>' is not equal!");
+<%
+        }
+%>
+            return true;
+<%
     }
-%> 
-				true;
-		}
-		return super.equals(obj);
+    else
+    {
+%>
+            return 
+<%
+        for (Field field : s.getFields())    
+        {
+            String optional = e.getOptionalClause(field);
+%>
+                (<%=(optional != null)? "(!("+optional+"))? true : " : ""%>(<%
+
+            String fieldName = field.getName();
+            TypeInterface type = field.getFieldType();
+            type = TypeReference.resolveType(type);
+            if (type instanceof EnumType)
+            {
+                %>this.<%=fieldName%>.getValue() == that.<%=fieldName%>.getValue()<%
+            }
+            else if (type instanceof BitFieldType && ((BitFieldType)type).getLength() == 0)
+            {
+                %>this.<%=fieldName%>.compareTo(that.<%=fieldName%>) == 0<%
+            }
+            /*
+            else if (type instanceof SequenceType ||
+                     type instanceof UnionType ||
+                     type instanceof ArrayType ||
+                     type instanceof TypeInstantiation ||
+                     type instanceof StringType ||
+                     (type instanceof StdIntegerType && 
+                         ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
+                    )
+            */
+            else if (type instanceof StdIntegerType && 
+                        ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64)
+            {
+                %>this.<%=fieldName%>.equals(that.<%=fieldName%>)<%
+            }
+            else
+            {
+                %>this.<%=fieldName%> == that.<%=fieldName%><%
+            }
+            %>)) && /* <%=type.getClass().getCanonicalName()%>*/<%
+        }
+%>
+                true;
+<%
+    }
+%>
+        }
+        return super.equals(obj);
     }
 
 
@@ -133,7 +188,7 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
     }
 
 
-	// Contructor for <%=name%> 
+    // Contructor for <%=name%> 
     public <%=name%>(
 <%
     int fieldCount = 0;
@@ -175,7 +230,7 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
     private <%=type%> <%=field%>;
 
 <%
-    	String getter = AccessorNameEmitter.getGetterName(field);
+        String getter = AccessorNameEmitter.getGetterName(field);
 %>
     public <%=type%> <%=getter%>() 
     { 
@@ -204,7 +259,7 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
     else if (totalTypeSize <= 64)
         fittingType = "long";
     else /* if (totalTypeSize > 64) */
-    	throw new RuntimeException("total size of all fields in '" + name + "' exceed 64 bits");
+        throw new RuntimeException("total size of all fields in '" + name + "' exceed 64 bits");
 %>
 
     public <%=fittingType%> pack()
@@ -220,7 +275,7 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
             {
                 Field field = li.previous();
 
-        	    String type =  TypeNameEmitter.getTypeName(field.getFieldType());
+                String type =  TypeNameEmitter.getTypeName(field.getFieldType());
                 bitSize = field.getFieldType().sizeof(null).integerValue().intValue();
                 long bitmask = (1L << bitSize) - 1L;
 %>
@@ -262,7 +317,7 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
             Field field = li.previous();
 
             shiftBits += bitSize;
-        	String type =  TypeNameEmitter.getTypeName(field.getFieldType());
+            String type =  TypeNameEmitter.getTypeName(field.getFieldType());
             bitSize = field.getFieldType().sizeof(null).integerValue().intValue();
             long bitmask = (1L << bitSize) - 1L;
 %>
@@ -274,4 +329,3 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
 }
 
 // END OF FILE
-    

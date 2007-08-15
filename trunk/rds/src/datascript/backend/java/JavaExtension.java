@@ -76,10 +76,13 @@ public class JavaExtension implements Extension
         System.out.println("emitting java code");
         try
         {
+            boolean generateExceptions = params.argumentExists("-java_e");
+
             // emit Java code for decoders
             JavaEmitter javaEmitter = new JavaEmitter(params.getOutPathName(),
                     params.getDefaultPackageName());
             javaEmitter.setRDSVersion(params.getVersion());
+            javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(javaEmitter);
             emitter.root(rootNode);
 
@@ -87,6 +90,7 @@ public class JavaExtension implements Extension
             VisitorEmitter visitorEmitter = new VisitorEmitter(params
                     .getOutPathName(), params.getDefaultPackageName());
             visitorEmitter.setRDSVersion(params.getVersion());
+            javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(visitorEmitter);
             emitter.root(rootNode);
 
@@ -94,6 +98,7 @@ public class JavaExtension implements Extension
             DepthFirstVisitorEmitter dfVisitorEmitter = new DepthFirstVisitorEmitter(
                     params.getOutPathName(), params.getDefaultPackageName());
             dfVisitorEmitter.setRDSVersion(params.getVersion());
+            javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(dfVisitorEmitter);
             emitter.root(rootNode);
 
@@ -101,6 +106,7 @@ public class JavaExtension implements Extension
             SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(params
                     .getOutPathName(), params.getDefaultPackageName());
             sizeOfEmitter.setRDSVersion(params.getVersion());
+            javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(sizeOfEmitter);
             emitter.root(rootNode);
 
@@ -108,6 +114,7 @@ public class JavaExtension implements Extension
             ConstEmitter constEmitter = new ConstEmitter(params
                     .getOutPathName(), params.getDefaultPackageName());
             constEmitter.setRDSVersion(params.getVersion());
+            javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(constEmitter);
             emitter.root(rootNode);
 
@@ -115,6 +122,7 @@ public class JavaExtension implements Extension
             XmlDumperEmitter xmlDumper = new XmlDumperEmitter(params
                     .getOutPathName(), params.getDefaultPackageName());
             xmlDumper.setRDSVersion(params.getVersion());
+            javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(xmlDumper);
             emitter.root(rootNode);
         }

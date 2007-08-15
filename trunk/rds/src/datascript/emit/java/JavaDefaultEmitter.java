@@ -54,6 +54,7 @@ public class JavaDefaultEmitter extends DefaultEmitter
     protected String packagePath;
     protected File dir = null;
     protected final HashSet<String> allPackageNames = new HashSet<String>();
+    private boolean generateExceptionsOnEquals;
 
 
 
@@ -146,6 +147,18 @@ public class JavaDefaultEmitter extends DefaultEmitter
     public String getTypeName(TypeInterface type)
     {
         return TypeNameEmitter.getTypeName(type);
+    }
+
+
+    public void setThrowsException(boolean generateExceptions)
+    {
+        generateExceptionsOnEquals = generateExceptions;
+    }
+
+
+    public boolean getThrowsException()
+    {
+        return generateExceptionsOnEquals;
     }
 
 }
