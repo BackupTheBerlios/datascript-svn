@@ -77,10 +77,18 @@ public class JavaExtension implements Extension
         try
         {
             boolean generateExceptions = params.argumentExists("-java_e");
+            String defaultPackageName = "";
+            try
+            {
+                defaultPackageName = params.getCommandlineArg("-pkg");
+            }
+            catch (Exception e)
+            {
+            }
 
             // emit Java code for decoders
             JavaEmitter javaEmitter = new JavaEmitter(params.getOutPathName(),
-                    params.getDefaultPackageName());
+                    defaultPackageName);
             javaEmitter.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(javaEmitter);
@@ -88,7 +96,7 @@ public class JavaExtension implements Extension
 
             // emit Java __Visitor interface
             VisitorEmitter visitorEmitter = new VisitorEmitter(params
-                    .getOutPathName(), params.getDefaultPackageName());
+                    .getOutPathName(), defaultPackageName);
             visitorEmitter.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(visitorEmitter);
@@ -96,7 +104,7 @@ public class JavaExtension implements Extension
 
             // emit Java __DepthFirstVisitor class
             DepthFirstVisitorEmitter dfVisitorEmitter = new DepthFirstVisitorEmitter(
-                    params.getOutPathName(), params.getDefaultPackageName());
+                    params.getOutPathName(), defaultPackageName);
             dfVisitorEmitter.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(dfVisitorEmitter);
@@ -104,7 +112,7 @@ public class JavaExtension implements Extension
 
             // emit Java __SizeOf class
             SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(params
-                    .getOutPathName(), params.getDefaultPackageName());
+                    .getOutPathName(), defaultPackageName);
             sizeOfEmitter.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(sizeOfEmitter);
@@ -112,7 +120,7 @@ public class JavaExtension implements Extension
 
             // emit Java __Const class
             ConstEmitter constEmitter = new ConstEmitter(params
-                    .getOutPathName(), params.getDefaultPackageName());
+                    .getOutPathName(), defaultPackageName);
             constEmitter.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(constEmitter);
@@ -120,7 +128,7 @@ public class JavaExtension implements Extension
 
             // emit Java __XmlDumper class
             XmlDumperEmitter xmlDumper = new XmlDumperEmitter(params
-                    .getOutPathName(), params.getDefaultPackageName());
+                    .getOutPathName(), defaultPackageName);
             xmlDumper.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(xmlDumper);
@@ -148,6 +156,22 @@ public class JavaExtension implements Extension
     public void setParameter(Parameters params)
     {
         this.params = params;
+    }
+
+
+    /* (non-Javadoc)
+     * @see datascript.tools.Extension#printUsage()
+     */
+    public String getUsage()
+    {
+        final String NL = System.getProperties().getProperty("line.separator");
+        final StringBuilder buffer = new StringBuilder();
+
+        // TODO Auto-generated method stub
+        //[-pkg \"packagename\"]
+        buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScript package" + NL);
+        buffer.append(" -java_e\t\tenables throwing exceptions in equals() function, when objects are not equal" + NL);
+        return buffer.toString();
     }
 
 }

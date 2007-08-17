@@ -88,8 +88,12 @@ public class XmlExtension extends XMLFilterImpl implements Extension
     {
         if (params == null)
             throw new DataScriptException("No parameters set for XmlBackend!");
+
         if (!params.argumentExists("-xml"))
+        {
+            System.out.println("emitting XML file is disabled.");
             return;
+        }
 
         System.out.println("emitting xml");
         
@@ -268,6 +272,20 @@ public class XmlExtension extends XMLFilterImpl implements Extension
         handler.startDocument();
         fireSaxEvents(rootNode);
         handler.endDocument();
+    }
+
+
+    /* (non-Javadoc)
+     * @see datascript.tools.Extension#printUsage()
+     */
+    public String getUsage()
+    {
+        String NL = System.getProperties().getProperty("line.separator");
+        StringBuilder buffer = new StringBuilder();
+
+        // TODO Auto-generated method stub
+        buffer.append(" -xml\t\t\tenables generation of a XML file of the syntaxtree" + NL);
+        return buffer.toString();
     }
 
 }

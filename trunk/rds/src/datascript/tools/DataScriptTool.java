@@ -70,7 +70,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.13.3 (17 Aug 2007)";
+    private static final String VERSION = "rds 0.13.4 (17 Aug 2007)";
 
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
@@ -78,48 +78,57 @@ public class DataScriptTool implements Parameters
     private DataScriptParser parser = null;
     private Scope globals = new Scope();
     private final HashSet<String> allPackageFiles = new HashSet<String>();
+    private final ArrayList<Extension> extensions = new ArrayList<Extension>();
 
     private DataScriptEmitter emitter = new DataScriptEmitter();
 
     /* Properties for command line parameters */
     private final HashMap<String, String> cmdLineArgs = new HashMap<String, String>();
-    private String defaultPackageName = "";
     private String fileName = null;
     private String srcPathName = null;
     private String outPathName = null;
-    private boolean generateDocs = false;
     private boolean checkSyntax = false; 
 
 
 
     public DataScriptTool()
     {
-    	Token token = new FileNameToken(DataScriptParserTokenTypes.ROOT, "ROOT");
+        Token token = new FileNameToken(DataScriptParserTokenTypes.ROOT, "ROOT");
         rootNode = new TokenAST(token);
     }
 
 
     public void parseArguments(String[] args) throws DataScriptException
     {
-        int i = 0;
+        // TODO: Das Fehlen des Dateinamen wird nicht erkannt.
+        int i = -1;
         while (i < args.length-1)
         {
-            String key = args[i++];
-            String value = (i < args.length-1)? args[i++] : null;
-            if (value != null && value.startsWith("-"))
+            String key = args[++i];
+            if (!key.startsWith("-"))
             {
-                value = null;
-                i--;
+                if (i != args.length-1)
+                    continue;
+                // this must be the mainfile name
+                fileName = new File(key).getPath();
             }
-            cmdLineArgs.put(key, value);
-        }
-        if (i < args.length)
-        {
-            fileName = new File(args[i]).getPath();
-        }
 
-        defaultPackageName = cmdLineArgs.get("-pkg");
-        generateDocs = cmdLineArgs.containsKey("-doc");
+            if (i < args.length -1)
+            {
+                String value = args[++i];
+                if (value.startsWith("-"))  // this is a new key, not a value
+                {
+                    value = null;
+                    i--;
+                }
+                cmdLineArgs.put(key, value);
+            }
+        }
+    }
+
+
+    public boolean checkArguments()
+    {
         checkSyntax = cmdLineArgs.containsKey("-c");
         srcPathName = cmdLineArgs.get("-src");
         outPathName = cmdLineArgs.get("-out");
@@ -130,7 +139,7 @@ public class DataScriptTool implements Parameters
         }
         else
         {
-            i = outPathName.length();
+            int i = outPathName.length();
             while (outPathName.charAt(i-1) == File.separatorChar)
                 --i;
             if (i < outPathName.length())
@@ -141,6 +150,7 @@ public class DataScriptTool implements Parameters
         {
             printUsage();
         }
+        return true;
     }
 
 
@@ -150,17 +160,57 @@ public class DataScriptTool implements Parameters
         final StringBuilder buffer = new StringBuilder();
 
         buffer.append("parameter missing." + NL + NL);
-        buffer.append("rds [-doc] [-c] [-ext \"pathname to extensions\"] [-out \"pathname for output\"] [-pkg \"packagename\"] [-src \"pathname\"] \"filename\"" + NL);
+
+        buffer.append("rds <extension options> [-c] [-ext \"pathname to extensions\"] [-out \"pathname for output\"] [-src \"pathname\"] \"filename\"" + NL);
         buffer.append("usage: " + NL);
-        buffer.append(" -doc\t\t\tgenerate Javadoc-style documentation" + NL);
+
+        for (Extension extension : extensions)
+        {
+            buffer.append(extension.getUsage());
+        }
+
+        buffer.append(NL);
         buffer.append(" -c\t\t\tcheck syntax" + NL);
         buffer.append(" -ext \"pathname\"\tpath to the extension directory" + NL);
         buffer.append(" -out \"pathname\"\tpath to the directory in which the generated code is stored" + NL);
-        buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScript package" + NL);
         buffer.append(" -src \"pathname\"\tpath to DataScript source files" + NL);
         buffer.append(" \"filename\"\t\tmain DataScript source file" + NL);
 
         throw new DataScriptException(buffer.toString());
+    }
+
+
+    private void prepareExtensions() throws Exception
+    {
+        String extDirName = cmdLineArgs.get("-ext");
+        File myExtDir = (extDirName != null && extDirName.length() > 0)? new File(extDirName) : EXT_DIR;
+        Collection<File> extensionFiles = findExtensionsRecursively(myExtDir);
+        if (extensionFiles == null || extensionFiles.size() <= 0)
+            return;
+
+        Collection<URL> urls = toURLs((File[]) extensionFiles.toArray(new File[] {}));
+        ClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[] {}), this.getClass().getClassLoader());
+
+        for (File f : extensionFiles)
+        {
+            java.util.jar.JarFile rf = new java.util.jar.JarFile(f);
+            java.util.jar.Manifest m = rf.getManifest();
+            if (m != null)
+            {
+                String mc = m.getMainAttributes().getValue("Main-Class");
+                try
+                {
+                    Class clazz = Class.forName(mc, true, classLoader);
+                    Extension extension = (Extension) clazz.newInstance();
+                    extension.setParameter(this);
+                    extensions.add(extension);
+                }
+                catch (ClassNotFoundException e)
+                {
+                    System.err.println("Extension " + mc + " not found.");
+                }
+            }
+        }
     }
 
 
@@ -174,8 +224,11 @@ public class DataScriptTool implements Parameters
 
         allPackageFiles.add(fileName);
         AST unitRoot = (TokenAST) parsePackage();
-        rootNode.addChild(unitRoot);
-        parseImportedPackages(unitRoot);
+        if (unitRoot != null)
+        {
+            rootNode.addChild(unitRoot);
+            parseImportedPackages(unitRoot);
+        }
 
 
         // Validate the syntax tree - this has no side effects.
@@ -211,36 +264,17 @@ public class DataScriptTool implements Parameters
 
     public void emitDatascript() throws Exception
     {
-        String extDirName = cmdLineArgs.get("-ext");
-        File myExtDir = (extDirName != null && extDirName.length() > 0)? new File(extDirName) : EXT_DIR;
-        Collection<File> extensionFiles = findExtensionsRecursively(myExtDir);
-        if (extensionFiles == null)
+        if (rootNode == null)
+            return;
+
+        if (extensions == null || extensions.size() <= 0)
         {
-            System.out.println("No backends in " + EXT_DIR.getAbsolutePath() + " found, nothing emitted.");
+            System.out.println("No backends found in " + EXT_DIR.getAbsolutePath() + ", nothing emitted.");
             return;
         }
-        Collection<URL> urls = toURLs((File[]) extensionFiles.toArray(new File[] {}));
-        ClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[] {}), this.getClass().getClassLoader());
-
-        for (File f : extensionFiles)
+        for (Extension extension : extensions)
         {
-            java.util.jar.JarFile rf = new java.util.jar.JarFile(f);
-            java.util.jar.Manifest m = rf.getManifest();
-            if (m != null)
-            {
-                String mc = m.getMainAttributes().getValue("Main-Class");
-                try
-                {
-                    Class clazz = Class.forName(mc, true, classLoader);
-                    Extension extension = (Extension) clazz.newInstance();
-                    extension.setParameter(this);
-                    extension.generate(emitter, rootNode);
-                }
-                catch (ClassNotFoundException e)
-                {
-                    System.err.println("Extension " + mc + " not found, nothing emitted.");
-                }
-            }
+            extension.generate(emitter, rootNode);
         }
     }
 
@@ -266,7 +300,11 @@ public class DataScriptTool implements Parameters
         for (File file : extensionFiles)
         {
             if (file.isDirectory())
-                retVal.addAll(findExtensionsRecursively(file));
+            {
+                Collection<File> eFiles = findExtensionsRecursively(file);
+                if (eFiles != null && eFiles.size() > 0)
+                    retVal.addAll(eFiles);
+            }
             if (file.isFile())
                 retVal.add(file);
         }
@@ -310,7 +348,7 @@ public class DataScriptTool implements Parameters
                 {
                     allPackageFiles.add(fileName);
                     context.setFileName(fileName);
-                    AST unitRoot = parsePackage();
+                    AST unitRoot = (TokenAST) parsePackage();
                     if (unitRoot != null)
                     {
                         rootNode.addChild(unitRoot);
@@ -358,18 +396,21 @@ public class DataScriptTool implements Parameters
             filter.discard(DataScriptParserTokenTypes.COMMENT);
             filter.hide(DataScriptParserTokenTypes.DOC);
             parser = new DataScriptParser(filter);
-            parser.setContext(context);
-
-            // must call this to see file name in error messages
-            parser.setFilename(fileName);
-            
-            // use custom node class containing line information
-            parser.setASTNodeClass("datascript.antlr.util.TokenAST");
         }
         catch (java.io.FileNotFoundException fnfe)
         {
-            ToolContext.logError((TokenAST)parser.getAST(), fnfe.getMessage());
+            ToolContext.logError((parser == null)? null : (TokenAST)parser.getAST(), fnfe.getMessage());
         }
+
+        if (parser == null)
+            return null;
+        parser.setContext(context);
+
+        // must call this to see file name in error messages
+        parser.setFilename(fileName);
+        
+        // use custom node class containing line information
+        parser.setASTNodeClass("datascript.antlr.util.TokenAST");
 
         // parse file and get root node of syntax tree
         parser.translationUnit();
@@ -392,18 +433,6 @@ public class DataScriptTool implements Parameters
     public String getVersion()
     {
         return VERSION;
-    }
-
-
-    public String getDefaultPackageName()
-    {
-        return defaultPackageName;
-    }
-
-
-    public boolean getGenerateDocs()
-    {
-        return generateDocs;
     }
 
 
@@ -461,6 +490,9 @@ public class DataScriptTool implements Parameters
         try
         {
             dsTool.parseArguments(args);
+            dsTool.prepareExtensions();
+            dsTool.checkArguments();
+
             dsTool.parseDatascript();
             dsTool.emitDatascript();
         }

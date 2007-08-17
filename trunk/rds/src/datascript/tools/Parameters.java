@@ -49,22 +49,6 @@ public interface Parameters
 
 
     /**
-     * For historical reason, it was not nessecary to give a package name in the script file
-     * This method gives a default name for a package.
-     * @return  returns the name of the default package, if non is given in a DataScript package
-     */
-    public String getDefaultPackageName();
-
-
-    /**
-     * This is nessecary for the html extension. This functions tells the extension 
-     * if the generation of html documentation ist needed.
-     * @return  returns true if the "-doc" flag is set at commandline, false if not
-     */
-    public boolean getGenerateDocs();
-
-
-    /**
      * 
      * @return  returns true if the "-c" flag is set at commandline, false if not
      */

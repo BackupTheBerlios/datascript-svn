@@ -59,7 +59,8 @@ public class HtmlExtension implements Extension
     {
         if (params == null)
             throw new DataScriptException("No parameters set for HtmlBackend!");
-        if (!params.getGenerateDocs())
+
+        if (!params.argumentExists("-doc"))
         {
             System.out.println("emitting html documentation is disabled.");
             return;
@@ -97,6 +98,20 @@ public class HtmlExtension implements Extension
     public void setParameter(Parameters params)
     {
         this.params = params;
+    }
+
+
+    /* (non-Javadoc)
+     * @see datascript.tools.Extension#printUsage()
+     */
+    public String getUsage()
+    {
+        String NL = System.getProperties().getProperty("line.separator");
+        StringBuilder buffer = new StringBuilder();
+
+        // TODO Auto-generated method stub
+        buffer.append(" -doc\t\t\tenables generation of Javadoc-style documentation" + NL);
+        return buffer.toString();
     }
 
 }

@@ -66,4 +66,13 @@ public interface Extension
     public abstract void generate(DataScriptEmitter emitter, TokenAST rootNode)
             throws Exception;
 
+
+    /**
+     * Generates a string with usage information. This stringcontent should follow
+     * this syntax:
+     * <parameter> [<parameter argument>] \t <description> NL
+     * i.e. "-ext \"pathname\"\tpath to the extension directory" + NL
+     * @return String object with informations about the usage
+     */
+    public String getUsage();
 }
