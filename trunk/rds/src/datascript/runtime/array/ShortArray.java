@@ -35,21 +35,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.runtime.array;
+
 
 import java.io.DataInput;
 import java.io.IOException;
-import java.math.BigInteger;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamWriter;
+
+
 
 public class ShortArray implements Array, SizeOf
 {
     short[] data; // data is between [offset... offset+length-1]
     int offset;
     int length;
+
 
     public ShortArray(DataInput in, int length) throws IOException
     {
@@ -70,10 +75,12 @@ public class ShortArray implements Array, SizeOf
         }
     }
 
+
     public ShortArray(int length)
     {
         this(new short[length], 0, length);
     }
+
 
     public ShortArray(short[] data, int offset, int length)
     {
@@ -88,12 +95,27 @@ public class ShortArray implements Array, SizeOf
         if (obj instanceof ShortArray)
         {
             ShortArray that = (ShortArray) obj;
-            return 
-                (this.offset == offset) && 
-                (this.length == length) && 
-                java.util.Arrays.equals(this.data, that.data);
+            return (this.offset == offset) && (this.length == length)
+                    && java.util.Arrays.equals(this.data, that.data);
         }
         return super.equals(obj);
+    }
+
+
+    public boolean equalsWithException(ShortArray that)
+    {
+        if (that.sizeof() != this.sizeof())
+            throw new RuntimeException("size of arrays are different.");
+        if (that.data.length != this.data.length)
+            throw new RuntimeException(
+                    "count of elements in arrays are different.");
+
+        for (int i = 0; i < this.data.length; i++)
+        {
+            if (this.data[i] != that.data[i])
+                throw new RuntimeException("index " + i + " do not match.");
+        }
+        return true;
     }
 
 
@@ -102,10 +124,12 @@ public class ShortArray implements Array, SizeOf
         return data[offset + i];
     }
 
+
     public int length()
     {
         return length;
     }
+
 
     public int sum() throws Exception
     {
@@ -116,13 +140,15 @@ public class ShortArray implements Array, SizeOf
         }
         if (retVal > Integer.MAX_VALUE)
             throw new Exception("result is too big for an integer");
-        return (int)retVal;
+        return (int) retVal;
     }
+
 
     public int sizeof()
     {
         return 2 * length;
     }
+
 
     public Array map(Mapping m)
     {
@@ -135,12 +161,14 @@ public class ShortArray implements Array, SizeOf
         return result;
     }
 
+
     public Array subRange(int begin, int length)
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
             throw new ArrayIndexOutOfBoundsException();
         return new ShortArray(data, offset + begin, length);
     }
+
 
     public void write(BitStreamWriter out, CallChain cc) throws IOException
     {

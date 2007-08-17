@@ -41,6 +41,12 @@ import java.io.DataInput;
 import java.io.IOException;
 import java.math.BigInteger;
 
+import datascript.ast.ArrayType;
+import datascript.ast.SequenceType;
+import datascript.ast.StdIntegerType;
+import datascript.ast.StringType;
+import datascript.ast.TypeInstantiation;
+import datascript.ast.UnionType;
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamWriter;
@@ -94,6 +100,22 @@ public class UnsignedIntArray implements Array, SizeOf
                 java.util.Arrays.equals(this.data, that.data);
         }
         return super.equals(obj);
+    }
+
+
+    public boolean equalsWithException(UnsignedIntArray that)
+    {
+        if (that.sizeof() != this.sizeof())
+            throw new RuntimeException("size of arrays are different.");
+        if (that.data.length != this.data.length)
+            throw new RuntimeException("count of elements in arrays are different.");
+
+        for (int i = 0; i < this.data.length; i++)
+        {
+            if (this.data[i] != that.data[i])
+                throw new RuntimeException("index " + i + " do not match.");
+        }
+        return true;
     }
 
 

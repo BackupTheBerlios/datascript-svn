@@ -35,7 +35,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.runtime.array;
+
 
 import java.io.IOException;
 
@@ -44,17 +47,20 @@ import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamReader;
 import datascript.runtime.io.BitStreamWriter;
 
+
+
 public class StringArray implements Array, SizeOf
 {
     private String[] data; // data is between [offset... offset+length-1]
     int offset;
     int length;
-    
-    
+
+
     public StringArray(int length)
     {
         this(new String[length], 0, length);
     }
+
 
     public StringArray(String[] data, int offset, int length)
     {
@@ -62,7 +68,8 @@ public class StringArray implements Array, SizeOf
         this.offset = offset;
         this.length = length;
     }
-    
+
+
     public StringArray(BitStreamReader in, int length) throws IOException
     {
         if (length == -1)
@@ -88,12 +95,26 @@ public class StringArray implements Array, SizeOf
         if (obj instanceof StringArray)
         {
             StringArray that = (StringArray) obj;
-            return 
-                (this.offset == offset) && 
-                (this.length == length) && 
-                java.util.Arrays.equals(this.data, that.data);
+            return (this.offset == offset) && (this.length == length)
+                    && java.util.Arrays.equals(this.data, that.data);
         }
         return super.equals(obj);
+    }
+
+
+    public boolean equalsWithException(StringArray that)
+    {
+        if (that.sizeof() != this.sizeof())
+            throw new RuntimeException("size of arrays are different.");
+        if (that.data.length != this.data.length)
+            throw new RuntimeException("count of elements in arrays are different.");
+
+        for (int i = 0; i < this.data.length; i++)
+        {
+            if (!this.data.equals(that.data[i]))
+                throw new RuntimeException("index " + i + " do not match.");
+        }
+        return true;
     }
 
 
@@ -101,6 +122,7 @@ public class StringArray implements Array, SizeOf
     {
         return data[offset + i];
     }
+
 
     public int length()
     {
@@ -141,7 +163,7 @@ public class StringArray implements Array, SizeOf
         int size = 0;
         for (int i = offset; i < offset + length; i++)
             size += data[i].length();
-        return (size+1) << 3;
+        return (size + 1) << 3;
     }
 
 }

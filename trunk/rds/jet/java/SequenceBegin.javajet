@@ -96,7 +96,6 @@ public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
             }
             else if (type instanceof SequenceType ||
                      type instanceof UnionType ||
-                     type instanceof ArrayType ||
                      type instanceof TypeInstantiation ||
                      type instanceof StringType ||
                      (type instanceof StdIntegerType && 
@@ -104,6 +103,10 @@ public class <%=name%> implements __Visitor.Acceptor, Writer, SizeOf
                      )
             {
                 %>!this.<%=fieldName%>.equals(that.<%=fieldName%>)<%
+            }
+            else if (type instanceof ArrayType)
+            {
+                %>!this.<%=fieldName%>.equalsWithException(that.<%=fieldName%>)<%
             }
             else
             {

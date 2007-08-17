@@ -35,16 +35,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.runtime.array;
+
 
 import java.util.Vector;
 import java.util.List;
-import java.io.IOException;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.Writer;
 import datascript.runtime.io.BitStreamWriter;
+
+
 
 public class ObjectArray<E> implements Array, SizeOf
 {
@@ -52,15 +56,18 @@ public class ObjectArray<E> implements Array, SizeOf
     // Vectors are (i.e., max 2^31-1 elements
     List<E> data;
 
+
     public ObjectArray(int length)
     {
         this(new Vector<E>(length));
     }
 
+
     public ObjectArray(List<E> data)
     {
         this.data = data;
     }
+
 
     public ObjectArray<E> typedMap(Mapping<E> m)
     {
@@ -84,6 +91,22 @@ public class ObjectArray<E> implements Array, SizeOf
     }
 
 
+    public boolean equalsWithException(ObjectArray<E> that)
+    {
+        if (that.sizeof() != this.sizeof())
+            throw new RuntimeException("size of arrays are different.");
+        if (that.data.size() != this.data.size())
+            throw new RuntimeException("count of elements in arrays are different.");
+
+        for (int i = 0; i < this.data.size(); i++)
+        {
+            if (!this.data.get(i).equals(that.data.get(i)))
+                throw new RuntimeException("index " + i + " do not match.");
+        }
+        return true;
+    }
+
+
     public Array map(Mapping m)
     {
         Vector result = new Vector(data.size());
@@ -94,15 +117,18 @@ public class ObjectArray<E> implements Array, SizeOf
         return new ObjectArray(result);
     }
 
+
     public Array subRange(int begin, int length)
     {
         return new ObjectArray<E>(data.subList(begin, begin + length));
     }
 
+
     public int length()
     {
         return data.size();
     }
+
 
     public void write(BitStreamWriter out, CallChain cc) throws Exception
     {
@@ -112,10 +138,12 @@ public class ObjectArray<E> implements Array, SizeOf
         }
     }
 
+
     public E elementAt(int i)
     {
         return data.get(i);
     }
+
 
     public int sizeof()
     {
@@ -127,10 +155,12 @@ public class ObjectArray<E> implements Array, SizeOf
         return sz;
     }
 
+
     public void remove(Object obj)
     {
         data.remove(obj);
     }
+
 
     public List<E> getData()
     {
