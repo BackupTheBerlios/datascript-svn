@@ -81,7 +81,9 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
             Template tpl = cfg.getTemplate("html/enumeration.html.ftl");
 
             setCurrentFolder(contentFolder);
-            openOutputFile(directory, e.getName() + HTML_EXT);
+
+            File outputDir = new File(directory, e.getPackage().getPackageName());
+            openOutputFile(outputDir, e.getName() + HTML_EXT);
 
             Writer writer = new PrintWriter(out);
             tpl.process(this, writer);

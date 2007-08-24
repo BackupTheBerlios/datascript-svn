@@ -80,13 +80,12 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     public static class FieldEmitter
     {
         private Field field;
-        private TypeNameEmitter tne;
+        private static final TypeNameEmitter tne = new TypeNameEmitter();
 
 
         FieldEmitter(Field f)
         {
             this.field = f;
-            this.tne = new TypeNameEmitter();
         }
 
 
@@ -100,8 +99,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         {
             TypeInterface type = field.getFieldType();
             type = TypeReference.resolveType(type);
-            String pkg = type.getPackage().getPackageName();
-            LinkedType linkedType = new LinkedType(pkg, type);
+            LinkedType linkedType = new LinkedType(type);
             return linkedType;
         }
 
@@ -164,7 +162,9 @@ public class CompoundEmitter extends DefaultHTMLEmitter
             Template tpl = cfg.getTemplate("html/compound.html.ftl");
 
             setCurrentFolder(contentFolder);
-            openOutputFile(directory, compound.getName() + HTML_EXT);
+
+            File outputDir = new File(directory, compound.getPackage().getPackageName());
+            openOutputFile(outputDir, compound.getName() + HTML_EXT);
 
             Writer writer = new PrintWriter(out);
             tpl.process(this, writer);
@@ -277,8 +277,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     public LinkedType toLinkedType(TypeInterface type1)
     {
         TypeInterface type2 = TypeReference.resolveType(type1);
-        String pkg = type2.getPackage().getPackageName();
-        LinkedType linkedType = new LinkedType(pkg, type2);
+        LinkedType linkedType = new LinkedType(type2);
         return linkedType;
     }
 

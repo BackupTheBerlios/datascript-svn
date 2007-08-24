@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>enum ${packageName}.${type.name}</title>
-    <link rel="stylesheet" type="text/css" href="../webStyles.css">
+    <link rel="stylesheet" type="text/css" href="../../webStyles.css">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   </head>
   <body>

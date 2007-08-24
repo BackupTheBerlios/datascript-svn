@@ -101,7 +101,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
         for (String typeName : currentPackage.getLocalTypeNames())
         {
             TypeInterface t = currentPackage.getLocalType(typeName);
-            LinkedType linkedType = new LinkedType(pkgName, t);
+            LinkedType linkedType = new LinkedType(t);
             typeMap.put(typeName, linkedType);
         }
         pkgName = pkgName.replace('.', '_');

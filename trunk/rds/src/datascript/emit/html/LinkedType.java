@@ -35,7 +35,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.html;
+
 
 import datascript.ast.ArrayType;
 import datascript.ast.EnumType;
@@ -49,26 +52,25 @@ import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
 
+
+
 /**
  * @author HWellmann
  * 
  */
 public class LinkedType
 {
-    private String pkgName;
-
     private TypeInterface type;
-
     private String style;
-
     private String category = "";
 
-    public LinkedType(String pkgName, TypeInterface type)
+
+    public LinkedType(TypeInterface type)
     {
-        this.pkgName = pkgName;
         this.type = type;
         init();
     }
+
 
     private void init()
     {
@@ -144,23 +146,33 @@ public class LinkedType
         }
     }
 
+
     public String getName()
     {
         return TypeNameEmitter.getTypeName(type);
     }
+
 
     public String getStyle()
     {
         return style;
     }
 
+
     public String getCategory()
     {
         return category;
     }
 
+
     public String getPackageName()
     {
-        return (pkgName == null) ? null : pkgName.replace('.', '_');
+        return type.getPackage().getPackageName();
+    }
+
+
+    public String getPackageNameAsID()
+    {
+        return type.getPackage().getPackageName().replace('.', '_');
     }
 }

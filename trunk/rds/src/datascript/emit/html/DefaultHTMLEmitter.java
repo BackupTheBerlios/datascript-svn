@@ -59,8 +59,9 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
 {
     protected static Configuration cfg = null;
 
-    public static final String contentFolder = "content";
+    protected static final String contentFolder = "content";
     protected static final String HTML_EXT = ".html";
+
     protected File directory = new File("html");
     protected TypeInterface currentType;
     private String currentFolder = "/";

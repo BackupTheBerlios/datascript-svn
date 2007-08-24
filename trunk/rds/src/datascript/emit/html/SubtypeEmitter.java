@@ -71,7 +71,9 @@ public class SubtypeEmitter extends DefaultHTMLEmitter
             Template tpl = cfg.getTemplate("html/subtype.html.ftl");
 
             setCurrentFolder(contentFolder);
-            openOutputFile(directory, s.getName() + HTML_EXT);
+
+            File outputDir = new File(directory, s.getPackage().getPackageName());
+            openOutputFile(outputDir, s.getName() + HTML_EXT);
 
             Writer writer = new PrintWriter(out);
             tpl.process(this, writer);
@@ -93,8 +95,7 @@ public class SubtypeEmitter extends DefaultHTMLEmitter
     public LinkedType getBaseType()
     {
         TypeInterface baseType = subtype.getBaseType();
-        String pkg = baseType.getPackage().getPackageName();
-        LinkedType linkedType = new LinkedType(pkg, baseType);
+        LinkedType linkedType = new LinkedType(baseType);
         return linkedType;
     }
 

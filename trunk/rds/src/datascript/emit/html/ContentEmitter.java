@@ -43,6 +43,7 @@ package datascript.emit.html;
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
 import datascript.ast.CompoundType;
+import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
@@ -89,6 +90,10 @@ public class ContentEmitter extends DefaultHTMLEmitter
             else if (type instanceof Subtype)
             {
                 se.emit((Subtype) type);
+            }
+            else
+            {
+                throw new DataScriptException("don't know how to emit content for " + type);
             }
         }
     }

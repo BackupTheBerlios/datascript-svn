@@ -70,7 +70,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.13.4 (17 Aug 2007)";
+    private static final String VERSION = "rds 0.13.5 (24 Aug 2007)";
 
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
@@ -243,7 +243,6 @@ public class DataScriptTool implements Parameters
 
         // create name scopes and resolve references
         TypeEvaluator typeEval = new TypeEvaluator();
-        typeEval.setContext(context);
         typeEval.pushScope(globals);
         typeEval.root(rootNode);
         if (context.getErrorCount() != 0)
