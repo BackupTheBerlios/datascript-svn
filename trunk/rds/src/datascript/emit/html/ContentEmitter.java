@@ -42,7 +42,9 @@ package datascript.emit.html;
 
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
+import datascript.antlr.util.ToolContext;
 import datascript.ast.CompoundType;
+import datascript.ast.ConstType;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import datascript.ast.Subtype;
@@ -91,9 +93,13 @@ public class ContentEmitter extends DefaultHTMLEmitter
             {
                 se.emit((Subtype) type);
             }
+            else if (type instanceof ConstType)
+            {
+                // TODO: No content for const
+            }
             else
             {
-                throw new DataScriptException("don't know how to emit content for " + type);
+                ToolContext.logWarning((TokenAST)p, "don't know how to emit content for type " + type);
             }
         }
     }
