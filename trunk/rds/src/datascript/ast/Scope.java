@@ -212,7 +212,8 @@ public class Scope implements Context, LinkAction
      */
     public void setTypeSymbol(AST node, Object type)
     {
-        setSymbol(node, type);
+        setSymbol(node, type);        
+        getPackage().setTypeSymbol(node, type);
     }
     
     public Context getParentScope()

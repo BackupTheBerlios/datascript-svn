@@ -26,14 +26,17 @@ sql_database SqlTestDb
         uint16 version = 1;
     };
     
+    /** A table type and instance definition. */
     sql_table LevelTable
     {
         uint8   levelNr      sql "PRIMARY KEY";
         Level   level;
     } levels;
 
+    /** Another table instance of the same type. */
     LevelTable moreLevels;
 
+    /** Another table type and instance definition. */
     sql_table TileTable
     {
     	TileId   tileid;
@@ -61,4 +64,5 @@ Level
 {
     int64 dummy;
 };
+
 

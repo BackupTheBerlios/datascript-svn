@@ -42,12 +42,17 @@ import antlr.Token;
 import antlr.collections.AST;
 
 /**
+ * This is our own AST class which overrides most methods of BaseAST. BaseAST
+ * does not store a token, but only its type and text. However, we require the
+ * token to be able to output line and column information with error messages.
+ * 
+ * Hence, this AST class stores the FileNameToken it is created from.
+ * 
  * @author HWellmann
- *
  */
 public class TokenAST extends CommonASTWithHiddenTokens
 {
-	private FileNameToken token;
+    private FileNameToken token;
 	
     public TokenAST() 
     {
@@ -65,34 +70,61 @@ public class TokenAST extends CommonASTWithHiddenTokens
         token = new FileNameToken(t, txt);
         super.initialize(token);
     }
-
-///////////////////////////////
     
+    public void initialize(AST t)
+    {
+        token = ((TokenAST)t).token;
+    }
+
+    public void initialize(Token t)
+    {
+        token = (FileNameToken) t;
+    }
+        
     public String getFileName()
     {    	
         return token.getFilename();
     }
-
-//    /** Get the token text for this node */
-//    public String getText() {
-//        return token.getText();
-//    }
-//
-//    /** Get the token type for this node */
-//    public int getType() {
-//        return token.getType();
-//    }
-//
-//    /** Set the token text for this node */
-//    public void setText(String text) {
-//        token.setText(text);
-//    }
-//
-//    /** Set the token type for this node */
-//    public void setType(int ttype) {
-//        token.setType(ttype);
-//    }
     
+    public int getLine()
+    {
+        return token.getLine();
+    }
+    
+    public int getColumn()
+    {
+        return token.getColumn();
+    }
+    
+    /** Get the token text for this node */
+    public String getText()
+    {
+        return token.getText();
+    }
+
+    /** Get the token type for this node */
+    public int getType()
+    {
+        return token.getType();
+    }
+
+    /** Set the token text for this node */
+    public void setText(String text)
+    {
+        token.setText(text);
+    }
+
+    /** Set the token type for this node */
+    public void setType(int ttype)
+    {
+        token.setType(ttype);
+    }
+    
+    /**
+     * Returns the first child with a given token type.
+     * @param type token type
+     * @return first child of this type, or null
+     */
     public AST findFirstChildOfType(int type)
     {
         for (AST node = getFirstChild(); node != null; 

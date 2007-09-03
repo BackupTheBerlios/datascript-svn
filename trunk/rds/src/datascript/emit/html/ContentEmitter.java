@@ -45,7 +45,6 @@ import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
 import datascript.ast.CompoundType;
 import datascript.ast.ConstType;
-import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;

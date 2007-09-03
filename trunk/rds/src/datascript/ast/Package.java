@@ -44,7 +44,6 @@ import java.util.Map;
 import java.util.Set;
 
 import antlr.collections.AST;
-import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
 
@@ -62,13 +61,34 @@ import datascript.antlr.util.ToolContext;
  * associated to the DataScript root package.
  * 
  * This design is somewhat awkward and may be changed in the future.
+ * 
+ * There is an important restriction regarding nested types. The most common
+ * examples are sql_table types within an sql_database definition or union
+ * types within a sequence definition.
+ * 
+ * At DataScript level, two outer types A and B may each contain a nested type
+ * of the same name C, thus there are two distinct types A.C and B.C. To model
+ * these adequately in the the code generators, we would have to generate 
+ * inner classes or to make the class names unique by prefixing the enclosing
+ * type, e.g. A__C and B__C.
+ * 
+ * To keep things simple and backward compatible, we require that the names of
+ * nested types SHALL be unique within a package, and we include nested type
+ * names in the list of local type names of a package.
  * @author HWellmann
  *
  */
 public class Package extends Scope
 {
+    /** System package for built-in types. */
     public static Package BUILTIN;
 
+    /** 
+     * Default package for types without an explicit package declaration.
+     * TODO: This was intended for backward compatibility. The implementation
+     * is probably not complete, since all existing DataScript modules now have
+     * a package declaration.  
+     */
     public static Package DEFAULT;
 
     static
@@ -252,7 +272,7 @@ public class Package extends Scope
     {   
         TypeInterface type = (TypeInterface) typeNode;
         localTypes.put(name.getText(), type);
-        super.setTypeSymbol(name, (TypeInterface) type);
+        super.setSymbol(name, (TypeInterface) type);
     }
     
     /**
@@ -280,11 +300,7 @@ public class Package extends Scope
         boolean first = true;
         StringBuilder buffer = new StringBuilder();
         for (AST child = node.getFirstChild(); 
-             child != null && 
-             // TODO: The AST should be changed such that all packages are
-             // children of ROOT instead of putting them at the end of 
-             // IMPORT nodes. Then the following condition can be removed.
-             child.getType() == DataScriptParserTokenTypes.ID;
+             child != null;
              child = child.getNextSibling())
         {
             if (first)
