@@ -40,14 +40,24 @@
 package datascript.emit.java;
 
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
 import datascript.ast.CompoundType;
+import datascript.ast.DataScriptException;
+import datascript.ast.Field;
+import datascript.ast.IntegerType;
 import datascript.ast.Parameter;
+import datascript.ast.SqlIntegerType;
 import datascript.ast.SqlTableType;
+import datascript.ast.TypeInterface;
+import datascript.ast.TypeReference;
 import datascript.jet.java.SqlTable;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 
 
@@ -57,9 +67,70 @@ import datascript.jet.java.SqlTable;
  */
 public class SqlTableEmitter extends CompoundEmitter
 {
+    private final List<CompoundEmitter.CompoundParameterFMEmitter> parameters = 
+        new ArrayList<CompoundEmitter.CompoundParameterFMEmitter>();
+    private final List<TableFieldFMEmitter> fields = 
+        new ArrayList<TableFieldFMEmitter>();
+
     private SqlTableType tableType;
     private SqlTable tableTmpl;
-    //private ParameterEmitter paramEmitter = new ParameterEmitter(this);
+
+
+
+    public class TableFieldFMEmitter
+    {
+        private final Field field;
+        private final SqlTableEmitter global;
+
+
+        public TableFieldFMEmitter(Field field, SqlTableEmitter global)
+        {
+            this.field = field;
+            this.global = global;
+        }
+
+
+        public String getName()
+        {
+            return field.getName();
+        }
+
+
+        public int getTypeSize()
+        {
+            TypeInterface ftype = TypeReference.resolveType(field.getFieldType());
+            if ((ftype instanceof SqlIntegerType) || (ftype instanceof IntegerType))
+            {
+                int typeSize = field.sizeof(null).integerValue().intValue();
+                if (typeSize <= 8)
+                    return 8;
+                else if (typeSize <= 16)
+                    return 16;
+                else if (typeSize <= 24)
+                    return 24;
+                else if (typeSize <= 32)
+                    return 32;
+                else if (typeSize <= 48)
+                    return 48;
+                else if (typeSize <= 64)
+                    return 64;
+                else /* if (totalTypeSize > 64) */
+                    throw new RuntimeException("size of type '" + field.getName() + 
+                            "' in '" + global.getName() + "' exceed 64 bits");
+            }
+            else
+            {
+                return 9999;
+            }
+        }
+
+
+        public String getSqlConstraint()
+        {
+            return field.getSqlConstraint();
+        }
+    }
+
 
 
     public SqlTableEmitter(JavaEmitter j, SqlTableType table)
@@ -76,33 +147,66 @@ public class SqlTableEmitter extends CompoundEmitter
     }
 
 
-    public String getName()
-    {
-        return tableType.getName();
-    }
-
-
     public SqlTableType getSqlTableType()
     {
         return tableType;
     }
 
 
-    public void setOutputStream(PrintStream out)
+    public void setWriter(PrintWriter writer)
     {
-        super.setOutputStream(out);
-        paramEmitter.setOutputStream(out);
+        super.setWriter(writer);
+        paramEmitter.setWriter(writer);
+    }
+
+
+    public void emitFreemarker(Configuration cfg, SqlTableType table)
+    {
+        parameters.clear();
+        for (Parameter param : tableType.getParameters())
+        {
+            CompoundEmitter.CompoundParameterFMEmitter pe = 
+                new CompoundEmitter.CompoundParameterFMEmitter(param);
+            parameters.add(pe);
+        }
+        fields.clear();
+        for (Field field : tableType.getFields())
+        {
+            TableFieldFMEmitter fe = new TableFieldFMEmitter(field, this);
+            fields.add(fe);
+        }
+
+        try
+        {
+            Template tpl = cfg.getTemplate("java/SqlTableBegin.ftl");
+            tpl.process(this, writer);
+
+            for (CompoundEmitter.CompoundParameterFMEmitter pe : parameters)
+            {
+                pe.emitFreeMarker(writer, cfg);
+            }
+
+            tpl = cfg.getTemplate("java/SqlTableWrite.ftl");
+            tpl.process(this, writer);
+        }
+        catch (Exception e)
+        {
+            throw new DataScriptException(e);
+        }
     }
 
 
     public void emit(SqlTableType SqlTableType)
     {
         String result = tableTmpl.generate(this);
-//        for (Parameter param : tableType.getParameters())
-//        {
-//            paramEmitter.emit(param);
-//        }
-        out.print(result);
+        writer.print(result);
+        writer.flush();
+    }
+
+
+    public String getName()
+    {
+        return tableType.getName();
     }
 
 
@@ -110,7 +214,7 @@ public class SqlTableEmitter extends CompoundEmitter
     {
         TokenAST constraint = tableType.getSqlConstraint();
         if (constraint == null)
-            return null;
+            return "";
 
         StringBuilder result = new StringBuilder();
         for (AST node = constraint.getFirstChild(); node != null; 
@@ -121,4 +225,17 @@ public class SqlTableEmitter extends CompoundEmitter
         }
         return result.toString();
     }
+
+
+    public List<CompoundEmitter.CompoundParameterFMEmitter> getParameters()
+    {
+        return parameters;
+    }
+
+
+    public List<TableFieldFMEmitter> getFields()
+    {
+        return fields;
+    }
 }
+

@@ -35,23 +35,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
+
+
+import java.io.PrintWriter;
 
 import datascript.ast.Field;
 import datascript.jet.java.SequenceFieldAccessor;
+import freemarker.template.Configuration;
+
+
 
 public class SequenceFieldEmitter extends FieldEmitter
-{    
+{
     public SequenceFieldEmitter(SequenceEmitter j)
     {
         super(j);
     }
-   
+
+
     public void emit(Field f)
     {
         this.field = f;
         SequenceFieldAccessor template = new SequenceFieldAccessor();
         String result = template.generate(this);
-        out.print(result);
+        writer.print(result);
+    }
+
+
+    public void emitFreeMarker(PrintWriter writer, Configuration cfg) throws Exception
+    {
+        throw new RuntimeException("emitFreeMarker does not exist for SequenceFieldEmitter");
     }
 }

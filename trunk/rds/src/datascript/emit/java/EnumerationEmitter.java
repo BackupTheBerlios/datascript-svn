@@ -1,6 +1,6 @@
 /* BSD License
  *
- * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
+ * Copyright (c) 2006, Harald Wellmann, Henrik Wedekind Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -35,12 +35,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
 
-import java.io.PrintStream;
 
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import datascript.antlr.util.ToolContext;
+import datascript.ast.DataScriptException;
+import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
+import datascript.ast.IntegerValue;
 import datascript.jet.java.Enumeration;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
+
 
 /**
  * @author HWellmann
@@ -51,15 +64,54 @@ public class EnumerationEmitter
     private JavaEmitter global;
     private EnumType enumType;
     private String javaType;
-    private PrintStream out;
+    private PrintWriter writer;
     private Enumeration enumTmpl;
-    
+    private final List<EnumerationItemFMEmitter> items = 
+        new ArrayList<EnumerationItemFMEmitter>();
+
+
+
+    public static class EnumerationItemFMEmitter
+    {
+        private EnumItem item;
+        private final IntegerValue maxVal;
+
+        
+        public EnumerationItemFMEmitter(EnumItem item)
+        {
+            this.item = item;
+            maxVal = new IntegerValue(1).shiftLeft(item.getEnumType().getBaseType().sizeof(null));
+        }
+
+
+        public String getName()
+        {
+            return item.getName();
+        }
+
+
+        public int getValue()
+        {
+            return item.getValue().integerValue().intValue();
+        }
+
+
+        public boolean getExceedMaxValue()
+        {
+            if (maxVal.compareTo(item.getValue()) != 1)
+                ToolContext.logError(item, "typeconflict with enum item " + 
+                        item.getName() + ", value " + item.getValue() + 
+                        " will not fit in enumtype");
+            return false;
+        }
+    }
+
+
 
     public EnumerationEmitter(JavaEmitter j, EnumType e)
     {
         this.global = j;
         this.enumType = e;
-        enumTmpl = new Enumeration();
     }
 
 
@@ -69,20 +121,17 @@ public class EnumerationEmitter
     }
 
 
-    public String getName()
-    {
-        return enumType.getName();
-    }
-
     public EnumType getEnumerationType()
     {
         return enumType;
     }
 
-    public void setOutputStream(PrintStream out)
+
+    public void setWriter(PrintWriter writer)
     {
-        this.out = out;
+        this.writer = writer;
     }
+
 
     public String getBaseType()
     {
@@ -93,9 +142,77 @@ public class EnumerationEmitter
         return javaType;
     }
 
+
+    public void emitFreemarker(Configuration cfg, EnumType enumType2)
+    {
+        items.clear();
+        for (EnumItem item : enumType.getItems())
+        {
+            EnumerationItemFMEmitter fe = new EnumerationItemFMEmitter(item);
+            items.add(fe);
+        }
+
+        try
+        {
+            Template tpl = cfg.getTemplate("java/Enumeration.ftl");
+            tpl.process(this, writer);
+        }
+        catch (Exception e)
+        {
+            throw new DataScriptException(e);
+        }
+    }
+
+
     public void emit(EnumType enumType)
     {
+        enumTmpl = new Enumeration();
         String result = enumTmpl.generate(this);
-        out.print(result);
+        writer.print(result);
+        writer.flush();
+    }
+
+
+    /**** interface to freemarker FileHeader.inc template ****/
+
+    public String getRdsVersion()
+    {
+        return global.getRDSVersion();
+    }
+
+
+    public String getPackageName()
+    {
+        return global.getPackageName();
+    }
+
+
+    public String getRootPackageName()
+    {
+        return datascript.ast.Package.getRoot().getPackageName();
+    }
+
+
+    public String getPackageImports()
+    {
+        return getGlobal().getPackageImports();
+    }
+
+
+    public String getName()
+    {
+        return enumType.getName();
+    }
+
+
+    public List<EnumerationItemFMEmitter> getItems()
+    {
+        return items;
+    }
+
+
+    public int getEnumSize()
+    {
+        return enumType.sizeof(null).integerValue().intValue();
     }
 }

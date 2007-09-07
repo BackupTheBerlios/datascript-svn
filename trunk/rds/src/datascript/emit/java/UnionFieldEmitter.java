@@ -35,10 +35,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
+
+
+import java.io.PrintWriter;
 
 import datascript.ast.Field;
 import datascript.jet.java.UnionFieldAccessor;
+import freemarker.template.Configuration;
+
+
 
 public class UnionFieldEmitter extends FieldEmitter
 {
@@ -46,12 +54,19 @@ public class UnionFieldEmitter extends FieldEmitter
     {
         super(ue);
     }
-   
+
+
     public void emit(Field f)
     {
         this.field = f;
         UnionFieldAccessor template = new UnionFieldAccessor();
         String result = template.generate(this);
-        out.print(result);
+        writer.print(result);
+    }
+
+
+    public void emitFreeMarker(PrintWriter writer, Configuration cfg) throws Exception
+    {
+        throw new RuntimeException("emitFreeMarker does not exist for UnionFieldEmitter");
     }
 }

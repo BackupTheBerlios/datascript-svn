@@ -1,6 +1,6 @@
 /* BSD License
  *
- * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
+ * Copyright (c) 2006, Harald Wellmann, Henrik Wedekind Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -35,28 +35,192 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
 
-import java.io.PrintStream;
 
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
+import datascript.ast.DataScriptException;
 import datascript.ast.Field;
 import datascript.ast.Parameter;
+import datascript.ast.StdIntegerType;
+import datascript.ast.TypeInterface;
+import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
 import datascript.jet.java.SequenceEnd;
 import datascript.jet.java.UnionBegin;
 import datascript.jet.java.UnionRead;
 import datascript.jet.java.UnionWrite;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
+
 
 public class UnionEmitter extends CompoundEmitter
 {
+    private final List<UnionFieldFMEmitter> fields = 
+        new ArrayList<UnionFieldFMEmitter>();
+
     private UnionType union;
     private UnionFieldEmitter fieldEmitter;
     private UnionBegin beginTmpl = new UnionBegin();
     private SequenceEnd endTmpl = new SequenceEnd();
     private UnionRead readReadTmpl = new UnionRead();
     private UnionWrite readWriteTmpl = new UnionWrite();
-    
+
+
+
+    public static class UnionFieldFMEmitter extends FieldEmitter
+    {
+        private static Template tpl = null;
+
+        private final TypeInterface type;
+
+        private String optional = null;
+        private String constraint = null;
+        private String label = null;
+
+
+        public UnionFieldFMEmitter(Field f, CompoundEmitter j)
+        {
+            super(j);
+            field = f;
+            type = TypeReference.resolveType(field.getFieldType());
+        }
+
+
+        public void emit(Field f)
+        {
+            throw new RuntimeException("emit does not exist for SequenceFieldFMEmitter");
+        }
+
+
+        public void emitFreeMarker(PrintWriter writer, Configuration cfg) throws Exception
+        {
+            if (tpl == null)
+                tpl = cfg.getTemplate("java/UnionFieldAccessor.ftl");
+            tpl.process(this, writer);
+        }
+
+
+        public String getReadField()
+        {
+            return getCompoundEmitter().readField(field);
+        }
+
+
+        public String getWriteField()
+        {
+            return getCompoundEmitter().writeField(field);
+        }
+
+
+        public String getOptionalClause()
+        {
+            if (optional == null)
+            {
+                optional = getCompoundEmitter().getOptionalClause(field);
+            }
+            return optional;
+        }
+
+
+        public String getConstraint()
+        {
+            if (constraint == null)
+            {
+                constraint = getCompoundEmitter().getConstraint(field);
+            }
+            return constraint;
+        }
+
+
+        public String getLabelExpression()
+        {
+            if (label == null)
+            {
+                label = getCompoundEmitter().getLabelExpression(field);
+            }
+            return label;
+        }
+
+
+        public String getName()
+        {
+            return field.getName();
+        }
+
+
+        public String getText()
+        {
+            return field.toString();
+        }
+
+
+        public String getCanonicalTypeName()
+        {
+            return type.getClass().getCanonicalName();
+        }
+
+
+        public String getJavaTypeName()
+        {
+            return TypeNameEmitter.getTypeName(field.getFieldType());
+        }
+
+
+        public String getClassName()
+        {
+            return TypeNameEmitter.getClassName(field.getFieldType());
+        }
+
+
+        public String getGetterName()
+        {
+            return AccessorNameEmitter.getGetterName(field);
+        }
+
+
+        public String getSetterName()
+        {
+            return AccessorNameEmitter.getSetterName(field);
+        }
+
+
+        public String getCheckerName()
+        {
+            return AccessorNameEmitter.getCheckerName(field);
+        }
+
+
+        public String getIndicatorName()
+        {
+            return AccessorNameEmitter.getIndicatorName(field);
+        }
+
+
+        public int getBitFieldLength()
+        {
+            if (type instanceof BitFieldType)
+                return ((BitFieldType)type).getLength();
+            throw new RuntimeException("type of field " + field.getName() + "is not a BitFieldType");
+        }
+
+
+        public boolean getIsUINT64()
+        {
+            if (type instanceof StdIntegerType)
+                return ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64;
+            throw new RuntimeException("type of field " + field.getName() + "is not a StdIntegerType");
+        }
+    }
+
 
     public UnionEmitter(JavaDefaultEmitter j, UnionType union)
     {
@@ -66,18 +230,18 @@ public class UnionEmitter extends CompoundEmitter
     }
 
 
-    public void setOutputStream(PrintStream out)
+    public void setWriter(PrintWriter writer)
     {
-        super.setOutputStream(out);
-        fieldEmitter.setOutputStream(out);
+        super.setWriter(writer);
+        fieldEmitter.setWriter(writer);
     }
-   
+
 
     public UnionType getUnionType()
     {
         return union;
     }
-    
+
 
     public CompoundType getCompoundType()
     {
@@ -89,32 +253,101 @@ public class UnionEmitter extends CompoundEmitter
     {
         return fieldEmitter;
     }
-    
+
+
+    public void beginFreemarker(Configuration cfg)
+    {
+        fields.clear();
+        for (Field field : union.getFields())
+        {
+            UnionFieldFMEmitter fe = new UnionFieldFMEmitter(field, this);
+            fields.add(fe);
+        }
+        params.clear();
+        for (Parameter param : union.getParameters())
+        {
+            CompoundParameterFMEmitter p = new CompoundParameterFMEmitter(param);
+            params.add(p);
+        }
+
+        try
+        {
+            Template tpl = cfg.getTemplate("java/UnionBegin.ftl");
+            tpl.process(this, writer);
+
+            for (UnionFieldFMEmitter field : fields)
+            {
+                field.emitFreeMarker(writer, cfg);
+            }
+
+            for (CompoundParameterFMEmitter param : params)
+            {
+                param.emitFreeMarker(writer, cfg);
+            }
+
+            tpl = cfg.getTemplate("java/UnionRead.ftl");
+            tpl.process(this, writer);
+
+            tpl = cfg.getTemplate("java/UnionWrite.ftl");
+            tpl.process(this, writer);
+        }
+        catch (Exception e)
+        {
+            throw new DataScriptException(e);
+        }
+    }
+
 
     public void begin()
     {
-        //reset();        
         String result = beginTmpl.generate(this);
-        out.print(result);
-        
+        writer.print(result);
+
         for (Field field : union.getFields())
         {
             fieldEmitter.emit(field);
         }
+
         for (Parameter param : union.getParameters())
         {
             paramEmitter.emit(param);
         }
+
         result = readReadTmpl.generate(this);
-        out.print(result);
+        writer.print(result);
+
         result = readWriteTmpl.generate(this);
-        out.print(result);
+        writer.print(result);
+        writer.flush();
     }
-    
+
+
+    public void endFreemarker(Configuration cfg)
+    {
+        try
+        {
+            Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
+
+            tpl.process(this, writer);
+        }
+        catch (Exception e)
+        {
+            throw new DataScriptException(e);
+        }
+    }
+
 
     public void end()
     {
         String result = endTmpl.generate(this);
-        out.print(result);
+        writer.print(result);
+        writer.flush();
     }
+
+
+    public List<UnionFieldFMEmitter> getFields()
+    {
+        return fields;
+    }
+
 }

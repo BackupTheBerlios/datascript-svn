@@ -130,6 +130,7 @@
     <copy todir="${classes}">
       <fileset dir="${basedir}/freemarker">
         <include name="html/**.ftl" />
+        <include name="java/**.ftl" />
       </fileset>
     </copy>
   </target>
@@ -235,6 +236,9 @@
         <include name="datascript/jet/java/**" />
         <include name="datascript/emit/java/**" />
       </fileset>
+        <fileset dir="${basedir}/freemarker">
+          <include name="java/**.ftl" />
+        </fileset>
     </jar>
 
     <jar destfile="${ext}/rds_htmlExtension.jar" manifest="${backend}/html/Manifest.txt">
@@ -279,7 +283,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
+      <arg line="-c -doc -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} bits.ds" />
     </java>
   </target>
 
@@ -322,7 +326,7 @@
         <pathelement path="${lib}/antlr.jar" />
         <pathelement path="${lib}/freemarker.jar" />
       </classpath>
-      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src  ${ds.src}  sqltest.ds" />
+      <arg line="-c -doc -out ${test.gen} -ext ${ext} -java_fm -src  ${ds.src}  sqltest.ds" />
     </java>
   </target>
 
@@ -338,7 +342,7 @@
         <pathelement path="${lib}/antlr.jar" />
         <pathelement path="${lib}/freemarker.jar" />
       </classpath>
-      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src ${ds.src} sqlParameter.ds" />
+      <arg line="-c -doc -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} sqlParameter.ds" />
     </java>
   </target>
 
@@ -353,7 +357,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  func.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -java_fm -src  ${ds.src}  func.ds" />
     </java>
   </target>
 
@@ -371,14 +375,14 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  child.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -java_fm -src  ${ds.src}  child.ds" />
     </java>
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
       <classpath>
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  pkg/top.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -java_fm -src  ${ds.src}  pkg/top.ds" />
     </java>
   </target>
 
@@ -394,7 +398,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  innerunion.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -java_fm -src  ${ds.src}  innerunion.ds" />
     </java>
   </target>
 
@@ -407,7 +411,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} gif.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} gif.ds" />
     </java>
   </target>
 

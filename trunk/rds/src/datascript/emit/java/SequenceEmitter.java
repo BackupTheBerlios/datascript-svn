@@ -1,6 +1,6 @@
 /* BSD License
  *
- * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
+ * Copyright (c) 2006, Harald Wellmann, Henrik Wedekind Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -35,22 +35,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
 
-import java.io.PrintStream;
 
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
+import datascript.ast.DataScriptException;
 import datascript.ast.Field;
 import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
 import datascript.ast.SequenceType;
+import datascript.ast.StdIntegerType;
+import datascript.ast.TypeInterface;
+import datascript.ast.TypeReference;
+import datascript.emit.java.TypeNameEmitter;
 import datascript.jet.java.SequenceBegin;
 import datascript.jet.java.SequenceEnd;
 import datascript.jet.java.SequenceRead;
 import datascript.jet.java.SequenceWrite;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
+
 
 public class SequenceEmitter extends CompoundEmitter
 {
+    private final List<SequenceFunctionFMEmitter> functions = 
+        new ArrayList<SequenceFunctionFMEmitter>();
+    private final List<SequenceFieldFMEmitter> fields = 
+        new ArrayList<SequenceFieldFMEmitter>();
+
     private SequenceType seq;
     private SequenceFieldEmitter fieldEmitter;
     private FunctionEmitter functionEmitter;
@@ -58,6 +78,177 @@ public class SequenceEmitter extends CompoundEmitter
     private SequenceEnd endTmpl = new SequenceEnd();
     private SequenceRead readTmpl = new SequenceRead();
     private SequenceWrite writeTmpl = new SequenceWrite();
+
+
+
+    public static class SequenceFunctionFMEmitter
+    {
+        private final FunctionType func;
+        private static Template tpl = null;
+
+        public SequenceFunctionFMEmitter(FunctionType func)
+        {
+            this.func = func;
+        }
+
+
+        public void emitFreeMarker(PrintWriter writer, Configuration cfg) throws Exception
+        {
+            if (tpl == null)
+                tpl = cfg.getTemplate("java/FunctionTmpl.ftl");
+            tpl.process(this, writer);
+        }
+
+
+        public String getName()
+        {
+            return func.getName();
+        }
+
+
+        public String getResult()
+        {
+            ExpressionEmitter ee = new ExpressionEmitter();
+            return ee.emit(func.getResult());
+        }
+
+
+        public String getReturnType()
+        {
+            TypeInterface returnType = func.getReturnType();
+            return TypeNameEmitter.getTypeName(returnType);
+        }
+    }
+
+
+
+    public static class SequenceFieldFMEmitter extends FieldEmitter
+    {
+        private static Template tpl = null;
+
+        private final TypeInterface type;
+
+        private String optional = null;
+        private String constraint = null;
+        private String label = null;
+
+
+        public SequenceFieldFMEmitter(Field f, CompoundEmitter j)
+        {
+            super(j);
+            field = f;
+            type = TypeReference.resolveType(field.getFieldType());
+        }
+
+
+        public void emit(Field f)
+        {
+            throw new RuntimeException("emit does not exist for SequenceFieldFMEmitter");
+        }
+
+
+        public void emitFreeMarker(PrintWriter writer, Configuration cfg) throws Exception
+        {
+            if (tpl == null)
+                tpl = cfg.getTemplate("java/SequenceFieldAccessor.ftl");
+            tpl.process(this, writer);
+        }
+
+
+        public String getReadField()
+        {
+            return getCompoundEmitter().readField(field);
+        }
+
+
+        public String getWriteField()
+        {
+            return getCompoundEmitter().writeField(field);
+        }
+
+
+        public String getOptionalClause()
+        {
+            if (optional == null)
+            {
+                optional = getCompoundEmitter().getOptionalClause(field);
+            }
+            return optional;
+        }
+
+
+        public String getConstraint()
+        {
+            if (constraint == null)
+            {
+                constraint = getCompoundEmitter().getConstraint(field);
+            }
+            return constraint;
+        }
+
+
+        public String getLabelExpression()
+        {
+            if (label == null)
+            {
+                label = getCompoundEmitter().getLabelExpression(field);
+            }
+            return label;
+        }
+
+
+        public String getName()
+        {
+            return field.getName();
+        }
+
+
+        public String getCanonicalTypeName()
+        {
+            return type.getClass().getCanonicalName();
+        }
+
+
+        public String getJavaTypeName()
+        {
+            return TypeNameEmitter.getTypeName(field.getFieldType());
+        }
+
+
+        public String getGetterName()
+        {
+            return AccessorNameEmitter.getGetterName(field);
+        }
+
+
+        public String getSetterName()
+        {
+            return AccessorNameEmitter.getSetterName(field);
+        }
+
+
+        public String getIndicatorName()
+        {
+            return AccessorNameEmitter.getIndicatorName(field);
+        }
+
+
+        public int getBitFieldLength()
+        {
+            if (type instanceof BitFieldType)
+                return ((BitFieldType)type).getLength();
+            throw new RuntimeException("type of field " + field.getName() + "is not a BitFieldType");
+        }
+
+
+        public boolean getIsUINT64()
+        {
+            if (type instanceof StdIntegerType)
+                return ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64;
+            throw new RuntimeException("type of field " + field.getName() + "is not a StdIntegerType");
+        }
+    }
+
 
 
     public SequenceEmitter(JavaDefaultEmitter j, SequenceType sequence)
@@ -69,10 +260,10 @@ public class SequenceEmitter extends CompoundEmitter
     }
 
 
-    public void setOutputStream(PrintStream out)
+    public void setWriter(PrintWriter writer)
     {
-        super.setOutputStream(out);
-        fieldEmitter.setOutputStream(out);
+        super.setWriter(writer);
+        fieldEmitter.setWriter(writer);
     }
 
 
@@ -88,41 +279,121 @@ public class SequenceEmitter extends CompoundEmitter
     }
 
 
-    public FieldEmitter getFieldEmitter()
+    public SequenceFieldEmitter getFieldEmitter()
     {
         return fieldEmitter;
+    }
+
+
+    public void beginFreemarker(Configuration cfg)
+    {
+        fields.clear();
+        for (Field field : seq.getFields())
+        {
+            SequenceFieldFMEmitter fe = new SequenceFieldFMEmitter(field, this);
+            fields.add(fe);
+        }
+        params.clear();
+        for (Parameter param : seq.getParameters())
+        {
+            CompoundParameterFMEmitter p = new CompoundParameterFMEmitter(param);
+            params.add(p);
+        }
+        functions.clear();
+        for (FunctionType func : seq.getFunctions())
+        {
+            SequenceFunctionFMEmitter f = new SequenceFunctionFMEmitter(func);
+            functions.add(f);
+        }
+
+        try
+        {
+            Template tpl = cfg.getTemplate("java/SequenceBegin.ftl");
+            tpl.process(this, writer);
+
+            for (SequenceFieldFMEmitter field : fields)
+            {
+                field.emitFreeMarker(writer, cfg);
+            }
+
+            for (CompoundParameterFMEmitter param : params)
+            {
+                param.emitFreeMarker(writer, cfg);
+            }
+
+            for (SequenceFunctionFMEmitter func : functions)
+            {
+                func.emitFreeMarker(writer, cfg);
+            }
+
+            tpl = cfg.getTemplate("java/SequenceRead.ftl");
+            tpl.process(this, writer);
+
+            tpl = cfg.getTemplate("java/SequenceWrite.ftl");
+            tpl.process(this, writer);
+        }
+        catch (Exception e)
+        {
+            throw new DataScriptException(e);
+        }
     }
 
 
     public void begin()
     {
         String result = beginTmpl.generate(this);
-        out.print(result);
-        
+        writer.print(result);
+
         for (Field field : seq.getFields())
         {
             fieldEmitter.emit(field);
         }
-        
+
         for (Parameter param : seq.getParameters())
         {
             paramEmitter.emit(param);
         }
+
         for (FunctionType function : seq.getFunctions())
         {
             functionEmitter.emit(function);
         }
+
         result = readTmpl.generate(this);
-        out.print(result);
+        writer.print(result);
 
         result = writeTmpl.generate(this);
-        out.print(result);
+        writer.print(result);
+        writer.flush();
+    }
+
+
+    public void endFreemarker(Configuration cfg)
+    {
+        try
+        {
+            Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
+
+            tpl.process(this, writer);
+        }
+        catch (Exception e)
+        {
+            throw new DataScriptException(e);
+        }
     }
 
 
     public void end()
     {
         String result = endTmpl.generate(this);
-        out.print(result);
-    }    
+        writer.print(result);
+        writer.flush();
+    }
+
+
+    public List<SequenceFieldFMEmitter> getFields()
+    {
+        return fields;
+    }
+
 }

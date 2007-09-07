@@ -84,7 +84,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
         {
             Template tpl = cfg.getTemplate("html/overview.html.ftl");
             openOutputFile(directory, "overview" + HTML_EXT);
-            Writer writer = new PrintWriter(out);
+
             tpl.process(this, writer);
             writer.close();
         }

@@ -1,6 +1,6 @@
 /* BSD License
  *
- * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
+ * Copyright (c) 2006, Harald Wellmann, Henrik Wedekind Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -35,43 +35,51 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
 
-import java.io.PrintStream;
+
+import java.io.PrintWriter;
 
 import datascript.ast.Field;
+import freemarker.template.Configuration;
+
+
 
 abstract public class FieldEmitter
 {
     private CompoundEmitter global;
     protected Field field;
-    protected PrintStream out;
-    
+    protected PrintWriter writer;
+
+
     public FieldEmitter(CompoundEmitter j)
     {
         this.global = j;
     }
-   
+
+
     public CompoundEmitter getCompoundEmitter()
     {
         return global;
     }
-    
-    public void setOutputStream(PrintStream out)
-    {
-        this.out = out;
-    }
-    
-    abstract public void emit(Field f);
 
-/*    
-    public String getTypeName()
+
+    public void setWriter(PrintWriter writer)
     {
-        TypeInterface type = field.getFieldType();
-        type = TypeReference.resolveType(type);
-        return global.getTypeName(type);
+        this.writer = writer;
     }
-*/    
+
+
+    abstract public void emit(Field f);
+    abstract public void emitFreeMarker(PrintWriter writer, Configuration cfg) throws Exception;
+
+
+    /*
+     * public String getTypeName() { TypeInterface type = field.getFieldType();
+     * type = TypeReference.resolveType(type); return global.getTypeName(type); }
+     */
     public Field getField()
     {
         return field;

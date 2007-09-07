@@ -45,10 +45,15 @@ import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.TypeInterface;
 import datascript.emit.DefaultEmitter;
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
 
 
 public class JavaDefaultEmitter extends DefaultEmitter
 {
+    protected static Configuration cfg = null;
+    protected static boolean useFreeMarker = false;
+
     protected static final String JAVA_EXT = ".java";
     protected String packageName;
     protected String packagePath;
@@ -62,6 +67,32 @@ public class JavaDefaultEmitter extends DefaultEmitter
     {
         packagePath = outPathName;
         packageName = defaultPackageName;
+    }
+
+
+    public static void useFreeMarker()
+    {
+        if (cfg != null) 
+            return;
+
+        cfg = new Configuration();
+        cfg.setClassForTemplateLoading(JavaDefaultEmitter.class, "/");
+        cfg.setObjectWrapper(new DefaultObjectWrapper());
+
+        useFreeMarker = true;
+        System.out.println("using FreeMarker!");
+    }
+
+
+    public boolean getUseFreeMarker()
+    {
+        return useFreeMarker;
+    }
+
+
+    public Configuration getTemplateConfig()
+    {
+        return cfg;
     }
 
 

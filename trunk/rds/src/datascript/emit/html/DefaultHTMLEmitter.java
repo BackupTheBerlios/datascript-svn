@@ -121,14 +121,13 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
     }
 
 
-    public void emit(String template, String outputName)
+    private void emit(String template, String outputName)
     {
         try
         {
             Template tpl = cfg.getTemplate(template);
             openOutputFile(directory, outputName);
 
-            Writer writer = new PrintWriter(out);
             tpl.process(this, writer);
             writer.close();
         }

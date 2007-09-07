@@ -35,46 +35,57 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
 
-import java.io.PrintStream;
+
+import java.io.PrintWriter;
 
 import datascript.ast.Parameter;
 import datascript.jet.java.ParameterAccessor;
+
+
 
 public class ParameterEmitter
 {
     private CompoundEmitter global;
     protected Parameter parameter;
-    protected PrintStream out;
-    
+    protected PrintWriter writer;
+
+
     public ParameterEmitter(CompoundEmitter j)
     {
         this.global = j;
     }
-   
+
+
     public CompoundEmitter getCompoundEmitter()
     {
         return global;
     }
-    
-    public void setOutputStream(PrintStream out)
+
+
+    public void setWriter(PrintWriter writer)
     {
-        this.out = out;
+        this.writer = writer;
     }
-    
+
+
     public void emit(Parameter p)
     {
         parameter = p;
         ParameterAccessor template = new ParameterAccessor();
         String result = template.generate(this);
-        out.print(result);
+        writer.print(result);
     }
+
 
     public Parameter getParameter()
     {
         return parameter;
     }
+
 
     /**
      * @param param

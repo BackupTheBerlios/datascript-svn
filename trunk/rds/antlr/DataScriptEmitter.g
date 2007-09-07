@@ -50,12 +50,14 @@ options
 
 {
     private Emitter em;
-    
+
+
     public void setEmitter(Emitter em)
     {
         this.em = em;
     }
-    
+
+
     public void reportError(RecognitionException ex)
     {
         System.out.println(ex.toString());
@@ -64,66 +66,59 @@ options
 }
 
 root : #(r:ROOT                 { em.beginRoot(r); }
-         (translationUnit[#r])+ )
-       { em.endRoot(); }  
+         (translationUnit[#r])+
+        )                       { em.endRoot(); }  
      ;
 
 translationUnit[AST r]
-    :   #(u:TRANSLATION_UNIT { em.beginTranslationUnit(r, u); }
-	      (packageDeclaration)? 
-	      (importDeclaration)* 
-	      members
-	    )
-		{ em.endTranslationUnit(); }
-	;
+    : #(u:TRANSLATION_UNIT      { em.beginTranslationUnit(r, u); }
+        (packageDeclaration)? 
+        (importDeclaration)* 
+        members
+       )                        { em.endTranslationUnit(); }
+    ;
 
 packageDeclaration
-    :   #(p:PACKAGE		{ em.beginPackage(p); }
-    	  (ID)+
-    	)
-    	{ em.endPackage(p); }
-    ;
-    
-importDeclaration
-    :   #(i:IMPORT 		{ em.beginImport(i); }
-    	  (ID)+
-    	)
-    	{ em.endImport(); }
-    ;
-        	
-members
-    :   { em.beginMembers(); }
-    	#(MEMBERS (declaration)*)
-    	{ em.endMembers(); }
-    ;
-    
-declaration
-    :   fieldDefinition
-    //|   conditionDefinition
-    |   constDeclaration
-    |   subtypeDeclaration
-    |   sqlDatabaseDefinition
-    |   sqlTableDeclaration
-    |   sqlIntegerDeclaration
+    : #(p:PACKAGE               { em.beginPackage(p); }
+        (ID)+
+       )                        { em.endPackage(p); }
     ;
 
+importDeclaration
+    : #(i:IMPORT                { em.beginImport(i); }
+        (ID)+
+       )        { em.endImport(); }
+    ;
+
+members
+    : { em.beginMembers(); }
+      #(MEMBERS (declaration)*)
+      { em.endMembers(); }
+    ;
+
+declaration
+    : fieldDefinition
+    //| conditionDefinition
+    | constDeclaration
+    | subtypeDeclaration
+    | sqlDatabaseDefinition
+    | sqlTableDeclaration
+    | sqlIntegerDeclaration
+    ;
 
 label
-    :   #(LABEL expression (expression)?)
+    : #(LABEL expression (expression)?)
     ;
 
 /*
-
-
 conditionDefinition
-    :   "condition"^ ID parameterList conditionBlock
+    : "condition"^ ID parameterList conditionBlock
     ;
 
 conditionBlock!
-    :   LCURLY^ (e:conditionExpression SEMICOLON!)* RCURLY!
-        { #conditionBlock = #([BLOCK, "BLOCK"], e); }
+    : LCURLY^ (e:conditionExpression SEMICOLON!)* RCURLY!
+      { #conditionBlock = #([BLOCK, "BLOCK"], e); }
     ;
-
 
 conditionExpression
     : expression
@@ -131,22 +126,20 @@ conditionExpression
 */
 
 parameterList 
-    :   #(PARAMLIST (parameterDefinition)+)
+    : #(PARAMLIST (parameterDefinition)+)
     ;
 
 parameterDefinition
-    :   #(PARAM definedType ID)
+    : #(PARAM definedType ID)
     ;
-
 
 /******************* begin of enumerator stuff *****************/
 
 enumDeclaration
-    : #(e:"enum" 		{ em.beginEnumeration(e); } 
+    : #(e:"enum"            { em.beginEnumeration(e); } 
         builtinType (ID)? 
         enumMemberList
-       )
-       { em.endEnumeration(e); }
+       )                    { em.endEnumeration(e); }
     ;
 
 enumMemberList
@@ -154,10 +147,9 @@ enumMemberList
     ;
 
 enumItem
-    : #(i:ITEM 			{ em.beginEnumItem(i); }
+    : #(i:ITEM              { em.beginEnumItem(i); }
         ID (expression)?
-       )
-       { em.endEnumItem(i); }
+       )                    { em.endEnumItem(i); }
     ;
 
 bitmaskDeclaration
@@ -165,216 +157,211 @@ bitmaskDeclaration
     ;
 
 constDeclaration
-    : #(c:"const"        { em.beginConst(c); } 
+    : #(c:"const"           { em.beginConst(c); } 
         builtinType ID expression
-       )                 { em.endConst(c); }
+       )                    { em.endConst(c); }
     ;
 
 fieldDefinition
-    :   #(f:FIELD 
-           ((zipModifier typeReference ID) => zipModifier)?
-    	   typeReference
-    	   (i:ID					{ em.beginField(f); })? 
-           (fieldInitializer)?
-           (fieldOptionalClause)?
-           (fieldCondition)? (label)?
-         )
-         { if (i != null) em.endField(f); }
+    : #(f:FIELD 
+        ((zipModifier typeReference ID) => zipModifier)?
+        typeReference
+        (i:ID                       { em.beginField(f); })? 
+        (fieldInitializer)?
+        (fieldOptionalClause)?
+        (fieldCondition)? (label)?
+       )                    { if (i != null) em.endField(f); }
     ;
 
 typeArgumentList
-    :   (expression)+
+    : (expression)+
     ;
 
-
 fieldInitializer
-    :   #(ASSIGN typeValue)
+    : #(ASSIGN typeValue)
     ;
 
 fieldOptionalClause
-    :   #("if" expression)
+    : #("if" expression)
     ;
 
 fieldCondition
-    :   #(COLON expression)
+    : #(COLON expression)
     ;
 
 typeDeclaration
-    :   sequenceDeclaration
-    |   unionDeclaration
-    |   enumDeclaration
-    |   bitmaskDeclaration
-    |   arrayType
+    : sequenceDeclaration
+    | unionDeclaration
+    | enumDeclaration
+    | bitmaskDeclaration
+    | arrayType
     ;
 
 typeReference
-    :   sequenceDeclaration
-    |   unionDeclaration
-    |   definedType
-    |   enumDeclaration
-    |   bitmaskDeclaration
-    |   arrayType
-    |   paramTypeInstantiation
+    : sequenceDeclaration
+    | unionDeclaration
+    | definedType
+    | enumDeclaration
+    | bitmaskDeclaration
+    | arrayType
+    | paramTypeInstantiation
     ;
 
 arrayType
-    :  #(ARRAY typeReference arrayRange)
+    : #(ARRAY typeReference arrayRange)
     ;
 
 paramTypeInstantiation
     : #(INST definedType typeArgumentList)
     ;
-    
+
 sequenceDeclaration
-    :   #(s:SEQUENCE 		{ em.beginSequence(s); }
-           (ID)? 
-           (parameterList)? 
-           memberList
-           (functionList)?
-         )
-         { em.endSequence(s); }
+    : #(s:SEQUENCE          { em.beginSequence(s); }
+        (ID)? 
+        (parameterList)? 
+        memberList
+        (functionList)?
+       )                    { em.endSequence(s); }
     ;
 
 unionDeclaration
-    :   #(u:UNION 		{ em.beginUnion(u); }
-           (ID)? 
-           (parameterList)? 
-           memberList
-           (functionList)?
-         )
-         { em.endUnion(u); }
+    : #(u:UNION             { em.beginUnion(u); }
+        (ID)? 
+        (parameterList)? 
+        memberList
+        (functionList)?
+       )                    { em.endUnion(u); }
     ;
 
 memberList
-    :   #(MEMBERS (declaration)*)
+    : #(MEMBERS (declaration)*)
     ;
 
 functionList
-    :   #(FUNCTIONS (function)+)
+    : #(FUNCTIONS (function)+)
     ;
-    
+
 function
-    :   #(f:FUNCTION                   { em.beginFunction(f); }
-          ID integerType functionBody) 
-        { em.endFunction(f); }  
+    : #(f:FUNCTION          { em.beginFunction(f); }
+        ID 
+        integerType 
+        functionBody
+       )                    { em.endFunction(f); }  
     ;
-    
+
 functionBody
-    :   #(RETURN expression)
+    : #(RETURN expression)
     ;        
-    
+
 definedType
-    :	#(TYPEREF ID (DOT ID)*) 
-    |   builtinType
+    : #(TYPEREF ID (DOT ID)*) 
+    | builtinType
     ;
 
 subtypeDeclaration
-    :	#(s:SUBTYPE     { em.beginSubtype(s); } 
-           definedType 
-           ID 
-           (expression)? 
-         )
-         { em.endSubtype(s); }
+    : #(s:SUBTYPE           { em.beginSubtype(s); } 
+        definedType 
+        ID 
+        (expression)? 
+       )                    { em.endSubtype(s); }
     ;
 
 builtinType
-    :   (byteOrderModifier)? builtinTypeDefaultOrder
+    : (byteOrderModifier)? builtinTypeDefaultOrder
     ;
 
 builtinTypeDefaultOrder
-    :   integerType
-    |   stringType
-    |   bitField
+    : integerType
+    | stringType
+    | bitField
     ;
 
 integerType
-    :   UINT8
-    |   UINT16
-    |   UINT32
-    |   UINT64
-    |   INT8
-    |   INT16
-    |   INT32
-    |   INT64
+    : UINT8
+    | UINT16
+    | UINT32
+    | UINT64
+    | INT8
+    | INT16
+    | INT32
+    | INT64
     ;
 
 stringType
-	:	STRING
-	;
-
-bitField
-    :   #(BIT expression)
+    : STRING
     ;
 
+bitField
+    : #(BIT expression)
+    ;
 
 modifier
-	:	byteOrderModifier
-	|	zipModifier
-	;
+    : byteOrderModifier
+    | zipModifier
+    ;
 
 zipModifier
-	:	#(ZIP "zip")
-	;
+    : #(ZIP "zip")
+    ;
 
 byteOrderModifier
-    :   "big"
-    |   "little"
+    : "big"
+    | "little"
     ;
 
 arrayRange
-    :   (expression (expression)?)?
+    : (expression (expression)?)?
     ;
 
 typeValue
-    :   expression
-    |   #(LCURLY (typeValue)+)
+    : expression
+    | #(LCURLY (typeValue)+)
     ;
-
-
 
 /*********************************************************************/
 
 sqlDatabaseDefinition
-    : #(d:SQL_DATABASE             { em.beginSqlDatabase(d); }
+    : #(d:SQL_DATABASE              { em.beginSqlDatabase(d); }
         ID 
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)? 
         (sqlTableField)+ 
         (sqlConstraint)?
-       )                           { em.endSqlDatabase(d); }
+       )                            { em.endSqlDatabase(d); }
     ;
-    
-sqlPragmaBlock                     { em.beginSqlPragma(p); }
+
+sqlPragmaBlock                      { em.beginSqlPragma(p); }
     : #(p:SQL_PRAGMA 
-        (sqlPragma)+)              { em.endSqlPragma(p); }
+        (sqlPragma)+)               { em.endSqlPragma(p); }
     ;
-    
+
 sqlPragma
     : #(FIELD sqlPragmaType ID (fieldInitializer)? (fieldCondition)?)
     ;    
 
 sqlPragmaType
-    :   integerType
-    |   "string"     
+    : integerType
+    | "string"     
     ;
 
 sqlMetadataBlock
-    : #(m:SQL_METADATA             { em.beginSqlMetadata(m); }
-        (sqlMetadataField)+ )      { em.endSqlMetadata(m); }
+    : #(m:SQL_METADATA              { em.beginSqlMetadata(m); }
+        (sqlMetadataField)+ )       { em.endSqlMetadata(m); }
     ;
-    
+
 sqlMetadataField
-    : #(FIELD typeReference
+    : #(FIELD 
+        typeReference
         ID
         (fieldInitializer)? 
         (fieldCondition)?
-      )
-    ;    
+       )
+    ;
 
 sqlTableField
     : #(FIELD sqlTableDefinition)
     ;
-      
+
 sqlTableDefinition
     : sqlTableDeclaration (ID)? 
     | paramTypeInstantiation ID 
@@ -382,87 +369,88 @@ sqlTableDefinition
     ;
 
 sqlTableDeclaration
-    : #(t:SQL_TABLE                { em.beginSqlTable(t); }
+    : #(t:SQL_TABLE                 { em.beginSqlTable(t); }
         ID (parameterList)? 
         (sqlFieldDefinition)+
         (sqlConstraint)?
-       )                           { em.endSqlTable(t); }
+       )                            { em.endSqlTable(t); }
     ;
-    
+
 sqlFieldDefinition
-    : #(FIELD typeReference ID (fieldCondition)? 
-        (SQL_KEY)? (sqlConstraint)?
-      )
+    : #(FIELD 
+        typeReference 
+        ID 
+        (fieldCondition)? 
+        (SQL_KEY)? 
+        (sqlConstraint)?
+       )
     ;
-    
+
 sqlConstraint
     : #(SQL (STRING_LITERAL)+)
     ;  
     
 sqlIntegerDeclaration
-    : #(i:SQL_INTEGER              { em.beginSqlInteger(i); }
+    : #(i:SQL_INTEGER               { em.beginSqlInteger(i); }
         ID
         (sqlIntegerFieldDefinition)+ 
-       )                           { em.endSqlInteger(i); }
+       )                            { em.endSqlInteger(i); }
     ;
-    
+
 sqlIntegerFieldDefinition
     : #(FIELD integerType ID (fieldCondition)?)
     ;    
-    
 
 // ------- expressions ----------------------------------------------------
 
 expression
-    :   #(COMMA expression expression)
-    |   #(ASSIGN expression expression)
-    |   #(MULTASSIGN expression expression)
-    |   #(DIVASSIGN expression expression)
-    |   #(MODASSIGN expression expression)
-    |   #(PLUSASSIGN expression expression)
-    |   #(MINUSASSIGN expression expression)
-    |   #(LSHIFTASSIGN expression expression)
-    |   #(RSHIFTASSIGN expression expression)
-    |   #(ANDASSIGN expression expression)
-    |   #(XORASSIGN expression expression)
-    |   #(ORASSIGN expression expression)
-    |   #("forall" expression expression expression)
-    |   #(QUESTIONMARK expression expression expression)
-    |   #(LOGICALOR expression expression)
-    |   #(LOGICALAND expression expression)
-    |   #(OR expression expression)
-    |   #(XOR expression expression)
-    |   #(AND expression expression)
-    |   #(EQ expression expression)
-    |   #(NE expression expression)
-    |   #(LT expression expression)
-    |   #(GT expression expression)
-    |   #(LE expression expression)
-    |   #(GE expression expression)
-    |   #(LSHIFT expression expression)
-    |   #(RSHIFT expression expression)
-    |   #(PLUS expression expression)
-    |   #(MINUS expression expression)
-    |   #(MULTIPLY expression expression)
-    |   #(DIVIDE expression expression)
-    |   #(MODULO expression expression)
-    |   #(CAST definedType expression)
-    |   #(UPLUS expression)
-    |   #(UMINUS expression)
-    |   #(TILDE expression)
-    |   #(BANG expression)
-    |   #(SIZEOF expression)
-    |   #(LENGTHOF expression)
-    |   #(DOT expression)
-    |   #(ARRAYELEM expression)
-    |   #(INST (expression)+)
-    |   #(LPAREN expression)
-    |   #(FUNCTIONCALL expression)
-    |   #("is" ID)
-    |   ID
-    |   INTEGER_LITERAL 
-    |   STRING_LITERAL
-    |   #(SUM expression)
+    : #(COMMA expression expression)
+    | #(ASSIGN expression expression)
+    | #(MULTASSIGN expression expression)
+    | #(DIVASSIGN expression expression)
+    | #(MODASSIGN expression expression)
+    | #(PLUSASSIGN expression expression)
+    | #(MINUSASSIGN expression expression)
+    | #(LSHIFTASSIGN expression expression)
+    | #(RSHIFTASSIGN expression expression)
+    | #(ANDASSIGN expression expression)
+    | #(XORASSIGN expression expression)
+    | #(ORASSIGN expression expression)
+    | #("forall" expression expression expression)
+    | #(QUESTIONMARK expression expression expression)
+    | #(LOGICALOR expression expression)
+    | #(LOGICALAND expression expression)
+    | #(OR expression expression)
+    | #(XOR expression expression)
+    | #(AND expression expression)
+    | #(EQ expression expression)
+    | #(NE expression expression)
+    | #(LT expression expression)
+    | #(GT expression expression)
+    | #(LE expression expression)
+    | #(GE expression expression)
+    | #(LSHIFT expression expression)
+    | #(RSHIFT expression expression)
+    | #(PLUS expression expression)
+    | #(MINUS expression expression)
+    | #(MULTIPLY expression expression)
+    | #(DIVIDE expression expression)
+    | #(MODULO expression expression)
+    | #(CAST definedType expression)
+    | #(UPLUS expression)
+    | #(UMINUS expression)
+    | #(TILDE expression)
+    | #(BANG expression)
+    | #(SIZEOF expression)
+    | #(LENGTHOF expression)
+    | #(DOT expression)
+    | #(ARRAYELEM expression)
+    | #(INST (expression)+)
+    | #(LPAREN expression)
+    | #(FUNCTIONCALL expression)
+    | #("is" ID)
+    | ID
+    | INTEGER_LITERAL 
+    | STRING_LITERAL
+    | #(SUM expression)
     ;
-
-

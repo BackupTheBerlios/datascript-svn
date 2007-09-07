@@ -35,7 +35,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
+
 
 import antlr.collections.AST;
 import datascript.ast.Subtype;
@@ -47,11 +50,11 @@ import datascript.ast.SqlIntegerType;
 import datascript.ast.UnionType;
 
 
+
 public class JavaEmitter extends JavaDefaultEmitter
 {
     private SequenceEmitter sequenceEmitter;
     private UnionEmitter unionEmitter;
-
 
 
     public JavaEmitter(String outPathName, String defaultPackageName)
@@ -73,15 +76,24 @@ public class JavaEmitter extends JavaDefaultEmitter
         String typeName = getTypeName(sequence);
         openOutputFile(dir, typeName + JAVA_EXT);
         sequenceEmitter = new SequenceEmitter(this, sequence);
-        sequenceEmitter.setOutputStream(out);
-        sequenceEmitter.begin();
+        sequenceEmitter.setWriter(writer);
+
+        if (useFreeMarker)
+            sequenceEmitter.beginFreemarker(cfg);
+        else
+            sequenceEmitter.begin();
     }
+
 
     public void endSequence(AST s)
     {
-        sequenceEmitter.end();
-        out.close();
+        if (useFreeMarker)
+            sequenceEmitter.endFreemarker(cfg);
+        else
+            sequenceEmitter.end();
+        writer.close();
     }
+
 
     public void beginUnion(AST u)
     {
@@ -89,15 +101,24 @@ public class JavaEmitter extends JavaDefaultEmitter
         String typeName = getTypeName(union);
         openOutputFile(dir, typeName + JAVA_EXT);
         unionEmitter = new UnionEmitter(this, union);
-        unionEmitter.setOutputStream(out);
-        unionEmitter.begin();
+        unionEmitter.setWriter(writer);
+
+        if (useFreeMarker)
+            unionEmitter.beginFreemarker(cfg);
+        else
+            unionEmitter.begin();
     }
+
 
     public void endUnion(AST u)
     {
-        unionEmitter.end();
-        out.close();
+        if (useFreeMarker)
+            unionEmitter.endFreemarker(cfg);
+        else
+            unionEmitter.end();
+        writer.close();
     }
+
 
     public void beginEnumeration(AST e)
     {
@@ -105,77 +126,101 @@ public class JavaEmitter extends JavaDefaultEmitter
         String typeName = getTypeName(enumType);
         openOutputFile(dir, typeName + JAVA_EXT);
         EnumerationEmitter enumEmitter = new EnumerationEmitter(this, enumType);
-        enumEmitter.setOutputStream(out);
-        enumEmitter.emit(enumType);
+        enumEmitter.setWriter(writer);
+
+        if (useFreeMarker)
+            enumEmitter.emitFreemarker(cfg, enumType);
+        else
+            enumEmitter.emit(enumType);
     }
+
 
     public void endEnumeration(AST e)
     {
-        out.close();
+        writer.close();
     }
 
 
     public void beginSubtype(AST s)
     {
         Subtype subtype = (Subtype) s;
-        String typeName = subtype.getName();  //getTypeName(subtype);
+        String typeName = subtype.getName();
         openOutputFile(dir, typeName + JAVA_EXT);
         SubtypeEmitter subtypeEmitter = new SubtypeEmitter(this, subtype);
-        subtypeEmitter.setOutputStream(out);
-        subtypeEmitter.emit(subtype);
+        subtypeEmitter.setWriter(writer);
+
+        if (useFreeMarker)
+            subtypeEmitter.emitFreemarker(cfg, subtype);
+        else
+            subtypeEmitter.emit(subtype);
     }
 
 
     public void endSubtype(AST s)
     {
+        writer.close();
     }
+
 
     public void beginSqlDatabase(AST s)
     {
-        SqlDatabaseType db = (SqlDatabaseType)s;
+        SqlDatabaseType db = (SqlDatabaseType) s;
         String typeName = getTypeName(db);
         openOutputFile(dir, typeName + JAVA_EXT);
         SqlDatabaseEmitter dbEmitter = new SqlDatabaseEmitter(this, db);
-        dbEmitter.setOutputStream(out);
-        dbEmitter.emit(db);
+        dbEmitter.setWriter(writer);
+
+        if (useFreeMarker)
+            dbEmitter.emitFreemarker(cfg, db);
+        else
+            dbEmitter.emit(db);
     }
+
 
     public void endSqlDatabase(AST s)
     {
-        out.close();
+        writer.close();
     }
 
 
     public void beginSqlTable(AST s)
     {
-        SqlTableType table = (SqlTableType)s;
+        SqlTableType table = (SqlTableType) s;
         String typeName = getTypeName(table);
         openOutputFile(dir, typeName + JAVA_EXT);
         SqlTableEmitter tableEmitter = new SqlTableEmitter(this, table);
-        tableEmitter.setOutputStream(out);
-        tableEmitter.emit(table);
+        tableEmitter.setWriter(writer);
+
+        if (useFreeMarker)
+            tableEmitter.emitFreemarker(cfg, table);
+        else
+            tableEmitter.emit(table);
     }
 
 
     public void endSqlTable(AST s)
     {
-        out.close();
+        writer.close();
     }
 
 
     public void beginSqlInteger(AST s)
     {
-        SqlIntegerType integerType = (SqlIntegerType)s;
+        SqlIntegerType integerType = (SqlIntegerType) s;
         String typeName = getTypeName(integerType);
         openOutputFile(dir, typeName + JAVA_EXT);
         SqlIntegerEmitter integerEmitter = new SqlIntegerEmitter(this, integerType);
-        integerEmitter.setOutputStream(out);
-        integerEmitter.emit(integerType);
+        integerEmitter.setWriter(writer);
+
+        if (useFreeMarker)
+            integerEmitter.emitFreemarker(cfg, integerType);
+        else
+            integerEmitter.emit(integerType);
     }
 
 
     public void endSqlInteger(AST s)
     {
-        out.close();
+        writer.close();
     }
 }

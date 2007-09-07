@@ -85,7 +85,6 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
             File outputDir = new File(directory, e.getPackage().getPackageName());
             openOutputFile(outputDir, e.getName() + HTML_EXT);
 
-            Writer writer = new PrintWriter(out);
             tpl.process(this, writer);
             writer.close();
         }

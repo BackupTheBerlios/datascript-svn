@@ -222,7 +222,7 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
 
 <%
     int totalTypeSize = 0;
-    for (Field field : e.getFields())
+    for (Field field : integerType.getFields())
     {
         String type =  TypeNameEmitter.getTypeName(field.getFieldType());
 %>
@@ -267,7 +267,7 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
         <%=fittingType%> retValue = 0;
 <%
         {
-            List<Field> list = e.getFields();
+            List<Field> list = integerType.getFields();
             ListIterator<Field> li = list.listIterator(list.size());
             int bitSize = 0;
             int shiftBits = 0;
@@ -275,7 +275,6 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
             {
                 Field field = li.previous();
 
-                String type =  TypeNameEmitter.getTypeName(field.getFieldType());
                 bitSize = field.getFieldType().sizeof(null).integerValue().intValue();
                 long bitmask = (1L << bitSize) - 1L;
 %>
@@ -308,7 +307,7 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
     public void read(<%=fittingType%> __in, CallChain __cc<%=formalPar%>) throws Exception 
     {
 <%
-        List<Field> list = e.getFields();
+        List<Field> list = integerType.getFields();
         ListIterator<Field> li = list.listIterator(list.size());
         int bitSize = 0;
         int shiftBits = 0;
@@ -317,7 +316,7 @@ public class <%=name%> implements __Visitor.Acceptor, SizeOf
             Field field = li.previous();
 
             shiftBits += bitSize;
-            String type =  TypeNameEmitter.getTypeName(field.getFieldType());
+            String type = TypeNameEmitter.getTypeName(field.getFieldType());
             bitSize = field.getFieldType().sizeof(null).integerValue().intValue();
             long bitmask = (1L << bitSize) - 1L;
 %>

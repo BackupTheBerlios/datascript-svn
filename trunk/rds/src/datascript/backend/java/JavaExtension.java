@@ -77,6 +77,7 @@ public class JavaExtension implements Extension
         try
         {
             boolean generateExceptions = params.argumentExists("-java_e");
+            boolean useFreeMarker = params.argumentExists("-java_fm");
             String defaultPackageName = "";
             try
             {
@@ -89,6 +90,10 @@ public class JavaExtension implements Extension
             // emit Java code for decoders
             JavaEmitter javaEmitter = new JavaEmitter(params.getOutPathName(),
                     defaultPackageName);
+            if (useFreeMarker)
+            {
+                JavaEmitter.useFreeMarker();
+            }
             javaEmitter.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(javaEmitter);
@@ -97,6 +102,10 @@ public class JavaExtension implements Extension
             // emit Java __Visitor interface
             VisitorEmitter visitorEmitter = new VisitorEmitter(params
                     .getOutPathName(), defaultPackageName);
+            if (useFreeMarker)
+            {
+                VisitorEmitter.useFreeMarker();
+            }
             visitorEmitter.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(visitorEmitter);
@@ -105,6 +114,10 @@ public class JavaExtension implements Extension
             // emit Java __DepthFirstVisitor class
             DepthFirstVisitorEmitter dfVisitorEmitter = new DepthFirstVisitorEmitter(
                     params.getOutPathName(), defaultPackageName);
+            if (useFreeMarker)
+            {
+                DepthFirstVisitorEmitter.useFreeMarker();
+            }
             dfVisitorEmitter.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(dfVisitorEmitter);
@@ -113,6 +126,10 @@ public class JavaExtension implements Extension
             // emit Java __SizeOf class
             SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(params
                     .getOutPathName(), defaultPackageName);
+            if (useFreeMarker)
+            {
+                SizeOfEmitter.useFreeMarker();
+            }
             sizeOfEmitter.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(sizeOfEmitter);
@@ -121,6 +138,10 @@ public class JavaExtension implements Extension
             // emit Java __Const class
             ConstEmitter constEmitter = new ConstEmitter(params
                     .getOutPathName(), defaultPackageName);
+            if (useFreeMarker)
+            {
+                ConstEmitter.useFreeMarker();
+            }
             constEmitter.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(constEmitter);
@@ -129,6 +150,10 @@ public class JavaExtension implements Extension
             // emit Java __XmlDumper class
             XmlDumperEmitter xmlDumper = new XmlDumperEmitter(params
                     .getOutPathName(), defaultPackageName);
+            if (useFreeMarker)
+            {
+                XmlDumperEmitter.useFreeMarker();
+            }
             xmlDumper.setRDSVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(xmlDumper);
@@ -167,10 +192,9 @@ public class JavaExtension implements Extension
         final String NL = System.getProperties().getProperty("line.separator");
         final StringBuilder buffer = new StringBuilder();
 
-        // TODO Auto-generated method stub
-        //[-pkg \"packagename\"]
         buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScript package" + NL);
         buffer.append(" -java_e\t\tenables throwing exceptions in equals() function, when objects are not equal" + NL);
+        buffer.append(" -java_fm\t\tonly for testing, turns on template emmitting using freemarker" + NL);
         return buffer.toString();
     }
 

@@ -1,6 +1,6 @@
 /* BSD License
  *
- * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
+ * Copyright (c) 2006, Harald Wellmann, Henrik Wedekind Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -35,30 +35,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
+
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
-import datascript.ast.EnumType;
+import datascript.ast.DataScriptException;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
-import datascript.ast.SequenceType;
 import datascript.ast.StringType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
-import datascript.ast.UnionType;
 import datascript.jet.java.XmlDumper;
-import datascript.jet.java.XmlDumperEnumeration;
+import freemarker.template.Template;
+
 
 
 public class XmlDumperEmitter extends DepthFirstVisitorEmitter
 {
-    private XmlDumper dumperTmpl = new XmlDumper();
-    private XmlDumperEnumeration enumerationTmpl = new XmlDumperEnumeration();
-
+    //private XmlDumperEnumeration enumerationTmpl = new XmlDumperEnumeration();
 
 
     public XmlDumperEmitter(String outPathName, String defaultPackageName)
@@ -72,40 +72,32 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
         findAllPackageNames(rootNode, allPackageNames);
         setPackageName(rootNode.getFirstChild());
         openOutputFile(dir, "__XmlDumper.java");
-        String result = dumperTmpl.generate(this);
-        out.print(result);
-    }
-
-
-    public void beginSequence(AST s)
-    {
-        sequence = (SequenceType) s;
-        String result = sequenceTmpl.generate(this);
-        out.print(result);
-    }
-
-
-    public void beginUnion(AST u)
-    {
-        union = (UnionType) u;
-        String result = unionTmpl.generate(this);
-        out.print(result);
-    }
-
-
-    public void beginEnumeration(AST e)
-    {
-        enumeration = (EnumType) e;
-        String result = enumerationTmpl.generate(this);
-        out.print(result);
+        if (useFreeMarker)
+        {
+            try
+            {
+                Template tpl = cfg.getTemplate("java/XmlDumper.ftl");
+                tpl.process(this, writer);
+            }
+            catch (Exception e)
+            {
+                throw new DataScriptException(e);
+            }
+        }
+        else
+        {
+            XmlDumper dumperTmpl = new XmlDumper();
+            String result = dumperTmpl.generate(this);
+            writer.print(result);
+        }
     }
 
 
     public String getVisitor(Field field)
     {
         TypeInterface type = field.getFieldType();
-        return getVisitor(type, "node." + AccessorNameEmitter.getGetterName(field) + "()",
-                field.getName());
+        return getVisitor(type, "node."
+                + AccessorNameEmitter.getGetterName(field) + "()", field.getName());
     }
 
 
@@ -117,7 +109,7 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
         if (type instanceof IntegerType)
         {
             buffer.append("visit");
-            IntegerType itype = (IntegerType)type;
+            IntegerType itype = (IntegerType) type;
             switch (itype.getType())
             {
                 case DataScriptParserTokenTypes.INT8:
@@ -145,7 +137,7 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
                     buffer.append("UInt64");
                     break;
                 case DataScriptParserTokenTypes.BIT:
-                    BitFieldType bftype = (BitFieldType)itype;
+                    BitFieldType bftype = (BitFieldType) itype;
                     length = bftype.getLengthExpression();
                     buffer.append("BitField");
                     break;
@@ -155,7 +147,7 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
             if (length != null)
             {
                 buffer.append(", ");
-                buffer.append(exprEmitter.emit(length, "node"));                    
+                buffer.append(exprEmitter.emit(length, "node"));
             }
             buffer.append(", \"");
             buffer.append(fieldName);
@@ -186,11 +178,11 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
         TypeInterface type = field.getFieldType();
         if (type instanceof ArrayType)
         {
-            ArrayType array = (ArrayType)type;            
+            ArrayType array = (ArrayType) type;
             TypeInterface elemType = array.getElementType();
-            result = getVisitor(elemType, "__elem", field.getName()); 
+            result = getVisitor(elemType, "__elem", field.getName());
         }
-        
+
         return result;
     }
 
@@ -205,5 +197,5 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
     {
         return "endElement(arg);";
     }
-    
+
 }

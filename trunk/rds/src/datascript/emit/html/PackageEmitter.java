@@ -72,7 +72,7 @@ public class PackageEmitter extends DefaultHTMLEmitter
         {
             Template tpl = cfg.getTemplate("html/package.html.ftl");
             openOutputFile(directory, "packages" + HTML_EXT);
-            Writer writer = new PrintWriter(out);
+
             tpl.process(this, writer);
             writer.close();
         }

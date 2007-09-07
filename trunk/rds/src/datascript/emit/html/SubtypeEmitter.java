@@ -75,7 +75,6 @@ public class SubtypeEmitter extends DefaultHTMLEmitter
             File outputDir = new File(directory, s.getPackage().getPackageName());
             openOutputFile(outputDir, s.getName() + HTML_EXT);
 
-            Writer writer = new PrintWriter(out);
             tpl.process(this, writer);
             writer.close();
         }

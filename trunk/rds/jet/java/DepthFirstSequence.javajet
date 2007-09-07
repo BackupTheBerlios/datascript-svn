@@ -48,7 +48,7 @@
     public void visit(<%=name%> node, Object arg)
     {
 <%
-	String start = e.startType();
+	String start = e.getStartType();
 	if (start != null)
 	{
 %>
@@ -86,7 +86,7 @@
             __exc.printStackTrace();
         }
 <%
-    String end = e.endType();
+    String end = e.getEndType();
     if (end != null)
     {
 %>

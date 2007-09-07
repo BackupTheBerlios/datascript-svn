@@ -40,13 +40,13 @@ package datascript.runtime.array;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.Writer;
 
-public interface Array extends Writer
+public interface Array<E> extends Writer
 {
     public boolean equals(Object obj);
 
-    public Array map(Mapping m);
+    public Array<E> map(Mapping<E> m);
 
-    public Array subRange(int begin, int length);
+    public Array<E> subRange(int begin, int length);
 
     public int length();
 }

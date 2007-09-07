@@ -41,8 +41,10 @@ package datascript.emit.java;
 
 
 import datascript.ast.ConstType;
+import datascript.ast.DataScriptException;
 import datascript.jet.java.ConstEnumeration;
 import datascript.jet.java.SequenceEnd;
+import freemarker.template.Template;
 import antlr.collections.AST;
 
 
@@ -53,9 +55,6 @@ import antlr.collections.AST;
  */
 public class ConstEmitter extends JavaDefaultEmitter
 {
-    private datascript.jet.java.ConstType constTmpl = new datascript.jet.java.ConstType();
-    private ConstEnumeration constItemTmpl = new ConstEnumeration();
-    private SequenceEnd endTmpl = new SequenceEnd();
     private ConstType constType;
 
 
@@ -70,34 +69,109 @@ public class ConstEmitter extends JavaDefaultEmitter
         findAllPackageNames(rootNode, allPackageNames);
         setPackageName(rootNode.getFirstChild());
         openOutputFile(dir, "__ConstType.java");
-        String result = constTmpl.generate(this);
-        out.print(result);
+        if (useFreeMarker)
+        {
+            try
+            {
+                Template tpl = cfg.getTemplate("java/ConstType.ftl");
+                tpl.process(this, writer);
+            }
+            catch (Exception e)
+            {
+                throw new DataScriptException(e);
+            }
+        }
+        else
+        {
+            datascript.jet.java.ConstType constTmpl = new datascript.jet.java.ConstType();
+            String result = constTmpl.generate(this);
+            writer.print(result);
+        }
     }
 
 
     public void endRoot()
     {
-        String result = endTmpl.generate(this);
-        out.print(result);
-        out.close();
+        if (useFreeMarker)
+        {
+            try
+            {
+                Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
+                tpl.process(this, writer);
+            }
+            catch (Exception e)
+            {
+                throw new DataScriptException(e);
+            }
+        }
+        else
+        {
+            SequenceEnd endTmpl = new SequenceEnd();
+            String result = endTmpl.generate(this);
+            writer.print(result);
+        }
+        writer.close();
     }
 
 
     public void beginConst(AST c)
     {
         constType = (ConstType)c;
-        String result = constItemTmpl.generate(this);
-        out.print(result);
-    }
-
-
-    public void endConst(AST c)
-    {
+        if (useFreeMarker)
+        {
+            try
+            {
+                Template tpl = cfg.getTemplate("java/ConstEnumeration.ftl");
+                tpl.process(this, writer);
+            }
+            catch (Exception e)
+            {
+                throw new DataScriptException(e);
+            }
+        }
+        else
+        {
+            ConstEnumeration constItemTmpl = new ConstEnumeration();
+            String result = constItemTmpl.generate(this);
+            writer.print(result);
+        }
     }
 
 
     public ConstType getConstType()
     {
         return constType;
+    }
+
+
+    public String getBaseTypeName()
+    {
+        return TypeNameEmitter.getTypeName(constType.getBaseType());
+    }
+
+
+    public String getName()
+    {
+        return constType.getName();
+    }
+
+
+    public String getValue()
+    {
+        return constType.getValue().toString();
+    }
+
+
+    /**** interface to freemarker FileHeader.inc template ****/
+
+    public String getRdsVersion()
+    {
+        return getRDSVersion();
+    }
+
+
+    public String getRootPackageName()
+    {
+        return datascript.ast.Package.getRoot().getPackageName();
     }
 }

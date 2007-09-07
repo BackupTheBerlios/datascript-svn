@@ -40,14 +40,17 @@
 package datascript.emit.java;
 
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import datascript.ast.CompoundType;
+import datascript.ast.DataScriptException;
 import datascript.ast.Field;
 import datascript.ast.SqlIntegerType;
 import datascript.jet.java.SqlInteger;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 
 
@@ -57,9 +60,37 @@ import datascript.jet.java.SqlInteger;
  */
 public class SqlIntegerEmitter extends CompoundEmitter
 {
+    private final List<IntegerFieldFMEmitter> fields = 
+        new ArrayList<IntegerFieldFMEmitter>();
+
+    private int totalTypeSize;
     private SqlIntegerType integerType;
-    private PrintStream out;
+    private PrintWriter writer;
     private SqlInteger integerTmpl;
+
+
+
+    public class IntegerFieldFMEmitter extends SequenceEmitter.SequenceFieldFMEmitter
+    {
+        public IntegerFieldFMEmitter(Field field, SqlIntegerEmitter global)
+        {
+            super(field, global);
+        }
+
+
+        public long getBitmask()
+        {
+            int bitSize = field.getFieldType().sizeof(null).integerValue().intValue();
+            return (1L << bitSize) - 1L;
+        }
+
+
+        public long getBitsize()
+        {
+            return field.getFieldType().sizeof(null).integerValue().intValue();
+        }
+    }
+
 
 
     public SqlIntegerEmitter(JavaEmitter j, SqlIntegerType integerType)
@@ -67,12 +98,6 @@ public class SqlIntegerEmitter extends CompoundEmitter
         super(j);
         this.integerType = integerType;
         integerTmpl = new SqlInteger();
-    }
-
-
-    public List<Field> getFields()
-    {
-        return integerType.getFields();
     }
 
 
@@ -95,15 +120,68 @@ public class SqlIntegerEmitter extends CompoundEmitter
     }
 
 
-    public void setOutputStream(PrintStream out)
+    public void setWriter(PrintWriter writer)
     {
-        this.out = out;
+        this.writer = writer;
+    }
+
+
+    public void emitFreemarker(Configuration cfg, SqlIntegerType integerType2)
+    {
+        totalTypeSize = 0;
+        fields.clear();
+        for (Field field : integerType.getFields())
+        {
+            IntegerFieldFMEmitter fe = new IntegerFieldFMEmitter(field, this);
+            fields.add(fe);
+            totalTypeSize += field.getFieldType().sizeof(null).integerValue().intValue();
+        }
+
+        try
+        {
+            Template tpl = cfg.getTemplate("java/SqlIntegerBegin.ftl");
+            tpl.process(this, writer);
+
+            for (IntegerFieldFMEmitter field : fields)
+            {
+                field.emitFreeMarker(writer, cfg);
+            }
+
+            tpl = cfg.getTemplate("java/SqlIntegerRead.ftl");
+            tpl.process(this, writer);
+        }
+        catch (Exception e)
+        {
+            throw new DataScriptException(e);
+        }
     }
 
 
     public void emit(SqlIntegerType SqlIntegerType)
     {
         String result = integerTmpl.generate(this);
-        out.print(result);
+        writer.print(result);
+        writer.flush();
+    }
+
+
+    public List<IntegerFieldFMEmitter> getFields()
+    {
+        return fields;
+    }
+
+
+    public String getFittingType()
+    {
+        if (totalTypeSize <= 8)
+            return "byte";
+        else if (totalTypeSize <= 16)
+            return "short";
+        else if (totalTypeSize <= 32)
+            return "int";
+        else if (totalTypeSize <= 64)
+            return "long";
+        else /* if (totalTypeSize > 64) */
+            throw new RuntimeException("total size of all fields in '" + getName() + "' exceed 64 bits");
     }
 }

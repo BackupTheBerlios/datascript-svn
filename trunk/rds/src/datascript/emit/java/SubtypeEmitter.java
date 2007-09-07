@@ -35,11 +35,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
 
-import java.io.PrintStream;
+
+import java.io.PrintWriter;
 
 import datascript.ast.Subtype;
+import freemarker.template.Configuration;
+
+
 
 /**
  * @author HWedekind
@@ -49,15 +55,16 @@ public class SubtypeEmitter
 {
     private JavaEmitter global;
     private Subtype subtype;
-    //private PrintStream out;
-    //private SubtypeTmpl subtypeTmpl;
 
+
+    // private PrintWriter writer;
+    // private SubtypeTmpl subtypeTmpl;
 
     public SubtypeEmitter(JavaEmitter j, Subtype s)
     {
         global = j;
         subtype = s;
-        //subtypeTmpl = new SubtypeTmpl();
+        // subtypeTmpl = new SubtypeTmpl();
     }
 
 
@@ -73,23 +80,75 @@ public class SubtypeEmitter
     }
 
 
+    public void setWriter(PrintWriter writer)
+    {
+        // this.writer = writer;
+    }
+
+
+    public void emitFreemarker(Configuration cfg, Subtype subtype2)
+    {
+
+        /*
+         * this does not generates serious content
+        try
+        {
+            Template tpl = cfg.getTemplate("java/SubtypeTmpl.ftl");
+            tpl.process(this, writer);
+        }
+        catch (Exception e)
+        {
+            throw new DataScriptException(e);
+        }
+        */
+    }
+
+
+    public void emit(Subtype subtype)
+    {
+        /*
+         * this does not generates serious content
+         * String result = subtypeTmpl.generate(this);
+         * writer.print(result);
+         * writer.flush();
+         */
+    }
+
+
+    /**** interface to freemarker FileHeader.inc template ****/
+
+    public String getRdsVersion()
+    {
+        return global.getRDSVersion();
+    }
+
+
+    public String getPackageName()
+    {
+        return global.getPackageName();
+    }
+
+
+    public String getRootPackageName()
+    {
+        return datascript.ast.Package.getRoot().getPackageName();
+    }
+
+
+    public String getPackageImports()
+    {
+        return getGlobal().getPackageImports();
+    }
+
+
     public String getName()
     {
         return subtype.getName();
     }
 
 
-    public void setOutputStream(PrintStream out)
+    public String getSuperClassName()
     {
-        //this.out = out;
-    }
-
-
-    public void emit(Subtype subtype)
-    {
-        /* this does not generates serious content
-        String result = subtypeTmpl.generate(this);
-        out.print(result);
-        */
+        return TypeNameEmitter.getTypeName(subtype.getBaseType()); //"Object";
     }
 }

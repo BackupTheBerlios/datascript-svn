@@ -166,7 +166,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
             File outputDir = new File(directory, compound.getPackage().getPackageName());
             openOutputFile(outputDir, compound.getName() + HTML_EXT);
 
-            Writer writer = new PrintWriter(out);
             tpl.process(this, writer);
             writer.close();
         }

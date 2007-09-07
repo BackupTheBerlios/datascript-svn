@@ -1,6 +1,6 @@
 /* BSD License
  *
- * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
+ * Copyright (c) 2006, Harald Wellmann, Henrik Wedekind Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -35,9 +35,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
 
-import java.io.PrintStream;
+
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
@@ -45,6 +50,7 @@ import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
+import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
@@ -59,18 +65,141 @@ import datascript.ast.Value;
 
 import datascript.jet.java.ArrayRead;
 import datascript.jet.java.ArrayWrite;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
+
 
 abstract public class CompoundEmitter
 {
+    protected final List<CompoundParameterFMEmitter> params = 
+        new ArrayList<CompoundParameterFMEmitter>();
+
     private JavaDefaultEmitter global;
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
     private ArrayRead arrayReadTmpl = new ArrayRead();
     private ArrayWrite arrayWriteTmpl = new ArrayWrite();
+    protected PrintWriter writer;
+    protected ParameterEmitter paramEmitter;
+
     private StringBuilder buffer;
     private String formalParams;
     private String actualParams;
-    protected PrintStream out;
-    protected ParameterEmitter paramEmitter;
+
+
+
+    public static class CompoundParameterFMEmitter
+    {
+        private final Parameter param;
+        private static Template tpl = null;
+
+
+        public CompoundParameterFMEmitter(Parameter param)
+        {
+            this.param = param;
+        }
+
+
+        public void emitFreeMarker(PrintWriter writer, Configuration cfg)
+                throws Exception
+        {
+            if (tpl == null)
+                tpl = cfg.getTemplate("java/ParameterAccessor.ftl");
+            tpl.process(this, writer);
+        }
+
+
+        public String getName()
+        {
+            return param.getName();
+        }
+
+
+        public String getJavaTypeName()
+        {
+            return TypeNameEmitter.getTypeName(param.getType());
+        }
+
+
+        public String getGetterName()
+        {
+            return AccessorNameEmitter.getGetterName(param);
+        }
+
+
+        public String getSetterName()
+        {
+            return AccessorNameEmitter.getSetterName(param);
+        }
+    }
+
+
+
+    public static class ArrayFMEmitter
+    {
+        private static final ExpressionEmitter ee = new ExpressionEmitter();
+
+        private final Field field;
+        private final ArrayType array;
+
+
+        public ArrayFMEmitter(Field field, ArrayType array)
+        {
+            this.field = field;
+            this.array = array;
+        }
+
+
+        public String getElType()
+        {
+            return TypeNameEmitter.getTypeName(array.getElementType());
+        }
+
+
+        public boolean getIsVariable()
+        {
+            return array.isVariable();
+        }
+
+
+        public String getGetterName()
+        {
+            return AccessorNameEmitter.getGetterName(field);
+        }
+
+
+        public String getSetterName()
+        {
+            return AccessorNameEmitter.getSetterName(field);
+        }
+
+
+        public String getActualParameterList()
+        {
+            StringBuilder buffer = new StringBuilder();
+            TypeInterface elType = array.getElementType();
+            if (elType instanceof TypeInstantiation)
+            {
+                ExpressionEmitter exprEmitter = new ExpressionEmitter();
+                TypeInstantiation inst = (TypeInstantiation) elType;
+                Iterable<Expression> arguments = inst.getArguments();
+                for (Expression arg : arguments)
+                {
+                    String javaArg = exprEmitter.emit(arg);
+                    buffer.append(", ");
+                    buffer.append(javaArg);
+                }
+            }
+            return buffer.toString();
+        }
+
+
+        public String getLengthExpr()
+        {
+            return ee.emit(array.getLengthExpression());
+        }
+    }
+
 
 
     public CompoundEmitter(JavaDefaultEmitter j)
@@ -96,20 +225,10 @@ abstract public class CompoundEmitter
     }
 
 
-    public void setOutputStream(PrintStream out)
+    public void setWriter(PrintWriter writer)
     {
-        this.out = out;
-        paramEmitter.setOutputStream(out);
-    }
-    
-
-
-    public void readFields()
-    {
-        for (Field field : getCompoundType().getFields())
-        {
-            readField(field);
-        }
+        this.writer = writer;
+        paramEmitter.setWriter(writer);
     }
 
 
@@ -120,33 +239,34 @@ abstract public class CompoundEmitter
         type = TypeReference.resolveType(type);
         if (type instanceof IntegerType)
         {
-            readIntegerField(field, (IntegerType)type);
+            readIntegerField(field, (IntegerType) type);
         }
         else if (type instanceof CompoundType)
         {
-            readCompoundField(field, (CompoundType)type);
+            readCompoundField(field, (CompoundType) type);
         }
         else if (type instanceof ArrayType)
         {
-            readArrayField(field, (ArrayType)type);
+            readArrayField(field, (ArrayType) type);
         }
         else if (type instanceof EnumType)
         {
-            readEnumField(field, (EnumType)type);
+            readEnumField(field, (EnumType) type);
         }
         else if (type instanceof TypeInstantiation)
         {
-            TypeInstantiation inst = (TypeInstantiation)type;
+            TypeInstantiation inst = (TypeInstantiation) type;
             readInstantiatedField(field, inst);
         }
         else if (type instanceof StringType)
         {
-            StringType inst = (StringType)type;
+            StringType inst = (StringType) type;
             readStringField(field, inst);
         }
         else
         {
-            throw new InternalError("unhandled type: " + type.getClass().getName());
+            throw new InternalError("unhandled type: "
+                    + type.getClass().getName());
         }
         return buffer.toString();
     }
@@ -171,39 +291,40 @@ abstract public class CompoundEmitter
             case DataScriptParserTokenTypes.INT8:
                 methodSuffix = "Byte";
                 break;
-            
+
             case DataScriptParserTokenTypes.INT16:
                 methodSuffix = "Short";
                 break;
-            
+
             case DataScriptParserTokenTypes.INT32:
                 methodSuffix = "Int";
                 break;
-            
+
             case DataScriptParserTokenTypes.INT64:
                 methodSuffix = "Long";
                 break;
-            
+
             case DataScriptParserTokenTypes.UINT8:
                 methodSuffix = "UnsignedByte";
                 cast = "(short) ";
                 break;
-            
+
             case DataScriptParserTokenTypes.UINT16:
-                methodSuffix = "UnsignedShort";                
+                methodSuffix = "UnsignedShort";
                 break;
-            
+
             case DataScriptParserTokenTypes.UINT32:
                 methodSuffix = "UnsignedInt";
                 break;
-            
+
             case DataScriptParserTokenTypes.UINT64:
                 methodSuffix = "BigInteger";
                 arg = "64";
                 break;
 
             case DataScriptParserTokenTypes.BIT:
-                Expression lengthExpr = ((BitFieldType)type).getLengthExpression();
+                Expression lengthExpr = ((BitFieldType) type)
+                        .getLengthExpression();
                 Value lengthValue = lengthExpr.getValue();
                 if (lengthValue == null)
                 {
@@ -231,8 +352,8 @@ abstract public class CompoundEmitter
         buffer.append(cast);
         buffer.append("__in.read");
         buffer.append(methodSuffix);
-        buffer.append("(");      
-        buffer.append(arg);      
+        buffer.append("(");
+        buffer.append(arg);
         buffer.append(")");
     }
 
@@ -244,7 +365,7 @@ abstract public class CompoundEmitter
     }
 
 
-    private void readCompoundField(Field field, CompoundType type) 
+    private void readCompoundField(Field field, CompoundType type)
     {
         buffer.append(AccessorNameEmitter.getSetterName(field));
         buffer.append("(new ");
@@ -256,7 +377,7 @@ abstract public class CompoundEmitter
     private void readInstantiatedField(Field field, TypeInstantiation inst)
     {
         CompoundType compound = inst.getBaseType();
-        
+
         buffer.append(AccessorNameEmitter.getSetterName(field));
         buffer.append("(new ");
         buffer.append(compound.getName());
@@ -264,6 +385,7 @@ abstract public class CompoundEmitter
         appendArguments(inst);
         buffer.append("));");
     }
+
 
     private void appendArguments(TypeInstantiation inst)
     {
@@ -287,28 +409,29 @@ abstract public class CompoundEmitter
         }
     }
 
+
     /**
      * Emits a type cast for passing an argument to a parameterized type.
      * @param type              compound type with parameters
      * @param expr              argument expression in type instantiation
      * @param paramIndex        index of argument in argument list
      */
-    private boolean emitTypeCast(CompoundType type, Expression expr, 
-                              int paramIndex)
+    private boolean emitTypeCast(CompoundType type, Expression expr,
+            int paramIndex)
     {
         boolean cast = false;
         Parameter param = type.getParameterAt(paramIndex);
         TypeInterface paramType = TypeReference.resolveType(param.getType());
         if (paramType instanceof StdIntegerType)
         {
-            StdIntegerType intType = (StdIntegerType)paramType;
+            StdIntegerType intType = (StdIntegerType) paramType;
             switch (intType.getType())
             {
                 case DataScriptParserTokenTypes.INT8:
                     buffer.append("(byte)(");
                     cast = true;
                     break;
-                    
+
                 case DataScriptParserTokenTypes.UINT8:
                 case DataScriptParserTokenTypes.INT16:
                     buffer.append("(short)(");
@@ -325,11 +448,28 @@ abstract public class CompoundEmitter
         String elTypeJavaName = TypeNameEmitter.getTypeName(array);
         if (elTypeJavaName.startsWith("ObjectArray"))
         {
-            String elTypeName = TypeNameEmitter.getTypeName(array.getElementType());
-            ArrayEmitter arrayEmitter = new ArrayEmitter(field, array, 
-                    elTypeName);
-            String result = arrayReadTmpl.generate(arrayEmitter);
-            buffer.append(result);            
+            if (global.getUseFreeMarker())
+            {
+                try
+                {
+                    ArrayFMEmitter ae = new ArrayFMEmitter(field, array);
+                    Template tpl = global.getTemplateConfig().getTemplate("java/ArrayRead.ftl");
+                    tpl.process(ae, writer);
+                }
+                catch (Exception e)
+                {
+                    throw new DataScriptException(e);
+                }
+            }
+            else
+            {
+                String elTypeName = TypeNameEmitter.getTypeName(array
+                        .getElementType());
+                ArrayEmitter arrayEmitter = new ArrayEmitter(field, array,
+                        elTypeName);
+                String result = arrayReadTmpl.generate(arrayEmitter);
+                buffer.append(result);
+            }
         }
         else
         {
@@ -361,7 +501,7 @@ abstract public class CompoundEmitter
         buffer.append(type.getName());
         buffer.append(".toEnum(");
         readIntegerValue(field, baseType);
-        buffer.append("));");        
+        buffer.append("));");
     }
 
 
@@ -417,8 +557,9 @@ abstract public class CompoundEmitter
         for (Parameter param : compound.getParameters())
         {
             String paramName = param.getName();
-            TypeInterface paramType = TypeReference.resolveType(param.getType());
-            
+            TypeInterface paramType = TypeReference
+                    .resolveType(param.getType());
+
             String typeName = TypeNameEmitter.getTypeName(paramType);
             formal.append(", ");
             formal.append(typeName);
@@ -486,31 +627,32 @@ abstract public class CompoundEmitter
         type = TypeReference.resolveType(type);
         if (type instanceof IntegerType)
         {
-            writeIntegerField(field, (IntegerType)type);
+            writeIntegerField(field, (IntegerType) type);
         }
         else if (type instanceof CompoundType)
         {
-            writeCompoundField(field, (CompoundType)type);
+            writeCompoundField(field, (CompoundType) type);
         }
         else if (type instanceof ArrayType)
         {
-            writeArrayField(field, (ArrayType)type);
+            writeArrayField(field, (ArrayType) type);
         }
         else if (type instanceof EnumType)
         {
-            writeEnumField(field, (EnumType)type);
+            writeEnumField(field, (EnumType) type);
         }
         else if (type instanceof TypeInstantiation)
         {
-            writeInstantiatedField(field, (TypeInstantiation)type);
+            writeInstantiatedField(field, (TypeInstantiation) type);
         }
         else if (type instanceof StringType)
         {
-            writeStringType(field, (StringType)type);
+            writeStringType(field, (StringType) type);
         }
         else
         {
-            throw new InternalError("unhandled type: " + type.getClass().getName());
+            throw new InternalError("unhandled type: "
+                    + type.getClass().getName());
         }
         return buffer.toString();
     }
@@ -518,7 +660,7 @@ abstract public class CompoundEmitter
 
     private void writeIntegerField(Field field, IntegerType type)
     {
-        writeIntegerValue(AccessorNameEmitter.getGetterName(field)+"()", type);
+        writeIntegerValue(AccessorNameEmitter.getGetterName(field) + "()", type);
     }
 
 
@@ -532,40 +674,41 @@ abstract public class CompoundEmitter
             case DataScriptParserTokenTypes.INT8:
                 methodSuffix = "Byte";
                 break;
-            
+
             case DataScriptParserTokenTypes.INT16:
                 methodSuffix = "Short";
                 break;
-            
+
             case DataScriptParserTokenTypes.INT32:
                 methodSuffix = "Int";
                 break;
-            
+
             case DataScriptParserTokenTypes.INT64:
                 methodSuffix = "Long";
                 break;
-            
+
             case DataScriptParserTokenTypes.UINT8:
                 methodSuffix = "Byte";
                 cast = "(short) ";
                 break;
-            
+
             case DataScriptParserTokenTypes.UINT16:
-                methodSuffix = "Short";                
+                methodSuffix = "Short";
                 break;
-            
+
             case DataScriptParserTokenTypes.UINT32:
                 methodSuffix = "UnsignedInt";
                 cast = "(int) ";
                 break;
-            
+
             case DataScriptParserTokenTypes.UINT64:
                 methodSuffix = "BigInteger";
                 arg = "64";
                 break;
 
             case DataScriptParserTokenTypes.BIT:
-                Expression lengthExpr = ((BitFieldType)type).getLengthExpression();
+                Expression lengthExpr = ((BitFieldType) type)
+                        .getLengthExpression();
                 Value lengthValue = lengthExpr.getValue();
                 if (lengthValue == null)
                 {
@@ -602,8 +745,8 @@ abstract public class CompoundEmitter
         }
         buffer.append(");");
     }
-    
-    
+
+
     private void writeStringType(Field field, StringType type)
     {
         buffer.append("__out.writeString(");
@@ -612,7 +755,7 @@ abstract public class CompoundEmitter
     }
 
 
-    private void writeCompoundField(Field field, CompoundType type) 
+    private void writeCompoundField(Field field, CompoundType type)
     {
         buffer.append(AccessorNameEmitter.getGetterName(field));
         buffer.append("().write(__out, __cc);");
@@ -621,11 +764,12 @@ abstract public class CompoundEmitter
 
     private void writeInstantiatedField(Field field, TypeInstantiation inst)
     {
-        String getter = AccessorNameEmitter.getGetterName(field); 
+        String getter = AccessorNameEmitter.getGetterName(field);
         setParameters(getter + "()", inst);
         buffer.append(getter);
         buffer.append("().write(__out, __cc);");
     }
+
 
     private void setParameters(String lhs, TypeInstantiation inst)
     {
@@ -655,16 +799,34 @@ abstract public class CompoundEmitter
         }
     }
 
+
     private void writeArrayField(Field field, ArrayType array)
     {
-
         String elTypeJavaName = TypeNameEmitter.getTypeName(array);
         if (elTypeJavaName.startsWith("ObjectArray"))
         {
-            String elTypeName = TypeNameEmitter.getTypeName(array.getElementType());
-            ArrayEmitter arrayEmitter = new ArrayEmitter(field, array, elTypeName);
-            String result = arrayWriteTmpl.generate(arrayEmitter);
-            buffer.append(result);            
+            if (global.getUseFreeMarker())
+            {
+                try
+                {
+                    ArrayFMEmitter ae = new ArrayFMEmitter(field, array);
+                    Template tpl = global.getTemplateConfig().getTemplate("java/ArrayWrite.ftl");
+                    tpl.process(ae, writer);
+                }
+                catch (Exception e)
+                {
+                    throw new DataScriptException(e);
+                }
+            }
+            else
+            {
+                String elTypeName = TypeNameEmitter.getTypeName(array
+                        .getElementType());
+                ArrayEmitter arrayEmitter = new ArrayEmitter(field, array,
+                        elTypeName);
+                String result = arrayWriteTmpl.generate(arrayEmitter);
+                buffer.append(result);
+            }
         }
         else
         {
@@ -678,7 +840,45 @@ abstract public class CompoundEmitter
     private void writeEnumField(Field field, EnumType type)
     {
         IntegerType baseType = (IntegerType) type.getBaseType();
-        writeIntegerValue(AccessorNameEmitter.getGetterName(field)+"().getValue()", 
-        		baseType);
+        writeIntegerValue(AccessorNameEmitter.getGetterName(field)
+                + "().getValue()", baseType);
+    }
+
+
+    /**** interface to freemarker FileHeader.inc template ****/
+
+    public String getRdsVersion()
+    {
+        return global.getRDSVersion();
+    }
+
+
+    public String getPackageName()
+    {
+        return global.getPackageName();
+    }
+
+
+    public String getRootPackageName()
+    {
+        return datascript.ast.Package.getRoot().getPackageName();
+    }
+
+
+    public boolean getEqualsCanThrowExceptions()
+    {
+        return global.getThrowsException();
+    }
+
+
+    public String getPackageImports()
+    {
+        return global.getPackageImports();
+    }
+
+
+    public String getClassName()
+    {
+        return getCompoundType().getName();
     }
 }

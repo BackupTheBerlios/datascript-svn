@@ -1,6 +1,6 @@
 /* BSD License
  *
- * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
+ * Copyright (c) 2006, Harald Wellmann, Henrik Wedekind Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -41,19 +41,20 @@ package datascript.emit.java;
 
 
 import antlr.collections.AST;
+import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
 import datascript.ast.UnionType;
 import datascript.ast.SqlIntegerType;
 import datascript.jet.java.SequenceEnd;
 import datascript.jet.java.Visitor;
+import freemarker.template.Template;
 
 
 
 public class VisitorEmitter extends JavaDefaultEmitter
 {
-    private Visitor visitorTmpl = new Visitor();
-    private SequenceEnd endTmpl = new SequenceEnd();
+    private Visitor visitorTmpl;
 
 
     public VisitorEmitter(String outPathName, String defaultPackageName)
@@ -67,16 +68,48 @@ public class VisitorEmitter extends JavaDefaultEmitter
         findAllPackageNames(rootNode, allPackageNames);
         setPackageName(rootNode.getFirstChild());
         openOutputFile(dir, "__Visitor.java");
-        String result = visitorTmpl.generate(this);
-        out.print(result);
+        if (useFreeMarker)
+        {
+            try
+            {
+                Template tpl = cfg.getTemplate("java/Visitor.ftl");
+                tpl.process(this, writer);
+            }
+            catch (Exception e)
+            {
+                throw new DataScriptException(e);
+            }
+        }
+        else
+        {
+            visitorTmpl = new Visitor();
+            String result = visitorTmpl.generate(this);
+            writer.print(result);
+        }
     }
 
 
     public void endRoot()
     {
-        String result = endTmpl.generate(this);
-        out.print(result);
-        out.close();
+        if (useFreeMarker)
+        {
+            try
+            {
+                Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
+                tpl.process(this, writer);
+            }
+            catch (Exception e)
+            {
+                throw new DataScriptException(e);
+            }
+        }
+        else
+        {
+            SequenceEnd endTmpl = new SequenceEnd();
+            String result = endTmpl.generate(this);
+            writer.print(result);
+        }
+        writer.close();
     }
 
 
@@ -137,6 +170,20 @@ public class VisitorEmitter extends JavaDefaultEmitter
         StringBuilder buffer = new StringBuilder("    public void visit(");
         buffer.append(typeName);
         buffer.append(" node, Object arg);");
-        out.println(buffer);
+        writer.println(buffer);
+    }
+
+
+    /**** interface to freemarker FileHeader.inc template ****/
+
+    public String getRdsVersion()
+    {
+        return getRDSVersion();
+    }
+
+
+    public String getRootPackageName()
+    {
+        return datascript.ast.Package.getRoot().getPackageName();
     }
 }

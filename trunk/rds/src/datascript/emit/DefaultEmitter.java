@@ -42,7 +42,7 @@ package datascript.emit;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -60,7 +60,7 @@ import antlr.collections.AST;
  */
 public class DefaultEmitter implements Emitter
 {
-    protected PrintStream out = null;
+    protected PrintWriter writer = null;
     protected AST curUnitNode = null;
     private String RDS_VERSION = null;
 
@@ -160,7 +160,8 @@ public class DefaultEmitter implements Emitter
     protected static Set<String> getName(AST in, Set<String> retval,
             int tokenType)
     {
-        if (in == null || in.getType() != tokenType) return retval;
+        if (in == null || in.getType() != tokenType)
+            return retval;
 
         retval.add(getIDName(in.getFirstChild()));
         return getName(in.getNextSibling(), retval, tokenType);
@@ -173,7 +174,8 @@ public class DefaultEmitter implements Emitter
             return null;
 
         String name = getIDName(in.getNextSibling());
-        if (name == null) return in.getText();
+        if (name == null)
+            return in.getText();
 
         return in.getText() + '.' + name;
     }
@@ -190,7 +192,7 @@ public class DefaultEmitter implements Emitter
         {
             File outputFile = new File(directory, fileName);
             //System.out.println(String.format("writing %1$s", fileName));
-            out = new PrintStream(outputFile);
+            writer = new PrintWriter(outputFile);
         }
         catch (IOException exc)
         {

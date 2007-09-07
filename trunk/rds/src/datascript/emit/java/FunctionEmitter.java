@@ -56,7 +56,7 @@ public class FunctionEmitter
         this.function = f;
         FunctionTmpl template = new FunctionTmpl();
         String result = template.generate(this);
-        ce.out.print(result);
+        ce.writer.print(result);
     }
     
     public FunctionType getFunction()

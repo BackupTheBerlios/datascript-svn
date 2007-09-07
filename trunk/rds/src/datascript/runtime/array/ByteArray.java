@@ -35,28 +35,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.runtime.array;
+
 
 import java.io.DataInput;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.math.BigInteger;
 
-import datascript.ast.ArrayType;
-import datascript.ast.SequenceType;
-import datascript.ast.StdIntegerType;
-import datascript.ast.StringType;
-import datascript.ast.TypeInstantiation;
-import datascript.ast.UnionType;
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamWriter;
 
-public class ByteArray implements Array, SizeOf
+
+
+public class ByteArray implements Array<Byte>, SizeOf
 {
     byte[] data; // data is between [offset... offset+length-1]
     int offset;
     int length;
+
 
     public ByteArray(DataInput in, int length) throws IOException
     {
@@ -74,10 +72,12 @@ public class ByteArray implements Array, SizeOf
         }
     }
 
+
     public ByteArray(int length)
     {
         this(new byte[length], 0, length);
     }
+
 
     public ByteArray(byte[] data, int offset, int length)
     {
@@ -92,10 +92,8 @@ public class ByteArray implements Array, SizeOf
         if (obj instanceof ByteArray)
         {
             ByteArray that = (ByteArray) obj;
-            return 
-                (this.offset == offset) && 
-                (this.length == length) && 
-                java.util.Arrays.equals(this.data, that.data);
+            return (this.offset == offset) && (this.length == length)
+                    && java.util.Arrays.equals(this.data, that.data);
         }
         return super.equals(obj);
     }
@@ -106,7 +104,8 @@ public class ByteArray implements Array, SizeOf
         if (that.sizeof() != this.sizeof())
             throw new RuntimeException("size of arrays are different.");
         if (that.data.length != this.data.length)
-            throw new RuntimeException("count of elements in arrays are different.");
+            throw new RuntimeException(
+                    "count of elements in arrays are different.");
 
         for (int i = 0; i < this.data.length; i++)
         {
@@ -117,23 +116,24 @@ public class ByteArray implements Array, SizeOf
     }
 
 
-    public Array map(Mapping m)
+    public Array<Byte> map(Mapping<Byte> m)
     {
         ByteArray result = new ByteArray(length);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = ((Byte) m.map(new Byte(data[offset + i])))
-                    .byteValue();
+            result.data[i] = m.map(new Byte(data[offset + i])).byteValue();
         }
         return result;
     }
 
-    public Array subRange(int begin, int length)
+
+    public Array<Byte> subRange(int begin, int length)
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
             throw new ArrayIndexOutOfBoundsException();
         return new ByteArray(data, offset + begin, length);
     }
+
 
     public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
@@ -143,20 +143,24 @@ public class ByteArray implements Array, SizeOf
         }
     }
 
+
     public byte elementAt(int i)
     {
         return data[offset + i];
     }
+
 
     public int length()
     {
         return length;
     }
 
+
     public int sizeof()
     {
         return length;
     }
+
 
     public int sum() throws Exception
     {
@@ -167,8 +171,9 @@ public class ByteArray implements Array, SizeOf
         }
         if (retVal > Integer.MAX_VALUE)
             throw new Exception("result is too big for an integer");
-        return (int)retVal;
+        return (int) retVal;
     }
+
 
     /**
      * Compares this byte array to a given string, assuming all characters are
@@ -195,12 +200,8 @@ public class ByteArray implements Array, SizeOf
         return true;
     }
 
-    /** *********************************************************************** */
 
-    public void dump(PrintStream out)
-    {
-        out.print(toString());
-    }
+    /** *********************************************************************** */
 
     public String toString()
     {
