@@ -43,7 +43,6 @@ package datascript.emit.java;
 import java.io.PrintWriter;
 
 import datascript.ast.Parameter;
-import datascript.jet.java.ParameterAccessor;
 
 
 
@@ -75,9 +74,6 @@ public class ParameterEmitter
     public void emit(Parameter p)
     {
         parameter = p;
-        ParameterAccessor template = new ParameterAccessor();
-        String result = template.generate(this);
-        writer.print(result);
     }
 
 
@@ -87,14 +83,4 @@ public class ParameterEmitter
     }
 
 
-    /**
-     * @param param
-     * @return
-     */
-    public String generate(Parameter p)
-    {
-        parameter = p;
-        ParameterAccessor template = new ParameterAccessor();
-        return template.generate(this);
-    }
 }

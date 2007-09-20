@@ -48,7 +48,6 @@ import datascript.ast.DataScriptException;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.SqlDatabaseType;
-import datascript.jet.java.SqlDatabase;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -70,8 +69,6 @@ public class SqlDatabaseEmitter
     private JavaEmitter global;
     private SqlDatabaseType dbType;
     private PrintWriter writer;
-    private SqlDatabase dbTmpl;
-
 
 
     public class DatabaseFieldFMEmitter
@@ -167,7 +164,6 @@ public class SqlDatabaseEmitter
     {
         this.global = j;
         this.dbType = db;
-        dbTmpl = new SqlDatabase();
     }
 
 
@@ -230,9 +226,6 @@ public class SqlDatabaseEmitter
 
     public void emit(SqlDatabaseType SqlDatabaseType)
     {
-        String result = dbTmpl.generate(this);
-        writer.print(result);
-        writer.flush();
     }
 
 

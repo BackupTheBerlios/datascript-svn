@@ -42,8 +42,6 @@ package datascript.emit.java;
 
 import datascript.ast.ConstType;
 import datascript.ast.DataScriptException;
-import datascript.jet.java.ConstEnumeration;
-import datascript.jet.java.SequenceEnd;
 import freemarker.template.Template;
 import antlr.collections.AST;
 
@@ -69,46 +67,28 @@ public class ConstEmitter extends JavaDefaultEmitter
         findAllPackageNames(rootNode, allPackageNames);
         setPackageName(rootNode.getFirstChild());
         openOutputFile(dir, "__ConstType.java");
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/ConstType.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/ConstType.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            datascript.jet.java.ConstType constTmpl = new datascript.jet.java.ConstType();
-            String result = constTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
     }
 
 
     public void endRoot()
     {
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            SequenceEnd endTmpl = new SequenceEnd();
-            String result = endTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
         writer.close();
     }
@@ -116,24 +96,15 @@ public class ConstEmitter extends JavaDefaultEmitter
 
     public void beginConst(AST c)
     {
-        constType = (ConstType)c;
-        if (useFreeMarker)
+        constType = (ConstType) c;
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/ConstEnumeration.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/ConstEnumeration.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            ConstEnumeration constItemTmpl = new ConstEnumeration();
-            String result = constItemTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
     }
 

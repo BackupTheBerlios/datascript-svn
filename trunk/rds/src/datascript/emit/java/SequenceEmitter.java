@@ -54,11 +54,6 @@ import datascript.ast.SequenceType;
 import datascript.ast.StdIntegerType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
-import datascript.emit.java.TypeNameEmitter;
-import datascript.jet.java.SequenceBegin;
-import datascript.jet.java.SequenceEnd;
-import datascript.jet.java.SequenceRead;
-import datascript.jet.java.SequenceWrite;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -73,11 +68,6 @@ public class SequenceEmitter extends CompoundEmitter
 
     private SequenceType seq;
     private SequenceFieldEmitter fieldEmitter;
-    private FunctionEmitter functionEmitter;
-    private SequenceBegin beginTmpl = new SequenceBegin();
-    private SequenceEnd endTmpl = new SequenceEnd();
-    private SequenceRead readTmpl = new SequenceRead();
-    private SequenceWrite writeTmpl = new SequenceWrite();
 
 
 
@@ -256,7 +246,6 @@ public class SequenceEmitter extends CompoundEmitter
         super(j);
         seq = sequence;
         fieldEmitter = new SequenceFieldEmitter(this);
-        functionEmitter = new FunctionEmitter(this);
     }
 
 
@@ -339,35 +328,6 @@ public class SequenceEmitter extends CompoundEmitter
     }
 
 
-    public void begin()
-    {
-        String result = beginTmpl.generate(this);
-        writer.print(result);
-
-        for (Field field : seq.getFields())
-        {
-            fieldEmitter.emit(field);
-        }
-
-        for (Parameter param : seq.getParameters())
-        {
-            paramEmitter.emit(param);
-        }
-
-        for (FunctionType function : seq.getFunctions())
-        {
-            functionEmitter.emit(function);
-        }
-
-        result = readTmpl.generate(this);
-        writer.print(result);
-
-        result = writeTmpl.generate(this);
-        writer.print(result);
-        writer.flush();
-    }
-
-
     public void endFreemarker(Configuration cfg)
     {
         try
@@ -382,13 +342,6 @@ public class SequenceEmitter extends CompoundEmitter
         }
     }
 
-
-    public void end()
-    {
-        String result = endTmpl.generate(this);
-        writer.print(result);
-        writer.flush();
-    }
 
 
     public List<SequenceFieldFMEmitter> getFields()

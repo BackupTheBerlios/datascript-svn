@@ -42,12 +42,6 @@ import antlr.collections.AST;
 
 public class StringType extends TokenAST implements TypeInterface
 {
-    private int length;
-    private Expression lengthExpr;
-
-/********************************************************************
- * Interface implementation
- */
     public IntegerValue sizeof(Context ctxt)
     {
         throw new ComputeError("sizeof String not known");

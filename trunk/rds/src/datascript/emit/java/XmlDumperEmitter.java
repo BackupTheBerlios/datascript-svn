@@ -51,7 +51,6 @@ import datascript.ast.IntegerType;
 import datascript.ast.StringType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
-import datascript.jet.java.XmlDumper;
 import freemarker.template.Template;
 
 
@@ -72,23 +71,14 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
         findAllPackageNames(rootNode, allPackageNames);
         setPackageName(rootNode.getFirstChild());
         openOutputFile(dir, "__XmlDumper.java");
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/XmlDumper.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/XmlDumper.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            XmlDumper dumperTmpl = new XmlDumper();
-            String result = dumperTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
     }
 

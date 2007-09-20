@@ -39,25 +39,15 @@ package datascript.emit.java;
 
 import datascript.ast.FunctionType;
 import datascript.ast.TypeInterface;
-import datascript.jet.java.FunctionTmpl;
 
 public class FunctionEmitter
 {    
-    private CompoundEmitter ce;
     private FunctionType function;
     
     public FunctionEmitter(CompoundEmitter ce)
     {
-        this.ce = ce;
     }
    
-    public void emit(FunctionType f)
-    {
-        this.function = f;
-        FunctionTmpl template = new FunctionTmpl();
-        String result = template.generate(this);
-        ce.writer.print(result);
-    }
     
     public FunctionType getFunction()
     {

@@ -138,9 +138,6 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
             ToolContext.logError(refType, "wrong number of parameters");            
         }
         
-        // Get scope of parameterized compound type to look up names of
-        // formal parameters.
-        Scope scope = compound.getScope();
         
         // Iterate over arguments
         arguments = new Vector<Expression>();

@@ -53,10 +53,6 @@ import datascript.ast.StdIntegerType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
-import datascript.jet.java.SequenceEnd;
-import datascript.jet.java.UnionBegin;
-import datascript.jet.java.UnionRead;
-import datascript.jet.java.UnionWrite;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -69,10 +65,6 @@ public class UnionEmitter extends CompoundEmitter
 
     private UnionType union;
     private UnionFieldEmitter fieldEmitter;
-    private UnionBegin beginTmpl = new UnionBegin();
-    private SequenceEnd endTmpl = new SequenceEnd();
-    private UnionRead readReadTmpl = new UnionRead();
-    private UnionWrite readWriteTmpl = new UnionWrite();
 
 
 
@@ -300,25 +292,6 @@ public class UnionEmitter extends CompoundEmitter
 
     public void begin()
     {
-        String result = beginTmpl.generate(this);
-        writer.print(result);
-
-        for (Field field : union.getFields())
-        {
-            fieldEmitter.emit(field);
-        }
-
-        for (Parameter param : union.getParameters())
-        {
-            paramEmitter.emit(param);
-        }
-
-        result = readReadTmpl.generate(this);
-        writer.print(result);
-
-        result = readWriteTmpl.generate(this);
-        writer.print(result);
-        writer.flush();
     }
 
 
@@ -339,9 +312,6 @@ public class UnionEmitter extends CompoundEmitter
 
     public void end()
     {
-        String result = endTmpl.generate(this);
-        writer.print(result);
-        writer.flush();
     }
 
 

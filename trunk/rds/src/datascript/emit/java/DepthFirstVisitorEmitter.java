@@ -36,9 +36,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.emit.java;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,60 +55,49 @@ import datascript.ast.SqlIntegerType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
-import datascript.jet.java.DepthFirstEnumeration;
-import datascript.jet.java.DepthFirstSequence;
-import datascript.jet.java.DepthFirstUnion;
-import datascript.jet.java.DepthFirstVisitor;
-import datascript.jet.java.DepthFirstSqlInteger;
-import datascript.jet.java.SequenceEnd;
 import freemarker.template.Template;
-
-
 
 public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 {
-    private final List<SequenceFieldFMEmitter> fields = 
-        new ArrayList<SequenceFieldFMEmitter>();
+    private final List<SequenceFieldFMEmitter> fields = new ArrayList<SequenceFieldFMEmitter>();
 
     protected SequenceType sequence;
+
     protected UnionType union;
+
     protected EnumType enumeration;
+
     protected SqlIntegerType sqlinteger;
 
     protected static final ExpressionEmitter exprEmitter = new ExpressionEmitter();
 
-
-
     public static class SequenceFieldFMEmitter
     {
         private final Field field;
+
         private final DepthFirstVisitorEmitter global;
 
-
-        public SequenceFieldFMEmitter(Field field, DepthFirstVisitorEmitter global)
+        public SequenceFieldFMEmitter(Field field,
+                DepthFirstVisitorEmitter global)
         {
             this.field = field;
             this.global = global;
         }
-
 
         public String getVisitor()
         {
             return global.getVisitor(field);
         }
 
-
         public String getOptionalClause()
         {
             return global.getOptionalClause(field);
         }
 
-
         public String getIndicatorName()
         {
             return global.getIndicatorName(field);
         }
-
 
         public String getName()
         {
@@ -118,64 +105,41 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         }
     }
 
-
-
     public DepthFirstVisitorEmitter(String outPathName,
             String defaultPackageName)
     {
         super(outPathName, defaultPackageName);
     }
 
-
     public void beginRoot(AST rootNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
         setPackageName(rootNode.getFirstChild());
         openOutputFile(dir, "__DepthFirstVisitor.java");
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/DepthFirstVisitor.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/DepthFirstVisitor.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            DepthFirstVisitor visitorTmpl = new DepthFirstVisitor();
-            String result = visitorTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
     }
-
 
     public void endRoot()
     {
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            SequenceEnd endTmpl = new SequenceEnd();
-            String result = endTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
         writer.close();
     }
-
 
     public void beginSequence(AST s)
     {
@@ -188,26 +152,16 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
             fields.add(fe);
         }
 
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/DepthFirstSequence.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/DepthFirstSequence.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            DepthFirstSequence sequenceTmpl = new DepthFirstSequence();
-            String result = sequenceTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
     }
-
 
     public void beginUnion(AST u)
     {
@@ -220,51 +174,31 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
             fields.add(fe);
         }
 
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/DepthFirstUnion.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/DepthFirstUnion.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            DepthFirstUnion unionTmpl = new DepthFirstUnion();
-            String result = unionTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
     }
-
 
     public void beginEnumeration(AST e)
     {
         enumeration = (EnumType) e;
 
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/DepthFirstEnumeration.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception ex)
-            {
-                throw new DataScriptException(ex);
-            }
+            Template tpl = cfg.getTemplate("java/DepthFirstEnumeration.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception ex)
         {
-            DepthFirstEnumeration enumerationTmpl = new DepthFirstEnumeration();
-            String result = enumerationTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(ex);
         }
     }
-
 
     public void beginSqlInteger(AST s)
     {
@@ -277,26 +211,16 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
             fields.add(fe);
         }
 
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/DepthFirstSqlInteger.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/DepthFirstSqlInteger.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            DepthFirstSqlInteger sqlintegerTmpl = new DepthFirstSqlInteger();
-            String result = sqlintegerTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
     }
-
 
     /********************************************************************/
 
@@ -305,24 +229,20 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         return sequence;
     }
 
-
     public UnionType getUnionType()
     {
         return union;
     }
-
 
     public EnumType getEnumerationType()
     {
         return enumeration;
     }
 
-
     public SqlIntegerType getSqlIntegerType()
     {
         return sqlinteger;
     }
-
 
     public String getOptionalClause(Field field)
     {
@@ -330,12 +250,10 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         return e.getOptionalClause(field);
     }
 
-
     public String getIndicatorName(Field field)
     {
         return AccessorNameEmitter.getIndicatorName(field) + "()";
     }
-
 
     public String getVisitor(Field field)
     {
@@ -343,7 +261,6 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         return getVisitor(type, "node."
                 + AccessorNameEmitter.getGetterName(field) + "()");
     }
-
 
     public String getVisitor(TypeInterface type, String nodeName)
     {
@@ -421,7 +338,6 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         return buffer.toString();
     }
 
-
     public String getElementType(Field field)
     {
         String result = null;
@@ -433,7 +349,6 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         }
         return result;
     }
-
 
     public String getElementVisitor(Field field)
     {
@@ -449,18 +364,15 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         return result;
     }
 
-
     public String getStartType()
     {
         return null;
     }
 
-
     public String getEndType()
     {
         return null;
     }
-
 
     /**** interface to freemarker FileHeader.inc template ****/
 
@@ -469,12 +381,10 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         return getRDSVersion();
     }
 
-
     public String getRootPackageName()
     {
         return datascript.ast.Package.getRoot().getPackageName();
     }
-
 
     public List<SequenceFieldFMEmitter> getFields()
     {

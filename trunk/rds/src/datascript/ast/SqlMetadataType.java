@@ -11,6 +11,7 @@ import datascript.antlr.util.TokenAST;
  */
 public class SqlMetadataType extends CompoundType
 {
+    @SuppressWarnings("unused")
     private TokenAST sqlConstraint;
     
     public void setSqlConstraint(TokenAST s)

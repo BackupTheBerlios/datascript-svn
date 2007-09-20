@@ -204,7 +204,7 @@
   </target>
 
 
-  <target name="compile" depends="prepare, antlr, jet" description="Compiles all project files">
+  <target name="compile" depends="prepare, antlr" description="Compiles all project files">
     <javac destdir="${classes}" debug="on" target="1.5">
       <classpath>
         <pathelement path="lib/freemarker.jar" />

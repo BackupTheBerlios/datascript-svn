@@ -40,104 +40,65 @@ package datascript.emit.java;
 import antlr.collections.AST;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
-import datascript.jet.java.SequenceEnd;
-import datascript.jet.java.SizeOf;
-import datascript.jet.java.SizeOfEnumeration;
 import freemarker.template.Template;
-
 
 public class SizeOfEmitter extends JavaDefaultEmitter
 {
     private EnumType enumeration;
-
-
 
     public SizeOfEmitter(String outPathName, String defaultPackageName)
     {
         super(outPathName, defaultPackageName);
     }
 
-
     public void beginRoot(AST rootNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
         setPackageName(rootNode.getFirstChild());
         openOutputFile(dir, "__SizeOf.java");
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/SizeOf.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/SizeOf.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            SizeOf sizeOfTmpl = new SizeOf();
-            String result = sizeOfTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
     }
 
-
     public void endRoot()
     {
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            SequenceEnd endTmpl = new SequenceEnd();
-            String result = endTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
         writer.close();
     }
 
-
     public void beginEnumeration(AST e)
     {
-        enumeration = (EnumType)e;
-        if (useFreeMarker)
+        enumeration = (EnumType) e;
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/SizeOfEnumeration.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception ex)
-            {
-                throw new DataScriptException(ex);
-            }
+            Template tpl = cfg.getTemplate("java/SizeOfEnumeration.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception ex)
         {
-            SizeOfEnumeration enumerationTmpl = new SizeOfEnumeration();
-            String result = enumerationTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(ex);
         }
     }
-
-
 
     public EnumType getEnumerationType()
     {
         return enumeration;
     }
-
 
     /**** interface to freemarker FileHeader.inc template ****/
 
@@ -146,12 +107,10 @@ public class SizeOfEmitter extends JavaDefaultEmitter
         return getRDSVersion();
     }
 
-
     public String getRootPackageName()
     {
         return datascript.ast.Package.getRoot().getPackageName();
     }
-
 
     public String getName()
     {

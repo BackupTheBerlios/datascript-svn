@@ -39,14 +39,7 @@ package datascript.runtime.array;
 
 import java.io.DataInput;
 import java.io.IOException;
-import java.math.BigInteger;
 
-import datascript.ast.ArrayType;
-import datascript.ast.SequenceType;
-import datascript.ast.StdIntegerType;
-import datascript.ast.StringType;
-import datascript.ast.TypeInstantiation;
-import datascript.ast.UnionType;
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamWriter;

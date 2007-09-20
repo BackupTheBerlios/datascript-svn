@@ -43,15 +43,12 @@ package datascript.tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.HashSet;
 
 import antlr.Token;
-import antlr.TokenBuffer;
 import antlr.TokenStreamHiddenTokenFilter;
 import antlr.collections.AST;
 import antlr.debug.misc.ASTFrame;
-
 import datascript.antlr.DataScriptLexer;
 import datascript.antlr.DataScriptParser;
 import datascript.antlr.DataScriptParserTokenTypes;

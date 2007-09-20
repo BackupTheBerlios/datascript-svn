@@ -43,7 +43,6 @@ package datascript.emit.java;
 import java.io.PrintWriter;
 
 import datascript.ast.Field;
-import datascript.jet.java.UnionFieldAccessor;
 import freemarker.template.Configuration;
 
 
@@ -59,9 +58,6 @@ public class UnionFieldEmitter extends FieldEmitter
     public void emit(Field f)
     {
         this.field = f;
-        UnionFieldAccessor template = new UnionFieldAccessor();
-        String result = template.generate(this);
-        writer.print(result);
     }
 
 

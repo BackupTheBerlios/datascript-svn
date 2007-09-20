@@ -49,7 +49,6 @@ import datascript.ast.DataScriptException;
 import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
 import datascript.ast.IntegerValue;
-import datascript.jet.java.Enumeration;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -65,7 +64,6 @@ public class EnumerationEmitter
     private EnumType enumType;
     private String javaType;
     private PrintWriter writer;
-    private Enumeration enumTmpl;
     private final List<EnumerationItemFMEmitter> items = 
         new ArrayList<EnumerationItemFMEmitter>();
 
@@ -164,13 +162,6 @@ public class EnumerationEmitter
     }
 
 
-    public void emit(EnumType enumType)
-    {
-        enumTmpl = new Enumeration();
-        String result = enumTmpl.generate(this);
-        writer.print(result);
-        writer.flush();
-    }
 
 
     /**** interface to freemarker FileHeader.inc template ****/

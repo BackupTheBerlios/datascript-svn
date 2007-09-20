@@ -55,7 +55,6 @@ import datascript.ast.SqlIntegerType;
 import datascript.ast.SqlTableType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
-import datascript.jet.java.SqlTable;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -73,7 +72,6 @@ public class SqlTableEmitter extends CompoundEmitter
         new ArrayList<TableFieldFMEmitter>();
 
     private SqlTableType tableType;
-    private SqlTable tableTmpl;
 
 
 
@@ -137,7 +135,6 @@ public class SqlTableEmitter extends CompoundEmitter
     {
         super(j);
         this.tableType = table;
-        tableTmpl = new SqlTable();
     }
 
 
@@ -198,9 +195,6 @@ public class SqlTableEmitter extends CompoundEmitter
 
     public void emit(SqlTableType SqlTableType)
     {
-        String result = tableTmpl.generate(this);
-        writer.print(result);
-        writer.flush();
     }
 
 

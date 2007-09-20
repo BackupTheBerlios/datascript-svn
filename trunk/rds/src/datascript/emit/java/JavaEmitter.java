@@ -78,19 +78,13 @@ public class JavaEmitter extends JavaDefaultEmitter
         sequenceEmitter = new SequenceEmitter(this, sequence);
         sequenceEmitter.setWriter(writer);
 
-        if (useFreeMarker)
-            sequenceEmitter.beginFreemarker(cfg);
-        else
-            sequenceEmitter.begin();
+        sequenceEmitter.beginFreemarker(cfg);
     }
 
 
     public void endSequence(AST s)
     {
-        if (useFreeMarker)
-            sequenceEmitter.endFreemarker(cfg);
-        else
-            sequenceEmitter.end();
+        sequenceEmitter.endFreemarker(cfg);
         writer.close();
     }
 
@@ -128,10 +122,7 @@ public class JavaEmitter extends JavaDefaultEmitter
         EnumerationEmitter enumEmitter = new EnumerationEmitter(this, enumType);
         enumEmitter.setWriter(writer);
 
-        if (useFreeMarker)
-            enumEmitter.emitFreemarker(cfg, enumType);
-        else
-            enumEmitter.emit(enumType);
+        enumEmitter.emitFreemarker(cfg, enumType);
     }
 
 

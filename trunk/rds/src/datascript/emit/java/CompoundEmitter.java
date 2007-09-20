@@ -63,8 +63,6 @@ import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.Value;
 
-import datascript.jet.java.ArrayRead;
-import datascript.jet.java.ArrayWrite;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -77,8 +75,6 @@ abstract public class CompoundEmitter
 
     private JavaDefaultEmitter global;
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
-    private ArrayRead arrayReadTmpl = new ArrayRead();
-    private ArrayWrite arrayWriteTmpl = new ArrayWrite();
     protected PrintWriter writer;
     protected ParameterEmitter paramEmitter;
 
@@ -448,27 +444,16 @@ abstract public class CompoundEmitter
         String elTypeJavaName = TypeNameEmitter.getTypeName(array);
         if (elTypeJavaName.startsWith("ObjectArray"))
         {
-            if (global.getUseFreeMarker())
+            try
             {
-                try
-                {
-                    ArrayFMEmitter ae = new ArrayFMEmitter(field, array);
-                    Template tpl = global.getTemplateConfig().getTemplate("java/ArrayRead.ftl");
-                    tpl.process(ae, writer);
-                }
-                catch (Exception e)
-                {
-                    throw new DataScriptException(e);
-                }
+                ArrayFMEmitter ae = new ArrayFMEmitter(field, array);
+                Template tpl = global.getTemplateConfig().getTemplate(
+                        "java/ArrayRead.ftl");
+                tpl.process(ae, writer);
             }
-            else
+            catch (Exception e)
             {
-                String elTypeName = TypeNameEmitter.getTypeName(array
-                        .getElementType());
-                ArrayEmitter arrayEmitter = new ArrayEmitter(field, array,
-                        elTypeName);
-                String result = arrayReadTmpl.generate(arrayEmitter);
-                buffer.append(result);
+                throw new DataScriptException(e);
             }
         }
         else
@@ -805,27 +790,16 @@ abstract public class CompoundEmitter
         String elTypeJavaName = TypeNameEmitter.getTypeName(array);
         if (elTypeJavaName.startsWith("ObjectArray"))
         {
-            if (global.getUseFreeMarker())
+            try
             {
-                try
-                {
-                    ArrayFMEmitter ae = new ArrayFMEmitter(field, array);
-                    Template tpl = global.getTemplateConfig().getTemplate("java/ArrayWrite.ftl");
-                    tpl.process(ae, writer);
-                }
-                catch (Exception e)
-                {
-                    throw new DataScriptException(e);
-                }
+                ArrayFMEmitter ae = new ArrayFMEmitter(field, array);
+                Template tpl = global.getTemplateConfig().getTemplate(
+                        "java/ArrayWrite.ftl");
+                tpl.process(ae, writer);
             }
-            else
+            catch (Exception e)
             {
-                String elTypeName = TypeNameEmitter.getTypeName(array
-                        .getElementType());
-                ArrayEmitter arrayEmitter = new ArrayEmitter(field, array,
-                        elTypeName);
-                String result = arrayWriteTmpl.generate(arrayEmitter);
-                buffer.append(result);
+                throw new DataScriptException(e);
             }
         }
         else

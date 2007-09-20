@@ -48,7 +48,6 @@ import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
 import datascript.ast.Field;
 import datascript.ast.SqlIntegerType;
-import datascript.jet.java.SqlInteger;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -66,7 +65,6 @@ public class SqlIntegerEmitter extends CompoundEmitter
     private int totalTypeSize;
     private SqlIntegerType integerType;
     private PrintWriter writer;
-    private SqlInteger integerTmpl;
 
 
 
@@ -97,7 +95,6 @@ public class SqlIntegerEmitter extends CompoundEmitter
     {
         super(j);
         this.integerType = integerType;
-        integerTmpl = new SqlInteger();
     }
 
 
@@ -159,9 +156,6 @@ public class SqlIntegerEmitter extends CompoundEmitter
 
     public void emit(SqlIntegerType SqlIntegerType)
     {
-        String result = integerTmpl.generate(this);
-        writer.print(result);
-        writer.flush();
     }
 
 

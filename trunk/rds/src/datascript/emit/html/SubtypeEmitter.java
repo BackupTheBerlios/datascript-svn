@@ -41,8 +41,6 @@ package datascript.emit.html;
 
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.Writer;
 
 import datascript.ast.DataScriptException;
 import datascript.ast.Subtype;

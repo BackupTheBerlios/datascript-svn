@@ -36,9 +36,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.emit.java;
-
 
 import antlr.collections.AST;
 import datascript.ast.DataScriptException;
@@ -46,72 +44,44 @@ import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
 import datascript.ast.UnionType;
 import datascript.ast.SqlIntegerType;
-import datascript.jet.java.SequenceEnd;
-import datascript.jet.java.Visitor;
 import freemarker.template.Template;
-
-
 
 public class VisitorEmitter extends JavaDefaultEmitter
 {
-    private Visitor visitorTmpl;
-
-
     public VisitorEmitter(String outPathName, String defaultPackageName)
     {
         super(outPathName, defaultPackageName);
     }
-
 
     public void beginRoot(AST rootNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
         setPackageName(rootNode.getFirstChild());
         openOutputFile(dir, "__Visitor.java");
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/Visitor.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/Visitor.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            visitorTmpl = new Visitor();
-            String result = visitorTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
     }
-
 
     public void endRoot()
     {
-        if (useFreeMarker)
+        try
         {
-            try
-            {
-                Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
-                tpl.process(this, writer);
-            }
-            catch (Exception e)
-            {
-                throw new DataScriptException(e);
-            }
+            Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
+            tpl.process(this, writer);
         }
-        else
+        catch (Exception e)
         {
-            SequenceEnd endTmpl = new SequenceEnd();
-            String result = endTmpl.generate(this);
-            writer.print(result);
+            throw new DataScriptException(e);
         }
         writer.close();
     }
-
 
     public void beginSequence(AST s)
     {
@@ -120,11 +90,9 @@ public class VisitorEmitter extends JavaDefaultEmitter
         emitVisitor(typeName);
     }
 
-
     public void endSequence(AST s)
     {
     }
-
 
     public void beginUnion(AST u)
     {
@@ -133,11 +101,9 @@ public class VisitorEmitter extends JavaDefaultEmitter
         emitVisitor(typeName);
     }
 
-
     public void endUnion(AST u)
     {
     }
-
 
     public void beginEnumeration(AST e)
     {
@@ -146,11 +112,9 @@ public class VisitorEmitter extends JavaDefaultEmitter
         emitVisitor(typeName);
     }
 
-
     public void endEnumeration(AST e)
     {
     }
-
 
     public void beginSqlInteger(AST s)
     {
@@ -159,11 +123,9 @@ public class VisitorEmitter extends JavaDefaultEmitter
         emitVisitor(typeName);
     }
 
-
     public void endSqlInteger(AST s)
     {
     }
-
 
     private void emitVisitor(String typeName)
     {
@@ -173,14 +135,12 @@ public class VisitorEmitter extends JavaDefaultEmitter
         writer.println(buffer);
     }
 
-
     /**** interface to freemarker FileHeader.inc template ****/
 
     public String getRdsVersion()
     {
         return getRDSVersion();
     }
-
 
     public String getRootPackageName()
     {
