@@ -74,7 +74,7 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
             return;
 
         cfg = new Configuration();
-        cfg.setClassForTemplateLoading(DefaultHTMLEmitter.class, "/");
+        cfg.setClassForTemplateLoading(DefaultHTMLEmitter.class, "/freemarker/");
         cfg.setObjectWrapper(new DefaultObjectWrapper());
     }
 

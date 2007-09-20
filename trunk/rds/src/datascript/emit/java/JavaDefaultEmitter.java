@@ -76,7 +76,7 @@ public class JavaDefaultEmitter extends DefaultEmitter
             return;
 
         cfg = new Configuration();
-        cfg.setClassForTemplateLoading(JavaDefaultEmitter.class, "/");
+        cfg.setClassForTemplateLoading(JavaDefaultEmitter.class, "/freemarker/");
         cfg.setObjectWrapper(new DefaultObjectWrapper());
 
         useFreeMarker = true;

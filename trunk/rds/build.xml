@@ -128,9 +128,9 @@
     <copy file="${lib}/antlr.jar" todir="${jar}" />
     <copy file="${lib}/freemarker.jar" todir="${jar}" />
     <copy todir="${classes}">
-      <fileset dir="${basedir}/freemarker">
-        <include name="html/**.ftl" />
-        <include name="java/**.ftl" />
+      <fileset dir="${basedir}">
+        <include name="freemarker/html/**.ftl" />
+        <include name="freemarker/java/**.ftl" />
       </fileset>
     </copy>
   </target>
@@ -236,8 +236,8 @@
         <include name="datascript/jet/java/**" />
         <include name="datascript/emit/java/**" />
       </fileset>
-        <fileset dir="${basedir}/freemarker">
-          <include name="java/**.ftl" />
+        <fileset dir="${basedir}">
+          <include name="freemarker/java/**.ftl" />
         </fileset>
     </jar>
 
@@ -247,8 +247,8 @@
         <include name="datascript/jet/html/**" />
         <include name="datascript/emit/html/**" />
       </fileset>
-      <fileset dir="${basedir}/freemarker">
-        <include name="html/**.ftl" />
+      <fileset dir="${basedir}">
+        <include name="freemarker/html/**.ftl" />
       </fileset>
     </jar>
 
