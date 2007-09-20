@@ -3,13 +3,11 @@ package datascript.test;
 import java.io.File;
 import java.io.IOException;
 
-import bits.arrays.StringArraySequence;
-
+import junit.framework.TestCase;
+import bits.arrays.LinkTable;
 import datascript.runtime.array.BitFieldArray;
 import datascript.runtime.array.UnsignedByteArray;
 import datascript.runtime.io.FileBitStreamWriter;
-import junit.framework.TestCase;
-import bits.arrays.LinkTable;
 
 /**
  * @author HWedekind
