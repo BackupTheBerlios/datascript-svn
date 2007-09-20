@@ -54,13 +54,13 @@
 
     public ${className}(BitStreamReader __in${formalParameterList}) throws IOException
     {
-    	read(__in, new CallChain()${actualParameterList});
+        read(__in, new CallChain()${actualParameterList});
     }
 
 
     public ${className}(BitStreamReader __in, CallChain __cc${formalParameterList}) throws IOException 
     {
-    	read(__in, __cc${actualParameterList});
+        read(__in, __cc${actualParameterList});
     }
 
 
@@ -72,7 +72,7 @@
 </#list>
         try 
         {
-        	__cc.push("${className}", this);
+            __cc.push("${className}", this);
             __fpos = __in.getBitPosition();
             while (true)
             {
@@ -90,8 +90,8 @@
                 } 
                 catch (Exception __exc) 
                 {
-        	    	__in.setBitPosition(__fpos);
-       	        }
+                    __in.setBitPosition(__fpos);
+                }
 
 </#list>
                 throw new IOException("no match in union");
@@ -102,4 +102,3 @@
             __cc.pop(); 
         }
     }
-

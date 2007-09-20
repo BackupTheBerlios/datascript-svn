@@ -64,9 +64,9 @@ public class __XmlDumper extends XMLFilterImpl implements __Visitor
 
     private void startElement(Object arg)
     {
-    	try
-    	{
-    	    String tag = (String) arg;
+        try
+        {
+            String tag = (String) arg;
             handler.startElement("", tag, tag, noAttr);
         }
         catch (SAXException exc)
@@ -78,9 +78,9 @@ public class __XmlDumper extends XMLFilterImpl implements __Visitor
 
     private void endElement(Object arg)
     {
-    	try
-    	{
-    	    String tag = (String) arg;
+        try
+        {
+            String tag = (String) arg;
             handler.endElement("", tag, tag);
         }
         catch (SAXException exc)
@@ -254,7 +254,7 @@ public class __XmlDumper extends XMLFilterImpl implements __Visitor
 
     public void visitBitField(java.math.BigInteger n, int length, Object arg)
     {
-    	visitBitField(n, arg);
+        visitBitField(n, arg);
     }
 
 
@@ -290,81 +290,81 @@ public class __XmlDumper extends XMLFilterImpl implements __Visitor
 
     public void visitArray(ObjectArray n, Object arg)
     {
-    	int last = n.length();
+        int last = n.length();
         for (int i = 0; i < last; i++) 
         {
-      	    ((__Visitor.Acceptor)(n.elementAt(i))).accept(this, arg);
-      	}
+            ((__Visitor.Acceptor)(n.elementAt(i))).accept(this, arg);
+        }
     }
 
 
     public void visitArray(ByteArray n, Object arg)
     {
-    	int last = n.length();
+        int last = n.length();
         for (int i = 0; i < last; i++) 
         {
-            visitInt8(n.elementAt(i), arg);	
-      	}
+            visitInt8(n.elementAt(i), arg);     
+        }
     }
 
 
     public void visitArray(UnsignedByteArray n, Object arg)
     {
-    	int last = n.length();
+        int last = n.length();
         for (int i = 0; i < last; i++) 
         {
-            visitUInt8(n.elementAt(i), arg);	
-      	}
+            visitUInt8(n.elementAt(i), arg);    
+        }
     }
 
 
     public void visitArray(ShortArray n, Object arg)
     {
-    	int last = n.length();
+        int last = n.length();
         for (int i = 0; i < last; i++) 
         {
-            visitInt16(n.elementAt(i), arg);	
-      	}
+            visitInt16(n.elementAt(i), arg);    
+        }
     }
 
 
     public void visitArray(UnsignedShortArray n, Object arg)
     {
-    	int last = n.length();
+        int last = n.length();
         for (int i = 0; i < last; i++) 
         {
-            visitUInt16(n.elementAt(i), arg);	
-      	}
+            visitUInt16(n.elementAt(i), arg);   
+        }
     }
 
 
     public void visitArray(IntArray n, Object arg)
     {
-    	int last = n.length();
+        int last = n.length();
         for (int i = 0; i < last; i++) 
         {
-            visitInt32(n.elementAt(i), arg);	
-      	}
+            visitInt32(n.elementAt(i), arg);    
+        }
     }
 
 
     public void visitArray(UnsignedIntArray n, Object arg)
     {
-    	int last = n.length();
+        int last = n.length();
         for (int i = 0; i < last; i++) 
         {
-            visitUInt32(n.elementAt(i), arg);	
-      	}
+            visitUInt32(n.elementAt(i), arg);   
+        }
     }
 
 
     public void visitArray(LongArray n, Object arg)
     {
-    	int last = n.length();
+        int last = n.length();
         for (int i = 0; i < last; i++) 
         {
-            visitInt64(n.elementAt(i), arg);	
-      	}
+            visitInt64(n.elementAt(i), arg);    
+        }
     }
 
 
@@ -373,8 +373,8 @@ public class __XmlDumper extends XMLFilterImpl implements __Visitor
         int last = n.length();
         for (int i = 0; i < last; i++) 
         {
-            visitUInt64(n.elementAt(i), arg);	
-      	}
+            visitUInt64(n.elementAt(i), arg);   
+        }
     }
 
 
@@ -383,6 +383,6 @@ public class __XmlDumper extends XMLFilterImpl implements __Visitor
         int last = n.length();
         for (int i = 0; i < last; i++) 
         {
-            visitString(n.elementAt(i), arg);	
-      	}
+            visitString(n.elementAt(i), arg);   
+        }
     }

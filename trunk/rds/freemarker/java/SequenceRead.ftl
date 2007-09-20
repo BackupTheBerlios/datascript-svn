@@ -42,7 +42,7 @@
     public ${className}()
     {
     }
-        	
+                
 
     public ${className}(String __filename${formalParameterList}) throws Exception 
     {
@@ -54,13 +54,13 @@
 
     public ${className}(BitStreamReader __in${formalParameterList}) throws Exception 
     {
-    	read(__in, new CallChain()${actualParameterList});
+        read(__in, new CallChain()${actualParameterList});
     }
 
 
     public ${className}(BitStreamReader __in, CallChain __cc${formalParameterList}) throws Exception 
     {
-    	read(__in, __cc${actualParameterList});
+        read(__in, __cc${actualParameterList});
     }
 
 
@@ -77,7 +77,7 @@
             try
             {
 <#list fields as field>
-	<#if field.labelExpression??>
+        <#if field.labelExpression??>
                 if (__in.getBitPosition() != ${field.labelExpression})
                 {
                     throw new IOException("wrong offset for field '${field.name}'");
@@ -98,10 +98,10 @@
     <#else>
                 ${field.readField}
         <#if field.constraint??>
-               	if (!(${field.constraint}))
-               	{
-                   	throw new IOException("constraint violated");
-               	}
+                if (!(${field.constraint}))
+                {
+                        throw new IOException("constraint violated");
+                }
         </#if>
     </#if>
 </#list>
@@ -110,7 +110,7 @@
             {
                 __in.setBitPosition(__fpos);
                 throw __e1;
-       	    }
+            }
         }
         finally
         {

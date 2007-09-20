@@ -86,7 +86,7 @@
                 if (${field.optionalClause})
                 {
         <#if field.constraint??>
-              	    if (!(${field.constraint}))
+                    if (!(${field.constraint}))
                     {
                         throw new IOException("constraint violated");
                     }
@@ -95,7 +95,7 @@
                 }
     <#else>
         <#if field.constraint??>
-               	if (!(${field.constraint}))
+                if (!(${field.constraint}))
                 {
                        throw new IOException("constraint violated");
                 }
@@ -108,7 +108,7 @@
             {
                 __out.setBitPosition(__fpos);
                 throw __e1;
-               }
+            }
         }
         finally 
         { 

@@ -37,4 +37,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 -->
-				${getterName}().write(__out, __cc);
+                ${getterName}().write(__out, __cc);

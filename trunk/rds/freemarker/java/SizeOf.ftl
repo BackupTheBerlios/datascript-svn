@@ -49,79 +49,79 @@ public class __SizeOf extends __DepthFirstVisitor
 
     public void visitInt8(byte n, Object arg) 
     {
-    	__size += 8;
+        __size += 8;
     }
 
 
     public void visitInt16(short n, Object arg)
     {
-    	__size += 16;
+        __size += 16;
     }
 
 
     public void visitInt32(int n, Object arg)
     {
-    	__size += 32;
+        __size += 32;
     }
 
 
     public void visitInt64(long n, Object arg)
     {
-    	__size += 64;
+        __size += 64;
     }
 
 
     public void visitUInt8(short n, Object arg)
     {
-    	__size += 8;
+        __size += 8;
     }
 
 
     public void visitUInt16(int n, Object arg)
     {
-    	__size += 16;
+        __size += 16;
     }
 
 
     public void visitUInt32(long n, Object arg)
     {
-    	__size += 32;
+        __size += 32;
     }
 
 
     public void visitUInt64(BigInteger n, Object arg)
     {
-    	__size += 64;
+        __size += 64;
     }
 
 
     public void visitBitField(byte n, int length, Object arg)
     {
-    	__size += length;
+        __size += length;
     }
 
 
     public void visitBitField(short n, int length, Object arg)
     {
-    	__size += length;
+        __size += length;
     }
 
 
     public void visitBitField(int n, int length, Object arg)
     {
-    	__size += length;
+        __size += length;
     }
 
 
     public void visitBitField(long n, int length, Object arg)
     {
-    	__size += length;
+        __size += length;
     }
 
 
     public void visitBitField(BigInteger n, int length, Object arg)
     {
-    	__size += length;
+        __size += length;
     }
 
 
@@ -141,5 +141,5 @@ public class __SizeOf extends __DepthFirstVisitor
         {
             throw new RuntimeException("sizeof not integer: " + v.__size);
         }
-    	return v.__size / 8;
+        return v.__size / 8;
     }
