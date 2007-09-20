@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="build/gen"/>
 	<classpathentry kind="src" output="build/test/classes" path="test/src"/>
 	<classpathentry kind="src" output="build/test/classes" path="build/test/gen"/>
-	<classpathentry kind="lib" path="lib/jetc-task.jar"/>
 	<classpathentry kind="lib" path="lib/antlr.jar" sourcepath="D:/work/antlr-2.7.7"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc.jar"/>

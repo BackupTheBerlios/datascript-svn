@@ -81,18 +81,10 @@
 
 
   <property name="jar" value="${build}/jar" />
-  <property name="jet.timestamp" value="${gen}/jet.ts" />
   <property name="classes" value="${build}/classes" />
   <property name="backend" value="${src}/datascript/backend" />
   <property name="ext" value="${basedir}/ext" />
 
-
-  <!-- task definition for compiling JET templates -->
-  <taskdef name="jetc" classname="ch.paranor.epla.structure.JETCTask">
-    <classpath>
-      <pathelement location="${lib}/jetc-task.jar" />
-    </classpath>
-  </taskdef>
 
   <taskdef name="rds" classname="datascript.ant.RdsTask">
     <classpath>
@@ -108,9 +100,6 @@
 
 
   <target name="init">
-    <uptodate property="jet.uptodate" targetfile="${jet.timestamp}">
-      <srcfiles dir="${basedir}" includes="jet/java/* jet/html/*" />
-    </uptodate>
   </target>
 
   <!-- Create output directories. -->
@@ -185,20 +174,6 @@
   </target>
 
 
-  <!-- Generate Java sources from JET templates.
-       Unfortunately, the jetc task does not check timestamps and always
-       compiles everything.
-       Hence, we create a timestamp file whenever the task is run and set the
-       jet.uptodate property if the timestamp is newer than all templates.
-  -->
-  <target name="jet" depends="prepare" unless="jet.uptodate">
-    <jetc destdir="${gen}">
-      <fileset dir="${basedir}" includes="jet/java/*.*jet" />
-    </jetc>
-    <touch file="${jet.timestamp}" />
-  </target>
-
-
   <target name="extensions.clean" description="removes all generated extension jar files">
     <delete dir="${ext}" />
   </target>
@@ -233,7 +208,6 @@
     <jar destfile="${ext}/rds_javaExtension.jar" manifest="${backend}/java/Manifest.txt">
       <fileset dir="${classes}">
         <include name="datascript/backend/java/**" />
-        <include name="datascript/jet/java/**" />
         <include name="datascript/emit/java/**" />
       </fileset>
         <fileset dir="${basedir}">
@@ -244,7 +218,6 @@
     <jar destfile="${ext}/rds_htmlExtension.jar" manifest="${backend}/html/Manifest.txt">
       <fileset dir="${classes}">
         <include name="datascript/backend/html/**" />
-        <include name="datascript/jet/html/**" />
         <include name="datascript/emit/html/**" />
       </fileset>
       <fileset dir="${basedir}">
@@ -255,7 +228,6 @@
     <jar destfile="${ext}/rds_xmlExtension.jar" manifest="${backend}/xml/Manifest.txt">
       <fileset dir="${classes}">
         <include name="datascript/backend/xml/**" />
-        <include name="datascript/jet/xml/**" />
         <include name="datascript/emit/xml/**" />
       </fileset>
     </jar>
