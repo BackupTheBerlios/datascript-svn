@@ -124,13 +124,13 @@ public class DefaultEmitter implements Emitter
     /**** end implementation of interface methods ****/
 
 
-    public void setRDSVersion(String version)
+    public void setRdsVersion(String version)
     {
         RDS_VERSION = version;
     }
 
 
-    public String getRDSVersion()
+    public String getRdsVersion()
     {
         return RDS_VERSION;
     }

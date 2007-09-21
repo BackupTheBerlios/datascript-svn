@@ -67,10 +67,11 @@ public class JavaDefaultEmitter extends DefaultEmitter
     {
         packagePath = outPathName;
         packageName = defaultPackageName;
+        useFreeMarker();
     }
 
 
-    public static void useFreeMarker()
+    private static void useFreeMarker()
     {
         if (cfg != null) 
             return;
@@ -81,12 +82,6 @@ public class JavaDefaultEmitter extends DefaultEmitter
 
         useFreeMarker = true;
         System.out.println("using FreeMarker!");
-    }
-
-
-    public boolean getUseFreeMarker()
-    {
-        return useFreeMarker;
     }
 
 
@@ -140,9 +135,9 @@ public class JavaDefaultEmitter extends DefaultEmitter
         java.util.Set<String> importNames = getImportNameList();
         for (String importName : importNames)
         {
-            if (true && !allPackageNames.contains(importName))
+            if (!allPackageNames.contains(importName))
             {
-                System.err.println("WARNING: could not found package " + importName);
+                System.err.println("WARNING: could not find package " + importName);
                 continue;
             }
             buffer.append("import ");

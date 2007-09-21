@@ -135,11 +135,6 @@ public class ConstEmitter extends JavaDefaultEmitter
 
     /**** interface to freemarker FileHeader.inc template ****/
 
-    public String getRdsVersion()
-    {
-        return getRDSVersion();
-    }
-
 
     public String getRootPackageName()
     {

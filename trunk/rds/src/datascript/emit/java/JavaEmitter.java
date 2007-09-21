@@ -77,7 +77,6 @@ public class JavaEmitter extends JavaDefaultEmitter
         openOutputFile(dir, typeName + JAVA_EXT);
         sequenceEmitter = new SequenceEmitter(this, sequence);
         sequenceEmitter.setWriter(writer);
-
         sequenceEmitter.beginFreemarker(cfg);
     }
 
@@ -97,19 +96,13 @@ public class JavaEmitter extends JavaDefaultEmitter
         unionEmitter = new UnionEmitter(this, union);
         unionEmitter.setWriter(writer);
 
-        if (useFreeMarker)
-            unionEmitter.beginFreemarker(cfg);
-        else
-            unionEmitter.begin();
+        unionEmitter.beginFreemarker(cfg);
     }
 
 
     public void endUnion(AST u)
     {
-        if (useFreeMarker)
-            unionEmitter.endFreemarker(cfg);
-        else
-            unionEmitter.end();
+        unionEmitter.endFreemarker(cfg);
         writer.close();
     }
 
@@ -140,10 +133,7 @@ public class JavaEmitter extends JavaDefaultEmitter
         SubtypeEmitter subtypeEmitter = new SubtypeEmitter(this, subtype);
         subtypeEmitter.setWriter(writer);
 
-        if (useFreeMarker)
-            subtypeEmitter.emitFreemarker(cfg, subtype);
-        else
-            subtypeEmitter.emit(subtype);
+        subtypeEmitter.emitFreemarker(cfg, subtype);
     }
 
 
@@ -161,10 +151,7 @@ public class JavaEmitter extends JavaDefaultEmitter
         SqlDatabaseEmitter dbEmitter = new SqlDatabaseEmitter(this, db);
         dbEmitter.setWriter(writer);
 
-        if (useFreeMarker)
-            dbEmitter.emitFreemarker(cfg, db);
-        else
-            dbEmitter.emit(db);
+        dbEmitter.emitFreemarker(cfg, db);
     }
 
 
@@ -181,11 +168,7 @@ public class JavaEmitter extends JavaDefaultEmitter
         openOutputFile(dir, typeName + JAVA_EXT);
         SqlTableEmitter tableEmitter = new SqlTableEmitter(this, table);
         tableEmitter.setWriter(writer);
-
-        if (useFreeMarker)
-            tableEmitter.emitFreemarker(cfg, table);
-        else
-            tableEmitter.emit(table);
+        tableEmitter.emitFreemarker(cfg, table);
     }
 
 
@@ -202,11 +185,7 @@ public class JavaEmitter extends JavaDefaultEmitter
         openOutputFile(dir, typeName + JAVA_EXT);
         SqlIntegerEmitter integerEmitter = new SqlIntegerEmitter(this, integerType);
         integerEmitter.setWriter(writer);
-
-        if (useFreeMarker)
-            integerEmitter.emitFreemarker(cfg, integerType);
-        else
-            integerEmitter.emit(integerType);
+        integerEmitter.emitFreemarker(cfg, integerType);
     }
 
 

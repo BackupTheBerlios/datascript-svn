@@ -233,7 +233,7 @@ public class SqlDatabaseEmitter
 
     public String getRdsVersion()
     {
-        return global.getRDSVersion();
+        return global.getRdsVersion();
     }
 
 

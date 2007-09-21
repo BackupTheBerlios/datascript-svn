@@ -102,11 +102,6 @@ public class SizeOfEmitter extends JavaDefaultEmitter
 
     /**** interface to freemarker FileHeader.inc template ****/
 
-    public String getRdsVersion()
-    {
-        return getRDSVersion();
-    }
-
     public String getRootPackageName()
     {
         return datascript.ast.Package.getRoot().getPackageName();

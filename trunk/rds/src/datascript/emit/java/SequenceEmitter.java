@@ -61,8 +61,8 @@ import freemarker.template.Template;
 
 public class SequenceEmitter extends CompoundEmitter
 {
-    private final List<SequenceFunctionFMEmitter> functions = 
-        new ArrayList<SequenceFunctionFMEmitter>();
+    private final List<SequenceFunctionEmitter> functions = 
+        new ArrayList<SequenceFunctionEmitter>();
     private final List<SequenceFieldFMEmitter> fields = 
         new ArrayList<SequenceFieldFMEmitter>();
 
@@ -71,12 +71,12 @@ public class SequenceEmitter extends CompoundEmitter
 
 
 
-    public static class SequenceFunctionFMEmitter
+    public static class SequenceFunctionEmitter
     {
         private final FunctionType func;
         private static Template tpl = null;
 
-        public SequenceFunctionFMEmitter(FunctionType func)
+        public SequenceFunctionEmitter(FunctionType func)
         {
             this.func = func;
         }
@@ -245,14 +245,14 @@ public class SequenceEmitter extends CompoundEmitter
     {
         super(j);
         seq = sequence;
-        fieldEmitter = new SequenceFieldEmitter(this);
+        //fieldEmitter = new SequenceFieldEmitter(this);
     }
 
 
     public void setWriter(PrintWriter writer)
     {
         super.setWriter(writer);
-        fieldEmitter.setWriter(writer);
+        //fieldEmitter.setWriter(writer);
     }
 
 
@@ -291,7 +291,7 @@ public class SequenceEmitter extends CompoundEmitter
         functions.clear();
         for (FunctionType func : seq.getFunctions())
         {
-            SequenceFunctionFMEmitter f = new SequenceFunctionFMEmitter(func);
+            SequenceFunctionEmitter f = new SequenceFunctionEmitter(func);
             functions.add(f);
         }
 
@@ -310,7 +310,7 @@ public class SequenceEmitter extends CompoundEmitter
                 param.emitFreeMarker(writer, cfg);
             }
 
-            for (SequenceFunctionFMEmitter func : functions)
+            for (SequenceFunctionEmitter func : functions)
             {
                 func.emitFreeMarker(writer, cfg);
             }

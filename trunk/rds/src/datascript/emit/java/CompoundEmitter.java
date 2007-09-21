@@ -823,7 +823,7 @@ abstract public class CompoundEmitter
 
     public String getRdsVersion()
     {
-        return global.getRDSVersion();
+        return global.getRdsVersion();
     }
 
 

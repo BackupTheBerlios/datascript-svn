@@ -90,11 +90,7 @@ public class JavaExtension implements Extension
             // emit Java code for decoders
             JavaEmitter javaEmitter = new JavaEmitter(params.getOutPathName(),
                     defaultPackageName);
-            if (useFreeMarker)
-            {
-                JavaEmitter.useFreeMarker();
-            }
-            javaEmitter.setRDSVersion(params.getVersion());
+            javaEmitter.setRdsVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(javaEmitter);
             emitter.root(rootNode);
@@ -102,11 +98,7 @@ public class JavaExtension implements Extension
             // emit Java __Visitor interface
             VisitorEmitter visitorEmitter = new VisitorEmitter(params
                     .getOutPathName(), defaultPackageName);
-            if (useFreeMarker)
-            {
-                VisitorEmitter.useFreeMarker();
-            }
-            visitorEmitter.setRDSVersion(params.getVersion());
+            visitorEmitter.setRdsVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(visitorEmitter);
             emitter.root(rootNode);
@@ -114,11 +106,7 @@ public class JavaExtension implements Extension
             // emit Java __DepthFirstVisitor class
             DepthFirstVisitorEmitter dfVisitorEmitter = new DepthFirstVisitorEmitter(
                     params.getOutPathName(), defaultPackageName);
-            if (useFreeMarker)
-            {
-                DepthFirstVisitorEmitter.useFreeMarker();
-            }
-            dfVisitorEmitter.setRDSVersion(params.getVersion());
+            dfVisitorEmitter.setRdsVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(dfVisitorEmitter);
             emitter.root(rootNode);
@@ -126,11 +114,7 @@ public class JavaExtension implements Extension
             // emit Java __SizeOf class
             SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(params
                     .getOutPathName(), defaultPackageName);
-            if (useFreeMarker)
-            {
-                SizeOfEmitter.useFreeMarker();
-            }
-            sizeOfEmitter.setRDSVersion(params.getVersion());
+            sizeOfEmitter.setRdsVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(sizeOfEmitter);
             emitter.root(rootNode);
@@ -138,11 +122,7 @@ public class JavaExtension implements Extension
             // emit Java __Const class
             ConstEmitter constEmitter = new ConstEmitter(params
                     .getOutPathName(), defaultPackageName);
-            if (useFreeMarker)
-            {
-                ConstEmitter.useFreeMarker();
-            }
-            constEmitter.setRDSVersion(params.getVersion());
+            constEmitter.setRdsVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(constEmitter);
             emitter.root(rootNode);
@@ -150,11 +130,7 @@ public class JavaExtension implements Extension
             // emit Java __XmlDumper class
             XmlDumperEmitter xmlDumper = new XmlDumperEmitter(params
                     .getOutPathName(), defaultPackageName);
-            if (useFreeMarker)
-            {
-                XmlDumperEmitter.useFreeMarker();
-            }
-            xmlDumper.setRDSVersion(params.getVersion());
+            xmlDumper.setRdsVersion(params.getVersion());
             javaEmitter.setThrowsException(generateExceptions);
             emitter.setEmitter(xmlDumper);
             emitter.root(rootNode);
