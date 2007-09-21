@@ -60,12 +60,9 @@ public class Field extends TokenAST
 
     private Token documentation;
 
-
-
     public Field()
     {
     }
-    
 
     public IntegerValue sizeof(Context ctxt)
     {
@@ -79,36 +76,36 @@ public class Field extends TokenAST
 
     public String getName()
     {
-        String result = (name == null) ? "<void>" : name.getText(); 
+        String result = (name == null) ? "<void>" : name.getText();
         return result;
     }
-    
+
     public void setName(AST name)
     {
-        this.name = (TokenAST)name;
+        this.name = (TokenAST) name;
     }
 
     public TypeInterface getFieldType()
     {
-        TypeInterface t = (TypeInterface)getFirstChild();
+        TypeInterface t = (TypeInterface) getFirstChild();
         return t;
     }
 
     public Expression getLabel()
     {
-    	if (fieldLabel != null)
-    	{
-    		return (Expression)fieldLabel.getFirstChild();
-    	}
-    	else
-    	{
-    		return null;
-    	}
+        if (fieldLabel != null)
+        {
+            return (Expression) fieldLabel.getFirstChild();
+        }
+        else
+        {
+            return null;
+        }
     }
-    
+
     public void setLabel(AST label)
     {
-        this.fieldLabel = (TokenAST)label;
+        this.fieldLabel = (TokenAST) label;
     }
 
     public CompoundType getCompound()
@@ -125,7 +122,7 @@ public class Field extends TokenAST
     {
         if (fieldCondition != null)
         {
-            return (Expression)fieldCondition.getFirstChild();
+            return (Expression) fieldCondition.getFirstChild();
         }
         else
         {
@@ -152,14 +149,14 @@ public class Field extends TokenAST
 
     public void setOptionalClause(AST optional)
     {
-        this.fieldOptionalClause = (TokenAST)optional;
+        this.fieldOptionalClause = (TokenAST) optional;
     }
 
     public Expression getInitializer()
     {
         if (fieldInitializer != null)
         {
-            return (Expression)fieldInitializer.getFirstChild();
+            return (Expression) fieldInitializer.getFirstChild();
         }
         else
         {
@@ -169,39 +166,36 @@ public class Field extends TokenAST
 
     public void setInitializer(AST fieldInitializer)
     {
-        this.fieldInitializer = (TokenAST)fieldInitializer;
+        this.fieldInitializer = (TokenAST) fieldInitializer;
     }
 
     public String getDocumentation()
     {
         return (documentation == null) ? "" : documentation.getText();
     }
-    
+
     public void setDocumentation(Token doc)
     {
         documentation = doc;
     }
-    
+
     public String getSqlConstraint()
     {
-    	String result = "";
+        String result = "";
         AST node = findFirstChildOfType(DataScriptParserTokenTypes.SQL);
         if (node != null)
         {
-        	String text = node.getFirstChild().getText();
-        	if (text.length() > 0)
-        		result = text.substring(1, text.length()-1);
+            String text = node.getFirstChild().getText();
+            if (text.length() > 0)
+                result = text.substring(1, text.length() - 1);
         }
         return result;
-    	
+
     }
-    
+
     public String toString()
     {
-        //return getName();
-        return (name == null) ? "FIELD" : name.getText(); 
-        //return "Field name='" + name + "' type='" + getFieldType() + "' compound='"
-        //        + compound + "'";
+        return (name == null) ? "FIELD" : name.getText();
     }
 
 }

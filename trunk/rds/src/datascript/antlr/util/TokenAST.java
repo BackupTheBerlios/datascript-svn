@@ -38,6 +38,7 @@
 package datascript.antlr.util;
 
 import antlr.CommonASTWithHiddenTokens;
+import antlr.CommonHiddenStreamToken;
 import antlr.Token;
 import antlr.collections.AST;
 
@@ -119,6 +120,17 @@ public class TokenAST extends CommonASTWithHiddenTokens
     {
         token.setType(ttype);
     }
+    
+    public CommonHiddenStreamToken getHiddenAfter()
+    {
+        return token.getHiddenAfter();
+    }
+
+    public CommonHiddenStreamToken getHiddenBefore()
+    {
+        return token.getHiddenBefore();
+    }
+
     
     /**
      * Returns the first child with a given token type.
