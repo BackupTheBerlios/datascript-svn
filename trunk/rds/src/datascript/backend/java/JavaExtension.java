@@ -77,7 +77,6 @@ public class JavaExtension implements Extension
         try
         {
             boolean generateExceptions = params.argumentExists("-java_e");
-            boolean useFreeMarker = params.argumentExists("-java_fm");
             String defaultPackageName = "";
             try
             {
@@ -170,7 +169,6 @@ public class JavaExtension implements Extension
 
         buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScript package" + NL);
         buffer.append(" -java_e\t\tenables throwing exceptions in equals() function, when objects are not equal" + NL);
-        buffer.append(" -java_fm\t\tonly for testing, turns on template emmitting using freemarker" + NL);
         return buffer.toString();
     }
 

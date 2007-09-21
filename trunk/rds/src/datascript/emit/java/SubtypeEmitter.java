@@ -86,7 +86,7 @@ public class SubtypeEmitter
     }
 
 
-    public void emitFreemarker(Configuration cfg, Subtype subtype2)
+    public void emit(Configuration cfg, Subtype subtype2)
     {
 
         /*
@@ -101,17 +101,6 @@ public class SubtypeEmitter
             throw new DataScriptException(e);
         }
         */
-    }
-
-
-    public void emit(Subtype subtype)
-    {
-        /*
-         * this does not generates serious content
-         * String result = subtypeTmpl.generate(this);
-         * writer.print(result);
-         * writer.flush();
-         */
     }
 
 

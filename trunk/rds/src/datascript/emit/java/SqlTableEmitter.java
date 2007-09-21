@@ -68,20 +68,20 @@ public class SqlTableEmitter extends CompoundEmitter
 {
     private final List<CompoundEmitter.CompoundParameterEmitter> parameters = 
         new ArrayList<CompoundEmitter.CompoundParameterEmitter>();
-    private final List<TableFieldFMEmitter> fields = 
-        new ArrayList<TableFieldFMEmitter>();
+    private final List<TableFieldEmitter> fields = 
+        new ArrayList<TableFieldEmitter>();
 
     private SqlTableType tableType;
 
 
 
-    public class TableFieldFMEmitter
+    public class TableFieldEmitter
     {
         private final Field field;
         private final SqlTableEmitter global;
 
 
-        public TableFieldFMEmitter(Field field, SqlTableEmitter global)
+        public TableFieldEmitter(Field field, SqlTableEmitter global)
         {
             this.field = field;
             this.global = global;
@@ -157,7 +157,7 @@ public class SqlTableEmitter extends CompoundEmitter
     }
 
 
-    public void emitFreemarker(Configuration cfg, SqlTableType table)
+    public void emit(Configuration cfg, SqlTableType table)
     {
         parameters.clear();
         for (Parameter param : tableType.getParameters())
@@ -169,7 +169,7 @@ public class SqlTableEmitter extends CompoundEmitter
         fields.clear();
         for (Field field : tableType.getFields())
         {
-            TableFieldFMEmitter fe = new TableFieldFMEmitter(field, this);
+            TableFieldEmitter fe = new TableFieldEmitter(field, this);
             fields.add(fe);
         }
 
@@ -190,11 +190,6 @@ public class SqlTableEmitter extends CompoundEmitter
         {
             throw new DataScriptException(e);
         }
-    }
-
-
-    public void emit(SqlTableType SqlTableType)
-    {
     }
 
 
@@ -227,7 +222,7 @@ public class SqlTableEmitter extends CompoundEmitter
     }
 
 
-    public List<TableFieldFMEmitter> getFields()
+    public List<TableFieldEmitter> getFields()
     {
         return fields;
     }

@@ -96,13 +96,13 @@ public class JavaEmitter extends JavaDefaultEmitter
         unionEmitter = new UnionEmitter(this, union);
         unionEmitter.setWriter(writer);
 
-        unionEmitter.beginFreemarker(cfg);
+        unionEmitter.begin(cfg);
     }
 
 
     public void endUnion(AST u)
     {
-        unionEmitter.endFreemarker(cfg);
+        unionEmitter.end(cfg);
         writer.close();
     }
 
@@ -115,7 +115,7 @@ public class JavaEmitter extends JavaDefaultEmitter
         EnumerationEmitter enumEmitter = new EnumerationEmitter(this, enumType);
         enumEmitter.setWriter(writer);
 
-        enumEmitter.emitFreemarker(cfg, enumType);
+        enumEmitter.emit(cfg, enumType);
     }
 
 
@@ -133,7 +133,7 @@ public class JavaEmitter extends JavaDefaultEmitter
         SubtypeEmitter subtypeEmitter = new SubtypeEmitter(this, subtype);
         subtypeEmitter.setWriter(writer);
 
-        subtypeEmitter.emitFreemarker(cfg, subtype);
+        subtypeEmitter.emit(cfg, subtype);
     }
 
 
@@ -151,7 +151,7 @@ public class JavaEmitter extends JavaDefaultEmitter
         SqlDatabaseEmitter dbEmitter = new SqlDatabaseEmitter(this, db);
         dbEmitter.setWriter(writer);
 
-        dbEmitter.emitFreemarker(cfg, db);
+        dbEmitter.emit(cfg, db);
     }
 
 
@@ -168,7 +168,7 @@ public class JavaEmitter extends JavaDefaultEmitter
         openOutputFile(dir, typeName + JAVA_EXT);
         SqlTableEmitter tableEmitter = new SqlTableEmitter(this, table);
         tableEmitter.setWriter(writer);
-        tableEmitter.emitFreemarker(cfg, table);
+        tableEmitter.emit(cfg, table);
     }
 
 
@@ -185,7 +185,7 @@ public class JavaEmitter extends JavaDefaultEmitter
         openOutputFile(dir, typeName + JAVA_EXT);
         SqlIntegerEmitter integerEmitter = new SqlIntegerEmitter(this, integerType);
         integerEmitter.setWriter(writer);
-        integerEmitter.emitFreemarker(cfg, integerType);
+        integerEmitter.emit(cfg, integerType);
     }
 
 

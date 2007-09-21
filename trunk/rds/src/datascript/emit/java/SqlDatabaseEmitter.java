@@ -59,24 +59,24 @@ import freemarker.template.Template;
  */
 public class SqlDatabaseEmitter
 {
-    private final List<DatabaseFieldFMEmitter> fields = 
-        new ArrayList<DatabaseFieldFMEmitter>();
-    private final List<PragmaFieldFMEmitter> pragmata = 
-        new ArrayList<PragmaFieldFMEmitter>();
-    private final List<MetadataFieldFMEmitter> metadatas = 
-        new ArrayList<MetadataFieldFMEmitter>();
+    private final List<DatabaseFieldEmitter> fields = 
+        new ArrayList<DatabaseFieldEmitter>();
+    private final List<PragmaFieldEmitter> pragmata = 
+        new ArrayList<PragmaFieldEmitter>();
+    private final List<MetadataFieldEmitter> metadatas = 
+        new ArrayList<MetadataFieldEmitter>();
 
     private JavaEmitter global;
     private SqlDatabaseType dbType;
     private PrintWriter writer;
 
 
-    public class DatabaseFieldFMEmitter
+    public class DatabaseFieldEmitter
     {
         private final Field field;
 
 
-        public DatabaseFieldFMEmitter(Field field)
+        public DatabaseFieldEmitter(Field field)
         {
             this.field = field;
         }
@@ -96,14 +96,14 @@ public class SqlDatabaseEmitter
 
 
 
-    public static class PragmaFieldFMEmitter
+    public static class PragmaFieldEmitter
     {
         private static final ExpressionEmitter exprEm = new ExpressionEmitter();
 
         private final Field field;
 
 
-        public PragmaFieldFMEmitter(Field field)
+        public PragmaFieldEmitter(Field field)
         {
             this.field = field;
         }
@@ -128,14 +128,14 @@ public class SqlDatabaseEmitter
 
 
 
-    public static class MetadataFieldFMEmitter
+    public static class MetadataFieldEmitter
     {
         private static final ExpressionEmitter exprEm = new ExpressionEmitter();
 
         private final Field field;
 
 
-        public MetadataFieldFMEmitter(Field field)
+        public MetadataFieldEmitter(Field field)
         {
             this.field = field;
         }
@@ -185,12 +185,12 @@ public class SqlDatabaseEmitter
     }
 
 
-    public void emitFreemarker(Configuration cfg, SqlDatabaseType db)
+    public void emit(Configuration cfg, SqlDatabaseType db)
     {
         fields.clear();
         for (Field field : dbType.getFields())
         {
-            DatabaseFieldFMEmitter fe = new DatabaseFieldFMEmitter(field);
+            DatabaseFieldEmitter fe = new DatabaseFieldEmitter(field);
             fields.add(fe);
         }
         pragmata.clear();
@@ -198,7 +198,7 @@ public class SqlDatabaseEmitter
         {
             for (Field field : dbType.getPragma().getFields())
             {
-                PragmaFieldFMEmitter fe = new PragmaFieldFMEmitter(field);
+                PragmaFieldEmitter fe = new PragmaFieldEmitter(field);
                 pragmata.add(fe);
             }
         }
@@ -207,7 +207,7 @@ public class SqlDatabaseEmitter
         {
             for (Field field : dbType.getMetadata().getFields())
             {
-                MetadataFieldFMEmitter fe = new MetadataFieldFMEmitter(field);
+                MetadataFieldEmitter fe = new MetadataFieldEmitter(field);
                 metadatas.add(fe);
             }
         }
@@ -221,11 +221,6 @@ public class SqlDatabaseEmitter
         {
             throw new DataScriptException(e);
         }
-    }
-
-
-    public void emit(SqlDatabaseType SqlDatabaseType)
-    {
     }
 
 
@@ -261,19 +256,19 @@ public class SqlDatabaseEmitter
     }
 
 
-    public List<DatabaseFieldFMEmitter> getFields()
+    public List<DatabaseFieldEmitter> getFields()
     {
         return fields;
     }
 
 
-    public List<PragmaFieldFMEmitter> getPragmaFields()
+    public List<PragmaFieldEmitter> getPragmaFields()
     {
         return pragmata;
     }
 
 
-    public List<MetadataFieldFMEmitter> getMetadataFields()
+    public List<MetadataFieldEmitter> getMetadataFields()
     {
         return metadatas;
     }

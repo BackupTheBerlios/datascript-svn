@@ -59,7 +59,7 @@ import freemarker.template.Template;
 
 public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 {
-    private final List<SequenceFieldFMEmitter> fields = new ArrayList<SequenceFieldFMEmitter>();
+    private final List<SequenceFieldEmitter> fields = new ArrayList<SequenceFieldEmitter>();
 
     protected SequenceType sequence;
 
@@ -71,13 +71,13 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 
     protected static final ExpressionEmitter exprEmitter = new ExpressionEmitter();
 
-    public static class SequenceFieldFMEmitter
+    public static class SequenceFieldEmitter
     {
         private final Field field;
 
         private final DepthFirstVisitorEmitter global;
 
-        public SequenceFieldFMEmitter(Field field,
+        public SequenceFieldEmitter(Field field,
                 DepthFirstVisitorEmitter global)
         {
             this.field = field;
@@ -148,7 +148,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         fields.clear();
         for (Field field : sequence.getFields())
         {
-            SequenceFieldFMEmitter fe = new SequenceFieldFMEmitter(field, this);
+            SequenceFieldEmitter fe = new SequenceFieldEmitter(field, this);
             fields.add(fe);
         }
 
@@ -170,7 +170,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         fields.clear();
         for (Field field : union.getFields())
         {
-            SequenceFieldFMEmitter fe = new SequenceFieldFMEmitter(field, this);
+            SequenceFieldEmitter fe = new SequenceFieldEmitter(field, this);
             fields.add(fe);
         }
 
@@ -207,7 +207,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         fields.clear();
         for (Field field : sqlinteger.getFields())
         {
-            SequenceFieldFMEmitter fe = new SequenceFieldFMEmitter(field, this);
+            SequenceFieldEmitter fe = new SequenceFieldEmitter(field, this);
             fields.add(fe);
         }
 
@@ -381,7 +381,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         return datascript.ast.Package.getRoot().getPackageName();
     }
 
-    public List<SequenceFieldFMEmitter> getFields()
+    public List<SequenceFieldEmitter> getFields()
     {
         return fields;
     }

@@ -64,18 +64,18 @@ public class EnumerationEmitter
     private EnumType enumType;
     private String javaType;
     private PrintWriter writer;
-    private final List<EnumerationItemFMEmitter> items = 
-        new ArrayList<EnumerationItemFMEmitter>();
+    private final List<EnumerationItemEmitter> items = 
+        new ArrayList<EnumerationItemEmitter>();
 
 
 
-    public static class EnumerationItemFMEmitter
+    public static class EnumerationItemEmitter
     {
         private EnumItem item;
         private final IntegerValue maxVal;
 
         
-        public EnumerationItemFMEmitter(EnumItem item)
+        public EnumerationItemEmitter(EnumItem item)
         {
             this.item = item;
             maxVal = new IntegerValue(1).shiftLeft(item.getEnumType().getBaseType().sizeof(null));
@@ -141,12 +141,12 @@ public class EnumerationEmitter
     }
 
 
-    public void emitFreemarker(Configuration cfg, EnumType enumType2)
+    public void emit(Configuration cfg, EnumType enumType2)
     {
         items.clear();
         for (EnumItem item : enumType.getItems())
         {
-            EnumerationItemFMEmitter fe = new EnumerationItemFMEmitter(item);
+            EnumerationItemEmitter fe = new EnumerationItemEmitter(item);
             items.add(fe);
         }
 
@@ -196,7 +196,7 @@ public class EnumerationEmitter
     }
 
 
-    public List<EnumerationItemFMEmitter> getItems()
+    public List<EnumerationItemEmitter> getItems()
     {
         return items;
     }

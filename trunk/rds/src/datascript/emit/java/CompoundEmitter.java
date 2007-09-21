@@ -131,7 +131,7 @@ abstract public class CompoundEmitter
 
 
 
-    public static class ArrayFMEmitter
+    public static class ArrayEmitter
     {
         private static final ExpressionEmitter ee = new ExpressionEmitter();
 
@@ -139,7 +139,7 @@ abstract public class CompoundEmitter
         private final ArrayType array;
 
 
-        public ArrayFMEmitter(Field field, ArrayType array)
+        public ArrayEmitter(Field field, ArrayType array)
         {
             this.field = field;
             this.array = array;
@@ -446,7 +446,7 @@ abstract public class CompoundEmitter
         {
             try
             {
-                ArrayFMEmitter ae = new ArrayFMEmitter(field, array);
+                ArrayEmitter ae = new ArrayEmitter(field, array);
                 Template tpl = global.getTemplateConfig().getTemplate(
                         "java/ArrayRead.ftl");
                 tpl.process(ae, writer);
@@ -792,7 +792,7 @@ abstract public class CompoundEmitter
         {
             try
             {
-                ArrayFMEmitter ae = new ArrayFMEmitter(field, array);
+                ArrayEmitter ae = new ArrayEmitter(field, array);
                 Template tpl = global.getTemplateConfig().getTemplate(
                         "java/ArrayWrite.ftl");
                 tpl.process(ae, writer);

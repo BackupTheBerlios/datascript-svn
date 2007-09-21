@@ -59,8 +59,8 @@ import freemarker.template.Template;
  */
 public class SqlIntegerEmitter extends CompoundEmitter
 {
-    private final List<IntegerFieldFMEmitter> fields = 
-        new ArrayList<IntegerFieldFMEmitter>();
+    private final List<IntegerFieldEmitter> fields = 
+        new ArrayList<IntegerFieldEmitter>();
 
     private int totalTypeSize;
     private SqlIntegerType integerType;
@@ -68,9 +68,9 @@ public class SqlIntegerEmitter extends CompoundEmitter
 
 
 
-    public class IntegerFieldFMEmitter extends SequenceEmitter.SequenceFieldEmitter
+    public class IntegerFieldEmitter extends SequenceEmitter.SequenceFieldEmitter
     {
-        public IntegerFieldFMEmitter(Field field, SqlIntegerEmitter global)
+        public IntegerFieldEmitter(Field field, SqlIntegerEmitter global)
         {
             super(field, global);
         }
@@ -123,13 +123,13 @@ public class SqlIntegerEmitter extends CompoundEmitter
     }
 
 
-    public void emitFreemarker(Configuration cfg, SqlIntegerType integerType2)
+    public void emit(Configuration cfg, SqlIntegerType integerType2)
     {
         totalTypeSize = 0;
         fields.clear();
         for (Field field : integerType.getFields())
         {
-            IntegerFieldFMEmitter fe = new IntegerFieldFMEmitter(field, this);
+            IntegerFieldEmitter fe = new IntegerFieldEmitter(field, this);
             fields.add(fe);
             totalTypeSize += field.getFieldType().sizeof(null).integerValue().intValue();
         }
@@ -139,7 +139,7 @@ public class SqlIntegerEmitter extends CompoundEmitter
             Template tpl = cfg.getTemplate("java/SqlIntegerBegin.ftl");
             tpl.process(this, writer);
 
-            for (IntegerFieldFMEmitter field : fields)
+            for (IntegerFieldEmitter field : fields)
             {
                 field.emit(writer, cfg);
             }
@@ -154,12 +154,7 @@ public class SqlIntegerEmitter extends CompoundEmitter
     }
 
 
-    public void emit(SqlIntegerType SqlIntegerType)
-    {
-    }
-
-
-    public List<IntegerFieldFMEmitter> getFields()
+    public List<IntegerFieldEmitter> getFields()
     {
         return fields;
     }

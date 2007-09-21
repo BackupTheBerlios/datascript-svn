@@ -57,9 +57,6 @@ import freemarker.template.Template;
 
 public class XmlDumperEmitter extends DepthFirstVisitorEmitter
 {
-    //private XmlDumperEnumeration enumerationTmpl = new XmlDumperEnumeration();
-
-
     public XmlDumperEmitter(String outPathName, String defaultPackageName)
     {
         super(outPathName, defaultPackageName);

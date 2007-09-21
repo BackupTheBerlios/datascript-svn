@@ -60,15 +60,14 @@ import freemarker.template.Template;
 
 public class UnionEmitter extends CompoundEmitter
 {
-    private final List<UnionFieldFMEmitter> fields = 
-        new ArrayList<UnionFieldFMEmitter>();
+    private final List<UnionFieldEmitter> fields = 
+        new ArrayList<UnionFieldEmitter>();
 
     private UnionType union;
-    private UnionFieldEmitter fieldEmitter;
 
 
 
-    public static class UnionFieldFMEmitter extends FieldEmitter
+    public static class UnionFieldEmitter extends FieldEmitter
     {
         private static Template tpl = null;
 
@@ -79,17 +78,11 @@ public class UnionEmitter extends CompoundEmitter
         private String label = null;
 
 
-        public UnionFieldFMEmitter(Field f, CompoundEmitter j)
+        public UnionFieldEmitter(Field f, CompoundEmitter j)
         {
             super(j);
             field = f;
             type = TypeReference.resolveType(field.getFieldType());
-        }
-
-
-        public void emitJet(Field f)
-        {
-            throw new RuntimeException("emit does not exist for SequenceFieldFMEmitter");
         }
 
 
@@ -205,7 +198,7 @@ public class UnionEmitter extends CompoundEmitter
         }
 
 
-        public boolean getIsUINT64()
+        public boolean getIsUInt64()
         {
             if (type instanceof StdIntegerType)
                 return ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64;
@@ -218,14 +211,6 @@ public class UnionEmitter extends CompoundEmitter
     {
         super(j);
         this.union = union;
-        fieldEmitter = new UnionFieldEmitter(this);
-    }
-
-
-    public void setWriter(PrintWriter writer)
-    {
-        super.setWriter(writer);
-        fieldEmitter.setWriter(writer);
     }
 
 
@@ -240,19 +225,12 @@ public class UnionEmitter extends CompoundEmitter
         return union;
     }
 
-
-    public FieldEmitter getFieldEmitter()
-    {
-        return fieldEmitter;
-    }
-
-
-    public void beginFreemarker(Configuration cfg)
+    public void begin(Configuration cfg)
     {
         fields.clear();
         for (Field field : union.getFields())
         {
-            UnionFieldFMEmitter fe = new UnionFieldFMEmitter(field, this);
+            UnionFieldEmitter fe = new UnionFieldEmitter(field, this);
             fields.add(fe);
         }
         params.clear();
@@ -267,7 +245,7 @@ public class UnionEmitter extends CompoundEmitter
             Template tpl = cfg.getTemplate("java/UnionBegin.ftl");
             tpl.process(this, writer);
 
-            for (UnionFieldFMEmitter field : fields)
+            for (UnionFieldEmitter field : fields)
             {
                 field.emit(writer, cfg);
             }
@@ -290,12 +268,7 @@ public class UnionEmitter extends CompoundEmitter
     }
 
 
-    public void begin()
-    {
-    }
-
-
-    public void endFreemarker(Configuration cfg)
+    public void end(Configuration cfg)
     {
         try
         {
@@ -310,12 +283,7 @@ public class UnionEmitter extends CompoundEmitter
     }
 
 
-    public void end()
-    {
-    }
-
-
-    public List<UnionFieldFMEmitter> getFields()
+    public List<UnionFieldEmitter> getFields()
     {
         return fields;
     }

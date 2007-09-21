@@ -52,9 +52,8 @@ import freemarker.template.DefaultObjectWrapper;
 public class JavaDefaultEmitter extends DefaultEmitter
 {
     protected static Configuration cfg = null;
-    protected static boolean useFreeMarker = false;
-
     protected static final String JAVA_EXT = ".java";
+    
     protected String packageName;
     protected String packagePath;
     protected File dir = null;
@@ -79,9 +78,6 @@ public class JavaDefaultEmitter extends DefaultEmitter
         cfg = new Configuration();
         cfg.setClassForTemplateLoading(JavaDefaultEmitter.class, "/freemarker/");
         cfg.setObjectWrapper(new DefaultObjectWrapper());
-
-        useFreeMarker = true;
-        System.out.println("using FreeMarker!");
     }
 
 

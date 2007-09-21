@@ -70,7 +70,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.13.8 (21 Sep 2007)";
+    private static final String VERSION = "rds 0.14 (21 Sep 2007)";
 
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
