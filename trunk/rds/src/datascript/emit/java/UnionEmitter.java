@@ -87,13 +87,13 @@ public class UnionEmitter extends CompoundEmitter
         }
 
 
-        public void emit(Field f)
+        public void emitJet(Field f)
         {
             throw new RuntimeException("emit does not exist for SequenceFieldFMEmitter");
         }
 
 
-        public void emitFreeMarker(PrintWriter writer, Configuration cfg) throws Exception
+        public void emit(PrintWriter writer, Configuration cfg) throws Exception
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/UnionFieldAccessor.ftl");
@@ -258,7 +258,7 @@ public class UnionEmitter extends CompoundEmitter
         params.clear();
         for (Parameter param : union.getParameters())
         {
-            CompoundParameterFMEmitter p = new CompoundParameterFMEmitter(param);
+            CompoundParameterEmitter p = new CompoundParameterEmitter(param);
             params.add(p);
         }
 
@@ -269,10 +269,10 @@ public class UnionEmitter extends CompoundEmitter
 
             for (UnionFieldFMEmitter field : fields)
             {
-                field.emitFreeMarker(writer, cfg);
+                field.emit(writer, cfg);
             }
 
-            for (CompoundParameterFMEmitter param : params)
+            for (CompoundParameterEmitter param : params)
             {
                 param.emitFreeMarker(writer, cfg);
             }

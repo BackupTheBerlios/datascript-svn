@@ -68,7 +68,7 @@ public class SqlIntegerEmitter extends CompoundEmitter
 
 
 
-    public class IntegerFieldFMEmitter extends SequenceEmitter.SequenceFieldFMEmitter
+    public class IntegerFieldFMEmitter extends SequenceEmitter.SequenceFieldEmitter
     {
         public IntegerFieldFMEmitter(Field field, SqlIntegerEmitter global)
         {
@@ -141,7 +141,7 @@ public class SqlIntegerEmitter extends CompoundEmitter
 
             for (IntegerFieldFMEmitter field : fields)
             {
-                field.emitFreeMarker(writer, cfg);
+                field.emit(writer, cfg);
             }
 
             tpl = cfg.getTemplate("java/SqlIntegerRead.ftl");

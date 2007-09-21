@@ -77,13 +77,13 @@ public class JavaEmitter extends JavaDefaultEmitter
         openOutputFile(dir, typeName + JAVA_EXT);
         sequenceEmitter = new SequenceEmitter(this, sequence);
         sequenceEmitter.setWriter(writer);
-        sequenceEmitter.beginFreemarker(cfg);
+        sequenceEmitter.begin(cfg);
     }
 
 
     public void endSequence(AST s)
     {
-        sequenceEmitter.endFreemarker(cfg);
+        sequenceEmitter.end(cfg);
         writer.close();
     }
 

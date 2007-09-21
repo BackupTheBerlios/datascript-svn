@@ -55,13 +55,13 @@ public class UnionFieldEmitter extends FieldEmitter
     }
 
 
-    public void emit(Field f)
+    public void emitJet(Field f)
     {
         this.field = f;
     }
 
 
-    public void emitFreeMarker(PrintWriter writer, Configuration cfg) throws Exception
+    public void emit(PrintWriter writer, Configuration cfg) throws Exception
     {
         throw new RuntimeException("emitFreeMarker does not exist for UnionFieldEmitter");
     }

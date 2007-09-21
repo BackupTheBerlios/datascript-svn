@@ -66,8 +66,8 @@ import freemarker.template.Template;
  */
 public class SqlTableEmitter extends CompoundEmitter
 {
-    private final List<CompoundEmitter.CompoundParameterFMEmitter> parameters = 
-        new ArrayList<CompoundEmitter.CompoundParameterFMEmitter>();
+    private final List<CompoundEmitter.CompoundParameterEmitter> parameters = 
+        new ArrayList<CompoundEmitter.CompoundParameterEmitter>();
     private final List<TableFieldFMEmitter> fields = 
         new ArrayList<TableFieldFMEmitter>();
 
@@ -162,8 +162,8 @@ public class SqlTableEmitter extends CompoundEmitter
         parameters.clear();
         for (Parameter param : tableType.getParameters())
         {
-            CompoundEmitter.CompoundParameterFMEmitter pe = 
-                new CompoundEmitter.CompoundParameterFMEmitter(param);
+            CompoundEmitter.CompoundParameterEmitter pe = 
+                new CompoundEmitter.CompoundParameterEmitter(param);
             parameters.add(pe);
         }
         fields.clear();
@@ -178,7 +178,7 @@ public class SqlTableEmitter extends CompoundEmitter
             Template tpl = cfg.getTemplate("java/SqlTableBegin.ftl");
             tpl.process(this, writer);
 
-            for (CompoundEmitter.CompoundParameterFMEmitter pe : parameters)
+            for (CompoundEmitter.CompoundParameterEmitter pe : parameters)
             {
                 pe.emitFreeMarker(writer, cfg);
             }
@@ -221,7 +221,7 @@ public class SqlTableEmitter extends CompoundEmitter
     }
 
 
-    public List<CompoundEmitter.CompoundParameterFMEmitter> getParameters()
+    public List<CompoundEmitter.CompoundParameterEmitter> getParameters()
     {
         return parameters;
     }

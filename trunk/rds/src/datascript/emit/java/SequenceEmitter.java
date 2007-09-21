@@ -63,12 +63,10 @@ public class SequenceEmitter extends CompoundEmitter
 {
     private final List<SequenceFunctionEmitter> functions = 
         new ArrayList<SequenceFunctionEmitter>();
-    private final List<SequenceFieldFMEmitter> fields = 
-        new ArrayList<SequenceFieldFMEmitter>();
+    private final List<SequenceFieldEmitter> fields = 
+        new ArrayList<SequenceFieldEmitter>();
 
     private SequenceType seq;
-    private SequenceFieldEmitter fieldEmitter;
-
 
 
     public static class SequenceFunctionEmitter
@@ -112,7 +110,7 @@ public class SequenceEmitter extends CompoundEmitter
 
 
 
-    public static class SequenceFieldFMEmitter extends FieldEmitter
+    public static class SequenceFieldEmitter extends FieldEmitter
     {
         private static Template tpl = null;
 
@@ -123,7 +121,7 @@ public class SequenceEmitter extends CompoundEmitter
         private String label = null;
 
 
-        public SequenceFieldFMEmitter(Field f, CompoundEmitter j)
+        public SequenceFieldEmitter(Field f, CompoundEmitter j)
         {
             super(j);
             field = f;
@@ -131,13 +129,7 @@ public class SequenceEmitter extends CompoundEmitter
         }
 
 
-        public void emit(Field f)
-        {
-            throw new RuntimeException("emit does not exist for SequenceFieldFMEmitter");
-        }
-
-
-        public void emitFreeMarker(PrintWriter writer, Configuration cfg) throws Exception
+        public void emit(PrintWriter writer, Configuration cfg) throws Exception
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/SequenceFieldAccessor.ftl");
@@ -245,14 +237,6 @@ public class SequenceEmitter extends CompoundEmitter
     {
         super(j);
         seq = sequence;
-        //fieldEmitter = new SequenceFieldEmitter(this);
-    }
-
-
-    public void setWriter(PrintWriter writer)
-    {
-        super.setWriter(writer);
-        //fieldEmitter.setWriter(writer);
     }
 
 
@@ -268,24 +252,19 @@ public class SequenceEmitter extends CompoundEmitter
     }
 
 
-    public SequenceFieldEmitter getFieldEmitter()
-    {
-        return fieldEmitter;
-    }
 
-
-    public void beginFreemarker(Configuration cfg)
+    public void begin(Configuration cfg)
     {
         fields.clear();
         for (Field field : seq.getFields())
         {
-            SequenceFieldFMEmitter fe = new SequenceFieldFMEmitter(field, this);
+            SequenceFieldEmitter fe = new SequenceFieldEmitter(field, this);
             fields.add(fe);
         }
         params.clear();
         for (Parameter param : seq.getParameters())
         {
-            CompoundParameterFMEmitter p = new CompoundParameterFMEmitter(param);
+            CompoundParameterEmitter p = new CompoundParameterEmitter(param);
             params.add(p);
         }
         functions.clear();
@@ -300,12 +279,12 @@ public class SequenceEmitter extends CompoundEmitter
             Template tpl = cfg.getTemplate("java/SequenceBegin.ftl");
             tpl.process(this, writer);
 
-            for (SequenceFieldFMEmitter field : fields)
+            for (SequenceFieldEmitter field : fields)
             {
-                field.emitFreeMarker(writer, cfg);
+                field.emit(writer, cfg);
             }
 
-            for (CompoundParameterFMEmitter param : params)
+            for (CompoundParameterEmitter param : params)
             {
                 param.emitFreeMarker(writer, cfg);
             }
@@ -328,7 +307,7 @@ public class SequenceEmitter extends CompoundEmitter
     }
 
 
-    public void endFreemarker(Configuration cfg)
+    public void end(Configuration cfg)
     {
         try
         {
@@ -344,7 +323,7 @@ public class SequenceEmitter extends CompoundEmitter
 
 
 
-    public List<SequenceFieldFMEmitter> getFields()
+    public List<SequenceFieldEmitter> getFields()
     {
         return fields;
     }

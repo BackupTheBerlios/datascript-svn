@@ -255,7 +255,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -doc -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} bits.ds" />
+      <arg line="-c -xml -doc -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} bits.ds" />
     </java>
   </target>
 

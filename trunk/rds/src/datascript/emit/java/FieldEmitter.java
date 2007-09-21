@@ -72,8 +72,7 @@ abstract public class FieldEmitter
     }
 
 
-    abstract public void emit(Field f);
-    abstract public void emitFreeMarker(PrintWriter writer, Configuration cfg) throws Exception;
+    abstract public void emit(PrintWriter writer, Configuration cfg) throws Exception;
 
 
     /*

@@ -70,8 +70,8 @@ import freemarker.template.Template;
 
 abstract public class CompoundEmitter
 {
-    protected final List<CompoundParameterFMEmitter> params = 
-        new ArrayList<CompoundParameterFMEmitter>();
+    protected final List<CompoundParameterEmitter> params = 
+        new ArrayList<CompoundParameterEmitter>();
 
     private JavaDefaultEmitter global;
     private ExpressionEmitter exprEmitter = new ExpressionEmitter();
@@ -84,13 +84,13 @@ abstract public class CompoundEmitter
 
 
 
-    public static class CompoundParameterFMEmitter
+    public static class CompoundParameterEmitter
     {
         private final Parameter param;
         private static Template tpl = null;
 
 
-        public CompoundParameterFMEmitter(Parameter param)
+        public CompoundParameterEmitter(Parameter param)
         {
             this.param = param;
         }
