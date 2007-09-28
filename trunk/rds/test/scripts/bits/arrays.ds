@@ -80,3 +80,11 @@ StringArraySequence
 	bit:4	byteCount;
 	string	text[byteCount];
 };
+
+/*
+EnumArray
+{
+    uint16 numItems;
+    Colour colours[numItems];
+};
+*/

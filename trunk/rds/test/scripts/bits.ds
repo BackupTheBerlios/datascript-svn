@@ -13,6 +13,11 @@ UseOfConst(MagicCode defaultMagicCode)
     MagicCode magicCode if defaultMagicCode == UNDEFINED_MAGIC_CODE;
 };
 
+TestConstParameter
+{
+    UseOfConst(UNDEFINED_MAGIC_CODE) single;
+    UseOfConst(UNDEFINED_MAGIC_CODE) list[2];
+};
 
 TestForBug1732604 
 {
