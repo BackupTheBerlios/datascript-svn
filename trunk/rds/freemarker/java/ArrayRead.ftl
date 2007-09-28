@@ -46,7 +46,7 @@
                         while (true)
                         {
                             __afpos = __in.getBitPosition();
-                            v.add(new ${elType}(__in, __cc${actualParameterList}));
+                            v.add(${currentElement});
                         }
                     }
                     catch (IOException __e)
@@ -63,7 +63,7 @@
                     Vector<${elType}> v = new Vector<${elType}>((int)__maxIndex);
                     for (int __index = 0; __index < __maxIndex; __index++) 
                     {
-                        v.add(new ${elType}(__in, __cc${actualParameterList}));
+                        v.add(${currentElement});
                     }
                     ${setterName}(new ObjectArray<${elType}>(v));
                 }

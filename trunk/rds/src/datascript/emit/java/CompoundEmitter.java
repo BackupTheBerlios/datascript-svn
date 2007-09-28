@@ -176,15 +176,8 @@ abstract public class CompoundEmitter
             TypeInterface elType = array.getElementType();
             if (elType instanceof TypeInstantiation)
             {
-                ExpressionEmitter exprEmitter = new ExpressionEmitter();
-                TypeInstantiation inst = (TypeInstantiation) elType;
-                Iterable<Expression> arguments = inst.getArguments();
-                for (Expression arg : arguments)
-                {
-                    String javaArg = exprEmitter.emit(arg);
-                    buffer.append(", ");
-                    buffer.append(javaArg);
-                }
+                TypeInstantiation inst = (TypeInstantiation)elType;
+                appendArguments(buffer, inst);
             }
             return buffer.toString();
         }
@@ -193,6 +186,31 @@ abstract public class CompoundEmitter
         public String getLengthExpr()
         {
             return ee.emit(array.getLengthExpression());
+        }
+        
+        public String getCurrentElement()
+        {
+            StringBuilder buffer = new StringBuilder();
+            TypeInterface elType = array.getElementType();
+            if (elType instanceof EnumType)
+            {
+                EnumType enumType = (EnumType) elType;
+                IntegerType baseType = (IntegerType) enumType.getBaseType();
+                buffer.append(elType.getName());
+                buffer.append(".toEnum(");
+                readIntegerValue(buffer, field, baseType);
+                buffer.append(")");
+            }
+            else
+            {
+                buffer.append("new ");
+                buffer.append(getElType());
+                buffer.append("(__in, __cc");
+                buffer.append(getActualParameterList());
+                buffer.append(")");
+            }
+            return buffer.toString();
+            
         }
     }
 
@@ -272,12 +290,12 @@ abstract public class CompoundEmitter
     {
         buffer.append(AccessorNameEmitter.getSetterName(field));
         buffer.append("(");
-        readIntegerValue(field, type);
+        readIntegerValue(buffer, field, type);
         buffer.append(");");
     }
 
 
-    private void readIntegerValue(Field field, IntegerType type)
+    private static void readIntegerValue(StringBuilder buffer, Field field, IntegerType type)
     {
         String methodSuffix;
         String cast = "";
@@ -339,7 +357,8 @@ abstract public class CompoundEmitter
                         methodSuffix = "BigInteger";
                     }
                 }
-                arg = exprEmitter.emit(lengthExpr);
+                ExpressionEmitter ee = new ExpressionEmitter();
+                arg = ee.emit(lengthExpr);
                 break;
 
             default:
@@ -378,22 +397,23 @@ abstract public class CompoundEmitter
         buffer.append("(new ");
         buffer.append(compound.getName());
         buffer.append("(__in, __cc");
-        appendArguments(inst);
+        appendArguments(buffer, inst);
         buffer.append("));");
     }
 
 
-    private void appendArguments(TypeInstantiation inst)
+    private static void appendArguments(StringBuilder buffer, TypeInstantiation inst)
     {
         CompoundType compound = inst.getBaseType();
         Iterable<Expression> arguments = inst.getArguments();
         if (arguments != null)
         {
+            ExpressionEmitter exprEmitter = new ExpressionEmitter();
             int argIndex = 0;
             for (Expression arg : arguments)
             {
                 buffer.append(", ");
-                boolean cast = emitTypeCast(compound, arg, argIndex);
+                boolean cast = emitTypeCast(buffer, compound, arg, argIndex);
                 String javaArg = exprEmitter.emit(arg);
                 buffer.append(javaArg);
                 if (cast)
@@ -412,7 +432,7 @@ abstract public class CompoundEmitter
      * @param expr              argument expression in type instantiation
      * @param paramIndex        index of argument in argument list
      */
-    private boolean emitTypeCast(CompoundType type, Expression expr,
+    private static boolean emitTypeCast(StringBuilder buffer, CompoundType type, Expression expr,
             int paramIndex)
     {
         boolean cast = false;
@@ -493,7 +513,7 @@ abstract public class CompoundEmitter
         buffer.append("(");
         buffer.append(type.getName());
         buffer.append(".toEnum(");
-        readIntegerValue(field, baseType);
+        readIntegerValue(buffer, field, baseType);
         buffer.append("));");
     }
 
@@ -779,7 +799,7 @@ abstract public class CompoundEmitter
                 buffer.append(".");
                 buffer.append(setter);
                 buffer.append("(");
-                boolean cast = emitTypeCast(compound, arg, argIndex);
+                boolean cast = emitTypeCast(buffer, compound, arg, argIndex);
                 String javaArg = exprEmitter.emit(arg);
                 buffer.append(javaArg);
                 if (cast)

@@ -81,10 +81,10 @@ StringArraySequence
 	string	text[byteCount];
 };
 
-/*
+
 EnumArray
 {
     uint16 numItems;
     Colour colours[numItems];
 };
-*/
+
