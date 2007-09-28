@@ -459,19 +459,27 @@ abstract public class CompoundEmitter
         else
         {
             Expression length = array.getLengthExpression();
-            buffer.append(AccessorNameEmitter.getSetterName(field));
-            buffer.append("(new ");
-            buffer.append(elTypeJavaName);
-            buffer.append("(__in, (int)(");
-            buffer.append(getLengthExpression(length));
-            buffer.append(")");
             TypeInterface elType = array.getElementType();
-            if (elType instanceof BitFieldType)
+            if (elType instanceof EnumType)
             {
-                BitFieldType bitField = (BitFieldType) elType;
-                Expression numBits = bitField.getLengthExpression();
-                buffer.append(", ");
-                buffer.append(getLengthExpression(numBits));
+                EnumType enumType = (EnumType) elType;
+                readEnumField(field, enumType);
+            }
+            else
+            {
+                buffer.append(AccessorNameEmitter.getSetterName(field));
+                buffer.append("(new ");
+                buffer.append(elTypeJavaName);
+                buffer.append("(__in, (int)(");
+                buffer.append(getLengthExpression(length));
+                buffer.append(")");
+                if (elType instanceof BitFieldType)
+                {
+                    BitFieldType bitField = (BitFieldType) elType;
+                    Expression numBits = bitField.getLengthExpression();
+                    buffer.append(", ");
+                    buffer.append(getLengthExpression(numBits));
+                }
             }
             buffer.append("));");
         }
