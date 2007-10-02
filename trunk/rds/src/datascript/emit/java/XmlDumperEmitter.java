@@ -142,11 +142,11 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
         }
         else if (type instanceof StringType)
         {
-            buffer.append("visitString(" + nodeName + ", arg)");
+            buffer.append("visitString(" + nodeName + ", \"" + fieldName + "\")");
         }
         else if (type instanceof ArrayType)
         {
-            buffer.append("visitArray(" + nodeName + ", arg)");
+            buffer.append("visitArray(" + nodeName + ", \"" + fieldName + "\")");
         }
         else
         {

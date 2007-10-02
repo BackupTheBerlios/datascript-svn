@@ -153,7 +153,6 @@ public class SqlTableEmitter extends CompoundEmitter
     public void setWriter(PrintWriter writer)
     {
         super.setWriter(writer);
-        paramEmitter.setWriter(writer);
     }
 
 

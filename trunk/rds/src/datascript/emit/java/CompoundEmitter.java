@@ -74,9 +74,8 @@ abstract public class CompoundEmitter
         new ArrayList<CompoundParameterEmitter>();
 
     private JavaDefaultEmitter global;
-    private ExpressionEmitter exprEmitter = new ExpressionEmitter();
+    private static final ExpressionEmitter exprEmitter = new ExpressionEmitter();
     protected PrintWriter writer;
-    protected ParameterEmitter paramEmitter;
 
     private StringBuilder buffer;
     private String formalParams;
@@ -219,7 +218,6 @@ abstract public class CompoundEmitter
     public CompoundEmitter(JavaDefaultEmitter j)
     {
         this.global = j;
-        paramEmitter = new ParameterEmitter(this);
     }
 
 
@@ -242,7 +240,6 @@ abstract public class CompoundEmitter
     public void setWriter(PrintWriter writer)
     {
         this.writer = writer;
-        paramEmitter.setWriter(writer);
     }
 
 
