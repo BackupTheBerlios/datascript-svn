@@ -42,7 +42,7 @@
 ${packageImports}
 
 
-public class __DepthFirstVisitor implements __Visitor
+public class __DepthFirstVisitor implements ${rootPackageName}.__Visitor
 {
     public void visitInt8(byte n, Object arg) {};
     public void visitInt16(short n, Object arg) {};
@@ -68,7 +68,7 @@ public class __DepthFirstVisitor implements __Visitor
         int last = n.length();
         for (int i = 0; i < last; i++) 
         {
-            ((__Visitor.Acceptor)(n.elementAt(i))).accept(this, arg);
+            ((${rootPackageName}.__Visitor.Acceptor)(n.elementAt(i))).accept(this, arg);
         }
     }
 

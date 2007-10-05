@@ -70,6 +70,6 @@ public interface __Visitor
 
     public interface Acceptor 
     {
-        public void accept(__Visitor visitor, Object arg);
+        public void accept(${rootPackageName}.__Visitor visitor, Object arg);
     }
 

@@ -49,5 +49,5 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Vector;
 
-import ${rootPackageName}.*;
+//import ${rootPackageName}.*;
 </#if>

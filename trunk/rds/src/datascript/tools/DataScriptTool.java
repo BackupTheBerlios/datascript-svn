@@ -70,7 +70,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.15.2 (5 Oct 2007)";
+    private static final String VERSION = "rds 0.15.3 (5 Oct 2007)";
 
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
@@ -100,7 +100,6 @@ public class DataScriptTool implements Parameters
 
     public void parseArguments(String[] args) throws DataScriptException
     {
-        // TODO: Das Fehlen des Dateinamen wird nicht erkannt.
         int i = -1;
         while (i < args.length-1)
         {

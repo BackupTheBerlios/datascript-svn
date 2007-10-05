@@ -42,7 +42,7 @@
 ${packageImports}
 
 
-public class __SizeOf extends __DepthFirstVisitor
+public class __SizeOf extends ${rootPackageName}.__DepthFirstVisitor
 {
     private int __size = 0;
 
@@ -133,7 +133,7 @@ public class __SizeOf extends __DepthFirstVisitor
     }
 
 
-    public static int sizeof(__Visitor.Acceptor a) 
+    public static int sizeof(${rootPackageName}.__Visitor.Acceptor a) 
     {
         __SizeOf v = new __SizeOf();
         a.accept(v, null);

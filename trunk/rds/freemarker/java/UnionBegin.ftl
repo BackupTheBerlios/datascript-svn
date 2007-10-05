@@ -42,14 +42,14 @@
 ${packageImports}
 
 
-public class ${className} implements __Visitor.Acceptor, Writer, SizeOf
+public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writer, SizeOf
 {
     long __fpos;
     Object __objectChoice;
     int __choiceTag = -1;
 
 
-    public void accept(__Visitor visitor, Object arg)
+    public void accept(${rootPackageName}.__Visitor visitor, Object arg)
     {
         visitor.visit(this, arg);
     }

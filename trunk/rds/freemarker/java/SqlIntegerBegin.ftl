@@ -45,10 +45,10 @@ import java.sql.*;
 
 
 
-public class ${name} implements __Visitor.Acceptor, SizeOf
+public class ${name} implements ${rootPackageName}.__Visitor.Acceptor, SizeOf
 {
 
-    public void accept(__Visitor visitor, Object arg)
+    public void accept(${rootPackageName}.__Visitor visitor, Object arg)
     {
         visitor.visit(this, arg);
     }
@@ -56,7 +56,7 @@ public class ${name} implements __Visitor.Acceptor, SizeOf
 
     public int sizeof() 
     {
-        return __SizeOf.sizeof(this);
+        return ${rootPackageName}.__SizeOf.sizeof(this);
     }
 
 

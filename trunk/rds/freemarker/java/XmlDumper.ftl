@@ -49,14 +49,14 @@ import org.xml.sax.helpers.XMLFilterImpl;
 
 
 
-public class __XmlDumper extends XMLFilterImpl implements __Visitor
+public class __XmlDumper extends XMLFilterImpl implements ${rootPackageName}.__Visitor
 {
     private ContentHandler handler;
     private AttributesImpl noAttr = new AttributesImpl();
-    private __Visitor.Acceptor acceptor;
+    private ${rootPackageName}.__Visitor.Acceptor acceptor;
 
 
-    public __XmlDumper(__Visitor.Acceptor acceptor)
+    public __XmlDumper(${rootPackageName}.__Visitor.Acceptor acceptor)
     {
         this.acceptor = acceptor;
     }

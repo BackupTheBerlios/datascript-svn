@@ -78,7 +78,7 @@ public enum ${name} implements SizeOf
     }
 
 
-    public void accept(__Visitor visitor, Object arg)
+    public void accept(${rootPackageName}.__Visitor visitor, Object arg)
     {
         visitor.visit(this, arg);
     }

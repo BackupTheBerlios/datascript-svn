@@ -42,7 +42,7 @@
 //${packageImports}
 
 
-public class __ConstType extends __DepthFirstVisitor
+public class __ConstType extends ${rootPackageName}.__DepthFirstVisitor
 {
     /**
      * All constant definitions from datascript are definde here
