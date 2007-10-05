@@ -254,8 +254,7 @@ typeValueList
 /****************************************************************/
 
 fieldDefinition!
-    :   
-        ( (label) => l:label )?
+    :   ( (label) => l:label )?
         t:typeReference
         (f:ID)? 
         (a:arrayRange {#t = #([ARRAY], t, a); } )?
@@ -333,8 +332,11 @@ typeReference
     ;
 
 paramTypeInstantiation
-    :   definedType typeArgumentList
-        { #paramTypeInstantiation = #([INST], paramTypeInstantiation); }
+    :   d:definedType typeArgumentList
+        { 
+        	#paramTypeInstantiation = #([INST], paramTypeInstantiation);
+        	((TypeReference)#d).setArgumentsPresent(true); 
+        }
     ;
 
 sequenceDeclaration!

@@ -35,12 +35,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
+
+
 
 /**
  * Any occurrence of a type name which is not the defining one is a type
@@ -50,8 +55,9 @@ import datascript.antlr.util.ToolContext;
  * <p>
  * A type reference is either a simple name or a sequence of simple names
  * separated by dots referring to a nested type, e.g. {@code Outer.Inner}.
+ * 
  * @author HWellmann
- *
+ * 
  */
 public class TypeReference extends TokenAST implements TypeInterface,
         LinkAction
@@ -59,27 +65,34 @@ public class TypeReference extends TokenAST implements TypeInterface,
     /** The referenced type. */
     private TypeInterface refType;
 
-    /** 
-     * Qualified name of referenced type. 
+    /**
+     * Qualified name of referenced type.
+     * 
      * @see #getName().
      */
     private String name;
 
+    private boolean hasArguments = false;
+
+
     public TypeReference()
     {
-        
+
     }
-    
+
+
     /** Constructs a type reference from a token. */
     public TypeReference(Token token)
     {
         super(token);
     }
 
-    /** 
-     * Returns the qualified name of this type within the current package, e.g. 
-     * {@code Outer.Inner}. This is different from the fully qualified name 
+
+    /**
+     * Returns the qualified name of this type within the current package, e.g.
+     * {@code Outer.Inner}. This is different from the fully qualified name
      * which includes the package, e.g. {@code com.acme.foo.bar.Outer.Inner}.
+     * 
      * @return type name
      */
     public String getName()
@@ -103,26 +116,26 @@ public class TypeReference extends TokenAST implements TypeInterface,
         return name;
     }
 
+
     /**
-     * Links this reference to the corresponding type and logs an error if
-     * there is a cycle in the containment hierarchy.
+     * Links this reference to the corresponding type and logs an error if there
+     * is a cycle in the containment hierarchy.
      */
     public void link(Context ctxt)
     {
         CompoundType outer = (CompoundType) ctxt.getOwner();
-        //String outerName = (outer == null) ? "<global>" : outer.getName();
-        //Object obj = null;
-        
+
         // From left to right, link each part of a nested reference.
-        for (AST node = getFirstChild(); node != null; node = node
-                .getNextSibling())
+        AST node = getFirstChild();
+        for (; node != null; node = node.getNextSibling())
         {
             String name = node.getText();
             refType = ctxt.getType(name);
-            //System.out.println("Linking " + name + " in scope " + outerName);
+            // System.out.println("Linking " + name + " in scope " + outerName);
             if (refType == null)
             {
-                ToolContext.logError((TokenAST)node, "'" + name + "' is undefined");
+                ToolContext.logError((TokenAST) node, "'" + name
+                        + "' is undefined");
             }
             if (refType instanceof CompoundType)
             {
@@ -130,39 +143,54 @@ public class TypeReference extends TokenAST implements TypeInterface,
                 ctxt = ctype.getScope();
             }
         }
-        
-        // Check for circular containment
+
         if (refType instanceof CompoundType)
         {
             CompoundType inner = (CompoundType) refType;
+            // Check for missing arguments
+            if (inner.getParameterCount() > 0 && !hasArguments)
+            {
+                ToolContext.logError(this, inner.getName() + " is defined as parameterized type");
+            }
+            else if (inner.getParameterCount() <= 0 && hasArguments)
+            {
+                ToolContext.logError(this, inner.getName() + " is defined without an argument list");
+            }
+
+            // Check for circular containment
             if (outer != null && outer.isContainedIn(inner))
             {
-                ToolContext.logError(this, "circular containment between '" +
-                        inner.getName() + "' and '" + outer.getName() + "'");
+                ToolContext.logError(this, "circular containment between '"
+                        + inner.getName() + "' and '" + outer.getName() + "'");
             }
             inner.addContainer(outer);
         }
     }
+
 
     public IntegerValue sizeof(Context ctxt)
     {
         return refType.sizeof(ctxt);
     }
 
+
     public boolean isMember(Context ctxt, Value val)
     {
         return refType.isMember(ctxt, val);
     }
+
 
     public Value castFrom(Value val)
     {
         return refType.castFrom(val);
     }
 
+
     public String toString()
     {
         return "TypeReference name='" + name + "' refType='" + refType + "'";
     }
+
 
     static public TypeInterface resolveType(TypeInterface type)
     {
@@ -171,29 +199,40 @@ public class TypeReference extends TokenAST implements TypeInterface,
             if (type instanceof TypeReference)
                 type = ((TypeReference) type).refType;
             else if (type instanceof Subtype)
-                type = ((Subtype)type).getBaseType();
+                type = ((Subtype) type).getBaseType();
             else
                 break;
         }
         return type;
     }
 
+
     public Scope getScope()
     {
         throw new UnsupportedOperationException();
-    }    
+    }
+
+
     public int getLength()
     {
         throw new UnsupportedOperationException();
     }
-    
+
+
     public Expression getLengthExpression()
     {
         throw new UnsupportedOperationException();
     }
-    
+
+
     public Package getPackage()
     {
-    	return refType.getPackage();
+        return refType.getPackage();
+    }
+
+
+    public void setArgumentsPresent(boolean hasArguments)
+    {
+        this.hasArguments = hasArguments;
     }
 }
