@@ -1,0 +1,9 @@
+package tableimport.client;
+
+import tableimport.provider.*;
+
+sql_database Client
+{
+    TileTable clientTable;
+};
+

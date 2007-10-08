@@ -259,7 +259,8 @@
     </java>
   </target>
 
-  <target name="test.compile" depends="test.gen, sqlParamTest.gen, sqltest.gen, pkgtest.gen, functest.gen, jar, gif.gen" description="Builds the test cases">
+  <target name="test.compile" depends="test.gen, sqlParamTest.gen, sqltest.gen, pkgtest.gen, functest.gen, jar, gif.gen, tableImportTest.gen" 
+    description="Builds the test cases">
     <javac destdir="${build}/test/classes" debug="on" target="1.5">
       <classpath>
         <pathelement path="${jar}/rds-runtime.jar" />
@@ -320,6 +321,22 @@
 
   <target name="sqlParamTest.clean" description="removes all generated test Java sources and classes">
     <delete dir="${test.gen}/sqlParameter" />
+  </target>
+
+
+  <target name="tableImportTest.gen" depends="jar" description="Generates parser for test cases" unless="tableimporttest.uptodate">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+        <pathelement path="${lib}/freemarker.jar" />
+      </classpath>
+      <arg line="-c -doc -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} tableimport/client.ds" />
+    </java>
+  </target>
+
+  <target name="tableImportTest.clean" description="removes all generated test Java sources and classes">
+    <delete dir="${test.gen}/tableimport" />
   </target>
 
 
