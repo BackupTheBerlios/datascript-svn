@@ -179,7 +179,7 @@ bitmaskDeclaration
     ;
 
 constDeclaration
-    : #(c:"const" t:builtinType i:ID expression )
+    : #(c:"const" definedType i:ID expression )
       { scope().setTypeSymbol(i, c); 
         ((ConstType)c).setPackage(pkg);
       }

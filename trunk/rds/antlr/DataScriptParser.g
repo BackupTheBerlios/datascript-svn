@@ -230,14 +230,14 @@ enumItem
     ;
 
 bitmaskDeclaration
-    : "bitmask"^  builtinType (ID)? enumMemberList
+    : "bitmask"^ builtinType (ID)? enumMemberList
     ;
 
 /******************* end of enumerator stuff *****************/
 
 
 constDeclaration
-    : CONST^ builtinType ID ASSIGN! typeValue
+    : CONST^ definedType ID ASSIGN! typeValue
     ;
 
 

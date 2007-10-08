@@ -176,7 +176,7 @@ bitmaskDeclaration
     ;
 
 constDeclaration
-    : #("const" builtinType ID expression)
+    : #("const" definedType ID expression)
     ;
 
 fieldDefinition

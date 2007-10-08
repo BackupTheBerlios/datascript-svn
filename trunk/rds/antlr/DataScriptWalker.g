@@ -142,7 +142,7 @@ bitmaskDeclaration
     ;
 
 constDeclaration
-    : #("const" typeReference ID expression)
+    : #("const" definedType ID expression)
     ;
 
 fieldDefinition

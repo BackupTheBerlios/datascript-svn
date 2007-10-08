@@ -158,7 +158,9 @@ bitmaskDeclaration
 
 constDeclaration
     : #(c:"const"           { em.beginConst(c); } 
-        builtinType ID expression
+        definedType 
+        ID 
+        expression
        )                    { em.endConst(c); }
     ;
 

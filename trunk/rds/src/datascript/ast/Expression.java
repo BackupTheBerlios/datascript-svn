@@ -501,11 +501,11 @@ public class Expression extends TokenAST
         TypeInterface t1, t2;
 
         if (type1 instanceof ConstType)
-            t1 = ((ConstType) type1).getBaseType();
+            t1 = TypeReference.resolveType(((ConstType) type1).getBaseType());
         else
             t1 = type1;
         if (type2 instanceof ConstType)
-            t2 = ((ConstType) type2).getBaseType();
+            t2 = TypeReference.resolveType(((ConstType) type2).getBaseType());
         else
             t2 = type2;
 
