@@ -39,6 +39,7 @@ package datascript.ast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -241,7 +242,23 @@ public class Package extends Scope
     {
         return importedPackages.keySet();
     }
-    
+
+
+    /**
+     * Returns all names of all imported packages
+     * @return set of names
+     */
+    public Set<String> getAllImportNames()
+    {
+        HashSet<String> retVal = new HashSet<String>();
+        for (Package p : nameToPackage.values())
+        {
+            retVal.addAll(p.getImportNames());
+        }
+        return retVal;
+    }
+
+
     /**
      * Initializes the package name from the PACKAGE AST node.
      * @param n AST node.

@@ -39,7 +39,7 @@
 -->
 
 
-    public void visit(${sqlIntegerType.name} node, Object arg)
+    public void visit(${sqlIntPackageName}.${sqlIntegerType.name} node, Object arg)
     {
 <#if getStartType()?? && getStartType()?has_content>
         ${startType}

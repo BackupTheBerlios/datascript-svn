@@ -39,7 +39,7 @@
 -->
 
 
-    public void visit(${name} node, Object arg)
+    public void visit(${enumPackageName}.${name} node, Object arg)
     {
         __size += node.sizeof();
     }

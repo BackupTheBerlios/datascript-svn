@@ -150,11 +150,13 @@ public class TypeReference extends TokenAST implements TypeInterface,
             // Check for missing arguments
             if (inner.getParameterCount() > 0 && !hasArguments)
             {
-                ToolContext.logError(this, inner.getName() + " is defined as parameterized type");
+                ToolContext.logError(this, inner.getName()
+                        + " is defined as parameterized type");
             }
             else if (inner.getParameterCount() <= 0 && hasArguments)
             {
-                ToolContext.logError(this, inner.getName() + " is defined without an argument list");
+                ToolContext.logError(this, inner.getName()
+                        + " is defined without an argument list");
             }
 
             // Check for circular containment

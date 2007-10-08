@@ -39,7 +39,7 @@
 -->
 
 
-    public void visit(${enumerationType.name} node, Object arg)
+    public void visit(${enumPackageName}.${enumerationType.name} node, Object arg)
     {
         // this ist an ENUM, so nothing more to visit
     }

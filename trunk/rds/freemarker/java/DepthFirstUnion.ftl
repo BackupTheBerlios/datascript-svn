@@ -39,7 +39,7 @@
 -->
 
 
-    public void visit(${unionType.name} node, Object arg)
+    public void visit(${unionPackageName}.${unionType.name} node, Object arg)
     {
 <#if getStartType()?? && getStartType()?has_content>
         ${startType}
@@ -49,7 +49,7 @@
             switch (node.getChoiceTag())
             {
 <#list fields as field>
-                case ${unionType.name}.CHOICE_${field.name}:
+                case ${unionPackageName}.${unionType.name}.CHOICE_${field.name}:
                     ${field.visitor};
                     break;
 </#list>

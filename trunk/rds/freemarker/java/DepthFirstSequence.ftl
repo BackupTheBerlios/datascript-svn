@@ -39,7 +39,7 @@
 -->
 
 
-    public void visit(${sequenceType.name} node, Object arg)
+    public void visit(${sequencePackageName}.${sequenceType.name} node, Object arg)
     {
 <#if getStartType()?? && getStartType()?has_content>
         ${startType}

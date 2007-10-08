@@ -4,11 +4,11 @@
 	<classpathentry kind="src" path="build/gen"/>
 	<classpathentry kind="src" output="build/test/classes" path="test/src"/>
 	<classpathentry kind="src" output="build/test/classes" path="build/test/gen"/>
-	<classpathentry kind="lib" path="lib/antlr.jar" sourcepath="D:/work/antlr-2.7.7"/>
+	<classpathentry kind="lib" path="lib/antlr.jar" />
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc.jar"/>
 	<classpathentry kind="lib" path="lib/rds-ant.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/freemarker.jar" sourcepath="C:/Programme/freemarker-2.3.10/src"/>
+	<classpathentry kind="lib" path="lib/freemarker.jar" />
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -57,7 +57,7 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
 
     public int sizeof() 
     {
-        return __SizeOf.sizeof(this);
+        return ${rootPackageName}.__SizeOf.sizeof(this);
     }
 
 

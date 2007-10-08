@@ -35,21 +35,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.java;
+
 
 import antlr.collections.AST;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import freemarker.template.Template;
 
+
+
 public class SizeOfEmitter extends JavaDefaultEmitter
 {
     private EnumType enumeration;
+
 
     public SizeOfEmitter(String outPathName, String defaultPackageName)
     {
         super(outPathName, defaultPackageName);
     }
+
 
     public void beginRoot(AST rootNode)
     {
@@ -67,6 +74,7 @@ public class SizeOfEmitter extends JavaDefaultEmitter
         }
     }
 
+
     public void endRoot()
     {
         try
@@ -80,6 +88,7 @@ public class SizeOfEmitter extends JavaDefaultEmitter
         }
         writer.close();
     }
+
 
     public void beginEnumeration(AST e)
     {
@@ -95,17 +104,26 @@ public class SizeOfEmitter extends JavaDefaultEmitter
         }
     }
 
+
     public EnumType getEnumerationType()
     {
         return enumeration;
     }
 
-    /**** interface to freemarker FileHeader.inc template ****/
+
+    public String getEnumPackageName()
+    {
+        return enumeration.getPackage().getPackageName();
+    }
+
+
+    /** ** interface to freemarker FileHeader.inc template *** */
 
     public String getRootPackageName()
     {
         return datascript.ast.Package.getRoot().getPackageName();
     }
+
 
     public String getName()
     {

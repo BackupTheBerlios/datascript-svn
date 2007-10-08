@@ -36,7 +36,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 package datascript.emit.java;
+
+
+import java.util.Set;
 
 import antlr.collections.AST;
 import datascript.ast.DataScriptException;
@@ -46,12 +50,15 @@ import datascript.ast.UnionType;
 import datascript.ast.SqlIntegerType;
 import freemarker.template.Template;
 
+
+
 public class VisitorEmitter extends JavaDefaultEmitter
 {
     public VisitorEmitter(String outPathName, String defaultPackageName)
     {
         super(outPathName, defaultPackageName);
     }
+
 
     public void beginRoot(AST rootNode)
     {
@@ -69,6 +76,7 @@ public class VisitorEmitter extends JavaDefaultEmitter
         }
     }
 
+
     public void endRoot()
     {
         try
@@ -83,49 +91,62 @@ public class VisitorEmitter extends JavaDefaultEmitter
         writer.close();
     }
 
+
     public void beginSequence(AST s)
     {
         SequenceType sequence = (SequenceType) s;
         String typeName = getTypeName(sequence);
+        typeName = sequence.getPackage().getPackageName() + "." + typeName;
         emitVisitor(typeName);
     }
+
 
     public void endSequence(AST s)
     {
     }
 
+
     public void beginUnion(AST u)
     {
         UnionType union = (UnionType) u;
         String typeName = getTypeName(union);
+        typeName = union.getPackage().getPackageName() + "." + typeName;
         emitVisitor(typeName);
     }
+
 
     public void endUnion(AST u)
     {
     }
 
+
     public void beginEnumeration(AST e)
     {
         EnumType enumType = (EnumType) e;
         String typeName = getTypeName(enumType);
+        typeName = enumType.getPackage().getPackageName() + "." + typeName;
         emitVisitor(typeName);
     }
+
 
     public void endEnumeration(AST e)
     {
     }
 
+
     public void beginSqlInteger(AST s)
     {
         SqlIntegerType integerType = (SqlIntegerType) s;
         String typeName = getTypeName(integerType);
+        typeName = integerType.getPackage().getPackageName() + "." + typeName;
         emitVisitor(typeName);
     }
+
 
     public void endSqlInteger(AST s)
     {
     }
+
 
     private void emitVisitor(String typeName)
     {
@@ -135,7 +156,31 @@ public class VisitorEmitter extends JavaDefaultEmitter
         writer.println(buffer);
     }
 
-    /**** interface to freemarker FileHeader.inc template ****/
+
+    public String getPackageImports()
+    {
+        StringBuilder buffer = new StringBuilder();
+        // Set<String> importNames = getImportNameList();
+        Set<String> importNames = datascript.ast.Package.getRoot()
+                .getAllImportNames();
+        for (String importName : importNames)
+        {
+            if (!allPackageNames.contains(importName))
+            {
+                System.err.println("WARNING: could not find package "
+                        + importName);
+                continue;
+            }
+            buffer.append("import ");
+            buffer.append(importName);
+            buffer.append(".*;");
+            buffer.append(System.getProperties().getProperty("line.separator"));
+        }
+        return buffer.toString();
+    }
+
+
+    /** ** interface to freemarker FileHeader.inc template *** */
 
     public String getRootPackageName()
     {
