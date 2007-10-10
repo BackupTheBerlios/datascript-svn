@@ -35,6 +35,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
 
 
@@ -42,43 +44,50 @@ public class SequenceType extends CompoundType
 {
 
     public SequenceType()
-    {        
+    {
     }
-    
+
+
     public IntegerValue sizeof(Context ctxt)
     {
-        IntegerValue size = new IntegerValue(0);
         IntegerValue eight = new IntegerValue(8);
+        IntegerValue size = bitsizeof(ctxt);
+        if (size.remainder(eight).compareTo(new IntegerValue(0)) != 0) 
+        {
+            throw new RuntimeException("sizeof not integer: " + size);
+        }
+        return size.divide(eight);
+    }
+
+
+    public IntegerValue bitsizeof(Context ctxt)
+    {
+        IntegerValue size = new IntegerValue(0);
 
         for (int i = 0; i < fields.size(); i++)
         {
             Field fi = (Field) fields.elementAt(i);
-            /* TODO:
-            try
-            {
-                StdIntegerType b = StdIntegerType.getBuiltinType(fi.getFieldType());
-                if (b instanceof BitFieldType)
-                {
-                    size = size.add(new IntegerValue(((BitFieldType) b)
-                            .getLength()));
-                    continue;
-                }
-            }
-            catch (ClassCastException _)
-            {
-            }
-                */
-            size = size.add(fi.sizeof(ctxt).multiply(eight));
+            /*
+             * TODO: try { StdIntegerType b =
+             * StdIntegerType.getBuiltinType(fi.getFieldType()); if (b
+             * instanceof BitFieldType) { size = size.add(new
+             * IntegerValue(((BitFieldType) b) .getLength())); continue; } }
+             * catch (ClassCastException _) { }
+             */
+            size = size.add(fi.bitsizeof(ctxt));
         }
-        return size.divide(eight);
+        return size;
     }
+
 
     public boolean isMember(Context ctxt, Value val)
     {
         // do something like
         // if val.getType() == this
-        throw new ComputeError("isMember() not implemented in " + this.getClass().getName());
+        throw new ComputeError("isMember() not implemented in "
+                + this.getClass().getName());
     }
+
 
     public String toString()
     {

@@ -59,6 +59,12 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
     }
 
 
+    public int bitsizeof() 
+    {
+        return ${rootPackageName}.__SizeOf.bitsizeof(this);
+    }
+
+
     public boolean equals(Object obj)
     {
         if (obj instanceof ${className})

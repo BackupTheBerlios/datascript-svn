@@ -35,12 +35,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
+
+
 
 public class Field extends TokenAST
 {
@@ -60,9 +65,11 @@ public class Field extends TokenAST
 
     private Token documentation;
 
+
     public Field()
     {
     }
+
 
     public IntegerValue sizeof(Context ctxt)
     {
@@ -74,22 +81,37 @@ public class Field extends TokenAST
         return type.sizeof(ctxt);
     }
 
+
+    public IntegerValue bitsizeof(Context ctxt)
+    {
+        if (fieldOptionalClause != null)
+        {
+            throw new Error("sizeof cannot be applied to optional field");
+        }
+        type = getFieldType();
+        return type.bitsizeof(ctxt);
+    }
+
+
     public String getName()
     {
         String result = (name == null) ? "<void>" : name.getText();
         return result;
     }
 
+
     public void setName(AST name)
     {
         this.name = (TokenAST) name;
     }
+
 
     public TypeInterface getFieldType()
     {
         TypeInterface t = (TypeInterface) getFirstChild();
         return t;
     }
+
 
     public Expression getLabel()
     {
@@ -103,20 +125,24 @@ public class Field extends TokenAST
         }
     }
 
+
     public void setLabel(AST label)
     {
         this.fieldLabel = (TokenAST) label;
     }
+
 
     public CompoundType getCompound()
     {
         return compound;
     }
 
+
     void setCompound(CompoundType compound)
     {
         this.compound = compound;
     }
+
 
     public Expression getCondition()
     {
@@ -130,10 +156,12 @@ public class Field extends TokenAST
         }
     }
 
+
     public void setCondition(AST fieldCondition)
     {
         this.fieldCondition = (TokenAST) fieldCondition;
     }
+
 
     public Expression getOptionalClause()
     {
@@ -147,10 +175,12 @@ public class Field extends TokenAST
         }
     }
 
+
     public void setOptionalClause(AST optional)
     {
         this.fieldOptionalClause = (TokenAST) optional;
     }
+
 
     public Expression getInitializer()
     {
@@ -164,20 +194,24 @@ public class Field extends TokenAST
         }
     }
 
+
     public void setInitializer(AST fieldInitializer)
     {
         this.fieldInitializer = (TokenAST) fieldInitializer;
     }
+
 
     public String getDocumentation()
     {
         return (documentation == null) ? "" : documentation.getText();
     }
 
+
     public void setDocumentation(Token doc)
     {
         documentation = doc;
     }
+
 
     public String getSqlConstraint()
     {
@@ -192,6 +226,7 @@ public class Field extends TokenAST
         return result;
 
     }
+
 
     public String toString()
     {

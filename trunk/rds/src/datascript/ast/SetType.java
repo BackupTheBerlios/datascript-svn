@@ -35,7 +35,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,6 +48,8 @@ import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
+
+
 
 public class SetType extends TokenAST implements TypeInterface
 {
@@ -58,10 +63,12 @@ public class SetType extends TokenAST implements TypeInterface
 
     CompoundType ctype; // compound in which this set type is defined
 
+
     public SetType()
     {
-        
+
     }
+
 
     public String getName()
     {
@@ -72,6 +79,7 @@ public class SetType extends TokenAST implements TypeInterface
         }
         return name;
     }
+
 
     public String getDocumentation()
     {
@@ -84,9 +92,10 @@ public class SetType extends TokenAST implements TypeInterface
         return result;
     }
 
+
     public TypeInterface getBaseType()
     {
-        return (TypeInterface)getFirstChild();
+        return (TypeInterface) getFirstChild();
     }
 
 
@@ -101,6 +110,7 @@ public class SetType extends TokenAST implements TypeInterface
         Arrays.sort(values);
         return values;
     }
+
 
     /**
      * not clear what this means - finding out whether it's a valid combination
@@ -119,33 +129,46 @@ public class SetType extends TokenAST implements TypeInterface
         return false;
     }
 
+
     public IntegerValue sizeof(Context ctxt)
     {
         return getBaseType().sizeof(ctxt);
     }
 
+
+    public IntegerValue bitsizeof(Context ctxt)
+    {
+        return getBaseType().bitsizeof(ctxt);
+    }
+
+
     public Value castFrom(Value val)
     {
         throw new InternalError("SetType.castFrom() not implemented");
     }
-    
+
+
     public Scope getScope()
     {
         return null;
     }
+
+
     public int getLength()
     {
         throw new InternalError("not implemented");
     }
-    
+
+
     public Expression getLengthExpression()
     {
         throw new InternalError("not implemented");
     }
-    
+
+
     public Package getPackage()
     {
-    	return pkg;
+        return pkg;
     }
-    
+
 }

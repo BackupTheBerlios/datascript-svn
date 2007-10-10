@@ -48,12 +48,20 @@ public interface TypeInterface
     final static int DEFAULT_BYTE_ORDER = BIG_ENDIAN;
 
     /**
-     * Return size of of this type, if known.
+     * Return size of bytes of this type, if known.
      * 
      * @throws ComputeError
      *             if not known
      */
     IntegerValue sizeof(Context ctxt);
+
+    /**
+     * Return size of bits of this type, if known.
+     * 
+     * @throws ComputeError
+     *             if not known
+     */
+    IntegerValue bitsizeof(Context ctxt);
 
     /**
      * Is this val a member of this type in this context?

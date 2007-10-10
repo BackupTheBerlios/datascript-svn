@@ -35,11 +35,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
+
+
 
 /**
  * This class represents a function within a compound type.
@@ -53,15 +58,18 @@ public class FunctionType extends TokenAST implements TypeInterface
     private TypeInterface returnType;
     private Expression result;
 
+
     public FunctionType()
     {
     }
+
 
     public FunctionType(Token token)
     {
         super(token);
     }
-    
+
+
     private void initMembersIfNeeded()
     {
         if (name == null)
@@ -71,67 +79,85 @@ public class FunctionType extends TokenAST implements TypeInterface
             ast = ast.getNextSibling();
             returnType = (StdIntegerType) ast;
             result = (Expression) ast.getNextSibling().getFirstChild();
-        }        
+        }
     }
+
 
     public String getName()
     {
         initMembersIfNeeded();
         return name;
     }
-    
+
+
     public Expression getResult()
     {
         initMembersIfNeeded();
         return result;
     }
-    
+
+
     public TypeInterface getReturnType()
     {
         initMembersIfNeeded();
         return returnType;
     }
-    
+
+
     public void setOwner(AST ast)
     {
         owner = (CompoundType) ast;
     }
-    
+
+
     public CompoundType getOwner()
     {
         return owner;
     }
-    
+
+
     public int getLength()
     {
         throw new UnsupportedOperationException();
     }
+
 
     public Value castFrom(Value val)
     {
         throw new UnsupportedOperationException();
     }
 
+
     public Scope getScope()
     {
         return null;
     }
-    
+
+
     public boolean isMember(Context ctxt, Value val)
     {
         throw new UnsupportedOperationException();
     }
-    
+
+
     public Package getPackage()
     {
         return owner.getPackage();
     }
 
+
     public IntegerValue sizeof(Context ctxt)
     {
         throw new UnsupportedOperationException();
     }
-    
+
+
+    public IntegerValue bitsizeof(Context ctxt)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+
     public Expression getLengthExpression()
     {
         return null;

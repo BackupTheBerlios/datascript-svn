@@ -35,11 +35,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import datascript.antlr.util.TokenAST;
 import antlr.Token;
 import antlr.collections.AST;
+
+
 
 /**
  * @author HWellmann
@@ -48,36 +53,49 @@ import antlr.collections.AST;
 public class SqlTableType extends CompoundType
 {
     private TokenAST sqlConstraint;
-    
+
+
     public SqlTableType()
-    {        
+    {
     }
-    
+
+
     public void setSqlConstraint(AST s)
     {
-        sqlConstraint = (TokenAST)s;
+        sqlConstraint = (TokenAST) s;
     }
-    
+
+
     public TokenAST getSqlConstraint()
     {
         return sqlConstraint;
     }
+
 
     public IntegerValue sizeof(Context ctxt)
     {
         throw new UnsupportedOperationException("sizeof not implemented");
     }
 
+
+    public IntegerValue bitsizeof(Context ctxt)
+    {
+        throw new UnsupportedOperationException("bitsizeof not implemented");
+    }
+
+
     public boolean isMember(Context ctxt, Value val)
     {
         throw new UnsupportedOperationException("isMember not implemented");
     }
 
+
     public String toString()
     {
         return "SQL_TABLE";
     }
-    
+
+
     public String getDocumentation()
     {
         String result = "";
@@ -87,5 +105,5 @@ public class SqlTableType extends CompoundType
             result = t.getText();
         }
         return result;
-    }    
+    }
 }

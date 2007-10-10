@@ -78,13 +78,19 @@ public class ConstType extends TokenAST implements TypeInterface
 
     public TypeInterface getBaseType()
     {
-        return (TypeInterface)getFirstChild();
+        return (TypeInterface) getFirstChild();
     }
 
 
     public IntegerValue sizeof(Context ctxt)
     {
         return getBaseType().sizeof(ctxt);
+    }
+
+
+    public IntegerValue bitsizeof(Context ctxt)
+    {
+        return getBaseType().bitsizeof(ctxt);
     }
 
 

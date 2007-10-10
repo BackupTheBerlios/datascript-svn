@@ -87,6 +87,12 @@ public class Subtype extends TokenAST implements TypeInterface
     }
 
 
+    public IntegerValue bitsizeof(Context ctx)
+    {
+        return getBaseType().bitsizeof(ctx);
+    }
+
+
     public Scope getScope()
     {
         throw new UnsupportedOperationException(

@@ -78,7 +78,7 @@ public class EnumerationEmitter
         public EnumerationItemEmitter(EnumItem item)
         {
             this.item = item;
-            maxVal = new IntegerValue(1).shiftLeft(item.getEnumType().getBaseType().sizeof(null));
+            maxVal = new IntegerValue(1).shiftLeft(item.getEnumType().getBaseType().bitsizeof(null));
         }
 
 
@@ -205,5 +205,11 @@ public class EnumerationEmitter
     public int getEnumSize()
     {
         return enumType.sizeof(null).integerValue().intValue();
+    }
+
+
+    public int getEnumBitsize()
+    {
+        return enumType.bitsizeof(null).integerValue().intValue();
     }
 }

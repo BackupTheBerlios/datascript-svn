@@ -41,5 +41,5 @@
 
     public void visit(${enumPackageName}.${name} node, Object arg)
     {
-        __size += node.sizeof();
+        __bitsize += node.bitsizeof();
     }

@@ -78,14 +78,14 @@ public class SqlIntegerEmitter extends CompoundEmitter
 
         public long getBitmask()
         {
-            int bitSize = field.getFieldType().sizeof(null).integerValue().intValue();
+            int bitSize = field.getFieldType().bitsizeof(null).integerValue().intValue();
             return (1L << bitSize) - 1L;
         }
 
 
         public long getBitsize()
         {
-            return field.getFieldType().sizeof(null).integerValue().intValue();
+            return field.getFieldType().bitsizeof(null).integerValue().intValue();
         }
     }
 
@@ -131,7 +131,7 @@ public class SqlIntegerEmitter extends CompoundEmitter
         {
             IntegerFieldEmitter fe = new IntegerFieldEmitter(field, this);
             fields.add(fe);
-            totalTypeSize += field.getFieldType().sizeof(null).integerValue().intValue();
+            totalTypeSize += field.getFieldType().bitsizeof(null).integerValue().intValue();
         }
 
         try

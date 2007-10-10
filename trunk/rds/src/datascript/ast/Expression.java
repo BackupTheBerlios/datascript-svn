@@ -175,6 +175,10 @@ public class Expression extends TokenAST
                 evaluateSizeOfExpression();
                 break;
 
+            case DataScriptParserTokenTypes.BITSIZEOF:
+                evaluateSizeOfExpression();
+                break;
+
             case DataScriptParserTokenTypes.SUM:
                 evaluateSumFunction();
                 break;

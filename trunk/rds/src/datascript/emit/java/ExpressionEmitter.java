@@ -153,6 +153,10 @@ public class ExpressionEmitter
                 append(expr.op1());
                 buffer.append(".sizeof()");
                 return;
+            case DataScriptParserTokenTypes.BITSIZEOF:
+                append(expr.op1());
+                buffer.append(".bitsizeof()");
+                return;
             case DataScriptParserTokenTypes.SUM:
                 emitCompoundPrefix();
                 append(expr.op1());

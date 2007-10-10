@@ -176,6 +176,12 @@ public class TypeReference extends TokenAST implements TypeInterface,
     }
 
 
+    public IntegerValue bitsizeof(Context ctxt)
+    {
+        return refType.bitsizeof(ctxt);
+    }
+
+
     public boolean isMember(Context ctxt, Value val)
     {
         return refType.isMember(ctxt, val);
@@ -202,8 +208,7 @@ public class TypeReference extends TokenAST implements TypeInterface,
                 type = ((TypeReference) type).refType;
             else if (type instanceof Subtype)
                 type = ((Subtype) type).getBaseType();
-            else
-                break;
+            else break;
         }
         return type;
     }

@@ -94,11 +94,21 @@ public class ArrayType extends TokenAST implements TypeInterface
 
     public IntegerValue sizeof(Context ctxt)
     {
-        // throw new ComputeError("sizeof() not implemented in " +
-        // this.getClass().getName());
         IntegerValue eight = new IntegerValue(8);
-        IntegerValue size = ((TypeReference) getFirstChild()).sizeof(ctxt);
+
+        IntegerValue size = ((TypeReference) getFirstChild()).bitsizeof(ctxt);
+        if (size.remainder(eight).compareTo(new IntegerValue(0)) != 0) 
+        {
+            throw new RuntimeException("sizeof not integer: " + size);
+        }
         return size.multiply(new IntegerValue(getLength())).divide(eight);
+    }
+
+
+    public IntegerValue bitsizeof(Context ctxt)
+    {
+        IntegerValue size = ((TypeReference) getFirstChild()).bitsizeof(ctxt);
+        return size.multiply(new IntegerValue(getLength()));
     }
 
 

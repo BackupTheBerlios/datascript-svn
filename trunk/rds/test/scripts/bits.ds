@@ -21,7 +21,7 @@ TestConstParameter
 
 TestForBug1732604 
 {
-	ByteAlignedBitField(5) data;
+    ByteAlignedBitField(5) data;
 };
 
 
@@ -35,7 +35,7 @@ ByteAlignedBitField(uint16 numBits)
  * test for structures without names
  *
 {
-	uint8 bla;
+    uint8 bla;
 };
 */
 
@@ -45,7 +45,7 @@ ByteAlignedBitField(uint16 numBits)
  */
 union BitField
 {
-    bit:8 value1 : 1 == 2;
+    bit:8  value1 : 1 == 2;
     bit:16 value2 : 2 == 2;
 };
 
@@ -224,6 +224,7 @@ VarArrayWithSize
 {
    VarArray     var;
    uint16       size = sizeof var;
+   uint16       bitsize = bitsizeof var;
 };
 
 ParamBlock(uint16 size)
@@ -235,31 +236,31 @@ ParamBlock(uint16 size)
 
 GlobalLabelSeq
 {
-    uint16		    magic = 0xFFFF;
+    uint16          magic = 0xFFFF;
     LabelledType    lt;
 };
 
 LabelledType
 {
-    uint16	numItems;
+    uint16  numItems;
     uint16  dataOffset;
     uint16  globalOffset;
-    Header	headers[numItems];
+    Header  headers[numItems];
 dataOffset:    
-    ItemA	a[numItems];
+    ItemA   a[numItems];
 GlobalLabelSeq::globalOffset:
-    int32	x;
+    int32   x;
 };
 
 CondExpr
 {
-    uint8	    tag;
+    uint8        tag;
     CondBlock(tag % 2 == 0 ? 47 : 11)  block;
 };
 
 CondBlock(uint8 tag)
 {
-    int32	    value : value == tag;
+    int32        value : value == tag;
 };
 
 VarBitField
@@ -272,7 +273,7 @@ Coord(bit:5 n)
 {    
     bit<n>    x;
     bit<n>    y;
-    bit<n>    array[2];	
+    bit<n>    array[2];    
 };
 
 BaseTypes
@@ -288,16 +289,16 @@ BaseTypes
 
 RecursiveStructure
 {
-	uint8	count;
-	RecursiveData(count) theElement	if count > 0;
+    uint8    count;
+    RecursiveData(count) theElement    if count > 0;
 };
 
 RecursiveData(uint8 byteCount)
 {
-	uint8	dataBytes[byteCount]	: byteCount > 0;
-	uint8	blockTerminator;
+    uint8    dataBytes[byteCount]    : byteCount > 0;
+    uint8    blockTerminator;
 
-	RecursiveData(blockTerminator)	nextData	if blockTerminator > 0;
+    RecursiveData(blockTerminator)    nextData    if blockTerminator > 0;
 };
 
 subtype uint16  TileId;

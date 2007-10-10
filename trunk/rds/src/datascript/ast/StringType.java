@@ -35,10 +35,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import datascript.antlr.util.TokenAST;
 import antlr.collections.AST;
+
+
 
 public class StringType extends TokenAST implements TypeInterface
 {
@@ -47,25 +52,36 @@ public class StringType extends TokenAST implements TypeInterface
         throw new ComputeError("sizeof String not known");
     }
 
+
+    public IntegerValue bitsizeof(Context ctxt)
+    {
+        throw new ComputeError("bitsizeof String not known");
+    }
+
+
     public boolean isMember(Context ctxt, Value val)
     {
         throw new ComputeError("StringType.isMember not implemented");
     }
+
 
     public Value castFrom(Value val)
     {
         throw new InternalError("IntegerType.castFrom not implemented");
     }
 
+
     public int getLength()
     {
         throw new InternalError("not implemented");
     }
 
+
     public Scope getScope()
     {
         throw new InternalError("not implemented");
     }
+
 
     public String getName()
     {
@@ -76,26 +92,27 @@ public class StringType extends TokenAST implements TypeInterface
         }
         return null;
     }
-    
+
+
     public Expression getLengthExpression()
     {
         throw new InternalError("not implemented");
     }
-    
-/********************************************************************/
-/*
-    public StringType()
-    {
-    }
-*/
+
+
+    /** ***************************************************************** */
+    /*
+     * public StringType() { }
+     */
     public String toString()
     {
         return "STRING";
     }
 
+
     public Package getPackage()
     {
-    	return Package.BUILTIN;
+        return Package.BUILTIN;
     }
 
 }

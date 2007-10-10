@@ -67,6 +67,7 @@ public class SizeOfTest extends TestCase
         os.writeShort(numElems);
         int size = (int)os.getStreamPosition();
         os.writeShort(size);
+        os.writeShort(size*8);
 
         size = (int)os.getStreamPosition();
         os.close();

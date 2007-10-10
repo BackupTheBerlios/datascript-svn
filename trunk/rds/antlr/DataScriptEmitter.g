@@ -444,6 +444,7 @@ expression
     | #(TILDE expression)
     | #(BANG expression)
     | #(SIZEOF expression)
+    | #(BITSIZEOF expression)
     | #(LENGTHOF expression)
     | #(DOT expression)
     | #(ARRAYELEM expression)

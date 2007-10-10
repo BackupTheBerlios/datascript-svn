@@ -35,34 +35,50 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import datascript.antlr.util.TokenAST;
 import antlr.collections.AST;
 
+
+
 public class BooleanType extends TokenAST implements TypeInterface
 {
     static BooleanType booleanType = new BooleanType();
+
 
     public IntegerValue sizeof(Context ctxt)
     {
         throw new ComputeError("cannot apply sizeof to boolean type");
     }
 
+
+    public IntegerValue bitsizeof(Context ctxt)
+    {
+        return new IntegerValue(1);
+    }
+
+
     public boolean isMember(Context ctxt, Value val)
     {
         return (val instanceof BooleanValue);
     }
+
 
     public Value castFrom(Value val)
     {
         throw new InternalError("not implemented");
     }
 
+
     public String toString()
     {
         return "boolean";
     }
+
 
     public String getName()
     {
@@ -74,23 +90,27 @@ public class BooleanType extends TokenAST implements TypeInterface
         return null;
     }
 
+
     public Scope getScope()
     {
         throw new InternalError("not implemented");
     }
 
+
     public int getLength()
     {
         throw new InternalError("not implemented");
     }
-    
+
+
     public Expression getLengthExpression()
     {
         throw new InternalError("not implemented");
     }
-    
+
+
     public Package getPackage()
     {
-    	return Package.BUILTIN;
+        return Package.BUILTIN;
     }
 }

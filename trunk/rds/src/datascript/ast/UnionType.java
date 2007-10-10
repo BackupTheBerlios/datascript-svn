@@ -35,7 +35,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 public class UnionType extends CompoundType
 {
@@ -45,6 +48,7 @@ public class UnionType extends CompoundType
 
     }
 
+
     public IntegerValue sizeof(Context ctxt)
     {
         IntegerValue size = ((Field) fields.elementAt(0)).sizeof(ctxt);
@@ -52,11 +56,26 @@ public class UnionType extends CompoundType
         {
             if (size.compareTo(((Field) fields.elementAt(i)).sizeof(ctxt)) != 0)
             {
-                throw new ComputeError("sizeof is unknown");
+                throw new ComputeError("sizeof is ambiguous");
             }
         }
         return size;
     }
+
+
+    public IntegerValue bitsizeof(Context ctxt)
+    {
+        IntegerValue size = ((Field) fields.elementAt(0)).bitsizeof(ctxt);
+        for (int i = 1; i < fields.size(); i++)
+        {
+            if (size.compareTo(((Field) fields.elementAt(i)).bitsizeof(ctxt)) != 0)
+            {
+                throw new ComputeError("bitsizeof is ambiguous");
+            }
+        }
+        return size;
+    }
+
 
     public boolean isMember(Context ctxt, Value val)
     {
@@ -64,6 +83,7 @@ public class UnionType extends CompoundType
         // if val.getType() == this
         throw new ComputeError("isMember not implemented");
     }
+
 
     public String toString()
     {

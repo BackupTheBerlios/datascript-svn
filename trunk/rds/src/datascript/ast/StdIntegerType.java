@@ -96,6 +96,18 @@ public class StdIntegerType extends IntegerType
 
     public IntegerValue sizeof(Context ctxt)
     {
+        IntegerValue eight = new IntegerValue(8);
+        IntegerValue size = bitsizeof(ctxt);
+        if (size.remainder(eight).compareTo(new IntegerValue(0)) != 0) 
+        {
+            throw new RuntimeException("sizeof not integer: " + size);
+        }
+        return size.divide(eight);
+    }
+
+
+    public IntegerValue bitsizeof(Context ctxt)
+    {
         switch (getType())
         {
             case DataScriptParserTokenTypes.UINT8:
@@ -117,7 +129,7 @@ public class StdIntegerType extends IntegerType
             //case DataScriptParserTokenTypes.LEINT64:
                 return new IntegerValue(64);
             default:
-                throw new ComputeError("unknown type in sizeof");
+                throw new ComputeError("unknown type in bitsizeof");
         }
     }
 

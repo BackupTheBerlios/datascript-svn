@@ -554,6 +554,7 @@ expression
     | TILDE
     | BANG
     | SIZEOF
+    | BITSIZEOF
     | LENGTHOF
     | DOT
     | ARRAYELEM

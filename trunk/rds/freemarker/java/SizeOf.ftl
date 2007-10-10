@@ -44,84 +44,84 @@ ${packageImports}
 
 public class __SizeOf extends ${rootPackageName}.__DepthFirstVisitor
 {
-    private int __size = 0;
+    private int __bitsize = 0;
 
 
     public void visitInt8(byte n, Object arg) 
     {
-        __size += 8;
+        __bitsize += 8;
     }
 
 
     public void visitInt16(short n, Object arg)
     {
-        __size += 16;
+        __bitsize += 16;
     }
 
 
     public void visitInt32(int n, Object arg)
     {
-        __size += 32;
+        __bitsize += 32;
     }
 
 
     public void visitInt64(long n, Object arg)
     {
-        __size += 64;
+        __bitsize += 64;
     }
 
 
     public void visitUInt8(short n, Object arg)
     {
-        __size += 8;
+        __bitsize += 8;
     }
 
 
     public void visitUInt16(int n, Object arg)
     {
-        __size += 16;
+        __bitsize += 16;
     }
 
 
     public void visitUInt32(long n, Object arg)
     {
-        __size += 32;
+        __bitsize += 32;
     }
 
 
     public void visitUInt64(BigInteger n, Object arg)
     {
-        __size += 64;
+        __bitsize += 64;
     }
 
 
     public void visitBitField(byte n, int length, Object arg)
     {
-        __size += length;
+        __bitsize += length;
     }
 
 
     public void visitBitField(short n, int length, Object arg)
     {
-        __size += length;
+        __bitsize += length;
     }
 
 
     public void visitBitField(int n, int length, Object arg)
     {
-        __size += length;
+        __bitsize += length;
     }
 
 
     public void visitBitField(long n, int length, Object arg)
     {
-        __size += length;
+        __bitsize += length;
     }
 
 
     public void visitBitField(BigInteger n, int length, Object arg)
     {
-        __size += length;
+        __bitsize += length;
     }
 
 
@@ -129,7 +129,7 @@ public class __SizeOf extends ${rootPackageName}.__DepthFirstVisitor
     {
         // do not use n.length()! the result contains only 
         // the count auf characters, not the count of bytes
-        __size += (n.getBytes().length + 1) << 3;
+        __bitsize += (n.getBytes().length + 1) << 3;
     }
 
 
@@ -137,9 +137,17 @@ public class __SizeOf extends ${rootPackageName}.__DepthFirstVisitor
     {
         __SizeOf v = new __SizeOf();
         a.accept(v, null);
-        if (v.__size % 8 != 0) 
+        if (v.__bitsize % 8 != 0) 
         {
-            throw new RuntimeException("sizeof not integer: " + v.__size);
+            throw new RuntimeException("sizeof not integer: " + v.__bitsize);
         }
-        return v.__size / 8;
+        return v.__bitsize / 8;
+    }
+
+
+    public static int bitsizeof(${rootPackageName}.__Visitor.Acceptor a) 
+    {
+        __SizeOf v = new __SizeOf();
+        a.accept(v, null);
+        return v.__bitsize;
     }

@@ -110,6 +110,7 @@ tokens
     RSHIFT<AST=datascript.ast.IntegerExpression>;
     SEQUENCE<AST=datascript.ast.SequenceType>;
     SIZEOF<AST=datascript.ast.IntegerExpression>;
+    BITSIZEOF<AST=datascript.ast.IntegerExpression>;
     SQL="sql";
     SQL_DATABASE="sql_database"<AST=datascript.ast.SqlDatabaseType>;
     SQL_INTEGER="sql_integer"<AST=datascript.ast.SqlIntegerType>;
@@ -668,6 +669,7 @@ unaryExpression
     :   postfixExpression
     |   unaryOperand
     |   sizeOfOperand
+    |   bitsizeOfOperand
     |   lengthOfOperand
     |   sumFunction
     ;
@@ -686,6 +688,11 @@ unaryOperator
 sizeOfOperand!
     :   "sizeof"^ e:unaryExpression
         { #sizeOfOperand = #([SIZEOF, "SIZEOF"], e); }
+    ;
+
+bitsizeOfOperand!
+    :   "bitsizeof"^ e:unaryExpression
+        { #bitsizeOfOperand = #([BITSIZEOF, "BITSIZEOF"], e); }
     ;
 
 lengthOfOperand!

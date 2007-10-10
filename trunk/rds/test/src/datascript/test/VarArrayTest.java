@@ -1,7 +1,10 @@
 /**
  * 
  */
+
+
 package datascript.test;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -14,9 +17,11 @@ import bits.ItemB;
 import bits.arrays.VarArray;
 import datascript.runtime.array.ObjectArray;
 
+
+
 /**
  * @author HWellmann
- *
+ * 
  */
 public class VarArrayTest extends TestCase
 {
@@ -25,14 +30,17 @@ public class VarArrayTest extends TestCase
     private String fileName = "vararraytest.bin";
     private File file = new File(fileName);
 
+
     /**
      * Constructor for BitStreamReaderTest.
+     * 
      * @param name
      */
     public VarArrayTest(String name)
     {
         super(name);
     }
+
 
     /*
      * @see TestCase#setUp()
@@ -41,6 +49,7 @@ public class VarArrayTest extends TestCase
     {
     }
 
+
     /*
      * @see TestCase#tearDown()
      */
@@ -48,14 +57,16 @@ public class VarArrayTest extends TestCase
     {
         file.delete();
     }
-    
-    private void checkArray(VarArray array, int size, int numElems, int startValue)
+
+
+    private void checkArray(VarArray array, int size, int numElems,
+            int startValue)
     {
         ObjectArray<ItemA> aa = array.getA();
         for (int i = 0; i < aa.length(); i++)
         {
             ItemA a = aa.elementAt(i);
-            assertEquals(startValue+i, a.getValue());
+            assertEquals(startValue + i, a.getValue());
         }
         ItemB b = array.getB();
         assertEquals(startValue, b.getValue());
@@ -63,27 +74,35 @@ public class VarArrayTest extends TestCase
         assertEquals(size, array.sizeof());
     }
 
+
     /*
      * Test method for 'datascript.library.BitStreamReader.readByte()'
      */
     private int writeArray(int numElems, int startValue) throws IOException
     {
-    	file.delete();
+        file.delete();
         os = new FileImageOutputStream(file);
 
+        // ItemA
         for (int i = 0; i < numElems; i++)
         {
             os.writeByte(1);
-            os.writeShort(startValue+i);
+            os.writeShort(startValue + i);
         }
+
+        // ItemB
         os.writeByte(2);
         os.writeInt(startValue);
+
+        // len
         os.writeShort(numElems);
-        int size = (int)os.getStreamPosition();
+
+        int size = (int) os.getStreamPosition();
         os.close();
 
         return size;
     }
+
 
     public void testArray1() throws Exception
     {
@@ -98,6 +117,7 @@ public class VarArrayTest extends TestCase
         assertTrue(array.equals(array2));
     }
 
+
     public void testArray2() throws Exception
     {
         int size = writeArray(10, 2000);
@@ -110,6 +130,7 @@ public class VarArrayTest extends TestCase
         checkArray(array2, size, 10, 2000);
         assertTrue(array.equals(array2));
     }
+
 
     public void testArray3() throws Exception
     {

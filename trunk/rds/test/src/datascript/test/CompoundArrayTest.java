@@ -52,18 +52,18 @@ public class CompoundArrayTest extends TestCase
     private void checkArray(CompoundArray array, int size, 
     		int numItems, int valueA, long valueB)
     {
-        ObjectArray a = array.getA();
+        ObjectArray<ItemA> a = array.getA();
         assertEquals(numItems, a.length());
         for (int i = 0; i < numItems ; i++)
         {
-            ItemA itemA = (ItemA) a.elementAt(i);
+            ItemA itemA = a.elementAt(i);
             assertEquals(valueA+i, itemA.getValue());
         }
-        ObjectArray b = array.getB();
+        ObjectArray<ItemB> b = array.getB();
         assertEquals(numItems, b.length());
         for (int i = 0; i < numItems; i++)
         {
-            ItemB itemB = (ItemB) b.elementAt(i);
+            ItemB itemB = b.elementAt(i);
             assertEquals(valueB+i, itemB.getValue());
         }
         assertEquals(size, array.sizeof());

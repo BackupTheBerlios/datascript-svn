@@ -61,6 +61,12 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
     }
 
 
+    public int bitsizeof() 
+    {
+        return ${rootPackageName}.__SizeOf.bitsizeof(this);
+    }
+
+
     public int getChoiceTag()
     {
         return __choiceTag;

@@ -84,25 +84,26 @@ public class TypeInstantiationTest extends TestCase
         os = new FileImageOutputStream(file);
         
         // header
-        os.writeShort(numBlocks);
+        os.writeShort(numBlocks);   // numBlocks -> 2
 
         // block 0
-        os.writeByte(sorted);
-        os.writeShort(sizes[0]);
-        os.writeInt(magic);
-        writeBytes(sizes[0]);
+        os.writeByte(sorted);       // BlockHeader.type -> 1
+        os.writeShort(sizes[0]);    // BlockHeader.size -> 2
+        os.writeInt(magic);         // BlockData.magic -> 4
+        writeBytes(sizes[0]);       // BlockData.bytes -> 1x1
 
         // block 1
         os.writeByte(unsorted);
         os.writeShort(sizes[1]);
         os.writeInt(magic);
-        writeBytes(sizes[1]);
+        writeBytes(sizes[1]);       // BlockData.bytes -> 3x1
 
         // block 2
         os.writeByte(sorted);
         os.writeShort(sizes[2]);
         os.writeInt(magic);
-        writeBytes(sizes[2]);
+        writeBytes(sizes[2]);       // BlockData.bytes -> 4x1
+
         int sizeof = (int) os.getStreamPosition();
         os.close();
 
@@ -128,6 +129,7 @@ public class TypeInstantiationTest extends TestCase
                 assertEquals(11 + j, bytes.elementAt(j));
             }
         }
-        assertEquals(sizeof, blocks.sizeof());
+        int bytesize = blocks.sizeof();
+        assertEquals(sizeof, bytesize);
     }
 }

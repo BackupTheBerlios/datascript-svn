@@ -18,13 +18,13 @@ LinkTable
  */
 IntegerArray
 {
-     uint16             numElems;
-     int8               int8List[numElems];
-     uint8              uint8List[numElems];
-     int16              int16List[numElems];
-     uint16             uint16List[numElems];
-     int32              int32List[numElems];
-     uint32             uint32List[numElems];
+     uint16     numElems;
+     int8       int8List[numElems];
+     uint8      uint8List[numElems];
+     int16      int16List[numElems];
+     uint16     uint16List[numElems];
+     int32      int32List[numElems];
+     uint32     uint32List[numElems];
 };
 
 
@@ -52,33 +52,33 @@ MixedArray
 VarArray
 {
     ItemA       a[];
-    ItemB   	b;
+    ItemB       b;
     uint16      len : len == lengthof a;
 };
 
 
 ParamArray
 {
-    uint32                          numItems;	// in java indexes of arrays are type of int. This ist for testing truncating
-    uint16		                    size[numItems];
+    uint32                          numItems;    // in java indexes of arrays are type of int. This ist for testing truncating
+    uint16                          size[numItems];
     ParamBlock(size[block$index])   block[numItems];
 };
 
 
 OptionalArraySequence
 {
-	int8	kleinesArray[3];
-	uint32	count;			// in java indexes of arrays are type of int. This ist for testing truncating
-	int16	a[count]    if count > 0;
-	int16	b[1]        if count == 0;
+    int8     kleinesArray[3];
+    uint32   count;            // in java indexes of arrays are type of int. This ist for testing truncating
+    int16    a[count]    if count > 0;
+    int16    b[1]        if count == 0;
 };
 
 
 StringArraySequence
 {
-	string	name;
-	bit:4	byteCount;
-	string	text[byteCount];
+    string    name;
+    bit:4     byteCount;
+    string    text[byteCount];
 };
 
 

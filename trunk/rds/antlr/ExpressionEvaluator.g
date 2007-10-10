@@ -473,6 +473,7 @@ opExpression
       | #(TILDE expression)
       | #(BANG expression)
       | #(SIZEOF expression)
+      | #(BITSIZEOF expression)
       | #(LENGTHOF expression)
       | #(DOT expression ID)    
       | #(ARRAYELEM expression expression)

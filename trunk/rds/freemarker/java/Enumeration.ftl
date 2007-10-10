@@ -86,7 +86,17 @@ public enum ${name} implements SizeOf
 
     public int sizeof() 
     {
+<#if ((enumBitsize % 8) == 0)>
         return ${enumSize};
+<#else>
+	throw new RuntimeException("sizeof not integer: 2L");
+</#if>
+    }
+
+
+    public int bitsizeof() 
+    {
+        return ${enumBitsize};
     }
 }
 
