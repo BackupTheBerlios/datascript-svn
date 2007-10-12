@@ -259,7 +259,7 @@
     </java>
   </target>
 
-  <target name="test.compile" depends="test.gen, sqlParamTest.gen, sqltest.gen, pkgtest.gen, functest.gen, jar, gif.gen, tableImportTest.gen" 
+  <target name="test.compile" depends="test.gen, sqlParamTest.gen, sqltest.gen, pkgtest.gen, functest.gen, jar, gif.gen, tableImportTest.gen, alignment.gen" 
     description="Builds the test cases">
     <javac destdir="${build}/test/classes" debug="on" target="1.5">
       <classpath>
@@ -337,8 +337,21 @@
 
   <target name="tableImportTest.clean" description="removes all generated test Java sources and classes">
     <delete dir="${test.gen}/tableimport" />
+  </target>  
+
+  <target name="alignment.gen" depends="jar" description="Generates parser for test cases" unless="bits.uptodate">
+    <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
+      <classpath>
+        <pathelement path="${gen}" />
+        <pathelement path="${lib}/antlr.jar" />
+      </classpath>
+      <arg line="-c -xml -doc -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} alignment.ds" />
+    </java>
   </target>
 
+  <target name="alignment.clean" description="removes all generated test Java sources and classes">
+    <delete dir="${test.gen}/alignment" />
+  </target>
 
   <target name="functest.gen" depends="jar" description="Generates parser for test cases" unless="sqltest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
@@ -351,7 +364,7 @@
   </target>
 
   <target name="functest.clean" description="removes all generated test Java sources and classes">
-    <delete dir="${test.gen}/sqltest" />
+    <delete dir="${test.gen}/func" />
   </target>
 
 

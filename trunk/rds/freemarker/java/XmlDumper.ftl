@@ -107,6 +107,11 @@ public class __XmlDumper extends XMLFilterImpl implements ${rootPackageName}.__V
     }
 
 
+    public void alignto(int n)
+    {
+    }
+
+
     public void visitInt8(byte n, Object arg)
     {
         try

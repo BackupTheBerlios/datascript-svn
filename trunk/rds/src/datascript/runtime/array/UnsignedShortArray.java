@@ -157,6 +157,12 @@ public class UnsignedShortArray implements Array, SizeOf
     }
 
 
+    public int bitsizeof()
+    {
+        return 2 * 8 * length;
+    }
+
+
     public int sum() throws Exception
     {
         long retVal = 0;

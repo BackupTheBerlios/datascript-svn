@@ -77,16 +77,18 @@
             try
             {
 <#list fields as field>
+    <#if field.optionalClause??>
+                if (${field.optionalClause})
+                {
+        <#if field.hasAlignment>
+                    __in.alignTo(#{field.alignmentValue});
+        </#if>
         <#if field.labelExpression??>
                 if (__in.getBitPosition() != ${field.labelExpression})
                 {
                     throw new IOException("wrong offset for field '${field.name}'");
                 }
-
-    </#if>
-    <#if field.optionalClause??>
-                if (${field.optionalClause})
-                {
+        </#if>
                     ${field.readField}
         <#if field.constraint??>
                     if (!(${field.constraint}))
@@ -96,14 +98,24 @@
         </#if>
                 }
     <#else>
+        <#if field.hasAlignment>
+                __in.alignTo(#{field.alignmentValue});
+        </#if>
+        <#if field.labelExpression??>
+                if (__in.getBitPosition() != ${field.labelExpression})
+                {
+                    throw new IOException("wrong offset for field '${field.name}'");
+                }
+        </#if>
                 ${field.readField}
         <#if field.constraint??>
                 if (!(${field.constraint}))
                 {
-                        throw new IOException("constraint violated");
+                    throw new IOException("constraint violated");
                 }
         </#if>
     </#if>
+
 </#list>
             }
             catch (Exception __e1)

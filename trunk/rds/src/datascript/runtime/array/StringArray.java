@@ -166,4 +166,13 @@ public class StringArray implements Array, SizeOf
         return (size + 1) << 3;
     }
 
+
+    public int bitsizeof()
+    {
+        int size = 0;
+        for (int i = offset; i < offset + length; i++)
+            size += data[i].length();
+        return (size + 1) << 3 * 8;
+    }
+
 }

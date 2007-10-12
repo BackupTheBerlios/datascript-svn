@@ -44,6 +44,7 @@ ${packageImports}
 
 public class __DepthFirstVisitor implements ${rootPackageName}.__Visitor
 {
+    public void alignto(int n) {};
     public void visitInt8(byte n, Object arg) {};
     public void visitInt16(short n, Object arg) {};
     public void visitInt32(int n, Object arg) {};

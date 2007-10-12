@@ -606,27 +606,26 @@ abstract public class CompoundEmitter
 
     public String getLabelExpression(Field field)
     {
-        String result = null;
         Expression label = field.getLabel();
-        if (label != null)
+        if (label == null)
+            return null;
+
+        StringBuilder buffer = new StringBuilder();
+        AST labelBase = label.getNextSibling();
+        if (labelBase != null)
         {
-            StringBuilder buffer = new StringBuilder();
-            AST labelBase = label.getNextSibling();
-            if (labelBase != null)
-            {
-                String name = labelBase.getText();
-                buffer.append("((");
-                buffer.append(name);
-                buffer.append(")__cc.find(\"");
-                buffer.append(name);
-                buffer.append("\")).");
-            }
-            buffer.append("__fpos + 8*");
-            String labelExpr = exprEmitter.emit(label);
-            buffer.append(labelExpr);
-            result = buffer.toString();
+            String name = labelBase.getText();
+            buffer.append("((");
+            buffer.append(name);
+            buffer.append(")__cc.find(\"");
+            buffer.append(name);
+            buffer.append("\")).");
         }
-        return result;
+        buffer.append("__fpos + 8*");
+        String labelExpr = exprEmitter.emit(label);
+        buffer.append(labelExpr);
+
+        return buffer.toString();
     }
 
 

@@ -34,8 +34,11 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
+
+
 package datascript.runtime.io;
+
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -43,37 +46,43 @@ import java.math.BigInteger;
 
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 
+
+
 /**
  * @author HWellmann
- *
+ * 
  */
 public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
 {
     protected OutputStream os;
-    
+
+
     public BitStreamWriter(OutputStream os)
     {
         super(os);
         this.os = os;
     }
-    
+
+
     public long getBitPosition() throws IOException
     {
-        long pos = 8*streamPos + bitOffset;
+        long pos = 8 * streamPos + bitOffset;
         return pos;
     }
-    
+
+
     public void setBitPosition(long pos) throws IOException
     {
         int newBitOffset = (int) (pos % 8);
-        long newBytePos  = pos / 8;
+        long newBytePos = pos / 8;
         seek(newBytePos);
         if (newBitOffset != 0)
         {
             setBitOffset(newBitOffset);
-        }       
+        }
     }
-    
+
+
     public void writeByte(int value) throws IOException
     {
         if (bitOffset == 0)
@@ -85,7 +94,8 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
             writeBits((long) value, 8);
         }
     }
-    
+
+
     public void writeBytes(String value) throws IOException
     {
         if (bitOffset == 0)
@@ -96,7 +106,7 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
         {
             for (int i = 0; i < value.length(); i++)
                 writeBits(value.charAt(i), 8);
-        }   
+        }
     }
 
 
@@ -108,11 +118,11 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
         }
         else
         {
-            writeBits((long)value, 16);            
+            writeBits((long) value, 16);
         }
     }
 
-    
+
     public void writeInt(int value) throws IOException
     {
         if (bitOffset == 0)
@@ -121,14 +131,16 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
         }
         else
         {
-            writeBits((long)value, 32);            
+            writeBits((long) value, 32);
         }
     }
 
+
     public void writeUnsignedInt(long value) throws IOException
     {
-        writeBits(value, 32);            
+        writeBits(value, 32);
     }
+
 
     public void writeLong(long value) throws IOException
     {
@@ -138,59 +150,84 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
         }
         else
         {
-            writeBits(value, 64);            
+            writeBits(value, 64);
         }
     }
-    
+
+
     public void byteAlign() throws IOException
     {
         if (bitOffset != 0)
         {
-            writeBits(0, 8-bitOffset);
+            writeBits(0, 8 - bitOffset);
         }
     }
-    
-    private void writeBitfield(BigInteger value, int numBits) throws IOException
-    {    	
-    	if (numBits >= 64)
-    	{
-        	long val = value.longValue();
-        	writeBitfield(value.shiftRight(64), numBits - 64);
-        	writeLong(val);
-    	}
-    	else if (numBits >= 32)
-    	{
-        	int val = value.intValue();
-        	writeBitfield(value.shiftRight(32), numBits - 32);
-        	writeInt(val);
-    	}
-    	else if (numBits >= 16)
-    	{
-        	int val = value.shortValue();
-        	writeBitfield(value.shiftRight(16), numBits - 16);
-        	writeShort(val);
-    	}
-    	else if (numBits >= 8)
-    	{
-        	int val = value.byteValue();
-        	writeBitfield(value.shiftRight(8), numBits - 8);
-        	writeByte(val);
-    	}
-    	else
-    	{
-        	int val = value.byteValue();
-        	writeBits(val, numBits);
-    	}
+
+
+    private void writeBitfield(BigInteger value, int numBits)
+            throws IOException
+    {
+        if (numBits >= 64)
+        {
+            long val = value.longValue();
+            writeBitfield(value.shiftRight(64), numBits - 64);
+            writeLong(val);
+        }
+        else if (numBits >= 32)
+        {
+            int val = value.intValue();
+            writeBitfield(value.shiftRight(32), numBits - 32);
+            writeInt(val);
+        }
+        else if (numBits >= 16)
+        {
+            int val = value.shortValue();
+            writeBitfield(value.shiftRight(16), numBits - 16);
+            writeShort(val);
+        }
+        else if (numBits >= 8)
+        {
+            int val = value.byteValue();
+            writeBitfield(value.shiftRight(8), numBits - 8);
+            writeByte(val);
+        }
+        else
+        {
+            int val = value.byteValue();
+            writeBits(val, numBits);
+        }
     }
 
-    public void writeBigInteger(BigInteger value, int numBits) throws IOException
+
+    public void writeBigInteger(BigInteger value, int numBits)
+            throws IOException
     {
-    	writeBitfield(value, numBits);
+        writeBitfield(value, numBits);
     }
-    
+
+
     public void writeString(String value) throws IOException
     {
         this.writeBytes(value);
         this.writeByte(0);
+    }
+
+
+    public void skipBits(int bitCnt) throws IOException
+    {
+        setBitPosition(getBitPosition() + bitCnt);
+    }
+
+
+    public void alignTo(int alignVal) throws IOException
+    {
+        long bitPosition = getBitPosition();
+        long newPosition = bitPosition;
+
+        if (bitPosition % alignVal != 0)
+        {
+            newPosition = ((bitPosition / alignVal) + 1) * alignVal;
+            setBitPosition(newPosition);
+        }
     }
 }

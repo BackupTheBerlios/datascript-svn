@@ -143,9 +143,16 @@ public class BitFieldArray implements Array, SizeOf
 
     public int sizeof()
     {
-        if ((numBits * length) % 8 != 0) return ((numBits * length) / 8) + 1;
+        if ((numBits * length) % 8 != 0) 
+            return ((numBits * length) / 8) + 1;
 
         return (numBits * length) / 8;
+    }
+
+
+    public int bitsizeof()
+    {
+        return numBits * length;
     }
 
 

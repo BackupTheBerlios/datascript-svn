@@ -34,13 +34,18 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
+
+
 package datascript.runtime.io;
+
 
 import java.io.IOException;
 import java.math.BigInteger;
 
 import javax.imageio.stream.ImageInputStreamImpl;
+
+
 
 /**
  * @author HWellmann
@@ -50,21 +55,23 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
 {
     public long getBitPosition() throws IOException
     {
-        long pos = 8*streamPos + bitOffset;
+        long pos = 8 * streamPos + bitOffset;
         return pos;
     }
-    
+
+
     public void setBitPosition(long pos) throws IOException
     {
         int newBitOffset = (int) (pos % 8);
-        long newBytePos  = pos / 8;
+        long newBytePos = pos / 8;
         seek(newBytePos);
         if (newBitOffset != 0)
         {
             setBitOffset(newBitOffset);
-        }       
+        }
     }
-    
+
+
     public byte readByte() throws IOException
     {
         byte result;
@@ -74,10 +81,11 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
         }
         else
         {
-            result = (byte) readBits(8);            
+            result = (byte) readBits(8);
         }
         return result;
     }
+
 
     public int readUnsignedByte() throws IOException
     {
@@ -88,10 +96,11 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
         }
         else
         {
-            result = (int) (readBits(8) & 0xFF);            
+            result = (int) (readBits(8) & 0xFF);
         }
         return result;
     }
+
 
     public short readShort() throws IOException
     {
@@ -102,10 +111,11 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
         }
         else
         {
-            result = (short) readBits(16);            
+            result = (short) readBits(16);
         }
         return result;
     }
+
 
     public int readUnsignedShort() throws IOException
     {
@@ -116,11 +126,12 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
         }
         else
         {
-            result = (int) (readBits(16) & 0xFFFF);            
+            result = (int) (readBits(16) & 0xFFFF);
         }
         return result;
     }
-    
+
+
     public int readInt() throws IOException
     {
         int result;
@@ -130,10 +141,11 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
         }
         else
         {
-            result = (int) readBits(32);            
+            result = (int) readBits(32);
         }
         return result;
     }
+
 
     public long readUnsignedInt() throws IOException
     {
@@ -144,10 +156,11 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
         }
         else
         {
-            result = readBits(32);            
+            result = readBits(32);
         }
         return result;
     }
+
 
     public long readLong() throws IOException
     {
@@ -158,11 +171,12 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
         }
         else
         {
-            result = readBits(64);            
+            result = readBits(64);
         }
         return result;
     }
-    
+
+
     public BigInteger readBigInteger(int numBits) throws IOException
     {
         BigInteger result = BigInteger.ZERO;
@@ -171,7 +185,7 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
         {
             if (bitOffset != 0)
             {
-                int prefixLength = 8-bitOffset;
+                int prefixLength = 8 - bitOffset;
                 long mostSignificantBits = readBits(prefixLength);
                 result = BigInteger.valueOf(mostSignificantBits);
                 toBeRead -= prefixLength;
@@ -181,7 +195,7 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
             byte[] b = new byte[numBytes];
             readFully(b);
             BigInteger i = new BigInteger(1, b);
-            result = result.shiftLeft(8*numBytes);
+            result = result.shiftLeft(8 * numBytes);
             result = result.or(i);
             toBeRead %= 8;
         }
@@ -190,20 +204,39 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
             long value = readBits(toBeRead);
             result = result.shiftLeft(toBeRead);
             result = result.or(BigInteger.valueOf(value));
-        }        
-        return result;        
+        }
+        return result;
     }
-    
+
+
     public String readString() throws IOException
     {
         String result = "";
         while (true)
         {
             byte characterByte = this.readByte();
-            if (characterByte == 0)
-                break;
-            result += (char)characterByte;
+            if (characterByte == 0) break;
+            result += (char) characterByte;
         }
         return result;
+    }
+
+
+    public void skipBits(int bitCnt) throws IOException
+    {
+        setBitPosition(getBitPosition() + bitCnt);
+    }
+
+
+    public void alignTo(int alignVal) throws IOException
+    {
+        long bitPosition = getBitPosition();
+        long newPosition = bitPosition;
+
+        if (bitPosition % alignVal != 0)
+        {
+            newPosition = ((bitPosition / alignVal) + 1) * alignVal;
+            setBitPosition(newPosition);
+        }
     }
 }

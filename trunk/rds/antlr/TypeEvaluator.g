@@ -126,6 +126,10 @@ label
     : #(LABEL expression (expression)?)
     ;
 
+alignment
+    : #(ALIGN INTEGER_LITERAL)
+    ;
+
 /*
 conditionDefinition
     : "condition"^ ID parameterList conditionBlock
@@ -186,8 +190,7 @@ constDeclaration
     ;
 
 fieldDefinition
-    : #(FIELD                      { Field f = (Field)#FIELD;
-                                   }
+    : #(FIELD                      { Field f = (Field)#FIELD; }
         typeReference
         (i:ID                      { scope().setSymbol(i, f);
                                      f.setName(i);
@@ -202,6 +205,8 @@ fieldDefinition
         (c:fieldCondition          { f.setCondition(c); }
         )? 
         (l:label                   { f.setLabel(l); }
+        )?
+        (a:alignment               { f.setAlignment(a); }
         )?
       ) 
     ;

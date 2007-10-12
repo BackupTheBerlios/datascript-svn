@@ -44,6 +44,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import datascript.antlr.util.ToolContext;
 import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
@@ -230,6 +231,8 @@ public class UnionEmitter extends CompoundEmitter
         fields.clear();
         for (Field field : union.getFields())
         {
+            if (field.getAlignment() != null)
+                ToolContext.logError(field, "align is not allowed in union");
             UnionFieldEmitter fe = new UnionFieldEmitter(field, this);
             fields.add(fe);
         }

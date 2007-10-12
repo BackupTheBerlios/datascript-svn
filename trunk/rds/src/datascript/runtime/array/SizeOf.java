@@ -40,4 +40,5 @@ package datascript.runtime.array;
 public interface SizeOf
 {
     public int sizeof();
+    public int bitsizeof();
 }

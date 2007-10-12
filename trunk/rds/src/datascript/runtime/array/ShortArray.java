@@ -150,6 +150,12 @@ public class ShortArray implements Array, SizeOf
     }
 
 
+    public int bitsizeof()
+    {
+        return 2 * 8 * length;
+    }
+
+
     public Array map(Mapping m)
     {
         ShortArray result = new ShortArray(length);

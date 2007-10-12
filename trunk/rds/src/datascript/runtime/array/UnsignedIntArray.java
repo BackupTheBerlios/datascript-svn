@@ -35,7 +35,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.runtime.array;
+
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -44,11 +47,14 @@ import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamWriter;
 
+
+
 public class UnsignedIntArray implements Array, SizeOf
 {
     long[] data; // data is between [offset... offset+length-1]
     int offset;
     int length;
+
 
     public UnsignedIntArray(DataInput in, int length) throws IOException
     {
@@ -69,10 +75,12 @@ public class UnsignedIntArray implements Array, SizeOf
         }
     }
 
+
     public UnsignedIntArray(int length)
     {
         this(new long[length], 0, length);
     }
+
 
     public UnsignedIntArray(long[] data, int offset, int length)
     {
@@ -87,10 +95,8 @@ public class UnsignedIntArray implements Array, SizeOf
         if (obj instanceof UnsignedIntArray)
         {
             UnsignedIntArray that = (UnsignedIntArray) obj;
-            return 
-                (this.offset == offset) && 
-                (this.length == length) && 
-                java.util.Arrays.equals(this.data, that.data);
+            return (this.offset == offset) && (this.length == length)
+                    && java.util.Arrays.equals(this.data, that.data);
         }
         return super.equals(obj);
     }
@@ -101,7 +107,8 @@ public class UnsignedIntArray implements Array, SizeOf
         if (that.sizeof() != this.sizeof())
             throw new RuntimeException("size of arrays are different.");
         if (that.data.length != this.data.length)
-            throw new RuntimeException("count of elements in arrays are different.");
+            throw new RuntimeException(
+                    "count of elements in arrays are different.");
 
         for (int i = 0; i < this.data.length; i++)
         {
@@ -117,15 +124,24 @@ public class UnsignedIntArray implements Array, SizeOf
         return data[offset + i];
     }
 
+
     public int length()
     {
         return length;
     }
 
+
     public int sizeof()
     {
         return 4 * length;
     }
+
+
+    public int bitsizeof()
+    {
+        return 4 * 8 * length;
+    }
+
 
     public int sum() throws Exception
     {
@@ -136,8 +152,9 @@ public class UnsignedIntArray implements Array, SizeOf
         }
         if (retVal > Integer.MAX_VALUE)
             throw new Exception("result is too big for an integer");
-        return (int)retVal;
+        return (int) retVal;
     }
+
 
     public Array map(Mapping m)
     {
@@ -150,6 +167,7 @@ public class UnsignedIntArray implements Array, SizeOf
         return result;
     }
 
+
     public Array subRange(int begin, int length)
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
@@ -157,11 +175,12 @@ public class UnsignedIntArray implements Array, SizeOf
         return new UnsignedIntArray(data, offset + begin, length);
     }
 
+
     public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
         for (int i = offset; i < offset + length; i++)
         {
-            out.writeInt((int)data[i]);
+            out.writeInt((int) data[i]);
         }
     }
 }

@@ -162,6 +162,12 @@ public class ByteArray implements Array<Byte>, SizeOf
     }
 
 
+    public int bitsizeof()
+    {
+        return length*8;
+    }
+
+
     public int sum() throws Exception
     {
         long retVal = 0;

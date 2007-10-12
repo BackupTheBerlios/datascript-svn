@@ -137,6 +137,12 @@ public class LongArray implements Array, SizeOf
     }
 
 
+    public int bitsizeof()
+    {
+        return 4 * 8 * length;
+    }
+
+
     public int sum() throws Exception
     {
         long retVal = 0;

@@ -50,19 +50,14 @@ import datascript.antlr.util.TokenAST;
 public class Field extends TokenAST
 {
     private TypeInterface type;
-
     private TokenAST name; // null is anonymous
-
     private CompoundType compound; // compound type containing this field
 
+    private TokenAST alignment;
     private TokenAST fieldCondition;
-
     private TokenAST fieldInitializer;
-
     private TokenAST fieldLabel;
-
     private TokenAST fieldOptionalClause;
-
     private Token documentation;
 
 
@@ -231,6 +226,27 @@ public class Field extends TokenAST
     public String toString()
     {
         return (name == null) ? "FIELD" : name.getText();
+    }
+
+
+    public TokenAST getAlignment()
+    {
+        return alignment;
+    }
+
+
+    public void setAlignment(AST alignment)
+    {
+        this.alignment = (TokenAST) alignment;
+    }
+
+
+    public int getAlignmentValue()
+    {
+        IntegerExpression alignExpr = (IntegerExpression)alignment.getFirstChild();
+        if (alignExpr.getValue() == null)
+            alignExpr.evaluate();
+        return alignExpr.getValue().integerValue().intValue();
     }
 
 }

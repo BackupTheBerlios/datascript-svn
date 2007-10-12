@@ -156,6 +156,17 @@ public class ObjectArray<E> implements Array, SizeOf
     }
 
 
+    public int bitsizeof()
+    {
+        int sz = 0;
+        for (int i = 0; i < data.size(); i++)
+        {
+            sz += ((SizeOf) data.get(i)).bitsizeof();
+        }
+        return sz;
+    }
+
+
     public void remove(Object obj)
     {
         data.remove(obj);

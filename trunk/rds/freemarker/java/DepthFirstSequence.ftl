@@ -50,9 +50,15 @@
     <#if field.getOptionalClause()?has_content>
             if (node.${field.indicatorName}<#--${field.optionalClause}-->)
             {
+        <#if field.hasAlignment>
+                alignto(#{field.alignmentValue});
+        </#if>
                 ${field.visitor};
             }
     <#else>
+        <#if field.hasAlignment>
+            alignto(#{field.alignmentValue});
+        </#if>
             ${field.visitor};
     </#if>
 </#list>

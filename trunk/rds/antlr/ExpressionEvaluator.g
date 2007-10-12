@@ -121,6 +121,10 @@ label
     : #(LABEL expression (expression)?)
     ;
 
+alignment
+    : #(ALIGN INTEGER_LITERAL)
+    ;
+
 /*
 conditionDefinition
     : "condition"^ ID parameterList conditionBlock
@@ -187,6 +191,7 @@ fieldDefinition
         (fieldOptionalClause)?
         (fieldCondition)? 
         (label)?
+        (alignment)?
       ) 
     ;
 

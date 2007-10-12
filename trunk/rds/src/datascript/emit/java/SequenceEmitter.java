@@ -229,6 +229,18 @@ public class SequenceEmitter extends CompoundEmitter
                 return ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64;
             throw new RuntimeException("type of field " + field.getName() + "is not a StdIntegerType");
         }
+
+
+        public boolean getHasAlignment()
+        {
+            return field.getAlignment() != null;
+        }
+
+
+        public int getAlignmentValue()
+        {
+            return field.getAlignmentValue();
+        }
     }
 
 

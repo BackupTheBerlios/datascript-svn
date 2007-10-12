@@ -47,6 +47,12 @@ public class __SizeOf extends ${rootPackageName}.__DepthFirstVisitor
     private int __bitsize = 0;
 
 
+    public void alignto(int n)
+    {
+        __bitsize = ((__bitsize / n) + 1) * n;
+    }
+
+
     public void visitInt8(byte n, Object arg) 
     {
         __bitsize += 8;

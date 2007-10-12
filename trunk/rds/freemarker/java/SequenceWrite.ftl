@@ -75,13 +75,6 @@
             try 
             {
 <#list fields as field>
-    <#if field.labelExpression??>
-                if (__out.getBitPosition() != ${field.labelExpression})
-                {
-                    throw new IOException("wrong offset for field '${field.name}'");
-                }
-
-    </#if>
     <#if field.optionalClause??>
                 if (${field.optionalClause})
                 {
@@ -91,14 +84,34 @@
                         throw new IOException("constraint violated");
                     }
         </#if>
+        <#if field.hasAlignment>
+                    __out.alignTo(#{field.alignmentValue});
+        </#if>
+        <#if field.labelExpression??>
+                if (__out.getBitPosition() != ${field.labelExpression})
+                {
+                    throw new IOException("wrong offset for field '${field.name}'");
+                }
+
+        </#if>
                     ${field.writeField}
                 }
     <#else>
         <#if field.constraint??>
                 if (!(${field.constraint}))
                 {
-                       throw new IOException("constraint violated");
+                   throw new IOException("constraint violated");
                 }
+        </#if>
+        <#if field.hasAlignment>
+                __out.alignTo(#{field.alignmentValue});
+        </#if>
+        <#if field.labelExpression??>
+                if (__out.getBitPosition() != ${field.labelExpression})
+                {
+                    throw new IOException("wrong offset for field '${field.name}'");
+                }
+
         </#if>
                 ${field.writeField}
     </#if>

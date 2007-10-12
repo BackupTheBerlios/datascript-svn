@@ -110,6 +110,10 @@ label
     : #(LABEL expression (expression)?)
     ;
 
+alignment
+    : #(ALIGN INTEGER_LITERAL)
+    ;
+
 /*
 conditionDefinition
     : "condition"^ ID parameterList conditionBlock
@@ -171,7 +175,9 @@ fieldDefinition
         (i:ID                       { em.beginField(f); })? 
         (fieldInitializer)?
         (fieldOptionalClause)?
-        (fieldCondition)? (label)?
+        (fieldCondition)?
+        (label)?
+        (alignment)?
        )                    { if (i != null) em.endField(f); }
     ;
 

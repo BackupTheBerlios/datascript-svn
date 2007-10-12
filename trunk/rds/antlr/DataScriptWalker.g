@@ -97,6 +97,10 @@ label
     :   #(LABEL expression (expression)?)
     ;
 
+alignment
+    :   #(ALIGN INTEGER_LITERAL)
+    ;
+
 /*
 
 
@@ -146,10 +150,13 @@ constDeclaration
     ;
 
 fieldDefinition
-    :   #(FIELD typeReference (ID)? 
+    :   #(FIELD typeReference 
+          (ID)? 
           (fieldInitializer)?
           (fieldOptionalClause)?
-          (fieldCondition)? (label)?
+          (fieldCondition)? 
+          (label)?
+          (alignment)?
           ) 
     ;
 

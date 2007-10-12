@@ -64,16 +64,12 @@ import freemarker.template.Template;
 public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 {
     private final List<SequenceFieldEmitter> fields = new ArrayList<SequenceFieldEmitter>();
-
     protected SequenceType sequence;
-
     protected UnionType union;
-
     protected EnumType enumeration;
-
     protected SqlIntegerType sqlinteger;
-
     protected static final ExpressionEmitter exprEmitter = new ExpressionEmitter();
+
 
     public static class SequenceFieldEmitter
     {
@@ -91,25 +87,51 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 
         public String getVisitor()
         {
-            return global.getVisitor(field);
+            StringBuffer result = new StringBuffer();
+            if (field.getAlignment() != null && false)
+            {
+                result.append("__bitsize = ((__bitsize / ");
+                result.append(field.getAlignmentValue());
+                result.append(") + 1) * ");
+                result.append(field.getAlignmentValue());
+                result.append(";");
+                result.append(System.getProperty("line.separator"));
+            }
+            TypeInterface type = field.getFieldType();
+            result.append(global.getVisitor(type, "node."
+                    + AccessorNameEmitter.getGetterName(field) + "()"));
+            return result.toString();
         }
 
 
         public String getOptionalClause()
         {
-            return global.getOptionalClause(field);
+            SequenceEmitter e = new SequenceEmitter(global, global.getSequenceType());
+            return e.getOptionalClause(field);
         }
 
 
         public String getIndicatorName()
         {
-            return global.getIndicatorName(field);
+            return AccessorNameEmitter.getIndicatorName(field) + "()";
         }
 
 
         public String getName()
         {
             return field.getName();
+        }
+
+
+        public boolean getHasAlignment()
+        {
+            return field.getAlignment() != null;
+        }
+
+
+        public int getAlignmentValue()
+        {
+            return field.getAlignmentValue();
         }
     }
 
@@ -285,27 +307,6 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     public String getSqlIntPackageName()
     {
         return sqlinteger.getPackage().getPackageName();
-    }
-
-
-    public String getOptionalClause(Field field)
-    {
-        SequenceEmitter e = new SequenceEmitter(this, sequence);
-        return e.getOptionalClause(field);
-    }
-
-
-    public String getIndicatorName(Field field)
-    {
-        return AccessorNameEmitter.getIndicatorName(field) + "()";
-    }
-
-
-    public String getVisitor(Field field)
-    {
-        TypeInterface type = field.getFieldType();
-        return getVisitor(type, "node."
-                + AccessorNameEmitter.getGetterName(field) + "()");
     }
 
 
