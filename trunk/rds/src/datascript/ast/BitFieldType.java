@@ -43,7 +43,7 @@ package datascript.ast;
 import java.math.BigInteger;
 
 
-
+@SuppressWarnings("serial")
 public class BitFieldType extends IntegerType
 {
     /**

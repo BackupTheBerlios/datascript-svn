@@ -51,6 +51,7 @@ import antlr.collections.AST;
  * 
  * @author HWellmann
  */
+@SuppressWarnings("serial")
 public class TokenAST extends CommonASTWithHiddenTokens
 {
     private FileNameToken token;

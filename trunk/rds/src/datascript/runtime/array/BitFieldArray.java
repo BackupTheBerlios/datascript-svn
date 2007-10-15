@@ -50,7 +50,7 @@ import datascript.runtime.io.BitStreamWriter;
 
 
 
-public class BitFieldArray implements Array, SizeOf
+public class BitFieldArray implements Array<BigInteger>, SizeOf
 {
     BigInteger[] data; // data is between [offset... offset+length-1]
 
@@ -169,7 +169,7 @@ public class BitFieldArray implements Array, SizeOf
     }
 
 
-    public Array map(Mapping m)
+    public Array<BigInteger> map(Mapping<BigInteger> m)
     {
         BitFieldArray result = new BitFieldArray(length, numBits);
         for (int i = 0; i < length; i++)
@@ -180,7 +180,7 @@ public class BitFieldArray implements Array, SizeOf
     }
 
 
-    public Array subRange(int begin, int length)
+    public Array<BigInteger> subRange(int begin, int length)
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
             throw new ArrayIndexOutOfBoundsException();

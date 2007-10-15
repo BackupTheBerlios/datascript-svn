@@ -39,7 +39,8 @@ package datascript.runtime;
 
 import java.util.Stack;
 
-public class CallChain extends Stack
+@SuppressWarnings({"unchecked", "serial"})
+public class CallChain extends Stack<Object>
 {
 
     public Object find(String name)

@@ -199,7 +199,7 @@ public class DataScriptTool implements Parameters
                 String mc = m.getMainAttributes().getValue("Main-Class");
                 try
                 {
-                    Class clazz = Class.forName(mc, true, classLoader);
+                    Class<?> clazz = Class.forName(mc, true, classLoader);
                     Extension extension = (Extension) clazz.newInstance();
                     extension.setParameter(this);
                     extensions.add(extension);

@@ -49,7 +49,7 @@ import datascript.runtime.io.BitStreamWriter;
 
 
 
-public class LongArray implements Array, SizeOf
+public class LongArray implements Array<Long>, SizeOf
 {
     long[] data; // data is between [offset... offset+length-1]
     int offset;

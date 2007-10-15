@@ -44,7 +44,7 @@ import datascript.antlr.util.TokenAST;
 import antlr.collections.AST;
 
 
-
+@SuppressWarnings("serial")
 public class ArrayType extends TokenAST implements TypeInterface
 {
     private Scope scope;
