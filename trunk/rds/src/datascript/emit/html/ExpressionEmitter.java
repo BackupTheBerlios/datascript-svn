@@ -166,6 +166,10 @@ public class ExpressionEmitter
                 append(expr.op1());
                 buffer.append("()");
                 return;
+            case DataScriptParserTokenTypes.EXPLICIT:
+                buffer.append("explicit ");
+                buffer.append(expr.op1().getText());
+                return;
             default:
                 throw new UnsupportedOperationException();
         }

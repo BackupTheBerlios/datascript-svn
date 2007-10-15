@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Vector;
 
 import antlr.collections.AST;
+import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
 
@@ -159,22 +160,28 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
 
         // Iterate over arguments
         arguments = new Vector<Expression>();
-        Expression arg = (Expression) refType.getNextSibling();
-        for (int paramIndex = 0; paramIndex < numParams; paramIndex++, arg = (Expression) arg
-                .getNextSibling())
+        AST arg = refType.getNextSibling();
+        for (int paramIndex = 0; 
+             paramIndex < numParams; 
+             paramIndex++, arg = arg.getNextSibling())
         {
-            arguments.add(arg);
-            // Get parameter corresponding to current argument
-            Parameter param = compound.getParameterAt(paramIndex);
-            // Resolve the type.
-            TypeInterface paramType = param.getType();
-            paramType = TypeReference.resolveType(paramType);
-
-            // Types must be compatible.
-            if (!Expression.checkCompatibility(paramType, arg.getExprType()))
+            Expression expr = (Expression) arg;
+            arguments.add(expr);
+            if (arg.getType() != DataScriptParserTokenTypes.EXPLICIT)
             {
-                ToolContext.logError(arg, "type mismatch in argument "
-                        + (paramIndex + 1));
+                // Get parameter corresponding to current argument
+                Parameter param = compound.getParameterAt(paramIndex);
+                // Resolve the type.
+                TypeInterface paramType = param.getType();
+                paramType = TypeReference.resolveType(paramType);
+
+                // Types must be compatible.
+                if (!Expression.checkCompatibility(paramType, expr
+                        .getExprType()))
+                {
+                    ToolContext.logError(expr, "type mismatch in argument "
+                            + (paramIndex + 1));
+                }
             }
         }
     }

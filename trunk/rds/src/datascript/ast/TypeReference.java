@@ -73,6 +73,20 @@ public class TypeReference extends TokenAST implements TypeInterface,
     private String name;
 
     private boolean hasArguments = false;
+    
+    private boolean ignoreArguments = false;
+
+
+    public boolean getIgnoreArguments()
+    {
+        return ignoreArguments;
+    }
+
+
+    public void setIgnoreArguments(boolean ignoreArguments)
+    {
+        this.ignoreArguments = ignoreArguments;
+    }
 
 
     public TypeReference()
@@ -148,7 +162,7 @@ public class TypeReference extends TokenAST implements TypeInterface,
         {
             CompoundType inner = (CompoundType) refType;
             // Check for missing arguments
-            if (inner.getParameterCount() > 0 && !hasArguments)
+            if (inner.getParameterCount() > 0 && !hasArguments && !ignoreArguments)
             {
                 ToolContext.logError((TokenAST) getFirstChild(), inner.getName()
                         + " is defined as parameterized type");

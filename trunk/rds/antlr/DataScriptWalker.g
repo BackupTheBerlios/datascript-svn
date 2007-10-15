@@ -164,7 +164,6 @@ typeArgumentList
     :   (expression)+
     ;
 
-
 fieldInitializer
     :   #(ASSIGN typeValue)
     ;
@@ -411,6 +410,7 @@ expression
     |   INTEGER_LITERAL 
     |   STRING_LITERAL
     |   #(SUM expression)
+    |   #(EXPLICIT ID)
     ;
 
 

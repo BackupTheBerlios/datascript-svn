@@ -69,6 +69,7 @@ tokens
     DOT<AST=datascript.ast.Expression>;
     ENUM="enum"<AST=datascript.ast.EnumType>;
     EQ<AST=datascript.ast.BooleanExpression>;
+    EXPLICIT="explicit"<AST=datascript.ast.Expression>;
     FIELD<AST=datascript.ast.Field>;
     FUNCTION="function"<AST=datascript.ast.FunctionType>;
     FUNCTIONCALL<AST=datascript.ast.Expression>;
@@ -216,8 +217,14 @@ conditionBlock!
     ;
 
 parameterDefinition
-    : definedType ID
-      { #parameterDefinition = #([PARAM, "param"], #parameterDefinition); }
+    : d:definedType ID
+      { 
+          #parameterDefinition = #([PARAM, "param"], #parameterDefinition);
+          if (#d instanceof TypeReference)
+          {
+              ((TypeReference)#d).setIgnoreArguments(true);
+          } 
+      }
     ;
 
 
@@ -310,9 +317,13 @@ fieldDefinition!
     ;
 
 typeArgumentList
-    :   LPAREN! (functionArgument (COMMA! functionArgument)* )? RPAREN!
+    :   LPAREN! (typeArgument (COMMA! typeArgument)* )? RPAREN!
     ;
 
+typeArgument
+    :   EXPLICIT^ variableName
+    |   functionArgument
+    ;
 
 fieldInitializer
     :   ASSIGN^ typeValue

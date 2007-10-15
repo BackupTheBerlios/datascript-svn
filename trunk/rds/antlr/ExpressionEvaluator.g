@@ -196,7 +196,7 @@ fieldDefinition
     ;
 
 typeArgumentList
-    : (expression)+
+    :   (expression)+
     ;
 
 fieldInitializer
@@ -487,6 +487,7 @@ opExpression
       | #(FUNCTIONCALL expression)
       | #("is" identifier)
       | #(INDEX identifier)
+      | #(EXPLICIT ID)
       )
       { ((Expression)#opExpression).evaluate(scope()); }
     ;   

@@ -187,6 +187,10 @@ public class Expression extends TokenAST
                 evaluateFunctionCallExpression();
                 break;
 
+            case DataScriptParserTokenTypes.EXPLICIT:
+                // do nothing
+                break;
+
             default:
                 throw new InternalError("illegal operation: type = " + 
                                         getType() + toStringTree() + ", " 

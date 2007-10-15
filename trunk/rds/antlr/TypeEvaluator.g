@@ -212,7 +212,7 @@ fieldDefinition
     ;
 
 typeArgumentList
-    : (expression)+
+    :   (expression)+
     ;
 
 fieldInitializer
@@ -572,4 +572,5 @@ expression
     | INTEGER_LITERAL 
     | STRING_LITERAL
     | SUM
+    | EXPLICIT
     ;
