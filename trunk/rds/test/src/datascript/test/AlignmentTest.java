@@ -12,7 +12,9 @@ import java.io.IOException;
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
-import alignment.*;
+import alignment.Alignseq;
+import datascript.runtime.io.ByteArrayBitStreamReader;
+import datascript.runtime.io.ByteArrayBitStreamWriter;
 
 
 
@@ -28,36 +30,18 @@ public class AlignmentTest extends TestCase
     private File file = new File(fileName);
 
 
-    /**
-     * Constructor for BitStreamReaderTest.
-     * @param name
-     */
     public AlignmentTest(String name)
     {
         super(name);
     }
 
 
-    /*
-     * @see TestCase#setUp()
-     */
-    protected void setUp() throws Exception
-    {
-    }
-
-
-    /*
-     * @see TestCase#tearDown()
-     */
     protected void tearDown() throws Exception
     {
         file.delete();
     }
 
 
-    /*
-     * Test method for 'datascript.library.BitStreamReader.readByte()'
-     */
     private int writeAlignment(byte u4, byte u1) throws IOException
     {
         file.delete();
@@ -89,7 +73,7 @@ public class AlignmentTest extends TestCase
 
     public void testUnsigned1() throws Exception
     {
-        int size = writeAlignment((byte)15, (byte)1);
+        writeAlignment((byte)15, (byte)1);
         Alignseq as = new Alignseq(fileName);
         checkAlignment(as, 28, (byte)15, (byte)1);
 
@@ -97,6 +81,52 @@ public class AlignmentTest extends TestCase
 
         Alignseq as2 = new Alignseq(wFileName);
         checkAlignment(as2, 28, (byte)15, (byte)1);
-        assert(as.equals(as2));
+        assertEquals(as, as2);
+    }
+    
+    public void testWriteAndRead() throws Exception 
+    {
+        Alignseq as = new Alignseq();
+        as.setA((byte)12);
+        as.setFlag((byte)1);
+        as.setLabel1((short)3);
+        as.setB((byte)13);
+        
+        ByteArrayBitStreamWriter writer = new ByteArrayBitStreamWriter();
+        as.write(writer);
+        writer.close();
+        
+        byte[] blob = writer.toByteArray();
+        
+        ByteArrayBitStreamReader reader = new ByteArrayBitStreamReader(blob);
+        Alignseq as2 = new Alignseq(reader);
+        
+        assertEquals(12, as2.getA());
+        assertEquals(1, as2.getFlag());
+        assertEquals(3, as2.getLabel1());
+        assertEquals(13, as2.getB());
+    }
+
+    public void testIncorrectOffset() 
+    {
+        Alignseq as = new Alignseq();
+        as.setA((byte)12);
+        as.setFlag((byte)1);
+        as.setLabel1((short)4);
+        as.setB((byte)13);
+        
+        try
+        {
+            ByteArrayBitStreamWriter writer = new ByteArrayBitStreamWriter();
+            as.write(writer);
+            writer.close();
+            
+            fail("expected IOException");
+        }
+        catch (Exception exc)
+        {
+            assertTrue(exc instanceof IOException);
+            assertEquals("wrong offset for field 'b'", exc.getMessage());
+        }
     }
 }
