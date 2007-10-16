@@ -35,23 +35,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.tools;
+
 
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.util.TokenAST;
 
 
+
 /**
- * Each extension must be named as rds*Extension.jar, i.e. "rds_javaExtension.jar"
+ * Each extension must be named as rds*Extension.jar, i.e.
+ * "rds_javaExtension.jar"
  * 
  * @author HWedekind
- *
+ * 
  */
 public interface Extension
 {
     /**
      * if the extension requires parameters they should be set via setParameter
-     * @param params the parametervalues to set
+     * 
+     * @param params
+     *            the parametervalues to set
      */
     public abstract void setParameter(Parameters params);
 
@@ -59,20 +66,23 @@ public interface Extension
     /**
      * Enables implementions of Extension to generate their ouptut
      * 
-     * @param emitter an already initialized datascript emitter
-     * @param rootNode the already parsed input file, should be given
-     *                  to translateUnit
+     * @param emitter
+     *            an already initialized datascript emitter
+     * @param rootNode
+     *            the already parsed input file, should be given to
+     *            translateUnit
      */
     public abstract void generate(DataScriptEmitter emitter, TokenAST rootNode)
             throws Exception;
 
 
     /**
-     * Generates a string with usage information. This stringcontent should follow
-     * this syntax:
-     * <parameter> [<parameter argument>] \t <description> NL
-     * i.e. "-ext \"pathname\"\tpath to the extension directory" + NL
-     * @return String object with informations about the usage
+     * Parse all arguments from the commandline parameterlist that are necessary
+     * for this extension.
+     * 
+     * @param cli
+     * @param rdsOptions
+     * @param args
      */
-    public String getUsage();
+    public void getOptions(org.apache.commons.cli.Options rdsOptions, String[] args);
 }

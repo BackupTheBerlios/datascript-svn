@@ -50,6 +50,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.cli.Option;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -114,6 +115,17 @@ public class XmlExtension extends XMLFilterImpl implements Extension
         Source source = new SAXSource(this, new InputSource());
         Result result = new StreamResult(new OutputStreamWriter(os));
         t.transform(source, result);
+    }
+
+
+    public void getOptions(org.apache.commons.cli.Options rdsOptions, String[] args)
+    {
+        org.apache.commons.cli.Option rdsOption;
+
+        rdsOption = new Option("xml", false, 
+                "enables generation of a XML file of the syntaxtree");
+        rdsOption.setRequired(false);
+        rdsOptions.addOption(rdsOption);
     }
 
 
@@ -272,20 +284,6 @@ public class XmlExtension extends XMLFilterImpl implements Extension
         handler.startDocument();
         fireSaxEvents(rootNode);
         handler.endDocument();
-    }
-
-
-    /* (non-Javadoc)
-     * @see datascript.tools.Extension#printUsage()
-     */
-    public String getUsage()
-    {
-        String NL = System.getProperties().getProperty("line.separator");
-        StringBuilder buffer = new StringBuilder();
-
-        // TODO Auto-generated method stub
-        buffer.append(" -xml\t\t\tenables generation of a XML file of the syntaxtree" + NL);
-        return buffer.toString();
     }
 
 }

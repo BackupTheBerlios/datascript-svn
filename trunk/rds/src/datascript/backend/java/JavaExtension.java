@@ -40,7 +40,10 @@
 package datascript.backend.java;
 
 
+import org.apache.commons.cli.Option;
+
 import antlr.RecognitionException;
+
 import datascript.ast.ComputeError;
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.util.TokenAST;
@@ -148,6 +151,22 @@ public class JavaExtension implements Extension
     }
 
 
+    public void getOptions(org.apache.commons.cli.Options rdsOptions, String[] args)
+    {
+        org.apache.commons.cli.Option rdsOption;
+
+        rdsOption = new Option("pkg", true, 
+                "\"packagename\"\tJava package name for types without a DataScript package");
+        rdsOption.setRequired(false);
+        rdsOptions.addOption(rdsOption);
+
+        rdsOption = new Option("java_e", false, 
+                "enables throwing exceptions in equals() function, when objects are not equal");
+        rdsOption.setRequired(false);
+        rdsOptions.addOption(rdsOption);
+    }
+
+
     /*
      * (non-Javadoc)
      * 
@@ -156,20 +175,6 @@ public class JavaExtension implements Extension
     public void setParameter(Parameters params)
     {
         this.params = params;
-    }
-
-
-    /* (non-Javadoc)
-     * @see datascript.tools.Extension#printUsage()
-     */
-    public String getUsage()
-    {
-        final String NL = System.getProperties().getProperty("line.separator");
-        final StringBuilder buffer = new StringBuilder();
-
-        buffer.append(" -pkg \"packagename\"\tJava package name for types without a DataScript package" + NL);
-        buffer.append(" -java_e\t\tenables throwing exceptions in equals() function, when objects are not equal" + NL);
-        return buffer.toString();
     }
 
 }

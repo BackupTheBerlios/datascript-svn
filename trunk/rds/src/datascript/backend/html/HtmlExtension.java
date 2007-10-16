@@ -37,6 +37,9 @@
  */
 package datascript.backend.html;
 
+
+import org.apache.commons.cli.Option;
+
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.util.TokenAST;
 import datascript.ast.DataScriptException;
@@ -92,26 +95,23 @@ public class HtmlExtension implements Extension
     }
 
 
+    public void getOptions(org.apache.commons.cli.Options rdsOptions, String[] args)
+    {
+        org.apache.commons.cli.Option rdsOption;
+
+        rdsOption = new Option("doc", false, 
+                "enables generation of Javadoc-style documentation");
+        rdsOption.setRequired(false);
+        rdsOptions.addOption(rdsOption);
+    }
+
+
     /* (non-Javadoc)
      * @see datascript.tools.Extension#setParameter(datascript.tools.Parameters)
      */
     public void setParameter(Parameters params)
     {
         this.params = params;
-    }
-
-
-    /* (non-Javadoc)
-     * @see datascript.tools.Extension#printUsage()
-     */
-    public String getUsage()
-    {
-        String NL = System.getProperties().getProperty("line.separator");
-        StringBuilder buffer = new StringBuilder();
-
-        // TODO Auto-generated method stub
-        buffer.append(" -doc\t\t\tenables generation of Javadoc-style documentation" + NL);
-        return buffer.toString();
     }
 
 }

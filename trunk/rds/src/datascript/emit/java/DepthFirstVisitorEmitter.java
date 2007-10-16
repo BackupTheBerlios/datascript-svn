@@ -87,20 +87,9 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 
         public String getVisitor()
         {
-            StringBuffer result = new StringBuffer();
-            if (field.getAlignment() != null && false)
-            {
-                result.append("__bitsize = ((__bitsize / ");
-                result.append(field.getAlignmentValue());
-                result.append(") + 1) * ");
-                result.append(field.getAlignmentValue());
-                result.append(";");
-                result.append(System.getProperty("line.separator"));
-            }
             TypeInterface type = field.getFieldType();
-            result.append(global.getVisitor(type, "node."
-                    + AccessorNameEmitter.getGetterName(field) + "()"));
-            return result.toString();
+            return global.getVisitor(type, "node."
+                    + AccessorNameEmitter.getGetterName(field) + "()");
         }
 
 

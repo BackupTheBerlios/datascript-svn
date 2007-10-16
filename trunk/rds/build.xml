@@ -116,6 +116,7 @@
     <mkdir dir="${antlr.out}" />
     <copy file="${lib}/antlr.jar" todir="${jar}" />
     <copy file="${lib}/freemarker.jar" todir="${jar}" />
+    <copy file="${lib}/commons-cli-1.1.jar" todir="${jar}" />
     <copy todir="${classes}">
       <fileset dir="${basedir}">
         <include name="freemarker/html/**.ftl" />
@@ -183,6 +184,7 @@
     <javac destdir="${classes}" debug="on" target="1.5">
       <classpath>
         <pathelement path="lib/freemarker.jar" />
+        <pathelement path="lib/commons-cli-1.1.jar" />
       </classpath>
       <src path="${src}" />
       <src path="${gen}" />
@@ -255,7 +257,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -xml -doc -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} bits.ds" />
+      <arg line="-c -xml -doc -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
     </java>
   </target>
 
@@ -277,6 +279,7 @@
         <pathelement path="${build}/test/classes" />
         <pathelement path="${jar}/rds-runtime.jar" />
         <pathelement path="${lib}/sqlitejdbc.jar" />
+        <pathelement path="${lib}/commons-cli-1.1.jar" />
       </classpath>
       <batchtest>
         <fileset dir="${test}">
@@ -299,7 +302,7 @@
         <pathelement path="${lib}/antlr.jar" />
         <pathelement path="${lib}/freemarker.jar" />
       </classpath>
-      <arg line="-c -doc -out ${test.gen} -ext ${ext} -java_fm -src  ${ds.src}  sqltest.ds" />
+      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src  ${ds.src}  sqltest.ds" />
     </java>
   </target>
 
@@ -315,7 +318,7 @@
         <pathelement path="${lib}/antlr.jar" />
         <pathelement path="${lib}/freemarker.jar" />
       </classpath>
-      <arg line="-c -doc -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} sqlParameter.ds" />
+      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src ${ds.src} sqlParameter.ds" />
     </java>
   </target>
 
@@ -331,7 +334,7 @@
         <pathelement path="${lib}/antlr.jar" />
         <pathelement path="${lib}/freemarker.jar" />
       </classpath>
-      <arg line="-c -doc -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} tableimport/client.ds" />
+      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src ${ds.src} tableimport/client.ds" />
     </java>
   </target>
 
@@ -345,7 +348,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -xml -doc -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} alignment.ds" />
+      <arg line="-c -xml -doc -out ${test.gen} -ext ${ext} -src ${ds.src} alignment.ds" />
     </java>
   </target>
 
@@ -359,7 +362,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -java_fm -src  ${ds.src}  func.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  func.ds" />
     </java>
   </target>
 
@@ -377,14 +380,14 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -java_fm -src  ${ds.src}  child.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  child.ds" />
     </java>
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
       <classpath>
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -java_fm -src  ${ds.src}  pkg/top.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  pkg/top.ds" />
     </java>
   </target>
 
@@ -400,7 +403,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -java_fm -src  ${ds.src}  innerunion.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  innerunion.ds" />
     </java>
   </target>
 
@@ -413,7 +416,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -out ${test.gen} -ext ${ext} -java_fm -src ${ds.src} gif.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} gif.ds" />
     </java>
   </target>
 
