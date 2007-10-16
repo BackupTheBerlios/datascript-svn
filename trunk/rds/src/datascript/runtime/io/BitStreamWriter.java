@@ -43,6 +43,7 @@ package datascript.runtime.io;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 
@@ -55,6 +56,7 @@ import javax.imageio.stream.MemoryCacheImageOutputStream;
 public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
 {
     protected OutputStream os;
+    private Charset charset = Charset.forName("UTF-8");
 
 
     public BitStreamWriter(OutputStream os)
@@ -108,8 +110,7 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
                 writeBits(value.charAt(i), 8);
         }
     }
-
-
+    
     public void writeShort(int value) throws IOException
     {
         if (bitOffset == 0)
@@ -208,8 +209,19 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
 
     public void writeString(String value) throws IOException
     {
-        this.writeBytes(value);
-        this.writeByte(0);
+        byte[] bytes = value.getBytes(charset);
+        if (bitOffset == 0)
+        {
+            write(bytes);
+        }
+        else
+        {
+            for (byte b : bytes)
+            {
+                writeByte(b);
+            }
+        }
+        writeByte(0);
     }
 
 
