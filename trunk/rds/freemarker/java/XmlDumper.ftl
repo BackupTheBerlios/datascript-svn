@@ -293,7 +293,7 @@ public class __XmlDumper extends XMLFilterImpl implements ${rootPackageName}.__V
     }
 
 
-    public void visitArray(ObjectArray n, Object arg)
+    public void visitArray(ObjectArray<?> n, Object arg)
     {
         int last = n.length();
         for (int i = 0; i < last; i++) 

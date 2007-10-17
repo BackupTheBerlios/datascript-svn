@@ -59,6 +59,7 @@ import datascript.antlr.util.ToolContext;
  * @author HWellmann
  * 
  */
+@SuppressWarnings("serial")
 public class TypeReference extends TokenAST implements TypeInterface,
         LinkAction
 {

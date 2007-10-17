@@ -45,6 +45,7 @@ import antlr.collections.AST;
 
 
 
+@SuppressWarnings("serial")
 public class StringType extends TokenAST implements TypeInterface
 {
     public IntegerValue sizeof(Context ctxt)

@@ -49,7 +49,7 @@ import datascript.runtime.io.BitStreamWriter;
 
 
 
-public class UnsignedByteArray implements Array, SizeOf
+public class UnsignedByteArray implements Array<Short>, SizeOf
 {
     short[] data; // data is between [offset... offset+length-1]
     int offset;
@@ -119,19 +119,18 @@ public class UnsignedByteArray implements Array, SizeOf
     }
 
 
-    public Array map(Mapping m)
+    public Array<Short> map(Mapping<Short> m)
     {
         UnsignedByteArray result = new UnsignedByteArray(length);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = ((Byte) m.map(new Short(data[offset + i])))
-                    .byteValue();
+            result.data[i] = m.map(new Short(data[offset + i])).byteValue();
         }
         return result;
     }
 
 
-    public Array subRange(int begin, int length)
+    public Array<Short> subRange(int begin, int length)
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
             throw new ArrayIndexOutOfBoundsException();

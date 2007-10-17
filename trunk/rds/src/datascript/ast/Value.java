@@ -35,11 +35,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import java.math.BigInteger;
 
-public abstract class Value implements Comparable
+
+
+public abstract class Value implements Comparable<Object>
 {
 
     public static Value makeValue(String sval)
@@ -48,7 +53,8 @@ public abstract class Value implements Comparable
         //
         if (sval.startsWith("\""))
         {
-            return null; // TODO: new StringValue(sval.substring(1, sval.length() - 1));
+            return null; // TODO: new StringValue(sval.substring(1,
+                            // sval.length() - 1));
         }
         else if (sval.startsWith("0x"))
         {
@@ -75,26 +81,30 @@ public abstract class Value implements Comparable
         {
             return new BooleanValue(false);
         }
-        else
-            throw new ComputeError("inconsistent format: " + sval);
+        else throw new ComputeError("inconsistent format: " + sval);
     }
+
 
     public String stringValue()
     {
         throw new ComputeError("not a string value: " + this);
     }
 
+
     public boolean booleanValue()
     {
         throw new ComputeError("not a boolean value: " + this);
     }
+
 
     public BigInteger integerValue()
     {
         throw new ComputeError("not an integer value: " + this);
     }
 
+
     abstract public int compareTo(Object obj);
+
 
     abstract public TypeInterface getType();
 }

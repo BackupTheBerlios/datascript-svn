@@ -35,9 +35,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.tools;
 
+
 import datascript.antlr.DataScriptParser;
+
 
 
 public interface Parameters
@@ -50,53 +54,58 @@ public interface Parameters
 
     /**
      * 
-     * @return  returns true if the "-c" flag is set at commandline, false if not
+     * @return returns true if the "-c" flag is set at commandline, false if not
      */
     public boolean getCheckSyntax();
 
 
     /**
      * 
-     * @return  returns the (relative) pathname to DataScript source files
+     * @return returns the (relative) pathname to DataScript source files
      */
     public String getPathName();
 
 
     /**
      * 
-     * @return  returns the (relative) pathname to the outputdirectory
+     * @return returns the (relative) pathname to the outputdirectory
      */
     public String getOutPathName();
 
 
     /**
      * 
-     * @return  returns the name of the initial DataScript file
+     * @return returns the name of the initial DataScript file
      */
     public String getFileName();
 
 
     /**
-     * The xml-extension needs this parser to resolve the name of a node in the AST.
-     * Normally the emitter ist given to process the AST.  
-     * @return  returns a datascript parser
+     * The xml-extension needs this parser to resolve the name of a node in the
+     * AST. Normally the emitter ist given to process the AST.
+     * 
+     * @return returns a datascript parser
      */
     public DataScriptParser getParser();
 
 
     /**
      * This method tests if a argument exists
-     * @param   key name of the key to test if it exists
-     * @return  true if key is present, fals if not
+     * 
+     * @param key
+     *            name of the key to test if it exists
+     * @return true if key is present, fals if not
      */
     public boolean argumentExists(String key);
 
 
     /**
      * This method returns the value of a specific commandlineargument
-     * @param   key name of the key to get his value from
-     * @return  returns the value of the argument to a given key
-     * @throws  Exception
+     * 
+     * @param key
+     *            name of the key to get his value from
+     * @return returns the value of the argument to a given key
+     * @throws Exception
      */
     public String getCommandlineArg(String key) throws Exception;
 }

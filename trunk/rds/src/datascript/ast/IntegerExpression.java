@@ -35,20 +35,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
 
+
 import datascript.antlr.DataScriptParserTokenTypes;
+
+
 
 /**
  * @author HWellmann
  *
  */
+@SuppressWarnings("serial")
 public class IntegerExpression extends Expression
 {
     public IntegerExpression()
     {
-        type  = IntegerType.integerType;        
+        type = IntegerType.integerType;
     }
+
 
     public void evaluate()
     {
@@ -57,11 +64,11 @@ public class IntegerExpression extends Expression
             case DataScriptParserTokenTypes.INTEGER_LITERAL:
                 value = Value.makeValue(getText());
                 break;
-                               
-            case DataScriptParserTokenTypes.PLUS:   
-            case DataScriptParserTokenTypes.MINUS:   
-            case DataScriptParserTokenTypes.MULTIPLY:   
-            case DataScriptParserTokenTypes.DIVIDE:   
+
+            case DataScriptParserTokenTypes.PLUS:
+            case DataScriptParserTokenTypes.MINUS:
+            case DataScriptParserTokenTypes.MULTIPLY:
+            case DataScriptParserTokenTypes.DIVIDE:
             case DataScriptParserTokenTypes.MODULO:
             case DataScriptParserTokenTypes.OR:
             case DataScriptParserTokenTypes.XOR:
@@ -72,8 +79,8 @@ public class IntegerExpression extends Expression
                 checkIntegerOperand(op2());
                 evaluate(op1(), op2());
                 break;
-                
-            case DataScriptParserTokenTypes.UPLUS:   
+
+            case DataScriptParserTokenTypes.UPLUS:
             case DataScriptParserTokenTypes.UMINUS:
             case DataScriptParserTokenTypes.TILDE:
                 checkIntegerOperand(op1());
@@ -81,41 +88,41 @@ public class IntegerExpression extends Expression
                 break;
 
             default:
-                throw new InternalError("illegal integer operation: type = " + 
-                                        getType());
-                
+                throw new InternalError("illegal integer operation: type = "
+                        + getType());
+
         }
         if (value != null)
         {
             //System.out.println("expr = " + value);
         }
     }
-    
+
+
     public void evaluate(Expression op1, Expression op2)
     {
-        IntegerValue val1 = (IntegerValue)op1.value;
-        IntegerValue val2 = (IntegerValue)op2.value;
-        if (val1 == null || val2 == null)
-            return;
-        
-        switch(getType())
+        IntegerValue val1 = (IntegerValue) op1.value;
+        IntegerValue val2 = (IntegerValue) op2.value;
+        if (val1 == null || val2 == null) return;
+
+        switch (getType())
         {
             case DataScriptParserTokenTypes.PLUS:
                 value = val1.add(val2);
                 break;
-                
-            case DataScriptParserTokenTypes.MINUS:   
+
+            case DataScriptParserTokenTypes.MINUS:
                 value = val1.subtract(val2);
                 break;
-                
-            case DataScriptParserTokenTypes.MULTIPLY:   
+
+            case DataScriptParserTokenTypes.MULTIPLY:
                 value = val1.multiply(val2);
                 break;
-                
-            case DataScriptParserTokenTypes.DIVIDE:   
+
+            case DataScriptParserTokenTypes.DIVIDE:
                 value = val1.divide(val2);
                 break;
-                
+
             case DataScriptParserTokenTypes.MODULO:
                 value = val1.remainder(val2);
                 break;
@@ -139,39 +146,39 @@ public class IntegerExpression extends Expression
             case DataScriptParserTokenTypes.RSHIFT:
                 value = val1.shiftRight(val2);
                 break;
-                
+
             default:
-                throw new InternalError("illegal integer operation: type = " + 
-                                        getType());
-                
+                throw new InternalError("illegal integer operation: type = "
+                        + getType());
+
         }
     }
 
+
     public void evaluate(Expression op1)
     {
-        IntegerValue val1 = (IntegerValue)op1.value;
-        if (val1 == null)
-            return;
-        
-        switch(getType())
+        IntegerValue val1 = (IntegerValue) op1.value;
+        if (val1 == null) return;
+
+        switch (getType())
         {
             case DataScriptParserTokenTypes.UPLUS:
                 value = val1;
                 break;
-                
+
             case DataScriptParserTokenTypes.UMINUS:
                 value = val1.negate();
                 break;
-                
+
             case DataScriptParserTokenTypes.TILDE:
                 value = val1.not();
                 break;
-                
+
             default:
-                throw new InternalError("illegal integer operation: type = " + 
-                                        getType());
-                
+                throw new InternalError("illegal integer operation: type = "
+                        + getType());
+
         }
     }
-    
+
 }

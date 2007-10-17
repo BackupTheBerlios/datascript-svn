@@ -35,19 +35,25 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import java.math.BigInteger;
 
 import datascript.antlr.DataScriptParserTokenTypes;
 
+
+
 /**
- * This class models the built-in signed and unsigned integer types.
- * All types are big-endian. Little-endian types are not currently supported.
- *
+ * This class models the built-in signed and unsigned integer types. All types
+ * are big-endian. Little-endian types are not currently supported.
+ * 
  * @author HWellmann
- *
+ * 
  */
+@SuppressWarnings("serial")
 public class StdIntegerType extends IntegerType
 {
     public boolean isSigned()
@@ -65,29 +71,29 @@ public class StdIntegerType extends IntegerType
         }
     }
 
+
     public BigInteger getLowerBound()
     {
         return lowerbounds[getType()];
     }
+
 
     public BigInteger getUpperBound()
     {
         return upperbounds[getType()];
     }
 
-/*
-    public String toString()
-    {
-        // remove double quotes from "uint8"
-        return DataScriptParser._tokenNames[getType()];
-    }
-*/
+
+    /*
+     * public String toString() { // remove double quotes from "uint8" return
+     * DataScriptParser._tokenNames[getType()]; }
+     */
 
     public boolean equals(Object obj)
     {
         if (obj instanceof StdIntegerType)
         {
-            StdIntegerType other = (StdIntegerType)obj;
+            StdIntegerType other = (StdIntegerType) obj;
             return other.getType() == getType();
         }
         return super.equals(obj);
@@ -98,7 +104,7 @@ public class StdIntegerType extends IntegerType
     {
         IntegerValue eight = new IntegerValue(8);
         IntegerValue size = bitsizeof(ctxt);
-        if (size.remainder(eight).compareTo(new IntegerValue(0)) != 0) 
+        if (size.remainder(eight).compareTo(new IntegerValue(0)) != 0)
         {
             throw new RuntimeException("sizeof not integer: " + size);
         }
@@ -115,18 +121,18 @@ public class StdIntegerType extends IntegerType
                 return new IntegerValue(8);
             case DataScriptParserTokenTypes.UINT16:
             case DataScriptParserTokenTypes.INT16:
-            //case DataScriptParserTokenTypes.LEUINT16:
-            //case DataScriptParserTokenTypes.LEINT16:
+                // case DataScriptParserTokenTypes.LEUINT16:
+                // case DataScriptParserTokenTypes.LEINT16:
                 return new IntegerValue(16);
             case DataScriptParserTokenTypes.UINT32:
             case DataScriptParserTokenTypes.INT32:
-            //case DataScriptParserTokenTypes.LEUINT32:
-            //case DataScriptParserTokenTypes.LEINT32:
+                // case DataScriptParserTokenTypes.LEUINT32:
+                // case DataScriptParserTokenTypes.LEINT32:
                 return new IntegerValue(32);
             case DataScriptParserTokenTypes.UINT64:
             case DataScriptParserTokenTypes.INT64:
-            //case DataScriptParserTokenTypes.LEUINT64:
-            //case DataScriptParserTokenTypes.LEINT64:
+                // case DataScriptParserTokenTypes.LEUINT64:
+                // case DataScriptParserTokenTypes.LEINT64:
                 return new IntegerValue(64);
             default:
                 throw new ComputeError("unknown type in bitsizeof");
@@ -137,60 +143,78 @@ public class StdIntegerType extends IntegerType
 
     private static BigInteger upperbounds[];
 
-    //private static StdIntegerType builtinTypes[];
+    // private static StdIntegerType builtinTypes[];
 
     static
     {
-    	// Warning: We rely on the fact the the token types are ordered
-    	// alphabetically to compute array length.
-        int n = DataScriptParserTokenTypes.UINT8+1;
+        // Warning: We rely on the fact the the token types are ordered
+        // alphabetically to compute array length.
+        int n = DataScriptParserTokenTypes.UINT8 + 1;
         lowerbounds = new BigInteger[n];
         upperbounds = new BigInteger[n];
         lowerbounds[DataScriptParserTokenTypes.UINT8] = BigInteger.ZERO;
         lowerbounds[DataScriptParserTokenTypes.UINT16] = BigInteger.ZERO;
         lowerbounds[DataScriptParserTokenTypes.UINT32] = BigInteger.ZERO;
         lowerbounds[DataScriptParserTokenTypes.UINT64] = BigInteger.ZERO;
-/*
-        lowerbounds[DataScriptParserTokenTypes.LEUINT16] = BigInteger.ZERO;
-        lowerbounds[DataScriptParserTokenTypes.LEUINT32] = BigInteger.ZERO;
-        lowerbounds[DataScriptParserTokenTypes.LEUINT64] = BigInteger.ZERO;
-*/
-        upperbounds[DataScriptParserTokenTypes.UINT8] = BigInteger.ONE.shiftLeft(8);
-        upperbounds[DataScriptParserTokenTypes.UINT16] = BigInteger.ONE.shiftLeft(16);
-        upperbounds[DataScriptParserTokenTypes.UINT32] = BigInteger.ONE.shiftLeft(32);
-        upperbounds[DataScriptParserTokenTypes.UINT64] = BigInteger.ONE.shiftLeft(64);
-/*
-        upperbounds[DataScriptParserTokenTypes.LEUINT16] = BigInteger.ONE.shiftLeft(16);
-        upperbounds[DataScriptParserTokenTypes.LEUINT32] = BigInteger.ONE.shiftLeft(32);
-        upperbounds[DataScriptParserTokenTypes.LEUINT64] = BigInteger.ONE.shiftLeft(64);
-*/        
-        upperbounds[DataScriptParserTokenTypes.INT8] = BigInteger.ONE.shiftLeft(7).subtract(
-                BigInteger.ONE);
+        /*
+         * lowerbounds[DataScriptParserTokenTypes.LEUINT16] = BigInteger.ZERO;
+         * lowerbounds[DataScriptParserTokenTypes.LEUINT32] = BigInteger.ZERO;
+         * lowerbounds[DataScriptParserTokenTypes.LEUINT64] = BigInteger.ZERO;
+         */
+        upperbounds[DataScriptParserTokenTypes.UINT8] = BigInteger.ONE
+                .shiftLeft(8);
+        upperbounds[DataScriptParserTokenTypes.UINT16] = BigInteger.ONE
+                .shiftLeft(16);
+        upperbounds[DataScriptParserTokenTypes.UINT32] = BigInteger.ONE
+                .shiftLeft(32);
+        upperbounds[DataScriptParserTokenTypes.UINT64] = BigInteger.ONE
+                .shiftLeft(64);
+        /*
+         * upperbounds[DataScriptParserTokenTypes.LEUINT16] =
+         * BigInteger.ONE.shiftLeft(16);
+         * upperbounds[DataScriptParserTokenTypes.LEUINT32] =
+         * BigInteger.ONE.shiftLeft(32);
+         * upperbounds[DataScriptParserTokenTypes.LEUINT64] =
+         * BigInteger.ONE.shiftLeft(64);
+         */
+        upperbounds[DataScriptParserTokenTypes.INT8] = BigInteger.ONE
+                .shiftLeft(7).subtract(BigInteger.ONE);
         upperbounds[DataScriptParserTokenTypes.INT16] = BigInteger.ONE
-            .shiftLeft(15).subtract(BigInteger.ONE);
-        upperbounds[DataScriptParserTokenTypes.INT32] = BigInteger.ONE
-            .shiftLeft(31).subtract(BigInteger.ONE);
-        upperbounds[DataScriptParserTokenTypes.INT64] = BigInteger.ONE
-        .shiftLeft(63).subtract(BigInteger.ONE);
-
-/*
-        upperbounds[DataScriptParserTokenTypes.LEINT16] = upperbounds[DataScriptParserTokenTypes.INT16] = BigInteger.ONE
                 .shiftLeft(15).subtract(BigInteger.ONE);
-        upperbounds[DataScriptParserTokenTypes.LEINT32] = upperbounds[DataScriptParserTokenTypes.INT32] = BigInteger.ONE
+        upperbounds[DataScriptParserTokenTypes.INT32] = BigInteger.ONE
                 .shiftLeft(31).subtract(BigInteger.ONE);
-        upperbounds[DataScriptParserTokenTypes.LEINT64] = upperbounds[DataScriptParserTokenTypes.INT64] = BigInteger.ONE
+        upperbounds[DataScriptParserTokenTypes.INT64] = BigInteger.ONE
                 .shiftLeft(63).subtract(BigInteger.ONE);
-*/
-        lowerbounds[DataScriptParserTokenTypes.INT8] = upperbounds[DataScriptParserTokenTypes.INT8].not();
-        lowerbounds[DataScriptParserTokenTypes.INT16] = upperbounds[DataScriptParserTokenTypes.INT16].not();
-        lowerbounds[DataScriptParserTokenTypes.INT32] = upperbounds[DataScriptParserTokenTypes.INT32].not();
-        lowerbounds[DataScriptParserTokenTypes.INT64] = upperbounds[DataScriptParserTokenTypes.INT64].not();
-/*
-        lowerbounds[DataScriptParserTokenTypes.LEINT16] = upperbounds[DataScriptParserTokenTypes.INT16].not();
-        lowerbounds[DataScriptParserTokenTypes.LEINT32] = upperbounds[DataScriptParserTokenTypes.INT32].not();
-        lowerbounds[DataScriptParserTokenTypes.LEINT64] = upperbounds[DataScriptParserTokenTypes.INT64].not();
-*/
+
+        /*
+         * upperbounds[DataScriptParserTokenTypes.LEINT16] =
+         * upperbounds[DataScriptParserTokenTypes.INT16] = BigInteger.ONE
+         * .shiftLeft(15).subtract(BigInteger.ONE);
+         * upperbounds[DataScriptParserTokenTypes.LEINT32] =
+         * upperbounds[DataScriptParserTokenTypes.INT32] = BigInteger.ONE
+         * .shiftLeft(31).subtract(BigInteger.ONE);
+         * upperbounds[DataScriptParserTokenTypes.LEINT64] =
+         * upperbounds[DataScriptParserTokenTypes.INT64] = BigInteger.ONE
+         * .shiftLeft(63).subtract(BigInteger.ONE);
+         */
+        lowerbounds[DataScriptParserTokenTypes.INT8] = upperbounds[DataScriptParserTokenTypes.INT8]
+                .not();
+        lowerbounds[DataScriptParserTokenTypes.INT16] = upperbounds[DataScriptParserTokenTypes.INT16]
+                .not();
+        lowerbounds[DataScriptParserTokenTypes.INT32] = upperbounds[DataScriptParserTokenTypes.INT32]
+                .not();
+        lowerbounds[DataScriptParserTokenTypes.INT64] = upperbounds[DataScriptParserTokenTypes.INT64]
+                .not();
+        /*
+         * lowerbounds[DataScriptParserTokenTypes.LEINT16] =
+         * upperbounds[DataScriptParserTokenTypes.INT16].not();
+         * lowerbounds[DataScriptParserTokenTypes.LEINT32] =
+         * upperbounds[DataScriptParserTokenTypes.INT32].not();
+         * lowerbounds[DataScriptParserTokenTypes.LEINT64] =
+         * upperbounds[DataScriptParserTokenTypes.INT64].not();
+         */
     }
+
 
     /**
      * for builtin types, membership test amounts to testing whether it's an
@@ -209,10 +233,12 @@ public class StdIntegerType extends IntegerType
         }
     }
 
+
     public Value castFrom(Value val)
     {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
+
 
     static StdIntegerType getBuiltinType(TypeInterface ftype)
     {
@@ -227,5 +253,5 @@ public class StdIntegerType extends IntegerType
         }
         return btype;
     }
-    
+
 }

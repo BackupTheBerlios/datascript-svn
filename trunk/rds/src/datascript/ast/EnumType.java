@@ -35,21 +35,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import java.util.Iterator;
 
 import datascript.antlr.util.TokenAST;
 
+
+
+@SuppressWarnings("serial")
 public class EnumType extends SetType
 {
     private TokenAST members;
     private Scope scope;
-    
+
+
     public EnumType()
     {
-        
+
     }
+
 
     public int size()
     {
@@ -62,42 +70,48 @@ public class EnumType extends SetType
         }
         return count;
     }
-    
+
+
     public int getNumItems()
     {
-    	return size();
+        return size();
     }
-    
+
+
     public Iterable<EnumItem> getItems()
     {
         if (members == null)
         {
             members = (TokenAST) getFirstChild().getNextSibling()
-                .getNextSibling();            
+                    .getNextSibling();
         }
-        return new Iterable<EnumItem>() {
+        return new Iterable<EnumItem>()
+        {
             public Iterator<EnumItem> iterator()
             {
                 return new ChildIterator<EnumItem>(members);
-            }            
+            }
         };
     }
+
 
     public String toString()
     {
         return "ENUM";
     }
-    
+
+
     public Scope getScope()
     {
         return scope;
     }
-    
+
+
     public void setScope(Scope scope, Package pkg)
     {
         this.scope = scope;
         this.pkg = pkg;
         scope.setOwner(this);
-        
+
     }
 }

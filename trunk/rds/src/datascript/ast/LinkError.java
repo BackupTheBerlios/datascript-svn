@@ -35,10 +35,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import datascript.antlr.util.TokenAST;
 
+
+
+@SuppressWarnings("serial")
 public class LinkError extends LineError
 {
 
@@ -47,10 +53,12 @@ public class LinkError extends LineError
         super();
     }
 
+
     public LinkError(String s)
     {
         super(s);
     }
+
 
     public LinkError(TokenAST n, String s)
     {

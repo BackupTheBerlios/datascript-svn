@@ -45,6 +45,7 @@ import antlr.collections.AST;
 
 
 
+@SuppressWarnings("serial")
 public class IntegerType extends TokenAST implements TypeInterface
 {
     static IntegerType integerType = new IntegerType();

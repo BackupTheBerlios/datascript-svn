@@ -35,11 +35,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import java.util.Iterator;
 
 import antlr.collections.AST;
+
+
 
 /**
  * @author HWellmann
@@ -49,17 +54,21 @@ public class ChildIterator<E> implements Iterator<E>
 {
     private AST child;
     private AST next;
-    
+
+
     public ChildIterator(AST parent)
     {
         this.next = parent.getFirstChild();
     }
-    
+
+
     public boolean hasNext()
     {
         return next != null;
     }
-    
+
+
+    @SuppressWarnings("unchecked")
     public E next()
     {
         child = next;
@@ -67,12 +76,13 @@ public class ChildIterator<E> implements Iterator<E>
         {
             next = next.getNextSibling();
         }
-        return (E)child;
+        return (E) child;
     }
-    
+
+
     public void remove()
     {
         throw new UnsupportedOperationException();
     }
-    
+
 }

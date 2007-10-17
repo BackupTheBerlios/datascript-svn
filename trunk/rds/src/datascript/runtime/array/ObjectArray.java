@@ -50,7 +50,7 @@ import datascript.runtime.io.BitStreamWriter;
 
 
 
-public class ObjectArray<E> implements Array, SizeOf
+public class ObjectArray<E> implements Array<E>, SizeOf
 {
     // using a Vector for now means we're subject to the limitations
     // Vectors are (i.e., max 2^31-1 elements
@@ -80,6 +80,7 @@ public class ObjectArray<E> implements Array, SizeOf
     }
 
 
+    @SuppressWarnings("unchecked")
     public boolean equals(Object obj)
     {
         if (obj instanceof ObjectArray)
@@ -107,18 +108,18 @@ public class ObjectArray<E> implements Array, SizeOf
     }
 
 
-    public Array map(Mapping m)
+    public Array<E> map(Mapping<E> m)
     {
-        Vector result = new Vector(data.size());
+        Vector<E> result = new Vector<E>(data.size());
         for (int i = 0; i < data.size(); i++)
         {
             result.add(i, m.map(data.get(i)));
         }
-        return new ObjectArray(result);
+        return new ObjectArray<E>(result);
     }
 
 
-    public Array subRange(int begin, int length)
+    public Array<E> subRange(int begin, int length)
     {
         return new ObjectArray<E>(data.subList(begin, begin + length));
     }

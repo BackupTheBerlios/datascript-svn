@@ -174,7 +174,7 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         BitFieldArray result = new BitFieldArray(length, numBits);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = ((BigInteger) m.map(data[offset + i]));
+            result.data[i] = m.map(data[offset + i]);
         }
         return result;
     }

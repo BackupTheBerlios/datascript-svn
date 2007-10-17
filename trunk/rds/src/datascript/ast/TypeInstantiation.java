@@ -50,6 +50,7 @@ import datascript.antlr.util.ToolContext;
 
 
 
+@SuppressWarnings("serial")
 public class TypeInstantiation extends TokenAST implements TypeInterface
 {
     /** Reference to a compound type with a parameter list. */

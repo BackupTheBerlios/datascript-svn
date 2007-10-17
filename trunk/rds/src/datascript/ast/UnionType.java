@@ -40,6 +40,7 @@
 package datascript.ast;
 
 
+@SuppressWarnings("serial")
 public class UnionType extends CompoundType
 {
 

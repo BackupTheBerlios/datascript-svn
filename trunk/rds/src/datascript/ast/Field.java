@@ -47,6 +47,7 @@ import datascript.antlr.util.TokenAST;
 
 
 
+@SuppressWarnings("serial")
 public class Field extends TokenAST
 {
     private TypeInterface type;

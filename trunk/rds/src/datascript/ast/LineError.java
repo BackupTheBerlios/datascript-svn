@@ -35,11 +35,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import datascript.antlr.util.TokenAST;
 
 
+
+@SuppressWarnings("serial")
 public class LineError extends Error
 {
     private TokenAST n;
@@ -48,15 +53,18 @@ public class LineError extends Error
 
     static String currentFile;
 
+
     public LineError()
     {
         super();
     }
 
+
     public LineError(String s)
     {
         super(s);
     }
+
 
     public LineError(TokenAST n, String s)
     {
@@ -65,12 +73,16 @@ public class LineError extends Error
         filename = currentFile;
     }
 
+
     public String toString()
     {
-        if (n == null)
-            return super.toString();
-        return getClass().toString().substring("class datascript.ast.".length())
-                + " in file " + filename + " at line " + n.getLine()
+        if (n == null) return super.toString();
+        return getClass().toString()
+                .substring("class datascript.ast.".length())
+                + " in file "
+                + filename
+                + " at line "
+                + n.getLine()
                 + ", column " + n.getColumn() + ": " + getMessage();
     }
 }

@@ -47,8 +47,9 @@ import java.sql.*;
 public class ${name}
 {
     private SqlDatabase db;
+    @SuppressWarnings("unused")
     private String tableName;
-    private PreparedStatement insertRow;
+<#--    private PreparedStatement insertRow;-->
 
 
     public ${name}(SqlDatabase db) throws SQLException

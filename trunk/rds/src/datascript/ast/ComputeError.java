@@ -35,10 +35,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import datascript.antlr.util.TokenAST;
 
+
+
+@SuppressWarnings("serial")
 public class ComputeError extends LineError
 {
     public ComputeError()
@@ -46,11 +52,13 @@ public class ComputeError extends LineError
         super();
     }
 
+
     public ComputeError(String s)
     {
         super(s);
     }
-    
+
+
     public ComputeError(TokenAST ast, String s)
     {
         super(ast, s);

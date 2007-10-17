@@ -51,10 +51,11 @@ import datascript.antlr.util.TokenAST;
 
 
 
+@SuppressWarnings("serial")
 public class SetType extends TokenAST implements TypeInterface
 {
 
-    protected HashMap items = new HashMap();
+    protected final HashMap<Object, Value> items = new HashMap<Object, Value>();
 
     protected TypeInterface type;
     protected Package pkg;
@@ -101,11 +102,11 @@ public class SetType extends TokenAST implements TypeInterface
 
     Value[] getValues()
     {
-        Iterator it = items.values().iterator();
+        Iterator<Value> it = items.values().iterator();
         Value[] values = new Value[items.size()];
         for (int i = 0; i < values.length; i++)
         {
-            values[i] = (Value) it.next();
+            values[i] = it.next();
         }
         Arrays.sort(values);
         return values;
@@ -113,15 +114,15 @@ public class SetType extends TokenAST implements TypeInterface
 
 
     /**
-     * not clear what this means - finding out whether it's a valid combination
-     * of non-disjoint bitmask entries takes some work
+     * TODO: not clear what this means - finding out whether it's a valid
+     * combination of non-disjoint bitmask entries takes some work
      */
     public boolean isMember(Context ctxt, Value val)
     {
-        Iterator i = items.keySet().iterator();
-        while (i.hasNext())
+        Iterator<Object> it = items.keySet().iterator();
+        while (it.hasNext())
         {
-            if (val.compareTo(i.next()) == 0)
+            if (val.compareTo(it.next()) == 0)
             {
                 return true;
             }

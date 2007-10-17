@@ -64,7 +64,7 @@ public class __DepthFirstVisitor implements ${rootPackageName}.__Visitor
     public void visitString(String n, Object arg) {};
 
 
-    public void visitArray(ObjectArray n, Object arg)
+    public void visitArray(ObjectArray<?> n, Object arg)
     {
         int last = n.length();
         for (int i = 0; i < last; i++) 

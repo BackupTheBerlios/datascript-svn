@@ -161,8 +161,7 @@ public class IntArray implements Array<Integer>, SizeOf
         IntArray result = new IntArray(length);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = ((Integer) m.map(new Integer(data[offset + i])))
-                    .intValue();
+            result.data[i] = m.map(new Integer(data[offset + i])).intValue();
         }
         return result;
     }

@@ -35,28 +35,36 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
 
+
+
 /**
  * @author HWellmann
  *
  */
+@SuppressWarnings("serial")
 public class EnumItem extends TokenAST
 {
     private EnumType enumType;
     private IntegerValue value;
     private String name;
-    
+
+
     public EnumItem()
     {
-        
+
     }
-    
+
+
     public String getName()
     {
         if (name == null)
@@ -71,6 +79,7 @@ public class EnumItem extends TokenAST
         return name;
     }
 
+
     public String getDocumentation()
     {
         String result = "";
@@ -81,26 +90,31 @@ public class EnumItem extends TokenAST
         }
         return result;
     }
-    
+
+
     public EnumType getEnumType()
     {
         return enumType;
     }
-    
+
+
     public void setEnumType(EnumType enumType)
     {
         this.enumType = enumType;
     }
 
+
     public void setValue(IntegerValue value)
     {
         this.value = value;
-    }   
-    
+    }
+
+
     public IntegerValue getValue()
     {
         return value;
     }
+
 
     public String toString()
     {

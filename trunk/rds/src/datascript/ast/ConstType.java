@@ -47,6 +47,7 @@ import datascript.antlr.util.TokenAST;
 
 
 
+@SuppressWarnings("serial")
 public class ConstType extends TokenAST implements TypeInterface
 {
     private String name;

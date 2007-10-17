@@ -49,7 +49,7 @@ import datascript.runtime.io.BitStreamWriter;
 
 
 
-public class UnsignedIntArray implements Array, SizeOf
+public class UnsignedIntArray implements Array<Long>, SizeOf
 {
     long[] data; // data is between [offset... offset+length-1]
     int offset;
@@ -156,19 +156,18 @@ public class UnsignedIntArray implements Array, SizeOf
     }
 
 
-    public Array map(Mapping m)
+    public Array<Long> map(Mapping<Long> m)
     {
         UnsignedIntArray result = new UnsignedIntArray(length);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = ((Integer) m.map(new Long(data[offset + i])))
-                    .intValue();
+            result.data[i] = m.map(new Long(data[offset + i])).intValue();
         }
         return result;
     }
 
 
-    public Array subRange(int begin, int length)
+    public Array<Long> subRange(int begin, int length)
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
             throw new ArrayIndexOutOfBoundsException();

@@ -65,30 +65,36 @@ public class ${name} extends SqlDatabase
     {
         Connection dbc = getConnection();
         Statement st = dbc.createStatement();
+<#if pragmaFields?size != 0>
 
         // create pragmata
-<#list pragmaFields as pragmaField>
-    <#if pragmaField.value??>
+    <#list pragmaFields as pragmaField>
+        <#if pragmaField.value??>
         st.executeUpdate("PRAGMA ${pragmaField.name} = ${pragmaField.value}");
-    </#if>
-</#list>
+        </#if>
+    </#list>
+</#if>
 
         // create metadata
         st.executeUpdate("CREATE TABLE __metadata(__name, __value)");
+<#if metadataFields?size != 0>
         PreparedStatement pst = 
             dbc.prepareStatement("INSERT INTO __metadata VALUES (?,?)");
-<#list metadataFields as metadataField>
-    <#if metadataField.value??>
+    <#list metadataFields as metadataField>
+        <#if metadataField.value??>
         pst.setString(1, "${metadataField.name}");
         pst.setObject(2, ${metadataField.value});
         pst.executeUpdate();
-    </#if>
-</#list>
+        </#if>
+    </#list>
+</#if>
+<#if fields?size != 0>
 
         // create user defined tables
-<#list fields as field>
+    <#list fields as field>
         ${field.name}.createTable("${field.name}");
-</#list>
+    </#list>
+</#if>
     }
 
 }

@@ -51,6 +51,7 @@ import datascript.antlr.util.TokenAST;
  * Functions are currently restricted to have empty parameter lists and 
  * integer return types.
  */
+@SuppressWarnings("serial")
 public class FunctionType extends TokenAST implements TypeInterface
 {
     private String name;

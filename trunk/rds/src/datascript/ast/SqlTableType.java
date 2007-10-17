@@ -50,6 +50,7 @@ import antlr.collections.AST;
  * @author HWellmann
  *
  */
+@SuppressWarnings("serial")
 public class SqlTableType extends CompoundType
 {
     private TokenAST sqlConstraint;

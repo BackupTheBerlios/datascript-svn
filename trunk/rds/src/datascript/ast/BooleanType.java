@@ -45,6 +45,7 @@ import antlr.collections.AST;
 
 
 
+@SuppressWarnings("serial")
 public class BooleanType extends TokenAST implements TypeInterface
 {
     static BooleanType booleanType = new BooleanType();

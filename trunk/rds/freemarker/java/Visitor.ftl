@@ -61,7 +61,7 @@ public interface __Visitor
 
     public void visitString(String n, Object arg);
 
-    public void visitArray(ObjectArray n, Object arg);
+    public void visitArray(ObjectArray<?> n, Object arg);
     public void visitArray(ByteArray n, Object arg);
     public void visitArray(ShortArray n, Object arg);
     public void visitArray(IntArray n, Object arg);

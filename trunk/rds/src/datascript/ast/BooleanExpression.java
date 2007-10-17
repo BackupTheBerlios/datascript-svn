@@ -44,6 +44,7 @@ import datascript.antlr.util.ToolContext;
  * @author HWellmann
  *
  */
+@SuppressWarnings("serial")
 public class BooleanExpression extends Expression
 {
     public BooleanExpression()

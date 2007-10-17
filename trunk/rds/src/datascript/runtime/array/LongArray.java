@@ -156,19 +156,18 @@ public class LongArray implements Array<Long>, SizeOf
     }
 
 
-    public Array map(Mapping m)
+    public Array<Long> map(Mapping<Long> m)
     {
         LongArray result = new LongArray(length);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = ((Long) m.map(new Long(data[offset + i])))
-                    .longValue();
+            result.data[i] = m.map(new Long(data[offset + i])).longValue();
         }
         return result;
     }
 
 
-    public Array subRange(int begin, int length)
+    public Array<Long> subRange(int begin, int length)
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
             throw new ArrayIndexOutOfBoundsException();

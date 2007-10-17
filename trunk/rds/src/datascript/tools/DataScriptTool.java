@@ -42,7 +42,6 @@ package datascript.tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -78,7 +77,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.15.9 (16 Oct 2007)";
+    private static final String VERSION = "rds 0.15.9 (17 Oct 2007)";
 
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
@@ -92,8 +91,6 @@ public class DataScriptTool implements Parameters
     private Extensions rdsExtensions = null;
 
     /* Properties for command line parameters */
-    private final HashMap<String, String> cmdLineArgs = 
-        new HashMap<String, String>();
     private final Options rdsOptions = new Options();
     private CommandLine cli = null;
     private String fileName = null;
@@ -468,15 +465,15 @@ public class DataScriptTool implements Parameters
 
     public boolean argumentExists(String key)
     {
-        return cmdLineArgs.containsKey(key);
+        return cli.hasOption(key);
     }
 
 
     public String getCommandlineArg(String key) throws Exception
     {
-        if (!cmdLineArgs.containsKey(key))
+        if (!cli.hasOption(key))
             throw new Exception(key + " is non of the commandline arguments.");
-        return cmdLineArgs.get(key);
+        return cli.getOptionValue(key);
     }
 
 

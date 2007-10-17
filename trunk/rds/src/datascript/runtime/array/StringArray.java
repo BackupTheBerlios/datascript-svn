@@ -49,7 +49,7 @@ import datascript.runtime.io.BitStreamWriter;
 
 
 
-public class StringArray implements Array, SizeOf
+public class StringArray implements Array<String>, SizeOf
 {
     private String[] data; // data is between [offset... offset+length-1]
     int offset;
@@ -130,18 +130,18 @@ public class StringArray implements Array, SizeOf
     }
 
 
-    public Array map(Mapping m)
+    public Array<String> map(Mapping<String> m)
     {
         StringArray result = new StringArray(length);
         for (int i = 0; i < length; i++)
         {
-            result.data[i] = (String) m.map(new String(elementAt(i)));
+            result.data[i] = m.map(new String(elementAt(i)));
         }
         return result;
     }
 
 
-    public Array subRange(int begin, int length)
+    public Array<String> subRange(int begin, int length)
     {
         if (begin < 0 || begin >= this.length || begin + length > this.length)
             throw new ArrayIndexOutOfBoundsException();

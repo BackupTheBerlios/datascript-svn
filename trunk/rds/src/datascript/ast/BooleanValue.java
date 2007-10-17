@@ -35,21 +35,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
 
-public class BooleanValue extends Value implements Comparable
+
+public class BooleanValue extends Value implements Comparable<Object>
 {
     private boolean bval;
+
 
     public boolean booleanValue()
     {
         return bval;
     }
 
+
     public BooleanValue(boolean bval)
     {
         this.bval = bval;
     }
+
 
     // boolean can implement compareTo only partially
     public int compareTo(Object o)
@@ -58,15 +64,18 @@ public class BooleanValue extends Value implements Comparable
         return bval == obval.bval ? 0 : -1; /* ??? makes != same as < */
     }
 
+
     public String toString()
     {
         return "\"" + bval + "\"";
     }
-    
+
+
     public BooleanValue not()
     {
         return new BooleanValue(!bval);
     }
+
 
     public TypeInterface getType()
     {

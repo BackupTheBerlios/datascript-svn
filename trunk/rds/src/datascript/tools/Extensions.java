@@ -74,7 +74,8 @@ public class Extensions implements Iterable<Extension>
             IllegalAccessException
     {
         Collection<File> extensionFiles = findExtensionsRecursively(extDir);
-        if (extensionFiles == null || extensionFiles.size() <= 0) return;
+        if (extensionFiles == null || extensionFiles.size() <= 0)
+            return;
 
         Collection<URL> urls = toURLs((File[]) extensionFiles
                 .toArray(new File[] {}));
@@ -178,7 +179,8 @@ public class Extensions implements Iterable<Extension>
      */
     private Collection<File> findExtensionsRecursively(File directory)
     {
-        if (directory == null || !directory.isDirectory()) return null;
+        if (directory == null || !directory.isDirectory())
+            return null;
         Collection<File> retVal = new ArrayList<File>();
 
         File[] extensionFiles = directory.listFiles(new FileFilter()
