@@ -253,10 +253,6 @@
     </rds-->
 
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <classpath>
-        <pathelement path="${gen}" />
-        <pathelement path="${lib}/antlr.jar" />
-      </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
     </java>
   </target>
@@ -297,11 +293,6 @@
 
   <target name="sqltest.gen" depends="jar" description="Generates parser for test cases" unless="sqltest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <classpath>
-        <pathelement path="${gen}" />
-        <pathelement path="${lib}/antlr.jar" />
-        <pathelement path="${lib}/freemarker.jar" />
-      </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  sqltest.ds" />
     </java>
   </target>
@@ -313,11 +304,6 @@
 
   <target name="sqlParamTest.gen" depends="jar" description="Generates parser for test cases" unless="sqlparamtest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <classpath>
-        <pathelement path="${gen}" />
-        <pathelement path="${lib}/antlr.jar" />
-        <pathelement path="${lib}/freemarker.jar" />
-      </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} sqlParameter.ds" />
     </java>
   </target>
@@ -329,11 +315,6 @@
 
   <target name="tableImportTest.gen" depends="jar" description="Generates parser for test cases" unless="tableimporttest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <classpath>
-        <pathelement path="${gen}" />
-        <pathelement path="${lib}/antlr.jar" />
-        <pathelement path="${lib}/freemarker.jar" />
-      </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} tableimport/client.ds" />
     </java>
   </target>
@@ -344,10 +325,6 @@
 
   <target name="alignment.gen" depends="jar" description="Generates parser for test cases" unless="bits.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <classpath>
-        <pathelement path="${gen}" />
-        <pathelement path="${lib}/antlr.jar" />
-      </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} alignment.ds" />
     </java>
   </target>
@@ -358,10 +335,6 @@
 
   <target name="functest.gen" depends="jar" description="Generates parser for test cases" unless="sqltest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <classpath>
-        <pathelement path="${gen}" />
-        <pathelement path="${lib}/antlr.jar" />
-      </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  func.ds" />
     </java>
   </target>
@@ -376,17 +349,9 @@
   -->
   <target name="pkgtest.gen" depends="jar" description="Generates parser for test cases" unless="pkgtest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <classpath>
-        <pathelement path="${gen}" />
-        <pathelement path="${lib}/antlr.jar" />
-      </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  child.ds" />
     </java>
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <classpath>
-        <pathelement path="${gen}" />
-        <pathelement path="${lib}/antlr.jar" />
-      </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  pkg/top.ds" />
     </java>
   </target>
@@ -399,23 +364,12 @@
 
   <target name="innerunion.gen" depends="jar" description="Generates parser for test cases">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <classpath>
-        <pathelement path="${gen}" />
-        <pathelement path="${lib}/antlr.jar" />
-      </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  innerunion.ds" />
     </java>
   </target>
-
-
-  
   
   <target name="gif.gen" depends="jar" description="Generates parser for examples" unless="gif.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <classpath>
-        <pathelement path="${gen}" />
-        <pathelement path="${lib}/antlr.jar" />
-      </classpath>
       <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} gif.ds" />
     </java>
   </target>
