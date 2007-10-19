@@ -8,6 +8,11 @@ sql_database SqlTestDb
         MyBlob(p1, p2) data;
     };
 
+    sql_table Bar
+    {
+        Tile(explicit width)  tile;    
+    } bar;    
+
     Foo(2,3) foo1;
     Foo(6,2) foo2;
 };
@@ -15,5 +20,16 @@ sql_database SqlTestDb
 MyBlob(uint8 p1, uint8 p2)
 {
     bit<p1> flags[p2];
+};
+
+Tile(uint8 width)
+{
+   uint8              tag;
+   Point              p;
+};
+
+Point
+{
+   bit<Tile.width>      x;
 };
 

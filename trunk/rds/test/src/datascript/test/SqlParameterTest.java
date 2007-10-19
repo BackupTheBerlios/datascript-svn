@@ -13,14 +13,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import junit.framework.TestCase;
 import sqlParameter.MyBlob;
+import sqlParameter.Point;
 import sqlParameter.SqlTestDb;
+import sqlParameter.Tile;
 import datascript.runtime.SqlDatabase.Mode;
 import datascript.runtime.array.BitFieldArray;
 import datascript.runtime.io.ByteArrayBitStreamReader;
 import datascript.runtime.io.ByteArrayBitStreamWriter;
-
-import junit.framework.TestCase;
 
 
 
@@ -163,6 +164,34 @@ public class SqlParameterTest extends TestCase
         writeFoo2();
 
         db.close();
+    }
+    
+    public void testExplicitParameter() throws Exception
+    {
+        SqlTestDb db = new SqlTestDb(fileName, Mode.WRITE);
+        dbc = db.getConnection();
+        st = dbc.createStatement();
+
+        Tile tile = new Tile();
+        tile.setWidth((short)11);
+        tile.setTag((short)1);
+        Point p = new Point();
+        p.setX(BigInteger.valueOf(13));
+        tile.setP(p);
+        
+        ByteArrayBitStreamWriter writer = new ByteArrayBitStreamWriter();
+        tile.write(writer);
+        writer.close();
+        
+        ByteArrayBitStreamReader reader = 
+            new ByteArrayBitStreamReader(writer.toByteArray());
+        Tile tile2 = new Tile(reader, (short) 11);
+        assertEquals(tile, tile2);
+        
+        
+        
+        db.close();
+        
     }
 
 }
