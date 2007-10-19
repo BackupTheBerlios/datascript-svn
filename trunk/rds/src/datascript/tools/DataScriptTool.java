@@ -41,6 +41,7 @@ package datascript.tools;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -77,16 +78,16 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.15.9 (17 Oct 2007)";
+    private static final String VERSION = "rds 0.15.10 (19 Oct 2007)";
 
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
     private TokenAST rootNode = null;
     private DataScriptParser parser = null;
-    private Scope globals = new Scope();
+    private final Scope globals = new Scope();
     private final HashSet<String> allPackageFiles = new HashSet<String>();
 
-    private DataScriptEmitter emitter = new DataScriptEmitter();
+    private final DataScriptEmitter emitter = new DataScriptEmitter();
 
     private Extensions rdsExtensions = null;
 
@@ -97,7 +98,6 @@ public class DataScriptTool implements Parameters
     private String srcPathName = null;
     private String outPathName = null;
     private boolean checkSyntax = false;
-    private boolean printHelp = false;
 
 
 
@@ -158,7 +158,7 @@ public class DataScriptTool implements Parameters
     }
 
 
-    public void parseArguments(String[] args) throws DataScriptException
+    public void getOptions(org.apache.commons.cli.Options rdsOptions, String[] args)
     {
         org.apache.commons.cli.Option rdsOption;
 
@@ -187,7 +187,12 @@ public class DataScriptTool implements Parameters
 //                "main DataScript source file");
 //        rdsOption.setRequired(true);
 //        rdsOptions.addOption(rdsOption);
+    }
 
+
+    public void parseArguments(String[] args)
+    {
+        getOptions(rdsOptions, args);
         CmdLineParser parser = new CmdLineParser();
         try
         {
@@ -206,7 +211,6 @@ public class DataScriptTool implements Parameters
             return false;
 
         checkSyntax = cli.hasOption('c');
-        printHelp = cli.hasOption('h');
         srcPathName = cli.getOptionValue("src");
         outPathName = cli.getOptionValue("out");
         //fileName = cli.getOptionValue("");
@@ -230,7 +234,8 @@ public class DataScriptTool implements Parameters
     }
 
 
-    private void prepareExtensions(String[] args) throws Exception
+    private void prepareExtensions(String[] args) throws IOException,
+            InstantiationException, IllegalAccessException
     {
         if (cli == null)
             return;
@@ -425,7 +430,7 @@ public class DataScriptTool implements Parameters
     }
 
 
-    /** ****** Implementation of Parameters interface ******* */
+    /******** Implementation of Parameters interface ******* */
 
     public String getVersion()
     {
@@ -477,17 +482,17 @@ public class DataScriptTool implements Parameters
     }
 
 
-    /** ****** End of Parameters interface ******* */
+    /******** End of Parameters interface ******* */
 
     public static void main(String[] args)
     {
         System.out.println(VERSION);
         DataScriptTool dsTool = new DataScriptTool();
+        dsTool.parseArguments(args);
         try
         {
-            dsTool.parseArguments(args);
             dsTool.prepareExtensions(args);
-            if (!dsTool.checkArguments() || dsTool.printHelp)
+            if (!dsTool.checkArguments() || dsTool.cli.hasOption('h'))
             {
                 org.apache.commons.cli.HelpFormatter hf = 
                     new org.apache.commons.cli.HelpFormatter();

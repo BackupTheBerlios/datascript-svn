@@ -69,11 +69,19 @@ public class SequenceType extends CompoundType
         {
             Field fi = (Field) fields.elementAt(i);
             /*
-             * TODO: try { StdIntegerType b =
-             * StdIntegerType.getBuiltinType(fi.getFieldType()); if (b
-             * instanceof BitFieldType) { size = size.add(new
-             * IntegerValue(((BitFieldType) b) .getLength())); continue; } }
-             * catch (ClassCastException _) { }
+             * TODO: 
+             * try
+             * {
+             *     StdIntegerType b = StdIntegerType.getBuiltinType(fi.getFieldType());
+             *     if (b instanceof BitFieldType)
+             *     {
+             *         size = size.add(new IntegerValue(((BitFieldType) b).getLength()));
+             *         continue;
+             *     }
+             * }
+             * catch (ClassCastException _)
+             * {
+             * }
              */
             size = size.add(fi.bitsizeof(ctxt));
         }

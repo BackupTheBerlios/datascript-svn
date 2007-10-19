@@ -44,16 +44,14 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
 import datascript.ast.Field;
 import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
 import datascript.ast.SequenceType;
-import datascript.ast.StdIntegerType;
 import datascript.ast.TypeInterface;
-import datascript.ast.TypeReference;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -80,7 +78,7 @@ public class SequenceEmitter extends CompoundEmitter
         }
 
 
-        public void emitFreeMarker(PrintWriter writer, Configuration cfg) throws Exception
+        public void emit(PrintWriter writer, Configuration cfg) throws Exception
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/FunctionTmpl.ftl");
@@ -112,122 +110,23 @@ public class SequenceEmitter extends CompoundEmitter
 
     public static class SequenceFieldEmitter extends FieldEmitter
     {
+        private ExpressionEmitter exprEmitter;
         private static Template tpl = null;
-
-        private final TypeInterface type;
-
-        private String optional = null;
-        private String constraint = null;
-        private String label = null;
 
 
         public SequenceFieldEmitter(Field f, CompoundEmitter j)
         {
-            super(j);
-            field = f;
-            type = TypeReference.resolveType(field.getFieldType());
+            super(f, j);
+            exprEmitter = new ExpressionEmitter();
         }
 
 
         public void emit(PrintWriter writer, Configuration cfg) throws Exception
         {
+            //super.emit(writer, cfg, "java/SequenceFieldAccessor.ftl");
             if (tpl == null)
                 tpl = cfg.getTemplate("java/SequenceFieldAccessor.ftl");
             tpl.process(this, writer);
-        }
-
-
-        public String getReadField()
-        {
-            return getCompoundEmitter().readField(field);
-        }
-
-
-        public String getWriteField()
-        {
-            return getCompoundEmitter().writeField(field);
-        }
-
-
-        public String getOptionalClause()
-        {
-            if (optional == null)
-            {
-                optional = getCompoundEmitter().getOptionalClause(field);
-            }
-            return optional;
-        }
-
-
-        public String getConstraint()
-        {
-            if (constraint == null)
-            {
-                constraint = getCompoundEmitter().getConstraint(field);
-            }
-            return constraint;
-        }
-
-
-        public String getLabelExpression()
-        {
-            if (label == null)
-            {
-                label = getCompoundEmitter().getLabelExpression(field);
-            }
-            return label;
-        }
-
-
-        public String getName()
-        {
-            return field.getName();
-        }
-
-
-        public String getCanonicalTypeName()
-        {
-            return type.getClass().getCanonicalName();
-        }
-
-
-        public String getJavaTypeName()
-        {
-            return TypeNameEmitter.getTypeName(field.getFieldType());
-        }
-
-
-        public String getGetterName()
-        {
-            return AccessorNameEmitter.getGetterName(field);
-        }
-
-
-        public String getSetterName()
-        {
-            return AccessorNameEmitter.getSetterName(field);
-        }
-
-
-        public String getIndicatorName()
-        {
-            return AccessorNameEmitter.getIndicatorName(field);
-        }
-
-
-        public int getBitFieldLength()
-        {
-            if (type instanceof BitFieldType)
-                return ((BitFieldType)type).getLength();
-            throw new RuntimeException("type of field " + field.getName() + "is not a BitFieldType");
-        }
-
-
-        public boolean getIsUINT64()
-        {
-            if (type instanceof StdIntegerType)
-                return ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64;
-            throw new RuntimeException("type of field " + field.getName() + "is not a StdIntegerType");
         }
 
 
@@ -240,6 +139,38 @@ public class SequenceEmitter extends CompoundEmitter
         public int getAlignmentValue()
         {
             return field.getAlignmentValue();
+        }
+
+
+        public int getBitsizeof()
+        {
+            int bitSize = field.bitsizeof(null).integerValue().intValue();
+//            if (bitSize % 8 != 0)
+//                bitSize = ((bitSize / 8) + 1) * 8;
+            return bitSize;
+        }
+
+
+        public String getLabel()
+        {
+            return exprEmitter.emit(field.getLabel());
+            //return field.getLabel().getText();
+        }
+
+
+        public String getLabelSetter()
+        {
+            String name = field.getLabel().getText();
+            StringBuffer result = new StringBuffer("set");
+            result.append(name.substring(0, 1).toUpperCase());
+            result.append(name.substring(1, name.length()));
+            return result.toString();
+        }
+
+
+        public String getLabelTypeName()
+        {
+            return TypeNameEmitter.getTypeName(field.getLabel().getExprType());
         }
     }
 
@@ -298,12 +229,12 @@ public class SequenceEmitter extends CompoundEmitter
 
             for (CompoundParameterEmitter param : params)
             {
-                param.emitFreeMarker(writer, cfg);
+                param.emit(writer, cfg);
             }
 
             for (SequenceFunctionEmitter func : functions)
             {
-                func.emitFreeMarker(writer, cfg);
+                func.emit(writer, cfg);
             }
 
             tpl = cfg.getTemplate("java/SequenceRead.ftl");

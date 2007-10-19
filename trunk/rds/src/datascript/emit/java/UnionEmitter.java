@@ -45,15 +45,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import datascript.antlr.util.ToolContext;
-import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
 import datascript.ast.Field;
 import datascript.ast.Parameter;
-import datascript.ast.StdIntegerType;
-import datascript.ast.TypeInterface;
-import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -72,110 +69,19 @@ public class UnionEmitter extends CompoundEmitter
     {
         private static Template tpl = null;
 
-        private final TypeInterface type;
-
-        private String optional = null;
-        private String constraint = null;
-        private String label = null;
-
 
         public UnionFieldEmitter(Field f, CompoundEmitter j)
         {
-            super(j);
-            field = f;
-            type = TypeReference.resolveType(field.getFieldType());
+            super(f, j);
         }
 
 
         public void emit(PrintWriter writer, Configuration cfg) throws Exception
         {
+            //super.emit(writer, cfg, "java/UnionFieldAccessor.ftl");
             if (tpl == null)
                 tpl = cfg.getTemplate("java/UnionFieldAccessor.ftl");
             tpl.process(this, writer);
-        }
-
-
-        public String getReadField()
-        {
-            return getCompoundEmitter().readField(field);
-        }
-
-
-        public String getWriteField()
-        {
-            return getCompoundEmitter().writeField(field);
-        }
-
-
-        public String getOptionalClause()
-        {
-            if (optional == null)
-            {
-                optional = getCompoundEmitter().getOptionalClause(field);
-            }
-            return optional;
-        }
-
-
-        public String getConstraint()
-        {
-            if (constraint == null)
-            {
-                constraint = getCompoundEmitter().getConstraint(field);
-            }
-            return constraint;
-        }
-
-
-        public String getLabelExpression()
-        {
-            if (label == null)
-            {
-                label = getCompoundEmitter().getLabelExpression(field);
-            }
-            return label;
-        }
-
-
-        public String getName()
-        {
-            return field.getName();
-        }
-
-
-        public String getText()
-        {
-            return field.toString();
-        }
-
-
-        public String getCanonicalTypeName()
-        {
-            return type.getClass().getCanonicalName();
-        }
-
-
-        public String getJavaTypeName()
-        {
-            return TypeNameEmitter.getTypeName(field.getFieldType());
-        }
-
-
-        public String getClassName()
-        {
-            return TypeNameEmitter.getClassName(field.getFieldType());
-        }
-
-
-        public String getGetterName()
-        {
-            return AccessorNameEmitter.getGetterName(field);
-        }
-
-
-        public String getSetterName()
-        {
-            return AccessorNameEmitter.getSetterName(field);
         }
 
 
@@ -185,25 +91,15 @@ public class UnionEmitter extends CompoundEmitter
         }
 
 
-        public String getIndicatorName()
+        public String getText()
         {
-            return AccessorNameEmitter.getIndicatorName(field);
+            return field.toString();
         }
 
 
-        public int getBitFieldLength()
+        public String getClassName()
         {
-            if (type instanceof BitFieldType)
-                return ((BitFieldType)type).getLength();
-            throw new RuntimeException("type of field " + field.getName() + "is not a BitFieldType");
-        }
-
-
-        public boolean getIsUInt64()
-        {
-            if (type instanceof StdIntegerType)
-                return ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64;
-            throw new RuntimeException("type of field " + field.getName() + "is not a StdIntegerType");
+            return TypeNameEmitter.getClassName(field.getFieldType());
         }
     }
 
@@ -255,7 +151,7 @@ public class UnionEmitter extends CompoundEmitter
 
             for (CompoundParameterEmitter param : params)
             {
-                param.emitFreeMarker(writer, cfg);
+                param.emit(writer, cfg);
             }
 
             tpl = cfg.getTemplate("java/UnionRead.ftl");

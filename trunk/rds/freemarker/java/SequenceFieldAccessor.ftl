@@ -39,11 +39,13 @@
 -->
 
     private ${javaTypeName} ${name};
+
     
     public ${javaTypeName} ${getterName}() 
     { 
         return ${name}; 
     }
+
 
     public void ${setterName}(${javaTypeName} ${name}) 
     { 
@@ -51,10 +53,10 @@
     }
 
 <#if optionalClause?? && optionalClause?has_content>
+
     public boolean ${indicatorName}()
     {
         return ${optionalClause};
     }
 
 </#if>
-

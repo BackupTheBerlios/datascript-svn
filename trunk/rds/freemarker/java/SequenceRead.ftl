@@ -84,10 +84,10 @@
                     __in.alignTo(#{field.alignmentValue});
         </#if>
         <#if field.labelExpression??>
-                if (__in.getBitPosition() != ${field.labelExpression})
-                {
-                    throw new IOException("wrong offset for field '${field.name}'");
-                }
+                    if (__in.getBitPosition() != ${field.labelExpression})
+                    {
+                        throw new IOException("wrong offset for field '${field.name}'");
+                    }
         </#if>
                     ${field.readField}
         <#if field.constraint??>

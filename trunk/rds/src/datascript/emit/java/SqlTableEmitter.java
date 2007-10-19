@@ -179,7 +179,7 @@ public class SqlTableEmitter extends CompoundEmitter
 
             for (CompoundEmitter.CompoundParameterEmitter pe : parameters)
             {
-                pe.emitFreeMarker(writer, cfg);
+                pe.emit(writer, cfg);
             }
 
             tpl = cfg.getTemplate("java/SqlTableWrite.ftl");

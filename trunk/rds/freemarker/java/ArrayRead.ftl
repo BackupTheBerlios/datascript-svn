@@ -38,7 +38,7 @@
  */
 -->
 <#if isVariable>
-                {
+                <#lt>{
                     Vector<${elType}> v = new Vector<${elType}>();
                     long __afpos = 0;
                     try
@@ -56,7 +56,7 @@
                     ${setterName}(new ObjectArray<${elType}>(v));
                 }
 <#else>
-                {
+                <#lt>{
                     long __maxIndex = ${lengthExpr};
                     if (__maxIndex > Integer.MAX_VALUE)
                         throw new RuntimeException("truncate indexvalue will fail");

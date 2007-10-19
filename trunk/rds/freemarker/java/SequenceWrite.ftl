@@ -37,11 +37,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 -->
+<#assign LabeledFieldCnt=0>
 
 
     // Contructor for ${className} 
     public ${className}(
 <#list fields as field>
+    <#if field.labelExpression??>
+        <#assign LabeledFieldCnt=LabeledFieldCnt+1>
+    </#if>
         ${field.javaTypeName} ${field.name}<#if field_has_next>, </#if>
 </#list>
         )
@@ -68,6 +72,10 @@
 
     public void write(BitStreamWriter __out, CallChain __cc) throws Exception 
     {
+<#if LabeledFieldCnt!=0>
+        computeLabelValues();
+
+</#if>
         try 
         {
             __cc.push("${className}", this);
@@ -128,3 +136,40 @@
             __cc.pop(); 
         }
     }
+
+<#if LabeledFieldCnt!=0>
+
+    private void computeLabelValues()
+    {
+        int bitoffset = 0;
+    <#list fields as field>
+        <#if field.labelExpression??>
+
+        ${field.labelSetter}((${field.labelTypeName})Util.bitsToBytes(bitoffset));
+            <#assign LabeledFieldCnt=LabeledFieldCnt-1>
+            <#if LabeledFieldCnt == 0>
+                <#break>
+            </#if>
+        <#else>
+            <#if (field.canonicalTypeName == "datascript.ast.SequenceType" ||
+                  field.canonicalTypeName == "datascript.ast.UnionType" ||
+                  field.canonicalTypeName == "datascript.ast.ArrayType" ||
+                  field.canonicalTypeName == "datascript.ast.TypeInstantiation" ||
+                  field.canonicalTypeName == "datascript.ast.StringType" ||
+                  (field.canonicalTypeName == "datascript.ast.StdIntegerType" && field.isUINT64))>
+                <#assign bitsizeof>${field.getterName}().bitsizeof()</#assign>
+            <#elseif (field.canonicalTypeName == "datascript.ast.BitFieldType" && field.bitFieldLength == 0)>
+                <#assign bitsizeof>${field.getterName}().bitLength()</#assign>
+            <#else>
+                <#assign bitsizeof=field.bitsizeof>
+            </#if>
+            <#if field.hasAlignment>
+        if (bitoffset % #{field.alignmentValue} != 0)
+            bitoffset = ((bitoffset / #{field.alignmentValue}) + 1) * #{field.alignmentValue};
+            </#if>
+
+        bitoffset += ${bitsizeof};	// ${field.name}
+        </#if>
+    </#list>
+    }
+</#if>

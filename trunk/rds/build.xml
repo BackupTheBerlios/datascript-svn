@@ -257,13 +257,13 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -xml -doc -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
     </java>
   </target>
 
   <target name="test.compile" depends="test.gen, sqlParamTest.gen, sqltest.gen, pkgtest.gen, functest.gen, jar, gif.gen, tableImportTest.gen, alignment.gen" 
     description="Builds the test cases">
-    <javac destdir="${build}/test/classes" debug="on" target="1.5">
+    <javac destdir="${build}/test/classes" debug="on">
       <classpath>
         <pathelement path="${jar}/rds-runtime.jar" />
       </classpath>
@@ -302,7 +302,7 @@
         <pathelement path="${lib}/antlr.jar" />
         <pathelement path="${lib}/freemarker.jar" />
       </classpath>
-      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src  ${ds.src}  sqltest.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  sqltest.ds" />
     </java>
   </target>
 
@@ -318,7 +318,7 @@
         <pathelement path="${lib}/antlr.jar" />
         <pathelement path="${lib}/freemarker.jar" />
       </classpath>
-      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src ${ds.src} sqlParameter.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} sqlParameter.ds" />
     </java>
   </target>
 
@@ -334,7 +334,7 @@
         <pathelement path="${lib}/antlr.jar" />
         <pathelement path="${lib}/freemarker.jar" />
       </classpath>
-      <arg line="-c -doc -out ${test.gen} -ext ${ext} -src ${ds.src} tableimport/client.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} tableimport/client.ds" />
     </java>
   </target>
 
@@ -348,7 +348,7 @@
         <pathelement path="${gen}" />
         <pathelement path="${lib}/antlr.jar" />
       </classpath>
-      <arg line="-c -xml -doc -out ${test.gen} -ext ${ext} -src ${ds.src} alignment.ds" />
+      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} alignment.ds" />
     </java>
   </target>
 

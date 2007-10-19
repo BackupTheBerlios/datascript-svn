@@ -42,21 +42,136 @@ package datascript.emit.java;
 
 import java.io.PrintWriter;
 
+import datascript.ast.BitFieldType;
 import datascript.ast.Field;
+import datascript.ast.StdIntegerType;
+import datascript.ast.TypeInterface;
+import datascript.ast.TypeReference;
+
 import freemarker.template.Configuration;
 
 
 
-abstract public class FieldEmitter
+public abstract class FieldEmitter
 {
-    private CompoundEmitter global;
-    protected Field field;
+    protected final Field field;
     protected PrintWriter writer;
 
+    private final CompoundEmitter global;
+    private final TypeInterface type;
+    private String optional = null;
+    private String constraint = null;
+    private String label = null;
 
-    public FieldEmitter(CompoundEmitter j)
+
+    public FieldEmitter(Field f, CompoundEmitter j)
     {
-        this.global = j;
+        global = j;
+        field = f;
+        type = TypeReference.resolveType(field.getFieldType());
+    }
+
+
+    abstract public void emit(PrintWriter writer, Configuration cfg) throws Exception;
+
+
+    public String getReadField()
+    {
+        return getCompoundEmitter().readField(field);
+    }
+
+
+    public String getWriteField()
+    {
+        return getCompoundEmitter().writeField(field);
+    }
+
+
+    public String getOptionalClause()
+    {
+        if (optional == null)
+        {
+            optional = getCompoundEmitter().getOptionalClause(field);
+        }
+        return optional;
+    }
+
+
+    public String getConstraint()
+    {
+        if (constraint == null)
+        {
+            constraint = getCompoundEmitter().getConstraint(field);
+        }
+        return constraint;
+    }
+
+
+    public String getLabelExpression()
+    {
+        if (label == null)
+        {
+            label = getCompoundEmitter().getLabelExpression(field);
+        }
+        return label;
+    }
+
+
+    public String getCanonicalTypeName()
+    {
+        return type.getClass().getCanonicalName();
+    }
+
+
+    public String getJavaTypeName()
+    {
+        return TypeNameEmitter.getTypeName(field.getFieldType());
+    }
+
+
+    public String getName()
+    {
+        return field.getName();
+    }
+
+
+    public String getGetterName()
+    {
+        return AccessorNameEmitter.getGetterName(field);
+    }
+
+
+    public String getSetterName()
+    {
+        return AccessorNameEmitter.getSetterName(field);
+    }
+
+
+    public String getIndicatorName()
+    {
+        return AccessorNameEmitter.getIndicatorName(field);
+    }
+
+
+    public int getBitFieldLength()
+    {
+        if (type instanceof BitFieldType)
+            return ((BitFieldType)type).getLength();
+        throw new RuntimeException("type of field " + field.getName() + "is not a BitFieldType");
+    }
+
+
+    public boolean getIsUINT64()
+    {
+        if (type instanceof StdIntegerType)
+            return ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64;
+        throw new RuntimeException("type of field " + field.getName() + "is not a StdIntegerType");
+    }
+
+
+    public boolean getIsIntegerType()
+    {
+        return type instanceof StdIntegerType;
     }
 
 
@@ -70,9 +185,6 @@ abstract public class FieldEmitter
     {
         this.writer = writer;
     }
-
-
-    abstract public void emit(PrintWriter writer, Configuration cfg) throws Exception;
 
 
     /*

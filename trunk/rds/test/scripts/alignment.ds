@@ -1,15 +1,21 @@
 package alignment;
 
 
+foo
+{
+    uint8    f;
+};
+
 Alignseq
 {
-    bit:4    a;
+    bit<4>    a;
 
 align(8):
     uint8    label1;
     bit:1    flag;
 
 align(8):
+    foo      f[2];
 label1:
     bit:4    b;
 };

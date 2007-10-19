@@ -95,7 +95,7 @@ abstract public class CompoundEmitter
         }
 
 
-        public void emitFreeMarker(PrintWriter writer, Configuration cfg)
+        public void emit(PrintWriter writer, Configuration cfg)
                 throws Exception
         {
             if (tpl == null)

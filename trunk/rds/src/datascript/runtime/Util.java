@@ -35,23 +35,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.runtime;
+
 
 import java.io.DataInput;
 import java.io.IOException;
 
+
+
 public class Util
 {
+    public static int bitsToBytes(int bits)
+    {
+        if (bits % 8 > 0)
+            throw new RuntimeException(bits + " is not a multiple of 8");
+        return bits / 8;
+    }
+
+
     public static short leShort(short s)
     {
         return (short) ((s << 8) | ((s >>> 8) & 0xff));
     }
+
 
     public static int leInt(int s)
     {
         return (s << 24) | ((s & 0xff00) << 8) | ((s & 0xff0000) >>> 8)
                 | (s >>> 24);
     }
+
 
     public static long leLong(long s)
     {
@@ -60,6 +75,7 @@ public class Util
                 | ((s & 0xff00000000L) >>> 8) | ((s & 0xff0000000000L) >>> 24)
                 | ((s & 0xff000000000000L) >>> 40) | (s >>> 56);
     }
+
 
     public static String readZTString(DataInput in) throws IOException
     {
@@ -74,6 +90,7 @@ public class Util
             b.append((char) c);
         }
     }
+
 
     public static void main(String av[])
     {
