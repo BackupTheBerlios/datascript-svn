@@ -46,6 +46,7 @@
 </#if>
         try
         {
+            __cc.push("${sequenceType.name}", this);        
 <#list fields as field>
     <#if field.getOptionalClause()?has_content>
             if (node.${field.indicatorName}<#--${field.optionalClause}-->)
@@ -66,6 +67,10 @@
         catch (Exception __exc)
         {
             __exc.printStackTrace();
+        }
+        finally
+        {
+            __cc.pop();
         }
 <#if getEndType()?? && getEndType()?has_content>
         ${endType}

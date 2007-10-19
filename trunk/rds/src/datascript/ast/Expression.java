@@ -340,7 +340,12 @@ public class Expression extends TokenAST
         {
             type = (CompoundType) obj;
         }
-        else
+        else if (obj instanceof Parameter)
+        {
+            Parameter param = (Parameter) obj;
+            type = TypeReference.resolveType(param.getType());
+        }
+        else 
         {
             throw new InternalError("cannot resolve symbol '" + symbol + "'");
         }

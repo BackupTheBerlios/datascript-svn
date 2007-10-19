@@ -46,6 +46,7 @@
 </#if>
         try
         {
+            __cc.push("${sequenceType.name}", this);        
             switch (node.getChoiceTag())
             {
 <#list fields as field>
@@ -58,6 +59,10 @@
         catch (IOException __exc)
         {
             __exc.printStackTrace();
+        }
+        finally
+        {
+            __cc.pop();
         }
 <#if getEndType()?? && getEndType()?has_content>
         ${endType}

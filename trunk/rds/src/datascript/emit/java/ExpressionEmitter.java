@@ -301,9 +301,12 @@ public class ExpressionEmitter
 
     private void appendDotExpression(Expression expr)
     {
+        String oldCompoundName = compoundName;
+        compoundName = null;
         append(expr.op1());
         buffer.append('.');
-        append(expr.op2());        
+        append(expr.op2());
+        compoundName = oldCompoundName;
     }
     
     private void appendIdentifier(Expression expr)

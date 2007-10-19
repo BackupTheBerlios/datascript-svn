@@ -54,7 +54,7 @@ public class __XmlDumper extends XMLFilterImpl implements ${rootPackageName}.__V
     private ContentHandler handler;
     private AttributesImpl noAttr = new AttributesImpl();
     private ${rootPackageName}.__Visitor.Acceptor acceptor;
-
+    private CallChain __cc = new CallChain();    
 
     public __XmlDumper(${rootPackageName}.__Visitor.Acceptor acceptor)
     {
