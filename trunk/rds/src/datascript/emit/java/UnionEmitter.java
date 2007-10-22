@@ -51,8 +51,6 @@ import datascript.ast.Field;
 import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
 import datascript.ast.UnionType;
-import datascript.emit.java.CompoundEmitter.CompoundFunctionEmitter;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 

@@ -50,8 +50,6 @@ import datascript.ast.Field;
 import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
 import datascript.ast.SequenceType;
-import datascript.ast.TypeInterface;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
