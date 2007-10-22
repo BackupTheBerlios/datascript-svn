@@ -279,6 +279,11 @@ public class Expression extends TokenAST
             value = item.getValue();
             type = item.getEnumType();
         }
+        else if (obj instanceof FunctionType)
+        {
+            FunctionType function = (FunctionType) obj;
+            type = function; //.getReturnType();
+        }
         else
         {
             ToolContext
@@ -537,7 +542,8 @@ public class Expression extends TokenAST
 
     private void evaluateFunctionCallExpression()
     {
-        if (op1().getExprType() instanceof FunctionType)
+        TypeInterface exprType = op1().getExprType();
+        if (exprType instanceof FunctionType)
         {
             FunctionType function = (FunctionType) op1().getExprType(); 
             type = function.getReturnType();

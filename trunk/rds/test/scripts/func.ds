@@ -66,8 +66,13 @@ union ItemRef
     function Item elem()
     {
         return (Inner.isExplicit == 1) 
-            ? Inner.ref.item 
-            : OuterArray.values[Inner.ref.pos];
+            ? item 
+            : OuterArray.values[position()];
+    }
+    
+    function uint8 position()
+    {
+        return pos;
     }
 };
 
