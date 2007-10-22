@@ -43,11 +43,11 @@
         ${returnType} result;
         try
         {
-            result = ${result};
+            result = (${returnType})(${result});
         }
         catch (Exception exc)
         {
             throw new IllegalArgumentException(exc);
         }
-        return (${returnType})(result); 
+        return result; 
     }
