@@ -182,11 +182,6 @@ public class DataScriptTool implements Parameters
         rdsOption = new Option("src", true, "path to DataScript source files");
         rdsOption.setRequired(false);
         rdsOptions.addOption(rdsOption);
-
-//        rdsOption = new Option("", true,
-//                "main DataScript source file");
-//        rdsOption.setRequired(true);
-//        rdsOptions.addOption(rdsOption);
     }
 
 
@@ -418,7 +413,7 @@ public class DataScriptTool implements Parameters
         parser.translationUnit();
         AST retVal = parser.getAST();
         if (context.getErrorCount() != 0 || retVal == null)
-            throw new ParserException("DataSciptParser: Parser errors.");
+            throw new ParserException("DataScriptParser: Parser errors.");
 
         String pkgName = ToolContext.getFileName();
         pkgName = pkgName.substring(0, pkgName.lastIndexOf(".ds"));
@@ -426,7 +421,7 @@ public class DataScriptTool implements Parameters
         if (node.getType() != DataScriptParserTokenTypes.PACKAGE
                 || node.getText().equals(pkgName))
             ToolContext.logWarning(node,
-                    "filename and packeage name do not match!");
+                    "filename and package name do not match!");
         return retVal;
     }
 
