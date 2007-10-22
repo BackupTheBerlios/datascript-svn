@@ -78,12 +78,7 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
                 <#t>this.${field.name}.getValue() != that.${field.name}.getValue()
             <#elseif (field.canonicalTypeName == "datascript.ast.BitFieldType" && field.bitFieldLength == 0)><#t>
                 <#t>this.${field.name}.compareTo(that.${field.name}) != 0
-            <#elseif (field.canonicalTypeName == "datascript.ast.SequenceType" ||
-                      field.canonicalTypeName == "datascript.ast.UnionType" ||
-                      field.canonicalTypeName == "datascript.ast.ArrayType" ||
-                      field.canonicalTypeName == "datascript.ast.TypeInstantiation" ||
-                      field.canonicalTypeName == "datascript.ast.StringType" ||
-                      (field.canonicalTypeName == "datascript.ast.StdIntegerType" && field.isUINT64))><#t>
+            <#elseif !field.isSimple><#t>
                 <#t>!this.${field.name}.equals(that.${field.name})
             <#else><#t>
                 <#t>this.${field.name} != that.${field.name}
@@ -99,12 +94,7 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
                 <#t>this.${field.name}.getValue() == that.${field.name}.getValue()
             <#elseif (field.canonicalTypeName == "datascript.ast.BitFieldType" && field.bitFieldLength == 0)><#t>
                 <#t>this.${field.name}.compareTo(that.${field.name}) == 0
-            <#elseif field.canonicalTypeName == "datascript.ast.SequenceType" ||
-                     field.canonicalTypeName == "datascript.ast.UnionType" ||
-                     field.canonicalTypeName == "datascript.ast.ArrayType" ||
-                     field.canonicalTypeName == "datascript.ast.TypeInstantiation" ||
-                     field.canonicalTypeName == "datascript.ast.StringType" ||
-                     (field.canonicalTypeName == "datascript.ast.StdIntegerType" && field.isUINT64)><#t>
+            <#elseif !field.isSimple><#t>
                 <#t>this.${field.name}.equals(that.${field.name})
             <#else><#t>
                 <#t>this.${field.name} == that.${field.name}
