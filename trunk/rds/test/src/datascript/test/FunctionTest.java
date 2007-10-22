@@ -12,6 +12,7 @@ import junit.framework.TestCase;
 import datascript.runtime.array.ObjectArray;
 import datascript.runtime.io.ByteArrayBitStreamReader;
 import datascript.runtime.io.ByteArrayBitStreamWriter;
+import datascript.runtime.io.DataScriptIO;
 import func.ArrayFunc;
 import func.Inner;
 import func.Item;
@@ -143,12 +144,8 @@ public class FunctionTest extends TestCase
         
         assertEquals(item1, arrayFunc.elem());
         
-        ByteArrayBitStreamWriter writer = new ByteArrayBitStreamWriter();
-        arrayFunc.write(writer);
-        writer.close();
-        
-        ByteArrayBitStreamReader reader = new ByteArrayBitStreamReader(writer.toByteArray());
-        ArrayFunc arrayFunc2 = new ArrayFunc(reader);
+        byte[] bytes = DataScriptIO.write(arrayFunc);        
+        ArrayFunc arrayFunc2 = DataScriptIO.read(ArrayFunc.class, bytes);
         
         assertEquals(item1, arrayFunc2.elem());
         assertEquals(arrayFunc, arrayFunc2);
@@ -187,13 +184,8 @@ public class FunctionTest extends TestCase
         
         outer.setInner(inner);
         
-        
-        ByteArrayBitStreamWriter writer = new ByteArrayBitStreamWriter();
-        outer.write(writer);
-        writer.close();
-        
-        ByteArrayBitStreamReader reader = new ByteArrayBitStreamReader(writer.toByteArray());
-        OuterArray outer2 = new OuterArray(reader);
+        byte[] bytes = DataScriptIO.write(outer);        
+        OuterArray outer2 = DataScriptIO.read(OuterArray.class, bytes);
         
         assertEquals(outer, outer2);
     }
