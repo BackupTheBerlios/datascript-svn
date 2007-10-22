@@ -47,14 +47,16 @@
     public ${className}(String __filename${formalParameterList}) throws Exception 
     {
         FileBitStreamReader __in = new FileBitStreamReader(__filename);
-        read(__in, new CallChain()${actualParameterList});
+        __cc = new CallChain();
+        read(__in, __cc${actualParameterList});
         __in.close();
     }
 
 
     public ${className}(BitStreamReader __in${formalParameterList}) throws Exception 
     {
-        read(__in, new CallChain()${actualParameterList});
+        __cc = new CallChain();
+        read(__in, __cc${actualParameterList});
     }
 
 
@@ -66,6 +68,7 @@
 
     public void read(BitStreamReader __in, CallChain __cc${formalParameterList}) throws Exception 
     {
+        this.__cc = __cc;
 <#list sequenceType.parameters as param>
         this.${param.name} = ${param.name};
 

@@ -404,7 +404,7 @@ functionList
     ;
     
 functionDefinition!
-    : f:FUNCTION t:integerType n:ID functionParamList b:functionBody
+    : f:FUNCTION t:definedType n:ID functionParamList b:functionBody
       { #functionDefinition = #(f, n, t, b); }
     ;
     

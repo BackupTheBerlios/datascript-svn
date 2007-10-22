@@ -59,53 +59,12 @@ import freemarker.template.Template;
 
 public class SequenceEmitter extends CompoundEmitter
 {
-    private final List<SequenceFunctionEmitter> functions = 
-        new ArrayList<SequenceFunctionEmitter>();
+    private final List<CompoundFunctionEmitter> functions = 
+        new ArrayList<CompoundFunctionEmitter>();
     private final List<SequenceFieldEmitter> fields = 
         new ArrayList<SequenceFieldEmitter>();
 
     private SequenceType seq;
-
-
-    public static class SequenceFunctionEmitter
-    {
-        private final FunctionType func;
-        private static Template tpl = null;
-
-        public SequenceFunctionEmitter(FunctionType func)
-        {
-            this.func = func;
-        }
-
-
-        public void emit(PrintWriter writer, Configuration cfg) throws Exception
-        {
-            if (tpl == null)
-                tpl = cfg.getTemplate("java/FunctionTmpl.ftl");
-            tpl.process(this, writer);
-        }
-
-
-        public String getName()
-        {
-            return func.getName();
-        }
-
-
-        public String getResult()
-        {
-            ExpressionEmitter ee = new ExpressionEmitter();
-            return ee.emit(func.getResult());
-        }
-
-
-        public String getReturnType()
-        {
-            TypeInterface returnType = func.getReturnType();
-            return TypeNameEmitter.getTypeName(returnType);
-        }
-    }
-
 
 
     public static class SequenceFieldEmitter extends FieldEmitter
@@ -213,7 +172,7 @@ public class SequenceEmitter extends CompoundEmitter
         functions.clear();
         for (FunctionType func : seq.getFunctions())
         {
-            SequenceFunctionEmitter f = new SequenceFunctionEmitter(func);
+            CompoundFunctionEmitter f = new CompoundFunctionEmitter(func);
             functions.add(f);
         }
 
@@ -232,7 +191,7 @@ public class SequenceEmitter extends CompoundEmitter
                 param.emit(writer, cfg);
             }
 
-            for (SequenceFunctionEmitter func : functions)
+            for (CompoundFunctionEmitter func : functions)
             {
                 func.emit(writer, cfg);
             }

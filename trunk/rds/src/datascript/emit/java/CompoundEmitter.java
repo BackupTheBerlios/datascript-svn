@@ -54,6 +54,7 @@ import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
+import datascript.ast.FunctionType;
 import datascript.ast.IntegerType;
 import datascript.ast.StringType;
 import datascript.ast.Parameter;
@@ -80,6 +81,47 @@ abstract public class CompoundEmitter
     private StringBuilder buffer;
     private String formalParams;
     private String actualParams;
+
+    public static class CompoundFunctionEmitter
+    {
+        private final FunctionType func;
+        private static Template tpl = null;
+
+        public CompoundFunctionEmitter(FunctionType func)
+        {
+            this.func = func;
+        }
+
+
+        public void emit(PrintWriter writer, Configuration cfg) throws Exception
+        {
+            if (tpl == null)
+                tpl = cfg.getTemplate("java/FunctionTmpl.ftl");
+            tpl.process(this, writer);
+        }
+
+
+        public String getName()
+        {
+            return func.getName();
+        }
+
+
+        public String getResult()
+        {
+            ExpressionEmitter ee = new ExpressionEmitter();
+            return ee.emit(func.getResult());
+        }
+
+
+        public String getReturnType()
+        {
+            TypeInterface returnType = func.getReturnType();
+            return TypeNameEmitter.getTypeName(returnType);
+        }
+    }
+
+
 
 
 

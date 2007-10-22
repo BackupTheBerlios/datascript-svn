@@ -4,11 +4,19 @@
 package datascript.test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import junit.framework.TestCase;
+import datascript.runtime.array.ObjectArray;
 import datascript.runtime.io.ByteArrayBitStreamReader;
 import datascript.runtime.io.ByteArrayBitStreamWriter;
+import func.ArrayFunc;
+import func.Inner;
+import func.Item;
+import func.ItemRef;
+import func.OuterArray;
 import func.VarInt;
 
 /**
@@ -17,15 +25,6 @@ import func.VarInt;
  */
 public class FunctionTest extends TestCase
 {
-    /**
-     * Constructor for BitStreamReaderTest.
-     * @param name
-     */
-    public FunctionTest(String name)
-    {
-        super(name);
-    }
-
     private VarInt encode(int aValue)
     {
         VarInt result = new VarInt();
@@ -117,4 +116,86 @@ public class FunctionTest extends TestCase
     {
         encodeAndDecodeValue(87654);
     }
+    
+    public void testEncodeDecodeArrayFunc() throws Exception
+    {
+        ArrayFunc arrayFunc = new ArrayFunc();
+        arrayFunc.setNumElems(3);
+        List<Item> items = new ArrayList<Item>();
+
+        Item item0 = new Item();
+        item0.setA((short) 12);
+        item0.setB((short) 13);
+        items.add(item0);
+
+        Item item1 = new Item();
+        item1.setA((short) 19);
+        item1.setB((short) 18);
+        items.add(item1);
+
+        Item item2 = new Item();
+        item2.setA((short) 17);
+        item2.setB((short) 14);
+        items.add(item2);
+        
+        arrayFunc.setValues(new ObjectArray<Item>(items));
+        arrayFunc.setPos(1);
+        
+        assertEquals(item1, arrayFunc.elem());
+        
+        ByteArrayBitStreamWriter writer = new ByteArrayBitStreamWriter();
+        arrayFunc.write(writer);
+        writer.close();
+        
+        ByteArrayBitStreamReader reader = new ByteArrayBitStreamReader(writer.toByteArray());
+        ArrayFunc arrayFunc2 = new ArrayFunc(reader);
+        
+        assertEquals(item1, arrayFunc2.elem());
+        assertEquals(arrayFunc, arrayFunc2);
+    }
+
+
+    public void testEncodeDecodeOuterArray() throws Exception
+    {
+        OuterArray outer = new OuterArray();
+        outer.setNumElems(3);
+        List<Item> items = new ArrayList<Item>();
+
+        Item item0 = new Item();
+        item0.setA((short) 12);
+        item0.setB((short) 13);
+        items.add(item0);
+
+        Item item1 = new Item();
+        item1.setA((short) 20);
+        item1.setB((short) 18);
+        items.add(item1);
+
+        Item item2 = new Item();
+        item2.setA((short) 17);
+        item2.setB((short) 14);
+        items.add(item2);
+        
+        outer.setValues(new ObjectArray<Item>(items));
+        
+        Inner inner = new Inner();
+        inner.setIsExplicit((short)0);
+        ItemRef ref = new ItemRef();
+        ref.setPos((short)1);
+        inner.setRef(ref);
+        inner.setExtra(4711);
+        
+        outer.setInner(inner);
+        
+        
+        ByteArrayBitStreamWriter writer = new ByteArrayBitStreamWriter();
+        outer.write(writer);
+        writer.close();
+        
+        ByteArrayBitStreamReader reader = new ByteArrayBitStreamReader(writer.toByteArray());
+        OuterArray outer2 = new OuterArray(reader);
+        
+        assertEquals(outer, outer2);
+    }
+
 }

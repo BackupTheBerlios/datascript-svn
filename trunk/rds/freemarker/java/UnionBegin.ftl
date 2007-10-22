@@ -47,6 +47,7 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
     long __fpos;
     Object __objectChoice;
     int __choiceTag = -1;
+    private CallChain __cc;
 
 
     public void accept(${rootPackageName}.__Visitor visitor, Object arg)

@@ -59,19 +59,22 @@
     public void write(String __filename) throws Exception 
     {
         FileBitStreamWriter __out = new FileBitStreamWriter(__filename);
-        write(__out, new CallChain());
+        __cc = new CallChain();
+        write(__out, __cc);
         __out.close();
     }
 
 
     public void write(BitStreamWriter __out) throws Exception 
     {
-        write(__out, new CallChain());
+        __cc = new CallChain();
+        write(__out, __cc);
     }
 
 
     public void write(BitStreamWriter __out, CallChain __cc) throws Exception 
     {
+        this.__cc = __cc;
 <#if LabeledFieldCnt!=0>
         computeLabelValues();
 

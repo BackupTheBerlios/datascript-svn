@@ -292,7 +292,7 @@ functionList
     ;
 
 function
-    : #(f:FUNCTION i:ID integerType functionBody) 
+    : #(f:FUNCTION i:ID definedType functionBody) 
       { CompoundType ct = (CompoundType) scope().getOwner();
         ct.addFunction(f); 
         ((FunctionType)f).setOwner(ct);

@@ -48,8 +48,10 @@ import datascript.antlr.util.ToolContext;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
 import datascript.ast.Field;
+import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
 import datascript.ast.UnionType;
+import datascript.emit.java.CompoundEmitter.CompoundFunctionEmitter;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -58,6 +60,9 @@ import freemarker.template.Template;
 
 public class UnionEmitter extends CompoundEmitter
 {
+    private final List<CompoundFunctionEmitter> functions = 
+        new ArrayList<CompoundFunctionEmitter>();
+
     private final List<UnionFieldEmitter> fields = 
         new ArrayList<UnionFieldEmitter>();
 
@@ -138,6 +143,13 @@ public class UnionEmitter extends CompoundEmitter
             CompoundParameterEmitter p = new CompoundParameterEmitter(param);
             params.add(p);
         }
+        functions.clear();
+        for (FunctionType func : union.getFunctions())
+        {
+            CompoundFunctionEmitter f = new CompoundFunctionEmitter(func);
+            functions.add(f);
+        }
+        
 
         try
         {
@@ -153,6 +165,12 @@ public class UnionEmitter extends CompoundEmitter
             {
                 param.emit(writer, cfg);
             }
+            for (CompoundFunctionEmitter func : functions)
+            {
+                func.emit(writer, cfg);
+            }
+
+            
 
             tpl = cfg.getTemplate("java/UnionRead.ftl");
             tpl.process(this, writer);

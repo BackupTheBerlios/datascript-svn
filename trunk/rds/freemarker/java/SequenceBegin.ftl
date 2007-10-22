@@ -45,6 +45,7 @@ ${packageImports}
 public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writer, SizeOf
 {
     long __fpos;
+    private CallChain __cc;
 
 
     public void accept(${rootPackageName}.__Visitor visitor, Object arg)
@@ -72,7 +73,7 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
             ${className} that = (${className}) obj;
 <#if equalsCanThrowExceptions>
     <#list fields as field>
-            if (<#if (field.optionalClause?? && field.optionalClause?has_content)>(!(${field.optionalClause}))? false : </#if>(<#rt>
+            if (<#if (field.optionalClause?? && field.optionalClause?has_content) && !field.isSimple>!(this.${field.name} == null && that.${field.name} == null) && </#if>(<#rt>
             <#if field.canonicalTypeName == "datascript.ast.EnumType"><#t>
                 <#t>this.${field.name}.getValue() != that.${field.name}.getValue()
             <#elseif (field.canonicalTypeName == "datascript.ast.BitFieldType" && field.bitFieldLength == 0)><#t>
@@ -93,7 +94,7 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
 <#else>
             return 
     <#list fields as field>
-                (<#if (field.optionalClause?? && field.optionalClause?has_content)>(!(${field.optionalClause}))? true : </#if>(<#rt>
+                (<#if field.optionalClause?? && field.optionalClause?has_content && ! field.isSimple>(this.${field.name} == /*XX*/ null && that.${field.name} == null) || </#if>(<#rt>
             <#if field.canonicalTypeName == "datascript.ast.EnumType"><#t>
                 <#t>this.${field.name}.getValue() == that.${field.name}.getValue()
             <#elseif (field.canonicalTypeName == "datascript.ast.BitFieldType" && field.bitFieldLength == 0)><#t>

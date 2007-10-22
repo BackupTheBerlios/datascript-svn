@@ -539,7 +539,8 @@ public class Expression extends TokenAST
     {
         if (op1().getExprType() instanceof FunctionType)
         {
-            type = IntegerType.integerType;
+            FunctionType function = (FunctionType) op1().getExprType(); 
+            type = function.getReturnType();
             value = null;
         }
         else

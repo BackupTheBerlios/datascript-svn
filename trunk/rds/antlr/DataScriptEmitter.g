@@ -252,7 +252,7 @@ functionList
 function
     : #(f:FUNCTION          { em.beginFunction(f); }
         ID 
-        integerType 
+        definedType 
         functionBody
        )                    { em.endFunction(f); }  
     ;

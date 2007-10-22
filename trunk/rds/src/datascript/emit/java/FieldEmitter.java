@@ -173,6 +173,21 @@ public abstract class FieldEmitter
     {
         return type instanceof StdIntegerType;
     }
+    
+    public boolean getIsSimple()
+    {
+        boolean result = false;
+        if (type instanceof StdIntegerType)
+        {
+            result = ((StdIntegerType)type).getType() != datascript.antlr.DataScriptParserTokenTypes.UINT64;            
+        }
+        else if (type instanceof BitFieldType)
+        {
+            BitFieldType bitField = (BitFieldType) type;
+            result = 0 < bitField.getLength() && bitField.getLength() < 64;
+        }
+        return result;
+    }
 
 
     public CompoundEmitter getCompoundEmitter()

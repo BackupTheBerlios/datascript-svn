@@ -38,7 +38,16 @@
  */
 -->
 
-    public ${returnType} ${name}() 
+    public ${returnType} ${name}()
     { 
-        return (${returnType})(${result}); 
+        ${returnType} result;
+        try
+        {
+            result = ${result};
+        }
+        catch (Exception exc)
+        {
+            throw new IllegalArgumentException(exc);
+        }
+        return (${returnType})(result); 
     }

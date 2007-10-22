@@ -17,3 +17,58 @@ VarList
     VarInt      numItems;
     int32       items[numItems.value()];
 };
+
+// ---------------------------------------------------------------------------
+
+ArrayFunc
+{
+    uint16     numElems;
+    Item       values[numElems];
+    uint16     pos;
+    
+    function Item elem()
+    {
+        return values[pos];
+    }
+};
+
+Item
+{
+    uint8      a;
+    uint8      b;
+};
+
+
+// ---------------------------------------------------------------------------
+
+OuterArray
+{
+    uint16     numElems;
+    Item       values[numElems];
+    bit:1      dummy if numElems == 0;
+    Inner      inner;
+};
+
+Inner
+{
+    uint8     isExplicit;
+    ItemRef   ref;
+    int32     extra if ref.elem().a == 20;
+    
+};
+
+
+union ItemRef
+{
+    Item      item : Inner.isExplicit == 1;
+    uint8     pos  : Inner.isExplicit == 0;
+
+    function Item elem()
+    {
+        return (Inner.isExplicit == 1) 
+            ? Inner.ref.item 
+            : OuterArray.values[Inner.ref.pos];
+    }
+};
+
+

@@ -268,7 +268,7 @@ functionList
     ;
 
 function
-    : #(FUNCTION ID integerType functionBody) 
+    : #(FUNCTION ID definedType functionBody) 
     ;
 
 functionBody
