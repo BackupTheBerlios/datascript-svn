@@ -399,7 +399,7 @@ memberList
     ;
     
 functionList
-    : functionDefinition (SEMICOLON! functionDefinition)*
+    : functionDefinition (functionDefinition)*
       { #functionList = #([FUNCTIONS, "FUNCTIONS"], #functionList); }
     ;
     
