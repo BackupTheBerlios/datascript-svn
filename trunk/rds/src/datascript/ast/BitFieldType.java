@@ -82,7 +82,7 @@ public class BitFieldType extends IntegerType
 
     public boolean isVariable()
     {
-        return getLength() != 0;
+        return getLength() == 0;
     }
 
 
