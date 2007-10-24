@@ -81,7 +81,6 @@ public class UnionEmitter extends CompoundEmitter
 
         public void emit(PrintWriter writer, Configuration cfg) throws Exception
         {
-            //super.emit(writer, cfg, "java/UnionFieldAccessor.ftl");
             if (tpl == null)
                 tpl = cfg.getTemplate("java/UnionFieldAccessor.ftl");
             tpl.process(this, writer);

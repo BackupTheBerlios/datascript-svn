@@ -46,6 +46,7 @@ import java.util.List;
 
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
+import datascript.ast.ArrayType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
 import datascript.ast.Field;
@@ -53,6 +54,7 @@ import datascript.ast.IntegerType;
 import datascript.ast.Parameter;
 import datascript.ast.SqlIntegerType;
 import datascript.ast.SqlTableType;
+import datascript.ast.StringType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import freemarker.template.Configuration;
@@ -120,6 +122,32 @@ public class SqlTableEmitter extends CompoundEmitter
             {
                 return 9999;
             }
+        }
+
+
+        public String getSqlType()
+        {
+            String retval;
+            TypeInterface ftype = TypeReference.resolveType(field.getFieldType());
+
+            if (ftype instanceof StringType)
+                retval = "VARCHAR";
+            else if (ftype instanceof ArrayType)
+            {
+                retval = "CHAR(" + ftype.getLength() + ")";
+            }
+            else
+            {
+                int size = getTypeSize();
+                switch(size)
+                {
+                    case 64:
+                        retval = "INTEGER(" + size/8 + ")";
+                    default:
+                        retval = "BLOB";
+                }
+            }
+            return retval;
         }
 
 

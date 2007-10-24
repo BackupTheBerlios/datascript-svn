@@ -552,6 +552,7 @@ sqlTableReference
 sqlFieldDefinition!
     : t:typeReference 
       i:ID 
+      (a:arrayRange {#t = #([ARRAY], t, a); } )?
       (c:fieldCondition)? 
       (k:"sql_key")? 
       (s:sqlConstraint)? 

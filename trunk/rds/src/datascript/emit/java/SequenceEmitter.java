@@ -80,7 +80,6 @@ public class SequenceEmitter extends CompoundEmitter
 
         public void emit(PrintWriter writer, Configuration cfg) throws Exception
         {
-            //super.emit(writer, cfg, "java/SequenceFieldAccessor.ftl");
             if (tpl == null)
                 tpl = cfg.getTemplate("java/SequenceFieldAccessor.ftl");
             tpl.process(this, writer);

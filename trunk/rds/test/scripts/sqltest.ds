@@ -29,7 +29,8 @@ sql_database SqlTestDb
     /** A table type and instance definition. */
     sql_table LevelTable
     {
-        uint8   levelNr      sql "PRIMARY KEY";
+        string  testName;
+        uint8   levelNr[3]      sql "PRIMARY KEY";
         Level   level;
     } levels;
 

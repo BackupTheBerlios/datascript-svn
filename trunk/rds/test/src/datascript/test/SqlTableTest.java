@@ -158,18 +158,18 @@ public class SqlTableTest extends TestCase
         Connection dbc = db.getConnection();
         Statement st = dbc.createStatement();
 
-        int rows = st.executeUpdate("insert into levels values (1, 'blob1')");
+        int rows = st.executeUpdate("insert into levels values ('test1', 1, 'blob1')");
         assertEquals(rows, 1);
 
-        rows = st.executeUpdate("insert into levels values (2, 'blob2')");
+        rows = st.executeUpdate("insert into levels values ('test1', 2, 'blob2')");
         assertEquals(rows, 1);
 
-        rows = st.executeUpdate("insert into levels values (3, 'blob3')");
+        rows = st.executeUpdate("insert into levels values ('test1', 3, 'blob3')");
         assertEquals(rows, 1);
 
         try
         {
-            rows = st.executeUpdate("insert into levels values (1, 'blob4')");
+            rows = st.executeUpdate("insert into levels values ('test1', 1, 'blob4')");
             assertTrue(false);
         }
         catch (SQLException exc)
@@ -188,10 +188,10 @@ public class SqlTableTest extends TestCase
         Statement st = dbc.createStatement();
 
         int rows = st
-                .executeUpdate("insert into moreLevels values (1, 'blob1')");
+                .executeUpdate("insert into moreLevels values ('test2', 1, 'blob1')");
         assertEquals(rows, 1);
 
-        rows = st.executeUpdate("insert into moreLevels values (2, 'blob2')");
+        rows = st.executeUpdate("insert into moreLevels values ('test2', 2, 'blob2')");
         assertEquals(rows, 1);
 
         db.close();

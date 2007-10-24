@@ -67,8 +67,7 @@ public class ${name}
         query.append(__tableName);
 <#list fields as field>
         query.append("<#if field_index == 0>(<#else>, </#if>${field.name} <#rt>
-    <#assign size = field.typeSize><#t>
-    <#if size <= 64>INTEGER(${size/8})<#else>BLOB</#if><#t>
+    ${field.sqlType}<#t>
     <#lt> NOT NULL ${field.sqlConstraint}");
 </#list>
 <#assign constraint = sqlConstraint>
