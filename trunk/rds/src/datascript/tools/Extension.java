@@ -80,9 +80,7 @@ public interface Extension
      * Parse all arguments from the commandline parameterlist that are necessary
      * for this extension.
      * 
-     * @param cli
      * @param rdsOptions
-     * @param args
      */
-    public void getOptions(org.apache.commons.cli.Options rdsOptions, String[] args);
+    public void getOptions(org.apache.commons.cli.Options rdsOptions);
 }

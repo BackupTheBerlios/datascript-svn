@@ -95,7 +95,7 @@ public class HtmlExtension implements Extension
     }
 
 
-    public void getOptions(org.apache.commons.cli.Options rdsOptions, String[] args)
+    public void getOptions(org.apache.commons.cli.Options rdsOptions)
     {
         org.apache.commons.cli.Option rdsOption;
 
