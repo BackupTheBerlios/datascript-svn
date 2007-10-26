@@ -2,6 +2,12 @@ package bits;
 
 import bits.arrays.*;
 
+Cluster
+{
+    uint8               numberOfClusterInternalNodes;
+    uint8               numberOfLinks;
+    bit<numberOfLinks>  inboundMask;
+};
 
 
 subtype uint8 MagicCode;
