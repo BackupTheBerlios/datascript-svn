@@ -35,7 +35,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.emit.html;
+
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -44,9 +47,13 @@ import java.util.List;
 import antlr.ANTLRException;
 import antlr.TokenBuffer;
 import antlr.collections.AST;
+
+import datascript.ast.CompoundType;
+import datascript.ast.Package;
 import datascript.antlr.DocCommentLexer;
 import datascript.antlr.DocCommentParser;
 import datascript.antlr.DocCommentParserTokenTypes;
+
 
 
 /**
@@ -55,96 +62,114 @@ import datascript.antlr.DocCommentParserTokenTypes;
  */
 public class Comment
 {
-	private List<String> paragraphs = new ArrayList<String>();
-	private List<Tag> tags = new ArrayList<Tag>();
-	
-	public static class Tag
-	{
-		private String name;
-		private String head;
-		private String tail;
-		
-		public Tag(String name, String head, String tail)
-		{
-			this.name = name;
-			this.head = head;
-			this.tail = tail;
-		}
-		
-		public String getName()
-		{
-			return name;
-		}
+    private List<String> paragraphs = new ArrayList<String>();
+    private List<Tag> tags = new ArrayList<Tag>();
 
-		public String getHead()
-		{
-			return head;
-		}
-		public String getTail()
-		{
-			return tail;
-		}
-	}
-	
-	public void parse(String doc)
-	{
-		try
-		{
-			StringReader is = new StringReader(doc);
-			DocCommentLexer lexer = new DocCommentLexer(is);
-			TokenBuffer tBuffer = new TokenBuffer(lexer);
-			DocCommentParser parser = new DocCommentParser(tBuffer);
+    public static class Tag
+    {
+        private String name;
+        private String head;
+        private String tail;
 
-			parser.comment();
-			AST docNode = parser.getAST();
-			AST child = docNode.getFirstChild();
-			
-	        for ( ; child != null && child.getType() == DocCommentParserTokenTypes.TEXT; 
-	        	child = child.getNextSibling())
-	        {
-	        	StringBuilder buffer = new StringBuilder(child.getText());
-	        	AST textAst = child.getFirstChild();
 
-		        for (; textAst != null; textAst = textAst.getNextSibling())
-		        {
-	    			buffer.append(textAst.getText());
-		        }
-		        String para = buffer.toString();
-		        paragraphs.add(para);
-	        }	        	
+        public Tag(String name, String head, String tail)
+        {
 
-	        for ( ; child != null && child.getType() == DocCommentParserTokenTypes.AT; 
-	        	child = child.getNextSibling())
-	        {
-	        	StringBuilder buffer = new StringBuilder();
-                String tagName = child.getText();
-	        	AST textAst = child.getFirstChild();
-                for (; textAst != null; textAst = textAst.getNextSibling())
-		        {
-	    			buffer.append(textAst.getText());
-		        }
+            this.name = name;
+            this.head = head;
+            this.tail = tail;
+        }
+
+
+        public String getName()
+        {
+            return name;
+        }
+
+
+        public String getHead()
+        {
+            return head;
+        }
+
+
+        public String getTail()
+        {
+            return tail;
+        }
+    }
+
+
+    public void parse(String doc)
+    {
+        try
+        {
+            StringReader is = new StringReader(doc);
+            DocCommentLexer lexer = new DocCommentLexer(is);
+            TokenBuffer tBuffer = new TokenBuffer(lexer);
+            DocCommentParser parser = new DocCommentParser(tBuffer);
+
+            parser.comment();
+            AST docNode = parser.getAST();
+            AST child = docNode.getFirstChild();
+            while (child != null
+                    && child.getType() == DocCommentParserTokenTypes.TEXT)
+            {
+                StringBuilder buffer = new StringBuilder(child.getText());
+                AST textAst = child.getFirstChild();
+                while (textAst != null)
+                {
+                    buffer.append(textAst.getText());
+                    textAst = textAst.getNextSibling();
+                }
+                String para = buffer.toString();
+                paragraphs.add(para);
+
+                child = child.getNextSibling();
+            }
+
+            Package packegeRoot = Package.getRoot();
+            while (child != null
+                    && child.getType() == DocCommentParserTokenTypes.AT)
+            {
+                StringBuilder buffer = new StringBuilder();
+
+                AST textAst = child.getFirstChild();
+                while (textAst != null)
+                {
+                    buffer.append(textAst.getText());
+                    textAst = textAst.getNextSibling();
+                }
                 String text = buffer.toString();
+
                 String[] parts = text.split("\\s+", 2);
                 String head = parts[0];
                 String tail = (parts.length == 2) ? parts[1] : "";
+
+                Object typeOrSymbol = packegeRoot.getTypeOrSymbol(head);
+                String tagName = (typeOrSymbol != null)? "seelink" : child.getText();
                 Tag tag = new Tag(tagName, head, tail);
                 tags.add(tag);
-	        }	        
-		}
-		catch (ANTLRException exc)
-		{
-			exc.printStackTrace();
-		}
-		
-	}
-	
-	public List<String> getParagraphs()
-	{
-		return paragraphs;
-	}
-	
-	public List<Tag> getTags()
-	{
-		return tags;
-	}
+
+                child = child.getNextSibling();
+            }
+        }
+        catch (ANTLRException exc)
+        {
+            exc.printStackTrace();
+        }
+
+    }
+
+
+    public List<String> getParagraphs()
+    {
+        return paragraphs;
+    }
+
+
+    public List<Tag> getTags()
+    {
+        return tags;
+    }
 }
