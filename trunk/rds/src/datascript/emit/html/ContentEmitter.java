@@ -56,6 +56,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
     private CompoundEmitter ce;
     private EnumerationEmitter ee;
     private SubtypeEmitter se;
+    private ConstTypeEmitter cte;
 
 
     public ContentEmitter()
@@ -65,6 +66,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
         ce = new CompoundEmitter();
         ee = new EnumerationEmitter();
         se = new SubtypeEmitter();
+        cte = new ConstTypeEmitter();
     }
 
 
@@ -94,7 +96,7 @@ public class ContentEmitter extends DefaultHTMLEmitter
             }
             else if (type instanceof ConstType)
             {
-                // TODO: No content for const
+                cte.emit((ConstType) type);
             }
             else
             {

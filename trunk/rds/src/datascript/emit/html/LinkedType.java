@@ -109,6 +109,11 @@ public class LinkedType
                 style = "subtypeLink";
                 category += "Subtype";
             }
+            else if (type instanceof datascript.ast.ConstType)
+            {
+                style = "consttypeLink";
+                category += "Consttype";
+            }
             else if (type instanceof SqlMetadataType)
             {
                 style = "sqlMetaLink";
@@ -149,7 +154,8 @@ public class LinkedType
 
     public String getName()
     {
-        return TypeNameEmitter.getTypeName(type);
+        String typeName = TypeNameEmitter.getTypeName(type);
+        return typeName;
     }
 
 

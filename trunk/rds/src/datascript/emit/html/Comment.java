@@ -48,7 +48,6 @@ import antlr.ANTLRException;
 import antlr.TokenBuffer;
 import antlr.collections.AST;
 
-import datascript.ast.CompoundType;
 import datascript.ast.Package;
 import datascript.antlr.DocCommentLexer;
 import datascript.antlr.DocCommentParser;

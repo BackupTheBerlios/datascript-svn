@@ -48,6 +48,7 @@ a.subtypeLink
 	font-style:italic;
 }
 
+a.consttypeLink,
 a.unionLink,
 a.sequenceLink,
 a.sqlMetaLink,

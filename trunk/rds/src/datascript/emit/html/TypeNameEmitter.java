@@ -150,6 +150,11 @@ public class TypeNameEmitter
             Subtype subtype = (Subtype) t;
             result = subtype.getName();
         }
+        else if (t instanceof ConstType)
+        {
+            ConstType consttype = (ConstType) t;
+            result = consttype.getName();
+        }
         else if (t instanceof TypeInstantiation)
         {
             TypeInstantiation inst = (TypeInstantiation)t;

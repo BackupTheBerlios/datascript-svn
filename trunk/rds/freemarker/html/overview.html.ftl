@@ -8,7 +8,9 @@
   <body>
     <ul class="classlist">
 <#list types as type>
-      <li id="${type.packageNameAsID}"><a class="${type.style}" href="content/${type.packageName}/${type.name}.html" title="Type: ${type.category}" target="detailedDocu" >${type.name}</a></li>
+      <li id="${type.packageNameAsID}"><#rt>
+      <#t><a class="${type.style}" href="content/${type.packageName}/${type.name}.html" title="Type: ${type.category}" target="detailedDocu" >${type.name}</a>
+      <#lt></li>
 </#list>      
     </ul>    
   </body>
