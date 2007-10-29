@@ -44,8 +44,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
+import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
@@ -59,6 +61,7 @@ public class SequenceEmitter extends CompoundEmitter
 {
     private final List<CompoundFunctionEmitter> functions = 
         new ArrayList<CompoundFunctionEmitter>();
+
     private final List<SequenceFieldEmitter> fields = 
         new ArrayList<SequenceFieldEmitter>();
 
@@ -67,14 +70,12 @@ public class SequenceEmitter extends CompoundEmitter
 
     public static class SequenceFieldEmitter extends FieldEmitter
     {
-        private ExpressionEmitter exprEmitter;
         private static Template tpl = null;
 
 
         public SequenceFieldEmitter(Field f, CompoundEmitter j)
         {
             super(f, j);
-            exprEmitter = new ExpressionEmitter();
         }
 
 
@@ -101,26 +102,51 @@ public class SequenceEmitter extends CompoundEmitter
         public int getBitsizeof()
         {
             int bitSize = field.bitsizeof(null).integerValue().intValue();
-//            if (bitSize % 8 != 0)
-//                bitSize = ((bitSize / 8) + 1) * 8;
             return bitSize;
         }
 
 
-        public String getLabel()
-        {
-            return exprEmitter.emit(field.getLabel());
-            //return field.getLabel().getText();
-        }
-
-
+        /**
+         * Returns a label setter for the current field. If the field
+         * has a composite label <tt>header.offsets.offset1</tt>, the
+         * result is <tt>getHeader().getOffsets().setOffset1</tt>.
+         * 
+         * @return setter without argument list
+         */
         public String getLabelSetter()
         {
-            String name = field.getLabel().getText();
-            StringBuffer result = new StringBuffer("set");
-            result.append(name.substring(0, 1).toUpperCase());
-            result.append(name.substring(1, name.length()));
-            return result.toString();
+            Expression expr = field.getLabel();
+            StringBuilder buffer = new StringBuilder();
+            appendLabelSetter(buffer, expr);
+            return buffer.toString();
+        }
+
+        /**
+         * Recursively traverses a label expression to construct the setter
+         * name for the label. We rely on the results of the ExpressionEvaluator
+         * in assuming that the expression type is either DOT or ID, and that
+         * an ID always resolved to a Field in the expression scope.
+         * 
+         * @param buffer string buffer used for appending the partial result
+         * @param expr   subexpression of current label expression
+         */
+        private void appendLabelSetter(StringBuilder buffer, Expression expr)
+        {
+            if (expr.getType() == DataScriptParserTokenTypes.DOT)
+            {
+                Expression op1 = expr.op1();
+                String symbol = op1.getText();
+                Field field = (Field) op1.getScope().getTypeOrSymbol(symbol);
+                String getter = AccessorNameEmitter.getGetterName(field);
+                buffer.append(getter);
+                buffer.append("().");
+                appendLabelSetter(buffer, expr.op2());
+            }
+            else
+            {                
+                Field field = (Field) expr.getScope().getTypeOrSymbol(expr.getText());
+                buffer.append(AccessorNameEmitter.getSetterName(field));
+            }            
         }
 
 
@@ -226,5 +252,4 @@ public class SequenceEmitter extends CompoundEmitter
     {
         return fields;
     }
-
 }

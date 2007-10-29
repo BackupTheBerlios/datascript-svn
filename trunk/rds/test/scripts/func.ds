@@ -77,3 +77,21 @@ union ItemRef
 };
 
 
+// ---------------------------------------------------------------------------
+
+Foo
+{
+    uint8     pos;
+
+    function uint8 position()
+    {
+        return pos;
+    }
+
+    function uint8 elem()
+    {
+        return position();
+    }
+    
+};
+

@@ -153,26 +153,20 @@
             <#if LabeledFieldCnt == 0>
                 <#break>
             </#if>
+        </#if>
+        <#if !field.isSimple>
+            <#assign bitsizeof>${field.getterName}().bitsizeof()</#assign>
+        <#elseif (field.canonicalTypeName == "datascript.ast.BitFieldType" && field.bitFieldLength == 0)>
+            <#assign bitsizeof>${field.getterName}().bitLength()</#assign>
         <#else>
-            <#if (field.canonicalTypeName == "datascript.ast.SequenceType" ||
-                  field.canonicalTypeName == "datascript.ast.UnionType" ||
-                  field.canonicalTypeName == "datascript.ast.ArrayType" ||
-                  field.canonicalTypeName == "datascript.ast.TypeInstantiation" ||
-                  field.canonicalTypeName == "datascript.ast.StringType" ||
-                  (field.canonicalTypeName == "datascript.ast.StdIntegerType" && field.isUINT64))>
-                <#assign bitsizeof>${field.getterName}().bitsizeof()</#assign>
-            <#elseif (field.canonicalTypeName == "datascript.ast.BitFieldType" && field.bitFieldLength == 0)>
-                <#assign bitsizeof>${field.getterName}().bitLength()</#assign>
-            <#else>
-                <#assign bitsizeof=field.bitsizeof>
-            </#if>
-            <#if field.hasAlignment>
+            <#assign bitsizeof=field.bitsizeof>
+        </#if>
+        <#if field.hasAlignment>
         if (bitoffset % #{field.alignmentValue} != 0)
             bitoffset = ((bitoffset / #{field.alignmentValue}) + 1) * #{field.alignmentValue};
-            </#if>
+        </#if>
 
         bitoffset += ${bitsizeof};	// ${field.name}
-        </#if>
     </#list>
     }
 </#if>

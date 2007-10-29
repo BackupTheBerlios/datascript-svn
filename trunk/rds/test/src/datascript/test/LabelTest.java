@@ -8,36 +8,27 @@ import java.io.File;
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
+import label.DataBlock;
+import label.Tile;
+import label.TileHeader;
+import label.TileWithHeader;
 import bits.GlobalLabelSeq;
 import bits.Header;
 import bits.ItemA;
 import bits.LabelledType;
+import datascript.runtime.io.DataScriptIO;
 
 /**
  * @author HWellmann
- *
+ * 
  */
 public class LabelTest extends TestCase
 {
     private FileImageOutputStream os;
+
     private String fileName = "labeltest.bin";
+
     private File file = new File(fileName);
-
-    /**
-     * Constructor for BitStreamReaderTest.
-     * @param name
-     */
-    public LabelTest(String name)
-    {
-        super(name);
-    }
-
-    /*
-     * @see TestCase#setUp()
-     */
-    protected void setUp() throws Exception
-    {
-    }
 
     /*
      * @see TestCase#tearDown()
@@ -50,7 +41,7 @@ public class LabelTest extends TestCase
     /*
      * Test method for 'datascript.library.BitStreamReader.readByte()'
      */
-    public  void testLabel1() throws Exception
+    public void testLabel1() throws Exception
     {
         os = new FileImageOutputStream(file);
         short numItems = 3;
@@ -59,23 +50,23 @@ public class LabelTest extends TestCase
 
         os.writeShort(magic);
         os.writeShort(numItems);
-        int dataOffset = 6+4*numItems;
-        int globalOffset = 2 + dataOffset + 3*numItems;
+        int dataOffset = 6 + 4 * numItems;
+        int globalOffset = 2 + dataOffset + 3 * numItems;
         os.writeShort(dataOffset);
         os.writeShort(globalOffset);
-        
+
         for (int i = 0; i < numItems; i++)
         {
-            os.writeShort(10+i);
-            os.writeShort(20+i);
+            os.writeShort(10 + i);
+            os.writeShort(20 + i);
         }
-        
+
         for (int i = 0; i < numItems; i++)
         {
             os.writeByte(1);
-            os.writeShort(30+i);
+            os.writeShort(30 + i);
         }
-        
+
         os.writeInt(x);
         int size = (int) os.getStreamPosition();
         os.close();
@@ -88,16 +79,73 @@ public class LabelTest extends TestCase
         assertEquals(globalOffset, lt.getGlobalOffset());
         for (int i = 0; i < numItems; i++)
         {
-        	Header header = lt.getHeaders().elementAt(i);
-            assertEquals(10+i, header.getLen());
-            assertEquals(20+i, header.getC());
+            Header header = lt.getHeaders().elementAt(i);
+            assertEquals(10 + i, header.getLen());
+            assertEquals(20 + i, header.getC());
         }
         for (int i = 0; i < numItems; i++)
         {
-        	ItemA a = lt.getA().elementAt(i);
-        	assertEquals(30+i, a.getValue());
+            ItemA a = lt.getA().elementAt(i);
+            assertEquals(30 + i, a.getValue());
         }
         assertEquals(x, lt.getX());
         assertEquals(size, seq.sizeof());
+    }
+    
+    public void testTile()
+    {
+        Tile tile = new Tile();
+        DataBlock b1 = new DataBlock();
+        b1.setA(17);
+        b1.setB((short)18);
+        tile.setBlock1(b1);
+
+        DataBlock b2 = new DataBlock();
+        b2.setA(19);
+        b2.setB((short)20);
+        tile.setBlock2(b2);
+
+        DataBlock b3 = new DataBlock();
+        b3.setA(30);
+        b3.setB((short)31);
+        tile.setBlock3(b3);
+        byte[] blob = DataScriptIO.write(tile);
+        
+        assertEquals(6, tile.getOffset1());
+        assertEquals(12, tile.getOffset2());
+        assertEquals(18, tile.getOffset3());
+        
+        Tile tile2 = DataScriptIO.read(Tile.class, blob);
+        assertEquals(tile2, tile);
+    }
+    
+    public void testTileWithHeader()
+    {
+        TileWithHeader tile = new TileWithHeader();
+        TileHeader header = new TileHeader();
+        tile.setHeader(header);
+
+        DataBlock b1 = new DataBlock();
+        b1.setA(17);
+        b1.setB((short)18);
+        tile.setB1(b1);
+
+        DataBlock b2 = new DataBlock();
+        b2.setA(19);
+        b2.setB((short)20);
+        tile.setB2(b2);
+
+        DataBlock b3 = new DataBlock();
+        b3.setA(30);
+        b3.setB((short)31);
+        tile.setB3(b3);
+        byte[] blob = DataScriptIO.write(tile);
+        
+        assertEquals(6, tile.getHeader().getOffset1());
+        assertEquals(12, tile.getHeader().getOffset2());
+        assertEquals(18, tile.getHeader().getOffset3());
+        
+        TileWithHeader tile2 = DataScriptIO.read(TileWithHeader.class, blob);
+        assertEquals(tile2, tile);
     }
 }
