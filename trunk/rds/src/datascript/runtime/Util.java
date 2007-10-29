@@ -90,21 +90,4 @@ public class Util
             b.append((char) c);
         }
     }
-
-
-    public static void main(String av[])
-    {
-        System.out.println(Long.toHexString(0x0011223344556677L));
-        System.out.println(Long.toHexString(leLong(0x0011223344556677L)));
-        System.out.println(Long.toHexString(0xffeeddccbbaa99f8L));
-        System.out.println(Long.toHexString(leLong(0xffeeddccbbaa99f8L)));
-        System.out.println(Integer.toHexString(0x00112233));
-        System.out.println(Integer.toHexString(leInt(0x00112233)));
-        System.out.println(Integer.toHexString(0xffeeddfa));
-        System.out.println(Integer.toHexString(leInt(0xffeeddfa)));
-        System.out.println(Integer.toHexString(0x0011));
-        System.out.println(Integer.toHexString(leShort((short) 0x0011)));
-        System.out.println(Integer.toHexString(0xffee));
-        System.out.println(Integer.toHexString(leShort((short) 0xffee)));
-    }
 }
