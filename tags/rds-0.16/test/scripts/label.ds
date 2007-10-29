@@ -1,0 +1,47 @@
+package label;
+
+Tile
+{
+    uint16         offset1;
+    uint16         offset2;
+    uint16         offset3;
+
+offset1:    
+    DataBlock      block1;
+
+offset2:
+    DataBlock      block2;
+
+offset3:
+    DataBlock      block3;
+};
+
+DataBlock
+{
+    int32         a;
+    int16         b;
+};
+
+
+// ---------------------------------------------------------------------------
+
+TileWithHeader
+{
+    TileHeader     header;
+
+header.offset1:    
+    DataBlock      b1;
+
+header.offset2:
+    DataBlock      b2;
+
+header.offset3:
+    DataBlock      b3;
+};
+
+TileHeader
+{
+    uint16         offset1;
+    uint16         offset2;
+    uint16         offset3;
+};

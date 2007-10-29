@@ -1,0 +1,90 @@
+package bits.arrays;
+
+import bits.*;
+
+/**
+ * Test for sum(array), that computes the sum of all items in an array.
+ */
+LinkTable
+{
+    bit:1         r[8];
+    uint8         numRefsInLevel[sum(r)];
+    bit<sum(r)>   b;
+};
+
+
+/**
+ * first meaningless doc 
+ */
+IntegerArray
+{
+     uint16     numElems;
+     int8       int8List[numElems];
+     uint8      uint8List[numElems];
+     int16      int16List[numElems];
+     uint16     uint16List[numElems];
+     int32      int32List[numElems];
+     uint32     uint32List[numElems];
+};
+
+
+/**
+ * this is for testing if following sequences gets the same doc
+ */
+CompoundArray
+{
+    int16       numItems;
+    ItemA       a[numItems];
+    ItemB       b[numItems];
+};
+
+
+/**
+ *
+ */
+MixedArray
+{
+    uint16      numItems;
+    AnyItem     items[numItems];
+};
+
+
+VarArray
+{
+    ItemA       a[];
+    ItemB       b;
+    uint16      len : len == lengthof a;
+};
+
+
+ParamArray
+{
+    uint32                          numItems;    // in java indexes of arrays are type of int. This ist for testing truncating
+    uint16                          size[numItems];
+    ParamBlock(size[block$index])   block[numItems];
+};
+
+
+OptionalArraySequence
+{
+    int8     kleinesArray[3];
+    uint32   count;            // in java indexes of arrays are type of int. This ist for testing truncating
+    int16    a[count]    if count > 0;
+    int16    b[1]        if count == 0;
+};
+
+
+StringArraySequence
+{
+    string    name;
+    bit:4     byteCount;
+    string    text[byteCount];
+};
+
+
+EnumArray
+{
+    uint16 numItems;
+    Colour colours[numItems];
+};
+
