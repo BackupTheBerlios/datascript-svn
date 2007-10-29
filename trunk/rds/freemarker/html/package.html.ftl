@@ -4,57 +4,58 @@
     <link rel="stylesheet" type="text/css" href="webStyles.css">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <script language="JavaScript">
-    	/*
-    	 * returns an array of CSS rules
-    	 */
-    	function getCSS(docToChange, index)
-    	{
-    	return null;
-    		if (!docToChange.styleSheets)
-    			return null;
-
-			var theRules = new Array();
-			var styleSheet = docToChange.styleSheets[index];
-			if (styleSheet.cssRules)
-				theRules = styleSheet.cssRules
-			else if (styleSheet.rules)
-				theRules = styleSheet.rules
-			else
-				return null;
-			return theRules;
-    	}
+        var oldClickedElement = null;
 
 
-    	function showhidePackage(clickedElement)
-    	{
-	    	clickedElement.style.listStyleType =  
-	    		(clickedElement.style.listStyleType == 'circle')? 'disc' : 'circle';
+        function hiliteElement(clickedElement)
+        {
+            clickedElement.className = 
+                (clickedElement.className == "packagelist")? "selectedpackagelist" : "packagelist";
 
-	   		docToChange = parent.overview.document;
-			theRules = getCSS(docToChange, 0);
-			if (theRules)
-			{
-				styleToChange = theRules[theRules.length-1].style;				
-				styleToChange.display = 
-					(styleToChange.getPropertyValue('display') == 'none')? 'list-item' : 'none';
-			}
-			else
-			{
-    			var styleItemId = "style_" + clickedElement.firstChild.firstChild.data.replace(/\./g, '_');
-		    	var styleElement = docToChange.getElementById(styleItemId);
-				var styleElementSheet = (styleElement.sheet)? styleElement.sheet : styleElement.styleSheet;
-		    	var styleElementRules = (styleElementSheet.rules)? styleElementSheet.rules : styleElementSheet.cssRules;
-		    	var styleElementStyle = styleElementRules[0].style;
-		    	styleElementStyle.display = (styleElementStyle.display == "none")? "list-item" : "none";
-			}
-    	}
+            if (oldClickedElement)
+            {
+                oldClickedElement.className = 
+                    (oldClickedElement.className == "packagelist")? "selectedpackagelist" : "packagelist";
+            }
+            oldClickedElement = clickedElement;
+        }
+
+
+        function showPackage(clickedElement)
+        {
+            hiliteElement(clickedElement);
+
+            var docToChange = parent.overview;
+            var clickedStyleItemId = "style_" + 
+                clickedElement.firstChild.firstChild.data.replace(/\./g, '_');
+            for (var styleItemId in docToChange.allPackageNameListStyles)
+            {
+                var styleElementStyle = docToChange.allPackageNameListStyles[styleItemId];
+                styleElementStyle.display = 
+                    (styleItemId == clickedStyleItemId)? "list-item" : "none";
+            }            
+        }
+
+
+        function showAllPackages(clickedElement)
+        {
+            hiliteElement(clickedElement);
+
+            var docToChange = parent.overview;
+            for (var styleItemId in docToChange.allPackageNameListStyles)
+            {
+                var styleElementStyle = docToChange.allPackageNameListStyles[styleItemId];
+                styleElementStyle.display = "list-item";
+            }
+        }
     </script>
   </head>
 
   <body>
     <h2>DataScript Package: ${rootPackageName}</h2>
+    <ul class="packagelist" onclick="showAllPackages(this);"><li>all packages</li></ul>
 <#list packages as pkg>
-    <ul class="packagelist" onclick="showhidePackage(this);"><li>${pkg}</li></ul>   
+    <ul class="packagelist" onclick="showPackage(this);"><li>${pkg}</li></ul>
 </#list>
   </body>
 </html>

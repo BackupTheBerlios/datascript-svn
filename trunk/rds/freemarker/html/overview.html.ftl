@@ -11,12 +11,62 @@
       <li id="${type.packageNameAsID}"><#rt>
       <#t><a class="${type.style}" href="content/${type.packageName}/${type.name}.html" title="Type: ${type.category}" target="detailedDocu" >${type.name}</a>
       <#lt></li>
-</#list>      
-    </ul>    
+</#list>
+    </ul>
   </body>
-<#list packages as pkg>  
+
+<#list packages as pkg>
   <style id="style_${pkg}" type="text/css">
-  	li#${pkg} { display: list-item; }
-  </style>   
-</#list>      
-</html>    
+    li#${pkg} { display: none<#--list-item;--> }
+  </style>
+</#list>
+
+  <script language="JavaScript">
+    var allPackageNameListStyles = new Object();
+<#list packages as pkg>
+    allPackageNameListStyles.style_${pkg} = getElementStyleFromID("style_${pkg}");
+</#list>
+
+<#--
+
+    /*
+     * returns an array of CSS rules
+     */
+    function getCSS(docToChange, index)
+    {
+        if (!docToChange.styleSheets)
+            return null;
+
+        var theRules = new Array();
+        var styleSheet = docToChange.styleSheets[index];
+        if (styleSheet.cssRules)
+            theRules = styleSheet.cssRules
+        else if (styleSheet.rules)
+            theRules = styleSheet.rules
+        else
+            return null;
+        return theRules;
+    }
+
+-->
+
+    function getElementStyleFromID(styleItemId)
+    {
+<#--
+        theRules = getCSS(document, 0);
+        if (theRules)
+        {
+            return theRules[theRules.length-1].style;
+        }
+        return null;
+-->
+        var styleElement = document.getElementById(styleItemId);
+
+        var styleElementSheet = 
+            (styleElement.sheet)? styleElement.sheet : styleElement.styleSheet;
+        var styleElementRules = 
+            (styleElementSheet.rules)? styleElementSheet.rules : styleElementSheet.cssRules;
+        return styleElementRules[0].style;
+      }
+  </script>
+</html>

@@ -169,6 +169,17 @@ th
 	padding-left:5.5ex;
 }
 
+.selectedpackagelist
+{
+	margin-left:0em;
+	text-align:left;
+	padding-left:1em;
+	height:0.2em;
+	cursor:pointer;
+	list-style-type:disc;
+	font-weight:bold;
+}
+
 .packagelist
 {
 	margin-left:0em;
@@ -176,9 +187,12 @@ th
 	padding-left:1em;
 	height:0.2em;
 	cursor:pointer;
+	list-style-type:circle;
+	font-weight:normal;
 }
 
-* html .packagelist
+* html .packagelist,
+* html .selectedpackagelist
 {  /* nur fuer Internet Explorer */
 	margin-top:0em;
 	margin-bottom:0em;
