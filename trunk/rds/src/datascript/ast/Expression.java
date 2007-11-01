@@ -230,6 +230,7 @@ public class Expression extends TokenAST
         if (obj instanceof Field)
         {
             Field field = (Field) obj;
+            field.setUsedInExpression(true);
             type = TypeReference.resolveType(field.getFieldType());
         }
         else if (obj instanceof Parameter)

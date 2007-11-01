@@ -1,0 +1,160 @@
+package model;
+
+Model
+{
+    int32        numTypes;
+    Type         types[numTypes];
+    
+    int32        numFields;
+    Field        fields[numFields];
+    
+    int32        numExpr;
+    Expression   expressions[numExpr];
+    
+    int32        numPackages;
+    Package      packages[numPackages];
+    
+    int32        numNames;
+    string       names[numNames];
+};
+
+subtype int32 NameId;
+
+Package
+{
+    int32    packageId;
+    NameId   packageName;
+    int32    numImports;
+    Import   imports[numImports];
+    int32    numTypes;
+    TypeId   types[numTypes];
+};
+
+Import
+{
+    int8 dummy;
+};
+
+subtype int32 TypeId;
+
+Type
+{
+    TypeId   typeId;
+    NameId   typeName;
+    Category category;
+    int32    size;
+    TypeInfo info;
+};
+
+enum int8 Category
+{
+    BUILTIN,
+    BITFIELD,
+    ENUM,
+    SUBTYPE,
+    SEQUENCE,
+    UNION    
+};
+
+union TypeInfo
+{
+    BuiltInInfo      builtInInfo      : Type.category == Category.BUILTIN;
+    //BitfieldInfo     bitfieldInfo     : Type.category == Category.BITFIELD;
+    //EnumerationInfo  enumerationInfo  : Type.category == Category.ENUMERATION;
+    //SubtypeInfo      subtypeInfo      : Type.category == Category.SUBTYPE;
+    SequenceInfo     sequenceInfo     : Type.category == Category.SEQUENCE;
+    //UnionInfo        unionInfo        : Type.category == Category.UNION;
+};
+
+enum int8 BuiltInInfo
+{
+    INT8,
+    INT16,
+    INT32,
+    INT64,
+    UINT8,
+    UINT16,
+    UINT32,
+    UINT64,
+    STRING
+};
+
+SequenceInfo
+{
+    int16    numFields;
+    FieldId  fields[numFields];
+};
+
+subtype int32 FieldId;
+subtype int32 TypeRef;
+
+Field
+{
+    int16    pos;
+    NameId   name;
+    TypeRef  type;
+    bit:1    isOptional;
+    bit:1    hasConstraint;
+    bit:1    hasAlignment;
+    bit:1    hasLabel;
+
+align(8):
+    ExpressionId  optional if isOptional;
+    ExpressionId  constraint if hasConstraint;
+    int32         alignment if hasAlignment;
+    ExpressionId  label if hasLabel;    
+};
+
+subtype int32 ExpressionId;
+
+Expression
+{
+    TypeId  type;
+    bit:1   isConstant;
+    bit:7   arity;
+    ExpressionInfo info;
+    Value   value if isConstant;
+};
+
+
+union ExpressionInfo
+{
+    Atom    atom    : Expression.arity == 0;
+    Unary   unary   : Expression.arity == 1;
+    Binary  binary  : Expression.arity == 2;
+    Ternary ternary : Expression.arity == 3;
+};
+
+Atom
+{
+    int8 dummy;
+};
+
+Unary
+{
+    Operator      op;
+    ExpressionId  arg1;
+};
+
+Binary
+{
+    Operator      op;
+    ExpressionId  arg1;
+    ExpressionId  arg2;
+};
+
+Ternary
+{
+    Operator      op;
+    ExpressionId  arg1;
+    ExpressionId  arg2;
+    ExpressionId  arg3;
+};
+
+subtype int64 Value;
+
+enum uint8 Operator
+{
+    PLUS,
+    MINUS
+};

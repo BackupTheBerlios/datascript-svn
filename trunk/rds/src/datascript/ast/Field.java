@@ -50,6 +50,8 @@ import datascript.antlr.util.TokenAST;
 @SuppressWarnings("serial")
 public class Field extends TokenAST
 {
+    private static int nextId;
+    
     private TypeInterface type;
     private TokenAST name; // null is anonymous
     private CompoundType compound; // compound type containing this field
@@ -60,10 +62,12 @@ public class Field extends TokenAST
     private TokenAST fieldLabel;
     private TokenAST fieldOptionalClause;
     private Token documentation;
-
+    private boolean usedInExpression;
+    private int id;
 
     public Field()
     {
+        this.id = nextId++;
     }
 
 
@@ -248,6 +252,23 @@ public class Field extends TokenAST
         if (alignExpr.getValue() == null)
             alignExpr.evaluate();
         return alignExpr.getValue().integerValue().intValue();
+    }
+
+
+    public boolean isUsedInExpression()
+    {
+        return usedInExpression;
+    }
+
+
+    public void setUsedInExpression(boolean usedInExpression)
+    {
+        this.usedInExpression = usedInExpression;
+    }
+    
+    public int getId()
+    {
+        return id;
     }
 
 }

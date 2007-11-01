@@ -70,7 +70,7 @@ public class Extensions implements Iterable<Extension>
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    Extensions(File extDir) throws IOException, InstantiationException,
+    public Extensions(File extDir) throws IOException, InstantiationException,
             IllegalAccessException
     {
         Collection<File> extensionFiles = findExtensionsRecursively(extDir);
