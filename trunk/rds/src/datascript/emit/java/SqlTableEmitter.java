@@ -45,8 +45,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import antlr.collections.AST;
+import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
 import datascript.ast.ArrayType;
+import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
 import datascript.ast.Field;
@@ -130,22 +132,38 @@ public class SqlTableEmitter extends CompoundEmitter
             String retval;
             TypeInterface ftype = TypeReference.resolveType(field.getFieldType());
 
-            if (ftype instanceof StringType)
-                retval = "VARCHAR";
-            else if (ftype instanceof ArrayType)
+            if (ftype instanceof ArrayType)
             {
-                retval = "CHAR(" + ftype.getLength() + ")";
+                int count = ftype.getLength();
+                ftype = TypeReference.resolveType(((ArrayType) ftype).getElementType());
+                if (!(ftype instanceof IntegerType))
+                    retval = "BLOB";
+                else if (((IntegerType)ftype).getType() == DataScriptParserTokenTypes.UINT8)
+                {
+                    retval = "CHAR(" + count + ")";
+                }
+                else
+                    retval = "BLOB";
+
+            }
+            else if (ftype instanceof BitFieldType)
+            {
+                if (((BitFieldType)ftype).getLength() < 64)
+                    retval = "INTEGER";
+                else
+                    retval = "BLOB";
+            }
+            else if ((ftype instanceof SqlIntegerType) || (ftype instanceof IntegerType))
+            {
+                retval = "INTEGER";
+            }
+            else if (ftype instanceof StringType)
+            {
+                retval = "VARCHAR";
             }
             else
             {
-                int size = getTypeSize();
-                switch(size)
-                {
-                    case 64:
-                        retval = "INTEGER(" + size/8 + ")";
-                    default:
-                        retval = "BLOB";
-                }
+                retval = "BLOB";
             }
             return retval;
         }

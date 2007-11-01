@@ -66,8 +66,8 @@ public class ${name}
         StringBuilder query = new StringBuilder("CREATE TABLE ");
         query.append(__tableName);
 <#list fields as field>
-        query.append("<#if field_index == 0>(<#else>, </#if>${field.name} <#rt>
-    ${field.sqlType}<#t>
+        query.append("<#if field_index == 0>(<#else>, </#if><#rt>
+    ${field.name} ${field.sqlType}<#t>
     <#lt> NOT NULL ${field.sqlConstraint}");
 </#list>
 <#assign constraint = sqlConstraint>

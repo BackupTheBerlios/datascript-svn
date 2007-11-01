@@ -8,6 +8,7 @@ package datascript.test;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -158,24 +159,62 @@ public class SqlTableTest extends TestCase
         Connection dbc = db.getConnection();
         Statement st = dbc.createStatement();
 
-        int rows = st.executeUpdate("insert into levels values ('test1', 1, 'blob1')");
+        int rows = st.executeUpdate("insert into levels values ('test1', 1, 'blob1', 123, 1234567, 3, x'0505050505')");
         assertEquals(rows, 1);
 
-        rows = st.executeUpdate("insert into levels values ('test1', 2, 'blob2')");
+        rows = st.executeUpdate("insert into levels values ('test1', 2, 'blob2', 123, 1234567, 3, x'0505050505')");
         assertEquals(rows, 1);
 
-        rows = st.executeUpdate("insert into levels values ('test1', 3, 'blob3')");
+        rows = st.executeUpdate("insert into levels values ('test1', 3, 'blob3', 123, 1234567, 3, x'0505050505')");
         assertEquals(rows, 1);
 
         try
         {
-            rows = st.executeUpdate("insert into levels values ('test1', 1, 'blob4')");
+            rows = st.executeUpdate("insert into levels values ('test1', 1, 'blob4', 123, 1234567, 3, x'0505050505')");
             assertTrue(false);
         }
         catch (SQLException exc)
         {
-            assertEquals(exc.getMessage(), "column levelNr is not unique");
+            assertEquals(exc.getMessage(), "PRIMARY KEY must be unique" /*"column levelNr is not unique"*/);
         }
+
+        db.close();
+    }
+
+
+    public void testTypes() throws Exception
+    {
+        SqlTestDb db = new SqlTestDb(fileName, Mode.WRITE);
+        DatabaseMetaData metaData = db.getConnection().getMetaData();
+
+        ResultSet columns = metaData.getColumns(null, null, "levels", "testName");
+        String typeName = columns.getString("TYPE_NAME");
+        assertEquals(typeName, "VARCHAR");
+        columns.close();
+
+        columns = metaData.getColumns(null, null, "levels", "levelNr");
+        typeName = columns.getString("TYPE_NAME");
+        assertEquals(typeName, "INTEGER");
+
+        columns = metaData.getColumns(null, null, "levels", "level");
+        typeName = columns.getString("TYPE_NAME");
+        assertEquals(typeName, "BLOB");
+
+        columns = metaData.getColumns(null, null, "levels", "val1");
+        typeName = columns.getString("TYPE_NAME");
+        assertEquals(typeName, "CHAR(3)");
+
+        columns = metaData.getColumns(null, null, "levels", "val2");
+        typeName = columns.getString("TYPE_NAME");
+        assertEquals(typeName, "INTEGER");
+
+        columns = metaData.getColumns(null, null, "levels", "val3");
+        typeName = columns.getString("TYPE_NAME");
+        assertEquals(typeName, "INTEGER");
+
+        columns = metaData.getColumns(null, null, "levels", "val4");
+        typeName = columns.getString("TYPE_NAME");
+        assertEquals(typeName, "BLOB");
 
         db.close();
     }
@@ -184,14 +223,12 @@ public class SqlTableTest extends TestCase
     public void testInsertionTableReference() throws Exception
     {
         SqlTestDb db = new SqlTestDb(fileName, Mode.WRITE);
-        Connection dbc = db.getConnection();
-        Statement st = dbc.createStatement();
+        Statement st = db.getConnection().createStatement();
 
-        int rows = st
-                .executeUpdate("insert into moreLevels values ('test2', 1, 'blob1')");
+        int rows = st.executeUpdate("insert into moreLevels values ('test2', 1, 'blob1', 12345, 1234567, 3, x'0505050505')");
         assertEquals(rows, 1);
 
-        rows = st.executeUpdate("insert into moreLevels values ('test2', 2, 'blob2')");
+        rows = st.executeUpdate("insert into moreLevels values ('test2', 2, 'blob2', 12345, 1234567, 3, x'0505050505')");
         assertEquals(rows, 1);
 
         db.close();

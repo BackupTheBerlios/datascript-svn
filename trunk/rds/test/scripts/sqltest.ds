@@ -30,8 +30,12 @@ sql_database SqlTestDb
     sql_table LevelTable
     {
         string  testName;
-        uint8   levelNr[3]      sql "PRIMARY KEY";
+        uint32  levelNr      sql "PRIMARY KEY";
         Level   level;
+        uint8   val1[3];
+        int32   val2;
+        bit<3>  val3;
+        bit<9>  val4[5];
     } levels;
 
     /** Another table instance of the same type. */
