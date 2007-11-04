@@ -94,4 +94,6 @@ public interface TypeInterface
     String getName();
 
     Expression getLengthExpression();
+    
+    int getId();
 }

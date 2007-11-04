@@ -54,6 +54,7 @@ import datascript.antlr.util.TokenAST;
 @SuppressWarnings("serial")
 public class FunctionType extends TokenAST implements TypeInterface
 {
+    private int id;
     private String name;
     private CompoundType owner;
     private TypeInterface returnType;
@@ -62,6 +63,7 @@ public class FunctionType extends TokenAST implements TypeInterface
 
     public FunctionType()
     {
+        id = TypeRegistry.registerType(this);
     }
 
 
@@ -163,5 +165,12 @@ public class FunctionType extends TokenAST implements TypeInterface
     public Expression getLengthExpression()
     {
         return null;
+    }
+
+
+    @Override
+    public int getId()
+    {
+        return id;
     }
 }

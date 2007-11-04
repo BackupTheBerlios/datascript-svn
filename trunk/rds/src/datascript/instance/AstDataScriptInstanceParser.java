@@ -36,7 +36,7 @@ public class AstDataScriptInstanceParser implements DataScriptInstanceParser
         TypeInterface type = rootPackage.getType(typeName);
         if (type instanceof CompoundType)
         {
-            int typeId = getId(type);
+            int typeId = type.getId();
             handler.startInstance(typeId);
             parse(type);
             handler.endInstance(typeId);
@@ -136,9 +136,4 @@ public class AstDataScriptInstanceParser implements DataScriptInstanceParser
         this.handler = handler;
     }
     
-    private int getId(TypeInterface type)
-    {
-        return 0;
-    }
-
 }

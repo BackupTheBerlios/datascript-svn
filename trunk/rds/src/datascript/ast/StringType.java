@@ -48,6 +48,13 @@ import antlr.collections.AST;
 @SuppressWarnings("serial")
 public class StringType extends TokenAST implements TypeInterface
 {
+    private int id;
+    
+    public StringType()
+    {
+        id = TypeRegistry.registerType(this);        
+    }
+    
     public IntegerValue sizeof(Context ctxt)
     {
         throw new ComputeError("sizeof String not known");
@@ -114,6 +121,13 @@ public class StringType extends TokenAST implements TypeInterface
     public Package getPackage()
     {
         return Package.BUILTIN;
+    }
+
+
+    @Override
+    public int getId()
+    {
+        return id;
     }
 
 }

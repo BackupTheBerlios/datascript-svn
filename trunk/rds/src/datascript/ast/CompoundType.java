@@ -49,6 +49,8 @@ import datascript.antlr.util.TokenAST;
 
 abstract public class CompoundType extends TokenAST implements TypeInterface
 {
+    protected int id;
+    
     protected Vector<Field> fields = new Vector<Field>();
     private Vector<FunctionType> functions = new Vector<FunctionType>();
     private Vector<Parameter> parameters = new Vector<Parameter>();
@@ -78,6 +80,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
 
     protected CompoundType()
     {
+        id = TypeRegistry.registerType(this);
     }
     
     public CompoundType getParent()
@@ -290,5 +293,11 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     public List<FunctionType> getFunctions()
     {
         return functions;
+    }
+    
+    @Override
+    public int getId()
+    {
+        return id;
     }
 }

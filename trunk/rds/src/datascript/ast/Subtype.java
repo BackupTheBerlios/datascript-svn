@@ -50,12 +50,14 @@ import datascript.antlr.util.TokenAST;
 @SuppressWarnings("serial")
 public class Subtype extends TokenAST implements TypeInterface
 {
+    private int id;
     private String name;
     private Package pkg;
 
 
     public Subtype()
     {
+        id = TypeRegistry.registerType(this);
     }
 
 
@@ -152,5 +154,12 @@ public class Subtype extends TokenAST implements TypeInterface
     public void setPackage(Package pkg)
     {
         this.pkg = pkg;
+    }
+
+
+    @Override
+    public int getId()
+    {
+        return id;
     }
 }

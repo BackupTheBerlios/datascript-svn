@@ -50,6 +50,7 @@ import datascript.antlr.util.TokenAST;
 @SuppressWarnings("serial")
 public class ConstType extends TokenAST implements TypeInterface
 {
+    private int id;
     private String name;
     private Package pkg;
     private Scope scope;
@@ -57,6 +58,7 @@ public class ConstType extends TokenAST implements TypeInterface
 
     public ConstType()
     {
+        id = TypeRegistry.registerType(this);
     }
 
 
@@ -169,6 +171,13 @@ public class ConstType extends TokenAST implements TypeInterface
         this.scope = scope;
         this.pkg = pkg;
         scope.setOwner(this);
+    }
+
+
+    @Override
+    public int getId()
+    {
+        return id;
     }
 
 }

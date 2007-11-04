@@ -49,8 +49,13 @@ import antlr.collections.AST;
 public class IntegerType extends TokenAST implements TypeInterface
 {
     static IntegerType integerType = new IntegerType();
+    private int id;
 
-
+    protected IntegerType()
+    {
+        id = TypeRegistry.registerType(this);        
+    }
+    
     public IntegerValue sizeof(Context ctxt)
     {
         throw new ComputeError(
@@ -115,5 +120,12 @@ public class IntegerType extends TokenAST implements TypeInterface
     public Package getPackage()
     {
         return Package.BUILTIN;
+    }
+
+
+    @Override
+    public int getId()
+    {
+        return id;
     }
 }

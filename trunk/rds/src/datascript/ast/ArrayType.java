@@ -47,13 +47,15 @@ import antlr.collections.AST;
 @SuppressWarnings("serial")
 public class ArrayType extends TokenAST implements TypeInterface
 {
+    private int id;
     private Scope scope;
     private int length;
     private Expression lengthExpr;
-
+   
 
     public ArrayType()
     {
+        id = TypeRegistry.registerType(this);
     }
 
 
@@ -147,5 +149,12 @@ public class ArrayType extends TokenAST implements TypeInterface
     public Package getPackage()
     {
         return getElementType().getPackage();
+    }
+
+
+    @Override
+    public int getId()
+    {
+        return id;
     }
 }

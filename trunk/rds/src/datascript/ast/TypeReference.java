@@ -257,4 +257,11 @@ public class TypeReference extends TokenAST implements TypeInterface,
     {
         this.hasArguments = hasArguments;
     }
+
+
+    @Override
+    public int getId()
+    {
+        return refType.getId();
+    }
 }

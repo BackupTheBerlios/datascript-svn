@@ -50,6 +50,12 @@ public class BooleanType extends TokenAST implements TypeInterface
 {
     static BooleanType booleanType = new BooleanType();
 
+    private int id;
+
+    private BooleanType()
+    {
+        id = TypeRegistry.registerType(this);      
+    }
 
     public IntegerValue sizeof(Context ctxt)
     {
@@ -113,5 +119,12 @@ public class BooleanType extends TokenAST implements TypeInterface
     public Package getPackage()
     {
         return Package.BUILTIN;
+    }
+
+
+    @Override
+    public int getId()
+    {
+        return id;
     }
 }

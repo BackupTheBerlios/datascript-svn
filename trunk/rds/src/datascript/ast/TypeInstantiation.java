@@ -53,6 +53,8 @@ import datascript.antlr.util.ToolContext;
 @SuppressWarnings("serial")
 public class TypeInstantiation extends TokenAST implements TypeInterface
 {
+    private int id;
+    
     /** Reference to a compound type with a parameter list. */
     private CompoundType compound;
 
@@ -61,6 +63,7 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
 
     public TypeInstantiation()
     {
+        id = TypeRegistry.registerType(this);
     }
 
 
@@ -209,6 +212,13 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
     public Package getPackage()
     {
         return getBaseType().getPackage();
+    }
+
+
+    @Override
+    public int getId()
+    {
+        return id;
     }
 
 }

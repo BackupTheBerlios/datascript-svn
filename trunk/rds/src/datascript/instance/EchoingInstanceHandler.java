@@ -2,9 +2,36 @@ package datascript.instance;
 
 import java.math.BigInteger;
 
+import datascript.ast.Field;
+import datascript.ast.FieldRegistry;
+import datascript.ast.TypeRegistry;
+
 public class EchoingInstanceHandler implements DataScriptInstanceHandler
 {
-
+    int indentLevel = 0;
+    
+    private String indent()
+    {
+        StringBuilder buffer = new StringBuilder();
+        for (int i = 0; i < indentLevel; i++)
+        {
+            buffer.append("    ");
+        }
+        return buffer.toString();
+    }
+    
+    private String getFieldName(int fieldId)
+    {
+        Field field = FieldRegistry.getField(fieldId);
+        String fieldName = field.getName();
+        return fieldName;
+    }
+    
+    private void echo(String msg)
+    {
+        System.out.println(indent() + msg);
+    }
+    
     @Override
     public void bigIntegerField(int fieldId, BigInteger value)
     {
@@ -15,29 +42,32 @@ public class EchoingInstanceHandler implements DataScriptInstanceHandler
     @Override
     public void endArray(int fieldId)
     {
-        System.out.println("end array " + fieldId);
+        indentLevel--;
+        echo("end array " + getFieldName(fieldId));
 
     }
 
     @Override
     public void endArrayElement(int fieldId)
     {
-        System.out.println("end array element " + fieldId);
+        indentLevel--;
+        echo("end array element " + getFieldName(fieldId));
 
     }
 
     @Override
     public void endCompound(int fieldId)
     {
-        System.out.println("end compound " + fieldId);
-
+        indentLevel--;
+        echo("end compound " + getFieldName(fieldId));        
     }
 
     @Override
     public void endInstance(int typeId)
     {
-        System.out.println("start instance");
-
+        indentLevel--;
+        String typeName = TypeRegistry.getType(typeId).getName();
+        echo("end instance " + typeName);
     }
 
     @Override
@@ -50,32 +80,36 @@ public class EchoingInstanceHandler implements DataScriptInstanceHandler
     @Override
     public void integerField(int fieldId, long value)
     {
-        System.out.println("integerField = " + value);
+        echo("integerField = " + value);
     }
 
     @Override
     public void startArray(int fieldId)
     {
-        System.out.println("start array " + fieldId);
-
+        echo("start array " + getFieldName(fieldId));
+        indentLevel++;
     }
 
     @Override
     public void startArrayElement(int fieldId)
     {
-        System.out.println("start array element " + fieldId);
+        echo("start array element " + getFieldName(fieldId));
+        indentLevel++;
     }
 
     @Override
     public void startCompound(int fieldId)
     {
-        System.out.println("start compound " + fieldId);
+        echo("start compound " + getFieldName(fieldId));
+        indentLevel++;
     }
 
     @Override
     public void startInstance(int typeId)
     {
-        System.out.println("start instance ");
+        String typeName = TypeRegistry.getType(typeId).getName();
+        echo("start instance " + typeName);
+        indentLevel++;
     }
 
     @Override

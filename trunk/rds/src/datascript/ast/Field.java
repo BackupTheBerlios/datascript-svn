@@ -50,8 +50,6 @@ import datascript.antlr.util.TokenAST;
 @SuppressWarnings("serial")
 public class Field extends TokenAST
 {
-    private static int nextId;
-    
     private TypeInterface type;
     private TokenAST name; // null is anonymous
     private CompoundType compound; // compound type containing this field
@@ -67,7 +65,7 @@ public class Field extends TokenAST
 
     public Field()
     {
-        this.id = nextId++;
+        id = FieldRegistry.registerField(this);
     }
 
 

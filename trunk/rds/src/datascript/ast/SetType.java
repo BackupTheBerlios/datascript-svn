@@ -57,6 +57,7 @@ public class SetType extends TokenAST implements TypeInterface
 
     protected final HashMap<Object, Value> items = new HashMap<Object, Value>();
 
+    protected int id;
     protected TypeInterface type;
     protected Package pkg;
 
@@ -67,7 +68,7 @@ public class SetType extends TokenAST implements TypeInterface
 
     public SetType()
     {
-
+        id = TypeRegistry.registerType(this);
     }
 
 
@@ -170,6 +171,13 @@ public class SetType extends TokenAST implements TypeInterface
     public Package getPackage()
     {
         return pkg;
+    }
+
+
+    @Override
+    public int getId()
+    {
+        return id;
     }
 
 }
