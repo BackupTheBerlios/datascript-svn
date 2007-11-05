@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import lines.LineGeometries;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
@@ -440,13 +442,23 @@ public class DataScriptInstanceTool implements Parameters
         return retVal;
     }
     
-    private void parseInstance() throws IOException
+    private void parseInstance() throws Exception
     {
         FileBitStreamReader reader = new FileBitStreamReader(instanceFileName);
         AstDataScriptInstanceParser parser = new AstDataScriptInstanceParser(reader);
-        parser.setInstanceHandler(new EchoingInstanceHandler());
+        parser.setInstanceHandler(new LineGeometriesInstanceHandler());
+        long start = System.currentTimeMillis();
         parser.parse(typeName);
+        long stop = System.currentTimeMillis();
+        System.out.println((stop - start) + " ms");
         reader.close();
+        System.out.println();
+        
+        FileBitStreamReader reader2 = new FileBitStreamReader(instanceFileName);
+        start = System.currentTimeMillis();
+        LineGeometries geometries = new LineGeometries(reader2);
+        stop = System.currentTimeMillis();
+        System.out.println((stop - start) + " ms");
     }
     
 

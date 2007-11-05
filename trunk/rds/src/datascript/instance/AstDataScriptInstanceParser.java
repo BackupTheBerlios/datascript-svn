@@ -10,6 +10,7 @@ import datascript.ast.Field;
 import datascript.ast.Package;
 import datascript.ast.StdIntegerType;
 import datascript.ast.TypeInterface;
+import datascript.ast.TypeReference;
 import datascript.runtime.io.BitStreamReader;
 import datascript.runtime.io.ByteArrayBitStreamReader;
 
@@ -61,6 +62,11 @@ public class AstDataScriptInstanceParser implements DataScriptInstanceParser
     {
         int fieldId = field.getId();
         TypeInterface type = field.getFieldType();
+        if (type instanceof TypeReference)
+        {
+            type = TypeReference.resolveType(type);
+            
+        }
         if (type instanceof CompoundType)
         {
             CompoundType compound = (CompoundType) type;

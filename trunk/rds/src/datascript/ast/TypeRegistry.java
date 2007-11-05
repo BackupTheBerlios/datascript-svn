@@ -10,7 +10,7 @@ public class TypeRegistry
     
     public static int registerType(TypeInterface type)
     {
-        int id = numTypes--;
+        int id = numTypes++;
         idToTypeMap.put(id, type);
         return id;        
     }

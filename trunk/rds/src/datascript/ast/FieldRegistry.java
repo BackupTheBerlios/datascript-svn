@@ -10,7 +10,7 @@ public class FieldRegistry
     
     public static int registerField(Field field)
     {
-        int id = numFields--;
+        int id = numFields++;
         idToFieldMap.put(id, field);
         return id;        
     }

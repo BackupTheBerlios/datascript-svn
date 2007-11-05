@@ -80,13 +80,13 @@ public class EchoingInstanceHandler implements DataScriptInstanceHandler
     @Override
     public void integerField(int fieldId, long value)
     {
-        echo("integerField = " + value);
+        echo("integerField = " + value + ", id = " + fieldId);
     }
 
     @Override
     public void startArray(int fieldId)
     {
-        echo("start array " + getFieldName(fieldId));
+        echo("start array " + getFieldName(fieldId) + " id = " + fieldId);
         indentLevel++;
     }
 
