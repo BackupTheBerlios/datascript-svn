@@ -4,6 +4,12 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import datascript.runtime.array.ObjectArray;
+
+import lines.LineGeometries;
+import lines.LineGeometry;
+import lines.Offset;
+
 public class LineGeometriesInstanceHandler implements DataScriptInstanceHandler
 {
     private static final int GEOMETRIES = 1;
@@ -142,6 +148,34 @@ public class LineGeometriesInstanceHandler implements DataScriptInstanceHandler
     {
         // TODO Auto-generated method stub
 
+    }
+    
+    public List<Line> decode(LineGeometries geometries)
+    {
+        ArrayList<Line> lines = new ArrayList<Line>();
+        for (int i = 0; i < geometries.getNumGeometries(); i++)
+        {
+            LineGeometry geometry = geometries.getGeometries().elementAt(i);
+            int numPoints = geometry.getNumPoints();
+            Line line = new Line(numPoints+1);
+            Point point = new Point();
+            point.x = geometry.getAnchor().getX();
+            point.y = geometry.getAnchor().getY();
+            line.add(point);
+            Point lastPoint = point;
+            ObjectArray<Offset> oa = geometry.getOffsets();
+            for (int j = 0; j < numPoints; j++)
+            {
+                Offset offset = oa.elementAt(j);
+                point = new Point();
+                point.x = lastPoint.x + offset.getDx();
+                point.y = lastPoint.y + offset.getDy();
+                line.add(point);
+                lastPoint = point;
+            }
+            lines.add(line);
+        }
+        return lines;
     }
 
 }

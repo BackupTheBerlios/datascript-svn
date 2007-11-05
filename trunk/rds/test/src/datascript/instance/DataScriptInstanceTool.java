@@ -73,6 +73,7 @@ import datascript.ast.DataScriptException;
 import datascript.ast.Package;
 import datascript.ast.ParserException;
 import datascript.ast.Scope;
+import datascript.runtime.io.ByteArrayBitStreamReader;
 import datascript.runtime.io.FileBitStreamReader;
 import datascript.tools.Extension;
 import datascript.tools.Extensions;
@@ -82,7 +83,7 @@ import datascript.tools.Parameters;
 
 public class DataScriptInstanceTool implements Parameters
 {
-    private static final String VERSION = "rds 0.17.1 (1 Nov 2007)";
+    private static final String VERSION = "edsi 0.17.1 (1 Nov 2007)";
 
     private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
@@ -444,9 +445,13 @@ public class DataScriptInstanceTool implements Parameters
     
     private void parseInstance() throws Exception
     {
-        FileBitStreamReader reader = new FileBitStreamReader(instanceFileName);
+        //FileBitStreamReader reader = new FileBitStreamReader(instanceFileName);
+        LineCreator lineCreator = new LineCreator();
+        byte[] blob = lineCreator.getLines(10000, 5);
+        ByteArrayBitStreamReader reader = new ByteArrayBitStreamReader(blob);
         AstDataScriptInstanceParser parser = new AstDataScriptInstanceParser(reader);
-        parser.setInstanceHandler(new LineGeometriesInstanceHandler());
+        LineGeometriesInstanceHandler handler = new LineGeometriesInstanceHandler();
+        parser.setInstanceHandler(handler);
         long start = System.currentTimeMillis();
         parser.parse(typeName);
         long stop = System.currentTimeMillis();
@@ -454,11 +459,18 @@ public class DataScriptInstanceTool implements Parameters
         reader.close();
         System.out.println();
         
-        FileBitStreamReader reader2 = new FileBitStreamReader(instanceFileName);
+        ByteArrayBitStreamReader reader2 = new ByteArrayBitStreamReader(blob);
         start = System.currentTimeMillis();
         LineGeometries geometries = new LineGeometries(reader2);
         stop = System.currentTimeMillis();
         System.out.println((stop - start) + " ms");
+        
+        start = System.currentTimeMillis();
+        handler.decode(geometries);
+        stop = System.currentTimeMillis();
+        System.out.println((stop - start) + " ms");
+        
+        
     }
     
 

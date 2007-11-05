@@ -262,6 +262,8 @@
     <javac destdir="${build}/test/classes" debug="on">
       <classpath>
         <pathelement path="${jar}/rds-runtime.jar" />
+        <pathelement path="${jar}/rds.jar" />
+        <pathelement path="${lib}/antlr.jar" />
       </classpath>
       <src path="${test.gen}" />
       <src path="${test}" />

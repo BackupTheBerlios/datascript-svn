@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import lines.LineGeometries;
 import datascript.runtime.io.BitStreamWriter;
+import datascript.runtime.io.ByteArrayBitStreamWriter;
 import datascript.runtime.io.FileBitStreamReader;
 import datascript.runtime.io.FileBitStreamWriter;
 
@@ -57,6 +58,29 @@ public class LineCreator implements Runnable
             writer.writeShort(10 * i);
             writer.writeShort(-10 * i);
         }        
+    }
+    
+    public byte[] getLines(int numLines, int numPoints)
+    {
+        try
+        {
+            this.numLines = numLines;
+            this.numPoints = numPoints;
+            ByteArrayBitStreamWriter bwriter = new ByteArrayBitStreamWriter();
+            writer = bwriter;
+            writer.writeInt(numLines);
+            for (int i = 0; i < numLines; i++)
+            {
+                writeLine();
+            }
+            bwriter.close();
+            return bwriter.toByteArray();
+        }
+        catch (Exception exc)
+        {
+            throw new RuntimeException(exc);
+        }
+
     }
 
     public static void main(String[] args)
