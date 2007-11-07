@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="build/gen"/>
 	<classpathentry kind="src" output="build/test/classes" path="test/src"/>
 	<classpathentry kind="src" output="build/test/classes" path="build/test/gen"/>
+	<classpathentry kind="src" path="services/all"/>
 	<classpathentry kind="lib" path="lib/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc.jar"/>

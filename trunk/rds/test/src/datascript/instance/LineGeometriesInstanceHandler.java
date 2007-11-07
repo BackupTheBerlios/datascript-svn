@@ -1,5 +1,8 @@
 package datascript.instance;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -178,4 +181,31 @@ public class LineGeometriesInstanceHandler implements DataScriptInstanceHandler
         return lines;
     }
 
+    public List<Line> decodeManually(byte[] blob) throws IOException
+    {
+        ByteArrayInputStream bais = new ByteArrayInputStream(blob);
+        DataInputStream is = new DataInputStream(bais);
+        int numGeometries = is.readInt();
+        List<Line> lines = new ArrayList<Line>(numGeometries);
+        for (int i = 0; i < numGeometries; i++)
+        {
+            int numPoints = is.readShort();
+            Line line = new Line(numPoints+1);
+            Point point = new Point();
+            point.x = is.readInt();
+            point.y = is.readInt();
+            line.add(point);
+            Point lastPoint = point;
+            for (int j = 0; j < numPoints; j++)
+            {
+                point = new Point();
+                point.x = lastPoint.x + is.readShort();
+                point.y = lastPoint.y + is.readShort();
+                line.add(point);
+                lastPoint = point;
+            }
+            lines.add(line);
+        }
+        return lines;
+    }
 }

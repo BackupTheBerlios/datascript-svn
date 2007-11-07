@@ -82,9 +82,6 @@
 
   <property name="jar" value="${build}/jar" />
   <property name="classes" value="${build}/classes" />
-  <property name="backend" value="${src}/datascript/backend" />
-  <property name="ext" value="${basedir}/ext" />
-
 
   <taskdef name="rds" classname="datascript.ant.RdsTask">
     <classpath>
@@ -92,7 +89,7 @@
     </classpath>
   </taskdef>
 
-  <target name="clean" depends="extensions.clean" description="removes all generated datascript Java sources and classes">
+  <target name="clean" description="removes all generated datascript Java sources and classes">
     <delete dir="${build}" />
   </target>
 
@@ -111,7 +108,6 @@
     <mkdir dir="${build}/examples/gen" />
     <mkdir dir="${gen}" />
     <mkdir dir="${jar}" />
-    <mkdir dir="${ext}" />
     <mkdir dir="${classes}" />
     <mkdir dir="${antlr.out}" />
     <copy file="${lib}/antlr.jar" todir="${jar}" />
@@ -175,10 +171,6 @@
   </target>
 
 
-  <target name="extensions.clean" description="removes all generated extension jar files">
-    <delete dir="${ext}" />
-  </target>
-
 
   <target name="compile" depends="prepare, antlr" description="Compiles all project files">
     <javac destdir="${classes}" debug="on" target="1.5">
@@ -207,30 +199,38 @@
       </fileset>
     </jar>
 
-    <jar destfile="${ext}/rds_javaExtension.jar" manifest="${backend}/java/Manifest.txt">
+    <jar destfile="${jar}/rds_javaExtension.jar" 
+      manifest="${src}/datascript/emit/java/Manifest.txt">
       <fileset dir="${classes}">
-        <include name="datascript/backend/java/**" />
         <include name="datascript/emit/java/**" />
       </fileset>
-        <fileset dir="${basedir}">
-          <include name="freemarker/java/**.ftl" />
-        </fileset>
+      <fileset dir="${basedir}">
+        <include name="freemarker/java/**.ftl" />
+      </fileset>
+      <fileset dir="${basedir}/services/java">
+        <include name="META-INF/**"/>
+      </fileset>
     </jar>
 
-    <jar destfile="${ext}/rds_htmlExtension.jar" manifest="${backend}/html/Manifest.txt">
+    <jar destfile="${jar}/rds_htmlExtension.jar" 
+      manifest="${src}/datascript/emit/html/Manifest.txt">
       <fileset dir="${classes}">
-        <include name="datascript/backend/html/**" />
         <include name="datascript/emit/html/**" />
       </fileset>
       <fileset dir="${basedir}">
         <include name="freemarker/html/**.ftl" />
       </fileset>
+      <fileset dir="${basedir}/services/html">
+        <include name="META-INF/**"/>
+      </fileset>
     </jar>
 
-    <jar destfile="${ext}/rds_xmlExtension.jar" manifest="${backend}/xml/Manifest.txt">
+    <jar destfile="${jar}/rds_xmlExtension.jar" manifest="${src}/datascript/emit/xml/Manifest.txt">
       <fileset dir="${classes}">
-        <include name="datascript/backend/xml/**" />
         <include name="datascript/emit/xml/**" />
+      </fileset>
+      <fileset dir="${basedir}/services/xml">
+        <include name="META-INF/**"/>
       </fileset>
     </jar>
 
@@ -244,7 +244,7 @@
         pkg="ds"
         out="${test.gen}"
         srcfile="bits.ds"
-        ext="${ext}">
+        ext="${jar}">
       <classpath>
         <pathelement path="${jar}/rds.jar"/>
         <pathelement path="${jar}/rds-runtime.jar"/>
@@ -253,7 +253,7 @@
     </rds-->
 
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} bits.ds" />
+      <arg line="-c -out ${test.gen} -src ${ds.src} bits.ds" />
     </java>
   </target>
 
@@ -295,7 +295,7 @@
 
   <target name="sqltest.gen" depends="jar" description="Generates parser for test cases" unless="sqltest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  sqltest.ds" />
+      <arg line="-c -out ${test.gen} -src  ${ds.src}  sqltest.ds" />
     </java>
   </target>
 
@@ -306,7 +306,7 @@
 
   <target name="sqlParamTest.gen" depends="jar" description="Generates parser for test cases" unless="sqlparamtest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} sqlParameter.ds" />
+      <arg line="-c -out ${test.gen} -src ${ds.src} sqlParameter.ds" />
     </java>
   </target>
 
@@ -317,7 +317,7 @@
 
   <target name="tableImportTest.gen" depends="jar" description="Generates parser for test cases" unless="tableimporttest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} tableimport/client.ds" />
+      <arg line="-c -out ${test.gen} -src ${ds.src} tableimport/client.ds" />
     </java>
   </target>
 
@@ -327,7 +327,7 @@
 
   <target name="alignment.gen" depends="jar" description="Generates parser for test cases" unless="bits.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} alignment.ds" />
+      <arg line="-c -out ${test.gen} -src ${ds.src} alignment.ds" />
     </java>
   </target>
 
@@ -337,13 +337,13 @@
 
   <target name="functest.gen" depends="jar" description="Generates parser for test cases" unless="sqltest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  func.ds" />
+      <arg line="-c -out ${test.gen} -src  ${ds.src}  func.ds" />
     </java>
   </target>
 
   <target name="labeltest.gen" depends="jar" description="Generates parser for test cases" unless="sqltest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  label.ds" />
+      <arg line="-c -out ${test.gen} -src  ${ds.src}  label.ds" />
     </java>
   </target>
 
@@ -354,7 +354,7 @@
 
   <target name="lines.gen" depends="jar" description="Generates parser for test cases" unless="sqltest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  lines.ds" />
+      <arg line="-c -out ${test.gen} -src  ${ds.src}  lines.ds" />
     </java>
   </target>
 
@@ -368,10 +368,10 @@
   -->
   <target name="pkgtest.gen" depends="jar" description="Generates parser for test cases" unless="pkgtest.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  child.ds" />
+      <arg line="-c -out ${test.gen} -src  ${ds.src}  child.ds" />
     </java>
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  pkg/top.ds" />
+      <arg line="-c -out ${test.gen} -src  ${ds.src}  pkg/top.ds" />
     </java>
   </target>
 
@@ -383,13 +383,13 @@
 
   <target name="innerunion.gen" depends="jar" description="Generates parser for test cases">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src  ${ds.src}  innerunion.ds" />
+      <arg line="-c -out ${test.gen} -src  ${ds.src}  innerunion.ds" />
     </java>
   </target>
   
   <target name="gif.gen" depends="jar" description="Generates parser for examples" unless="gif.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -ext ${ext} -src ${ds.src} gif.ds" />
+      <arg line="-c -out ${test.gen} -src ${ds.src} gif.ds" />
     </java>
   </target>
 
@@ -414,7 +414,7 @@
        pkg="psi/common"
        out="${test.gen}"
        srcfile="psi\routing\routing.ds"
-       ext="${ext}"   
+       ext="${jar}"   
        clean="false">
 
         <dependencies>

@@ -44,7 +44,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
+
+import javax.imageio.spi.ServiceRegistry;
 
 import lines.LineGeometries;
 
@@ -74,9 +78,7 @@ import datascript.ast.Package;
 import datascript.ast.ParserException;
 import datascript.ast.Scope;
 import datascript.runtime.io.ByteArrayBitStreamReader;
-import datascript.runtime.io.FileBitStreamReader;
 import datascript.tools.Extension;
-import datascript.tools.Extensions;
 import datascript.tools.Parameters;
 
 
@@ -85,7 +87,6 @@ public class DataScriptInstanceTool implements Parameters
 {
     private static final String VERSION = "edsi 0.17.1 (1 Nov 2007)";
 
-    private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
     private TokenAST rootNode;
     private DataScriptParser parser;
@@ -94,7 +95,7 @@ public class DataScriptInstanceTool implements Parameters
 
     private final DataScriptEmitter emitter = new DataScriptEmitter();
 
-    private Extensions rdsExtensions;
+    private List<Extension> extensions;    
 
     /* Properties for command line parameters */
     private final Options rdsOptions = new Options();
@@ -256,13 +257,16 @@ public class DataScriptInstanceTool implements Parameters
 	// normalize slashes and backslashes
         fileName = new File(args[args.length-1]).getPath();
 
-        File myExtDir = new File(cli.getOptionValue("ext", "ext/"));
-        rdsExtensions = new Extensions(myExtDir);
-
-        for (Extension extension : rdsExtensions)
+        extensions = new ArrayList<Extension>();
+        ServiceLoader<Extension> loader = ServiceLoader.load(Extension.class);
+        Iterator<Extension> it = loader.iterator();
+        while (it.hasNext())
         {
+            Extension extension = it.next();
+            extensions.add(extension);
             extension.getOptions(rdsOptions);
         }
+        
 
         CmdLineParser parser = new CmdLineParser();
         try
@@ -275,7 +279,7 @@ public class DataScriptInstanceTool implements Parameters
             hf.printHelp(pe.getMessage(), rdsOptions);
         }
 
-        for (Extension extension : rdsExtensions)
+        for (Extension extension : extensions)
         {
             extension.setParameter(this);
         }
@@ -333,13 +337,7 @@ public class DataScriptInstanceTool implements Parameters
         if (rootNode == null)
             return;
 
-        if (rdsExtensions == null || rdsExtensions.size() <= 0)
-        {
-            System.out.println("No backends found in "
-                    + EXT_DIR.getAbsolutePath() + ", nothing emitted.");
-            return;
-        }
-        for (Extension extension : rdsExtensions)
+        for (Extension extension : extensions)
         {
             extension.generate(emitter, rootNode);
         }
@@ -448,33 +446,55 @@ public class DataScriptInstanceTool implements Parameters
         //FileBitStreamReader reader = new FileBitStreamReader(instanceFileName);
         LineCreator lineCreator = new LineCreator();
         byte[] blob = lineCreator.getLines(10000, 5);
-        ByteArrayBitStreamReader reader = new ByteArrayBitStreamReader(blob);
-        AstDataScriptInstanceParser parser = new AstDataScriptInstanceParser(reader);
-        LineGeometriesInstanceHandler handler = new LineGeometriesInstanceHandler();
-        parser.setInstanceHandler(handler);
-        long start = System.currentTimeMillis();
-        parser.parse(typeName);
-        long stop = System.currentTimeMillis();
-        System.out.println((stop - start) + " ms");
-        reader.close();
-        System.out.println();
-        
-        ByteArrayBitStreamReader reader2 = new ByteArrayBitStreamReader(blob);
-        start = System.currentTimeMillis();
-        LineGeometries geometries = new LineGeometries(reader2);
-        stop = System.currentTimeMillis();
-        System.out.println((stop - start) + " ms");
-        
-        start = System.currentTimeMillis();
-        handler.decode(geometries);
-        stop = System.currentTimeMillis();
-        System.out.println((stop - start) + " ms");
-        
-        
+        for (int i = 0; i < 100; i++)
+        {
+            System.gc();
+            ByteArrayBitStreamReader reader = new ByteArrayBitStreamReader(blob);
+            AstDataScriptInstanceParser parser = new AstDataScriptInstanceParser(reader);
+            LineGeometriesInstanceHandler handler = new LineGeometriesInstanceHandler();
+            parser.setInstanceHandler(handler);
+            //parser.setInstanceHandler(new EchoingInstanceHandler());
+            long start = System.currentTimeMillis();
+            parser.parse(typeName);
+            long stop = System.currentTimeMillis();
+            System.out.println("Building application structure from instance parser events: " + (stop - start) + " ms");
+            reader.setBitPosition(0);
+            
+            ByteArrayBitStreamReader reader2 = new ByteArrayBitStreamReader(
+                    blob);
+            start = System.currentTimeMillis();
+            LineGeometries geometries = new LineGeometries(reader2);
+            stop = System.currentTimeMillis();
+            System.out.println("Building DataScript object tree: "
+                    + (stop - start) + " ms");
+
+            start = System.currentTimeMillis();
+            handler.decode(geometries);
+            stop = System.currentTimeMillis();
+            System.out
+                    .println("Building application structure from object tree: "
+                            + (stop - start) + " ms");
+
+            start = System.currentTimeMillis();
+            handler.decodeManually(blob);
+            stop = System.currentTimeMillis();
+            System.out
+                    .println("Building application structure by manual decoding: "
+                            + (stop - start) + " ms");
+            System.out.println();
+        }
     }
     
-
-
+    private void printServices()
+    {
+        Iterator<Extension> it = ServiceRegistry.lookupProviders(Extension.class);
+        while (it.hasNext())
+        {
+            Extension ext = it.next();
+            System.out.println(ext.getClass().getName());
+        }
+    }
+    
     /******** Implementation of Parameters interface ******* */
 
     public String getVersion()
@@ -546,6 +566,7 @@ public class DataScriptInstanceTool implements Parameters
             }
             else
             {
+                dsTool.printServices();
                 dsTool.parseDatascript();
                 dsTool.parseInstance();
                

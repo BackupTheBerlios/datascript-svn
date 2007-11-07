@@ -35,7 +35,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package datascript.backend.html;
+package datascript.emit.html;
 
 
 import org.apache.commons.cli.Option;
@@ -43,9 +43,6 @@ import org.apache.commons.cli.Option;
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.util.TokenAST;
 import datascript.ast.DataScriptException;
-import datascript.emit.html.ContentEmitter;
-import datascript.emit.html.OverviewEmitter;
-import datascript.emit.html.PackageEmitter;
 import datascript.tools.Extension;
 import datascript.tools.Parameters;
 

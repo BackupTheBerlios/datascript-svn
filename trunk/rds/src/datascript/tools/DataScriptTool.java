@@ -44,7 +44,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
@@ -57,7 +59,6 @@ import antlr.Token;
 import antlr.TokenStreamHiddenTokenFilter;
 import antlr.TokenStreamRecognitionException;
 import antlr.collections.AST;
-
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.DataScriptLexer;
 import datascript.antlr.DataScriptParser;
@@ -68,7 +69,6 @@ import datascript.antlr.TypeEvaluator;
 import datascript.antlr.util.FileNameToken;
 import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
-
 import datascript.ast.DataScriptException;
 import datascript.ast.Package;
 import datascript.ast.ParserException;
@@ -78,9 +78,8 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.17.1 (1 Nov 2007)";
+    private static final String VERSION = "rds 0.17.2 (7 Nov 2007)";
 
-    private static final File EXT_DIR = new File("ext/");
     private ToolContext context;
     private TokenAST rootNode = null;
     private DataScriptParser parser = null;
@@ -89,7 +88,7 @@ public class DataScriptTool implements Parameters
 
     private final DataScriptEmitter emitter = new DataScriptEmitter();
 
-    private Extensions rdsExtensions = null;
+    private List<Extension> extensions;
 
     /* Properties for command line parameters */
     private final Options rdsOptions = new Options();
@@ -170,10 +169,6 @@ public class DataScriptTool implements Parameters
         rdsOption.setRequired(false);
         rdsOptions.addOption(rdsOption);
 
-        rdsOption = new Option("ext", true, "path to the extension directory");
-        rdsOption.setRequired(false);
-        rdsOptions.addOption(rdsOption);
-
         rdsOption = new Option("out", true,
                 "path to the directory in which the generated code is stored");
         rdsOption.setRequired(false);
@@ -238,13 +233,16 @@ public class DataScriptTool implements Parameters
 	// normalize slashes and backslashes
         fileName = new File(args[args.length-1]).getPath();
 
-        File myExtDir = new File(cli.getOptionValue("ext", "ext/"));
-        rdsExtensions = new Extensions(myExtDir);
-
-        for (Extension extension : rdsExtensions)
+        extensions = new ArrayList<Extension>();
+        ServiceLoader<Extension> loader = ServiceLoader.load(Extension.class);
+        Iterator<Extension> it = loader.iterator();
+        while (it.hasNext())
         {
+            Extension extension = it.next();
+            extensions.add(extension);
             extension.getOptions(rdsOptions);
         }
+        
 
         CmdLineParser parser = new CmdLineParser();
         try
@@ -257,7 +255,7 @@ public class DataScriptTool implements Parameters
             hf.printHelp(pe.getMessage(), rdsOptions);
         }
 
-        for (Extension extension : rdsExtensions)
+        for (Extension extension : extensions)
         {
             extension.setParameter(this);
         }
@@ -315,16 +313,16 @@ public class DataScriptTool implements Parameters
         if (rootNode == null)
             return;
 
-        if (rdsExtensions == null || rdsExtensions.size() <= 0)
+        if (extensions.size() == 0)
         {
-            System.out.println("No backends found in "
-                    + EXT_DIR.getAbsolutePath() + ", nothing emitted.");
+            System.out.println("No extensions found, nothing emitted.");
             return;
         }
-        for (Extension extension : rdsExtensions)
+
+        for (Extension extension : extensions)
         {
             extension.generate(emitter, rootNode);
-        }
+        }        
     }
 
 
@@ -425,6 +423,18 @@ public class DataScriptTool implements Parameters
         return retVal;
     }
 
+    private void printExtensions()
+    {
+        ServiceLoader<Extension> loader = ServiceLoader.load(Extension.class);
+        Iterator<Extension> it = loader.iterator();
+        while (it.hasNext())
+        {
+            Extension ext = it.next();
+            System.out.println("Extension: " + ext.getClass().getName());
+        }
+    }
+    
+
 
     /******** Implementation of Parameters interface ******* */
 
@@ -492,8 +502,9 @@ public class DataScriptTool implements Parameters
             {
                 org.apache.commons.cli.HelpFormatter hf = 
                     new org.apache.commons.cli.HelpFormatter();
-                //hf.printHelp("rds <extension options> [-c] [-ext \"pathname to extensions\"] [-out \"pathname for output\"] [-src \"pathname\"] \"filename\"", dsTool.rdsOptions);
                 hf.printHelp("rds <options> \"filename\"", "options are:", dsTool.rdsOptions, "\t\"filename\"    main DataScript source file", false);
+                dsTool.prepareExtensions(args);
+                dsTool.printExtensions();
             }
             else
             {
@@ -515,4 +526,5 @@ public class DataScriptTool implements Parameters
         }
         System.out.println("done.");
     }
+    
 }
