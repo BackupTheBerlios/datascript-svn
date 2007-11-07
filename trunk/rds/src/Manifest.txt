@@ -1,3 +1,9 @@
 Main-Class: datascript.tools.DataScriptTool
-Class-Path: rds_javaExtension.jar rds_htmlExtension.jar rds_xmlExtension.jar rds_cppExtension.jar antlr.jar freemarker.jar velocity-dep-1.5.jar commons-cli-1.1.jar
+Class-Path: rds_javaExtension.jar 
+ rds_htmlExtension.jar 
+ rds_xmlExtension.jar 
+ rds_cppExtension.jar 
+ antlr.jar freemarker.jar 
+ velocity-dep-1.5.jar 
+ commons-cli-1.1.jar
 

@@ -199,8 +199,7 @@
       </fileset>
     </jar>
 
-    <jar destfile="${jar}/rds_javaExtension.jar" 
-      manifest="${src}/datascript/emit/java/Manifest.txt">
+    <jar destfile="${jar}/rds_javaExtension.jar"> 
       <fileset dir="${classes}">
         <include name="datascript/emit/java/**" />
       </fileset>
@@ -212,8 +211,7 @@
       </fileset>
     </jar>
 
-    <jar destfile="${jar}/rds_htmlExtension.jar" 
-      manifest="${src}/datascript/emit/html/Manifest.txt">
+    <jar destfile="${jar}/rds_htmlExtension.jar"> 
       <fileset dir="${classes}">
         <include name="datascript/emit/html/**" />
       </fileset>
@@ -225,7 +223,7 @@
       </fileset>
     </jar>
 
-    <jar destfile="${jar}/rds_xmlExtension.jar" manifest="${src}/datascript/emit/xml/Manifest.txt">
+    <jar destfile="${jar}/rds_xmlExtension.jar">
       <fileset dir="${classes}">
         <include name="datascript/emit/xml/**" />
       </fileset>
