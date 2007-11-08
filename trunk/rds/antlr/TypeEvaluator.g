@@ -227,19 +227,10 @@ fieldCondition
     : #(COLON expression)
     ;
 
-/*
-typeDeclaration
-    : sequenceDeclaration
-    | unionDeclaration
-    | enumDeclaration
-    | bitmaskDeclaration
-    | arrayType
-    ;
-*/
-
 typeReference
     : sequenceDeclaration
     | unionDeclaration
+    | choiceDeclaration
     | definedType
     | enumDeclaration
     | bitmaskDeclaration
@@ -283,6 +274,39 @@ unionDeclaration
                                    }
     ;
 
+choiceDeclaration
+    :  #(c:CHOICE i:ID             { scope().setTypeSymbol(i, c);
+                                     pushScope();
+                                     ((ChoiceType)c).setScope(scope(), pkg); } 
+         (parameterList)? 
+         expression 
+         choiceMemberList 
+         (functionList)? 
+       )                           { popScope(); 
+                                     ((ChoiceType)c).storeParameters();
+                                   }
+    ;
+    
+choiceMemberList
+    :  #(MEMBERS (choiceMember)+ (defaultChoice)?)
+    ;
+    
+choiceMember
+    : choiceCases choiceAlternative
+    ;
+    
+choiceCases
+    : #(CASE (expression)+)
+    ;
+    
+choiceAlternative
+    : #(FIELD typeReference ID)
+    ;
+    
+defaultChoice
+    : #(DEFAULT choiceAlternative)        
+    ;   
+     
 memberList
     : #(MEMBERS (declaration)*)
     ;

@@ -202,7 +202,7 @@ public class DataScriptXmlDumper implements Parameters
         /* if the XML extension is present, generate xml dump */
         try
         {
-            Class<?> clazz = Class.forName("datascript.backend.xml.XmlExtension");
+            Class<?> clazz = Class.forName("datascript.emit.xml.XmlExtension");
             Extension extension = (Extension) clazz.newInstance();
             extension.setParameter(this);
             extension.generate(null, rootNode);
@@ -268,7 +268,7 @@ public class DataScriptXmlDumper implements Parameters
 
     public boolean argumentExists(String key)
     {
-        return false;
+        return "-xml".equals(key);
     }
 
 

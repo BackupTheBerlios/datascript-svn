@@ -189,6 +189,7 @@ typeDeclaration
 typeReference
     :   sequenceDeclaration
     |   unionDeclaration
+    |   choiceDeclaration
     |   definedType
     |   enumDeclaration
     |   bitmaskDeclaration
@@ -212,6 +213,30 @@ unionDeclaration
     :   #(UNION (ID)? (parameterList)? memberList (functionList)?)
     ;
 
+choiceDeclaration
+    :  #(CHOICE ID (parameterList)? expression choiceMemberList (functionList)? )
+    ;
+    
+choiceMemberList
+    :  #(MEMBERS (choiceMember)+ (defaultChoice)?)
+    ;
+    
+choiceMember
+    : choiceCases choiceAlternative
+    ;
+    
+choiceCases
+    : #(CASE (expression)+)
+    ;
+    
+choiceAlternative
+    : #(FIELD typeReference ID)
+    ;
+    
+defaultChoice
+    : #(DEFAULT choiceAlternative)        
+    ;   
+     
 memberList
     :    #(MEMBERS (declaration)*)
     ;

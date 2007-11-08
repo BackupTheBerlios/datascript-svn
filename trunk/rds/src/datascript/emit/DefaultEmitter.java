@@ -91,6 +91,9 @@ public class DefaultEmitter implements Emitter
     public void beginUnion(AST u) {}
     public void endUnion(AST u) {}
 
+    public void beginChoice(AST c) {}
+    public void endChoice(AST c) {}
+
     public void beginField(AST f) {}
     public void endField(AST f) {}
 

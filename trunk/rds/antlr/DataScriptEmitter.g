@@ -197,17 +197,10 @@ fieldCondition
     : #(COLON expression)
     ;
 
-typeDeclaration
-    : sequenceDeclaration
-    | unionDeclaration
-    | enumDeclaration
-    | bitmaskDeclaration
-    | arrayType
-    ;
-
 typeReference
     : sequenceDeclaration
     | unionDeclaration
+    | choiceDeclaration
     | definedType
     | enumDeclaration
     | bitmaskDeclaration
@@ -241,6 +234,35 @@ unionDeclaration
        )                    { em.endUnion(u); }
     ;
 
+choiceDeclaration
+    :  #(c:CHOICE ID        { em.beginChoice(c); }
+         (parameterList)? 
+         expression 
+         choiceMemberList 
+         (functionList)? 
+        )                   { em.endChoice(c); }
+    ;
+    
+choiceMemberList
+    :  #(MEMBERS (choiceMember)+ (defaultChoice)?)
+    ;
+    
+choiceMember
+    : choiceCases choiceAlternative
+    ;
+    
+choiceCases
+    : #(CASE (expression)+)
+    ;
+    
+choiceAlternative
+    : #(FIELD typeReference ID)
+    ;
+    
+defaultChoice
+    : #(DEFAULT choiceAlternative)        
+    ;   
+     
 memberList
     : #(MEMBERS (declaration)*)
     ;

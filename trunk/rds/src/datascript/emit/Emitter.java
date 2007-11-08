@@ -82,6 +82,8 @@ public interface Emitter
     public void endSequence(AST s);
     public void beginUnion(AST u);
     public void endUnion(AST u);
+    public void beginChoice(AST c);
+    public void endChoice(AST c);
 
     public void beginEnumeration(AST e);
     public void endEnumeration(AST e);

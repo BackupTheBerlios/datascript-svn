@@ -211,17 +211,10 @@ fieldCondition
     : #(COLON expression)
     ;
 
-typeDeclaration
-    : sequenceDeclaration
-    | unionDeclaration
-    | enumDeclaration
-    | bitmaskDeclaration
-    | arrayType
-    ;
-
 typeReference
     : sequenceDeclaration
     | unionDeclaration
+    | choiceDeclaration
     | definedType
     | enumDeclaration
     | bitmaskDeclaration
@@ -259,6 +252,41 @@ unionDeclaration
       )                            { popScope(); }
     ;
 
+choiceDeclaration
+    :  #(c:CHOICE ID                 { pushScope(((ChoiceType)c).getScope()); } 
+         (parameterList)? 
+         e:expression                { TypeInterface exprType = ((Expression)e).getExprType(); 
+                                       if (exprType instanceof EnumType)
+                                            pushScope(((EnumType)exprType).getScope());
+         							 } 
+         choiceMemberList 
+                                     { if (exprType instanceof EnumType)
+                                           popScope();
+         							 }
+         (functionList)? 
+        )                          { popScope(); }
+    ;
+    
+choiceMemberList
+    :  #(MEMBERS (choiceMember)+ (defaultChoice)?)
+    ;
+    
+choiceMember
+    : choiceCases choiceAlternative
+    ;
+    
+choiceCases
+    : #(CASE (expression)+)
+    ;
+    
+choiceAlternative
+    : #(FIELD typeReference ID)
+    ;
+    
+defaultChoice
+    : #(DEFAULT choiceAlternative)        
+    ;   
+     
 memberList
     : #(MEMBERS (declaration)*)
     ;

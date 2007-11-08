@@ -61,9 +61,12 @@ tokens
     BIG="big";
     BIT="bit"<AST=datascript.ast.BitFieldType>;
     BLOCK;
+    CASE="case";
     CAST;
+    CHOICE="choice"<AST=datascript.ast.ChoiceType>;
     COMMENT;
     CONST="const"<AST=datascript.ast.ConstType>;
+    DEFAULT="default";
     DIVIDE<AST=datascript.ast.IntegerExpression>;
     DOC;
     DOT<AST=datascript.ast.Expression>;
@@ -100,6 +103,7 @@ tokens
     MODULO<AST=datascript.ast.IntegerExpression>;
     MULTIPLY<AST=datascript.ast.IntegerExpression>;
     NE<AST=datascript.ast.BooleanExpression>;
+    ON="on";
     OR<AST=datascript.ast.IntegerExpression>;
     PACKAGE="package";
     PARAM;
@@ -340,6 +344,7 @@ fieldCondition
 typeDeclaration
     :   ( (modifier)* ("union")? (ID)? (LPAREN parameterDefinition | LCURLY)) =>
         sequenceDeclaration
+    |   choiceDeclaration
     |   definedType
     |   enumDeclaration
     |   bitmaskDeclaration
@@ -351,6 +356,7 @@ typeReference
     :   ( (modifier)* ("union")? (ID)? (LPAREN parameterDefinition | LCURLY)) =>
         sequenceDeclaration
     |   (ID LPAREN) => paramTypeInstantiation
+    |   choiceDeclaration
     |   definedType
     |   enumDeclaration
     |   bitmaskDeclaration
@@ -393,6 +399,47 @@ sequenceDeclaration!
           }
         } 
     ;
+    
+choiceDeclaration!
+    : c:CHOICE n:ID (p:parameterList)? ON! t:choiceTag
+      m:choiceMemberList
+      { 
+        #choiceDeclaration = #(c, n, p, t, m);
+        ChoiceType ch = (ChoiceType) #choiceDeclaration;
+        FileNameToken first = (FileNameToken) c;
+        Token t = first.getHiddenBefore();
+        ch.setDocumentation(t); 
+      }
+    ;
+    
+choiceTag
+    : postfixExpression   
+      // TODO: We just want ID (DOT ID)*, and not a general postfixExpression
+    ;          
+
+choiceMemberList
+    : LCURLY! (choiceMember)+ (defaultChoice)? (functionList)? RCURLY!
+      { #choiceMemberList = #([MEMBERS, "CHOICE_MEMBERS"], #choiceMemberList); }
+    ;
+    
+choiceMember
+    : choiceCases choiceAlternative SEMICOLON!
+    ;
+    
+choiceCases
+    : CASE^ expression COLON! (CASE! expression COLON!)*
+    ;
+
+choiceAlternative!
+   :  t:typeReference
+      (f:ID)? 
+      (a:arrayRange {#t = #([ARRAY], t, a); } )?
+      { #choiceAlternative = #([FIELD], t, f); }
+   ;
+    
+defaultChoice
+    :  DEFAULT^ COLON! choiceAlternative SEMICOLON!        
+    ;   
 
 memberList
     :   LCURLY! declarationList (f:functionList)? RCURLY!
