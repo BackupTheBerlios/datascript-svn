@@ -157,7 +157,6 @@ public class Subtype extends TokenAST implements TypeInterface
     }
 
 
-    @Override
     public int getId()
     {
         return id;

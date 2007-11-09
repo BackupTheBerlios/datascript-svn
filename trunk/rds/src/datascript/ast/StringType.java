@@ -124,7 +124,6 @@ public class StringType extends TokenAST implements TypeInterface
     }
 
 
-    @Override
     public int getId()
     {
         return id;

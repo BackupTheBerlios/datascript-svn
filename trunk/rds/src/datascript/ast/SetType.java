@@ -174,7 +174,6 @@ public class SetType extends TokenAST implements TypeInterface
     }
 
 
-    @Override
     public int getId()
     {
         return id;

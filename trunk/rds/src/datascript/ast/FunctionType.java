@@ -168,7 +168,6 @@ public class FunctionType extends TokenAST implements TypeInterface
     }
 
 
-    @Override
     public int getId()
     {
         return id;

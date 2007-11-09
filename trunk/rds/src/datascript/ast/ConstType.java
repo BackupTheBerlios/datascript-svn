@@ -174,7 +174,6 @@ public class ConstType extends TokenAST implements TypeInterface
     }
 
 
-    @Override
     public int getId()
     {
         return id;

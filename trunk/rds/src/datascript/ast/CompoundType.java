@@ -294,8 +294,8 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     {
         return functions;
     }
-    
-    @Override
+
+
     public int getId()
     {
         return id;

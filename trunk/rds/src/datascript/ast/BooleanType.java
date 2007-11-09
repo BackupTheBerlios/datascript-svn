@@ -122,7 +122,6 @@ public class BooleanType extends TokenAST implements TypeInterface
     }
 
 
-    @Override
     public int getId()
     {
         return id;

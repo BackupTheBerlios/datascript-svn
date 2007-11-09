@@ -123,7 +123,6 @@ public class IntegerType extends TokenAST implements TypeInterface
     }
 
 
-    @Override
     public int getId()
     {
         return id;

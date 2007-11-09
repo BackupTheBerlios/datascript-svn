@@ -39,6 +39,7 @@
 
 package datascript.tools;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -98,8 +99,6 @@ public class DataScriptTool implements Parameters
     private String outPathName = null;
     private boolean checkSyntax = false;
 
-
-
     private class CmdLineParser extends org.apache.commons.cli.Parser
     {
         /**
@@ -147,7 +146,6 @@ public class DataScriptTool implements Parameters
             return newArguments.toArray(a);
         }
     }
-
 
 
     public DataScriptTool()
@@ -230,8 +228,8 @@ public class DataScriptTool implements Parameters
         if (cli == null)
             return;
 
-	// normalize slashes and backslashes
-        fileName = new File(args[args.length-1]).getPath();
+        // normalize slashes and backslashes
+        fileName = new File(args[args.length - 1]).getPath();
 
         extensions = new ArrayList<Extension>();
         ServiceLoader<Extension> loader = ServiceLoader.load(Extension.class);
@@ -242,7 +240,6 @@ public class DataScriptTool implements Parameters
             extensions.add(extension);
             extension.getOptions(rdsOptions);
         }
-        
 
         CmdLineParser parser = new CmdLineParser();
         try
@@ -322,7 +319,7 @@ public class DataScriptTool implements Parameters
         for (Extension extension : extensions)
         {
             extension.generate(emitter, rootNode);
-        }        
+        }
     }
 
 
@@ -423,6 +420,7 @@ public class DataScriptTool implements Parameters
         return retVal;
     }
 
+
     private void printExtensions()
     {
         ServiceLoader<Extension> loader = ServiceLoader.load(Extension.class);
@@ -433,7 +431,6 @@ public class DataScriptTool implements Parameters
             System.out.println("Extension: " + ext.getClass().getName());
         }
     }
-    
 
 
     /******** Implementation of Parameters interface ******* */
@@ -503,7 +500,6 @@ public class DataScriptTool implements Parameters
                 org.apache.commons.cli.HelpFormatter hf = 
                     new org.apache.commons.cli.HelpFormatter();
                 hf.printHelp("rds <options> \"filename\"", "options are:", dsTool.rdsOptions, "\t\"filename\"    main DataScript source file", false);
-                dsTool.prepareExtensions(args);
                 dsTool.printExtensions();
             }
             else
@@ -526,5 +522,5 @@ public class DataScriptTool implements Parameters
         }
         System.out.println("done.");
     }
-    
+
 }

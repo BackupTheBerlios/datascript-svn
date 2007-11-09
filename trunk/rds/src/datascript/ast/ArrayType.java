@@ -152,7 +152,6 @@ public class ArrayType extends TokenAST implements TypeInterface
     }
 
 
-    @Override
     public int getId()
     {
         return id;

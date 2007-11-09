@@ -259,7 +259,6 @@ public class TypeReference extends TokenAST implements TypeInterface,
     }
 
 
-    @Override
     public int getId()
     {
         return refType.getId();
