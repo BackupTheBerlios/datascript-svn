@@ -11,11 +11,15 @@ import junit.framework.TestCase;
 import label.DataBlock;
 import label.Tile;
 import label.TileHeader;
+import label.TileHeader2;
 import label.TileWithHeader;
+import label.TileWithOptionalBlocks;
+import label.VarBlock;
 import bits.GlobalLabelSeq;
 import bits.Header;
 import bits.ItemA;
 import bits.LabelledType;
+import datascript.runtime.array.UnsignedByteArray;
 import datascript.runtime.io.DataScriptIO;
 
 /**
@@ -146,6 +150,34 @@ public class LabelTest extends TestCase
         assertEquals(18, tile.getHeader().getOffset3());
         
         TileWithHeader tile2 = DataScriptIO.read(TileWithHeader.class, blob);
+        assertEquals(tile2, tile);
+    }
+
+    public void testTileWithOptionalBlocks()
+    {
+        TileWithOptionalBlocks tile = new TileWithOptionalBlocks();
+        TileHeader2 header = new TileHeader2();
+        tile.setHeader(header);
+        header.setHasBlock1((byte)1);
+        header.setHasBlock2((byte)0);
+        header.setHasBlock3((byte)1);
+
+        VarBlock b1 = new VarBlock();
+        b1.setNumItems(1);
+        short[] items = {99};
+        b1.setItems(new UnsignedByteArray(items, 0, 1));
+        tile.setB1(b1);
+
+        DataBlock b3 = new DataBlock();
+        b3.setA(30);
+        b3.setB((short)31);
+        tile.setB3(b3);
+        byte[] blob = DataScriptIO.write(tile);
+        
+        assertEquals(5, tile.getHeader().getOffset1());
+        assertEquals(8, tile.getHeader().getOffset3());
+        
+        TileWithOptionalBlocks tile2 = DataScriptIO.read(TileWithOptionalBlocks.class, blob);
         assertEquals(tile2, tile);
     }
 }

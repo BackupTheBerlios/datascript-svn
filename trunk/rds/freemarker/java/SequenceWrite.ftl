@@ -146,11 +146,19 @@
     {
         int bitoffset = 0;
     <#list fields as field>
-        <#if field.labelExpression??>
-
-        ${field.labelSetter}((${field.labelTypeName})Util.bitsToBytes(bitoffset));
+        <#assign indent="">
+        <#if field.optionalClause??>
+        <#assign indent="    ">
+        if (${field.optionalClause})
+        {
+        </#if><#t>
+        <#if field.labelExpression??><#t>
+        ${indent}${field.labelSetter}((${field.labelTypeName})Util.bitsToBytes(bitoffset));
             <#assign LabeledFieldCnt=LabeledFieldCnt-1>
             <#if LabeledFieldCnt == 0>
+              <#if field.optionalClause??>
+        }
+              </#if>
                 <#break>
             </#if>
         </#if>
@@ -162,11 +170,13 @@
             <#assign bitsizeof=field.bitsizeof>
         </#if>
         <#if field.hasAlignment>
-        if (bitoffset % #{field.alignmentValue} != 0)
-            bitoffset = ((bitoffset / #{field.alignmentValue}) + 1) * #{field.alignmentValue};
+        ${indent}if (bitoffset % #{field.alignmentValue} != 0)
+            ${indent}bitoffset = ((bitoffset / #{field.alignmentValue}) + 1) * #{field.alignmentValue};
         </#if>
-
-        bitoffset += ${bitsizeof};	// ${field.name}
+        ${indent}bitoffset += ${bitsizeof};	// ${field.name}
+        <#if field.optionalClause??>
+        }
+        </#if>
     </#list>
     }
 </#if>

@@ -45,3 +45,37 @@ TileHeader
     uint16         offset2;
     uint16         offset3;
 };
+
+// ---------------------------------------------------------------------------
+
+TileWithOptionalBlocks
+{
+    TileHeader2    header;
+
+header.offset1:    
+    VarBlock      b1   if header.hasBlock1 == 1;
+
+header.offset2:
+    DataBlock      b2   if header.hasBlock2 == 1;
+
+header.offset3:
+    DataBlock      b3   if header.hasBlock3 == 1;
+};
+
+TileHeader2
+{
+    bit:1          hasBlock1;
+    bit:1          hasBlock2;
+    bit:1          hasBlock3;
+
+align(8):    
+    uint16         offset1   if hasBlock1 == 1;
+    uint16         offset2   if hasBlock2 == 1;
+    uint16         offset3   if hasBlock3 == 1;
+};
+
+VarBlock
+{
+    uint16    numItems;
+    uint8     items[numItems];
+};
