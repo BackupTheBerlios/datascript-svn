@@ -90,6 +90,7 @@ public class StringArray implements Array<String>, SizeOf
     }
 
 
+    @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof StringArray)

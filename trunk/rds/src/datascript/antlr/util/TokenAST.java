@@ -35,12 +35,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.antlr.util;
+
 
 import antlr.CommonASTWithHiddenTokens;
 import antlr.CommonHiddenStreamToken;
 import antlr.Token;
 import antlr.collections.AST;
+
+
 
 /**
  * This is our own AST class which overrides most methods of BaseAST. BaseAST
@@ -55,84 +60,109 @@ import antlr.collections.AST;
 public class TokenAST extends CommonASTWithHiddenTokens
 {
     private FileNameToken token;
-	
-    public TokenAST() 
+
+
+    public TokenAST()
     {
-    	token = new FileNameToken();
+        token = new FileNameToken();
     }
 
-    public TokenAST(Token tok) 
+
+    public TokenAST(Token tok)
     {
         super(tok);
-    	this.token = (FileNameToken) tok;
+        this.token = (FileNameToken) tok;
     }
 
+
+    @Override
     public void initialize(int t, String txt)
     {
         token = new FileNameToken(t, txt);
         super.initialize(token);
     }
-    
+
+
+    @Override
     public void initialize(AST t)
     {
-        token = ((TokenAST)t).token;
+        token = ((TokenAST) t).token;
     }
 
+
+    @Override
     public void initialize(Token t)
     {
         token = (FileNameToken) t;
     }
-        
+
+
     public String getFileName()
-    {    	
+    {
         return token.getFilename();
     }
-    
+
+
+    @Override
     public int getLine()
     {
         return token.getLine();
     }
-    
+
+
+    @Override
     public int getColumn()
     {
         return token.getColumn();
     }
-    
+
+
     /** Get the token text for this node */
+    @Override
     public String getText()
     {
         return token.getText();
     }
 
+
     /** Get the token type for this node */
+    @Override
     public int getType()
     {
         return token.getType();
     }
 
+
     /** Set the token text for this node */
+    @Override
     public void setText(String text)
     {
         token.setText(text);
     }
 
+
     /** Set the token type for this node */
+    @Override
     public void setType(int ttype)
     {
         token.setType(ttype);
     }
-    
+
+
+    @Override
     public CommonHiddenStreamToken getHiddenAfter()
     {
         return token.getHiddenAfter();
     }
 
+
+    @Override
     public CommonHiddenStreamToken getHiddenBefore()
     {
         return token.getHiddenBefore();
     }
 
-    
+
     /**
      * Returns the first child with a given token type.
      * @param type token type
@@ -140,8 +170,8 @@ public class TokenAST extends CommonASTWithHiddenTokens
      */
     public AST findFirstChildOfType(int type)
     {
-        for (AST node = getFirstChild(); node != null; 
-             node = node.getNextSibling())
+        for (AST node = getFirstChild(); node != null; node = node
+                .getNextSibling())
         {
             if (node.getType() == type)
             {
@@ -149,7 +179,5 @@ public class TokenAST extends CommonASTWithHiddenTokens
             }
         }
         return null;
-    }      
+    }
 }
-
-

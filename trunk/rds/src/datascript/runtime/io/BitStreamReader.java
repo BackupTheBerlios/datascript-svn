@@ -78,6 +78,7 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
     }
 
 
+    @Override
     public byte readByte() throws IOException
     {
         byte result;
@@ -93,6 +94,7 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
     }
 
 
+    @Override
     public int readUnsignedByte() throws IOException
     {
         int result;
@@ -108,6 +110,7 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
     }
 
 
+    @Override
     public short readShort() throws IOException
     {
         short result;
@@ -123,6 +126,7 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
     }
 
 
+    @Override
     public int readUnsignedShort() throws IOException
     {
         int result;
@@ -138,6 +142,7 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
     }
 
 
+    @Override
     public int readInt() throws IOException
     {
         int result;
@@ -153,6 +158,7 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
     }
 
 
+    @Override
     public long readUnsignedInt() throws IOException
     {
         long result;
@@ -168,6 +174,7 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
     }
 
 
+    @Override
     public long readLong() throws IOException
     {
         long result;

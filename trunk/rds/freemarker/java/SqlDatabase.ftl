@@ -66,6 +66,7 @@ public class ${name} extends SqlDatabase
     }
 
 
+    @Override
     public void createSchema() throws SQLException
     {
         Connection dbc = getConnection();

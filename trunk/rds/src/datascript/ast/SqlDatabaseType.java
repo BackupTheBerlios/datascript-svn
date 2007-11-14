@@ -64,6 +64,7 @@ public class SqlDatabaseType extends CompoundType
     }
 
 
+    @Override
     public IntegerValue sizeof(Context ctxt)
     {
         throw new UnsupportedOperationException("sizeof not implemented");
@@ -76,6 +77,7 @@ public class SqlDatabaseType extends CompoundType
     }
 
 
+    @Override
     public boolean isMember(Context ctxt, Value val)
     {
         throw new UnsupportedOperationException("isMember not implemented");
@@ -96,6 +98,7 @@ public class SqlDatabaseType extends CompoundType
     }
 
 
+    @Override
     public String getDocumentation()
     {
         String result = "";
@@ -108,6 +111,7 @@ public class SqlDatabaseType extends CompoundType
     }
 
 
+    @Override
     public String toString()
     {
         return "SQL_DATABASE";

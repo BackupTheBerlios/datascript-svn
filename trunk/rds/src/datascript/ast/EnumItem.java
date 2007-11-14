@@ -116,6 +116,7 @@ public class EnumItem extends TokenAST
     }
 
 
+    @Override
     public String toString()
     {
         return "ENUM_ITEM";

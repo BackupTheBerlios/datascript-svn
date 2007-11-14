@@ -48,12 +48,14 @@ public class ChoiceType extends CompoundType
 {
     private Expression selector;
 
+
     public ChoiceType()
     {
 
     }
 
 
+    @Override
     public IntegerValue sizeof(Context ctxt)
     {
         IntegerValue size = ((Field) fields.elementAt(0)).sizeof(ctxt);
@@ -82,6 +84,7 @@ public class ChoiceType extends CompoundType
     }
 
 
+    @Override
     public boolean isMember(Context ctxt, Value val)
     {
         // do something like
@@ -90,11 +93,13 @@ public class ChoiceType extends CompoundType
     }
 
 
+    @Override
     public String toString()
     {
         return "CHOICE";
     }
-    
+
+
     public Expression getSelector()
     {
         if (selector == null)

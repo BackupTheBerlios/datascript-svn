@@ -67,6 +67,7 @@ public class IntegerValue extends Value implements Comparable<Object>
     }
 
 
+    @Override
     public BigInteger integerValue()
     {
         return (ival);
@@ -157,6 +158,7 @@ public class IntegerValue extends Value implements Comparable<Object>
      * @return -1, 0 or 1 as this BigInteger is numerically less than, equal to,
      *         or greater than val.
      */
+    @Override
     public int compareTo(Object obj)
     {
         IntegerValue ivalobject = (IntegerValue) obj;
@@ -164,12 +166,14 @@ public class IntegerValue extends Value implements Comparable<Object>
     }
 
 
+    @Override
     public String toString()
     {
         return ival.toString() + "L";
     }
 
 
+    @Override
     public TypeInterface getType()
     {
         return IntegerType.integerType;

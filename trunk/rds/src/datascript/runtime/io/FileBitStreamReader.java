@@ -34,63 +34,81 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
+
+
 package datascript.runtime.io;
+
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+
+
 /**
  * @author HWellmann
- *
+ * 
  */
 public class FileBitStreamReader extends BitStreamReader
 {
     private RandomAccessFile raf;
-    
+
+
     public FileBitStreamReader(String fileName) throws IOException
     {
         raf = new RandomAccessFile(fileName, "r");
     }
-    
+
+
+    @Override
     public int read() throws IOException
     {
         checkClosed();
         bitOffset = 0;
         int val = raf.read();
-        if (val != -1) {
+        if (val != -1)
+        {
             ++streamPos;
         }
         return val;
     }
-    
-    public int read(byte[] b, int off, int len) throws IOException 
+
+
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException
     {
         checkClosed();
         bitOffset = 0;
         int nbytes = raf.read(b, off, len);
-        if (nbytes != -1) {
+        if (nbytes != -1)
+        {
             streamPos += nbytes;
         }
         return nbytes;
     }
 
-    public long length() {
-        try 
+
+    @Override
+    public long length()
+    {
+        try
         {
             checkClosed();
             return raf.length();
-        } 
-        catch (IOException e) 
+        }
+        catch (IOException e)
         {
             return -1L;
         }
     }
 
-    public void seek(long pos) throws IOException 
+
+    @Override
+    public void seek(long pos) throws IOException
     {
         checkClosed();
-        if (pos < flushedPos) {
+        if (pos < flushedPos)
+        {
             throw new IndexOutOfBoundsException("pos < flushedPos!");
         }
         bitOffset = 0;
@@ -98,10 +116,12 @@ public class FileBitStreamReader extends BitStreamReader
         streamPos = raf.getFilePointer();
     }
 
-    public void close() throws IOException 
+
+    @Override
+    public void close() throws IOException
     {
         super.close();
         raf.close();
     }
-    
+
 }

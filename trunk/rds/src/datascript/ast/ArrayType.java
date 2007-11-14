@@ -134,6 +134,7 @@ public class ArrayType extends TokenAST implements TypeInterface
     }
 
 
+    @Override
     public String toString()
     {
         return "array of " + getElementType();

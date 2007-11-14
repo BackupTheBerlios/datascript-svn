@@ -89,6 +89,7 @@ public class StdIntegerType extends IntegerType
      * DataScriptParser._tokenNames[getType()]; }
      */
 
+    @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof StdIntegerType)
@@ -100,6 +101,7 @@ public class StdIntegerType extends IntegerType
     }
 
 
+    @Override
     public IntegerValue sizeof(Context ctxt)
     {
         IntegerValue eight = new IntegerValue(8);
@@ -112,6 +114,7 @@ public class StdIntegerType extends IntegerType
     }
 
 
+    @Override
     public IntegerValue bitsizeof(Context ctxt)
     {
         switch (getType())
@@ -220,6 +223,7 @@ public class StdIntegerType extends IntegerType
      * for builtin types, membership test amounts to testing whether it's an
      * integer (via integerValue()) and then a simple range comparison
      */
+    @Override
     public boolean isMember(Context ctxt, Value val)
     {
         try
@@ -234,6 +238,7 @@ public class StdIntegerType extends IntegerType
     }
 
 
+    @Override
     public Value castFrom(Value val)
     {
         throw new UnsupportedOperationException();

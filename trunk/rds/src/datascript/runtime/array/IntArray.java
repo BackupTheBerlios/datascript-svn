@@ -91,6 +91,7 @@ public class IntArray implements Array<Integer>, SizeOf
     }
 
 
+    @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof IntArray)

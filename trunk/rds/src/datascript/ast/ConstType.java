@@ -142,6 +142,7 @@ public class ConstType extends TokenAST implements TypeInterface
     }
 
 
+    @Override
     public String toString()
     {
         return "CONSTTYPE";

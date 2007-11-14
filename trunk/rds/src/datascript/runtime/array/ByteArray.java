@@ -87,6 +87,7 @@ public class ByteArray implements Array<Byte>, SizeOf
     }
 
 
+    @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof ByteArray)
@@ -209,6 +210,7 @@ public class ByteArray implements Array<Byte>, SizeOf
 
     /** *********************************************************************** */
 
+    @Override
     public String toString()
     {
         /*

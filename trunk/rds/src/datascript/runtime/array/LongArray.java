@@ -90,6 +90,7 @@ public class LongArray implements Array<Long>, SizeOf
     }
 
 
+    @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof LongArray)

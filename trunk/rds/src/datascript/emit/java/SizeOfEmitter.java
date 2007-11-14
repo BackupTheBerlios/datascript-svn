@@ -58,6 +58,7 @@ public class SizeOfEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginRoot(AST rootNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
@@ -75,6 +76,7 @@ public class SizeOfEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endRoot()
     {
         try
@@ -90,6 +92,7 @@ public class SizeOfEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginEnumeration(AST e)
     {
         enumeration = (EnumType) e;

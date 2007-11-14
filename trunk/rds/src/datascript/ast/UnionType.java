@@ -50,6 +50,7 @@ public class UnionType extends CompoundType
     }
 
 
+    @Override
     public IntegerValue sizeof(Context ctxt)
     {
         IntegerValue size = ((Field) fields.elementAt(0)).sizeof(ctxt);
@@ -78,6 +79,7 @@ public class UnionType extends CompoundType
     }
 
 
+    @Override
     public boolean isMember(Context ctxt, Value val)
     {
         // do something like
@@ -86,6 +88,7 @@ public class UnionType extends CompoundType
     }
 
 
+    @Override
     public String toString()
     {
         return "UNION";

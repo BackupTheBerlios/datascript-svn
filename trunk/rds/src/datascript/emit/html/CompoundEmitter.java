@@ -244,6 +244,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     }
 
 
+    @Override
     public String getPackageName()
     {
         return compound.getScope().getPackage().getPackageName();

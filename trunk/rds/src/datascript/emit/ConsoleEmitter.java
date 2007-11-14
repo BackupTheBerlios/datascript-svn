@@ -54,6 +54,7 @@ public class ConsoleEmitter extends DefaultEmitter
     /* (non-Javadoc)
      * @see datascript.emit.Emitter#beginTranslationUnit()
      */
+    @Override
     public void beginTranslationUnit(AST rootNode, AST unitNode)
     {
         // TODO Auto-generated method stub
@@ -63,6 +64,7 @@ public class ConsoleEmitter extends DefaultEmitter
     /* (non-Javadoc)
      * @see datascript.emit.Emitter#endTranslationUnit()
      */
+    @Override
     public void endTranslationUnit()
     {
         // TODO Auto-generated method stub
@@ -72,6 +74,7 @@ public class ConsoleEmitter extends DefaultEmitter
     /* (non-Javadoc)
      * @see datascript.emit.Emitter#beginField(antlr.collections.AST)
      */
+    @Override
     public void beginField(AST f)
     {
         Field field = (Field)f;
@@ -81,6 +84,7 @@ public class ConsoleEmitter extends DefaultEmitter
     /* (non-Javadoc)
      * @see datascript.emit.Emitter#endField(antlr.collections.AST)
      */
+    @Override
     public void endField(AST f)
     {
         Field field = (Field)f;
@@ -90,6 +94,7 @@ public class ConsoleEmitter extends DefaultEmitter
     /* (non-Javadoc)
      * @see datascript.emit.Emitter#beginSequence(antlr.collections.AST)
      */
+    @Override
     public void beginSequence(AST s)
     {
         SequenceType struct = (SequenceType)s;
@@ -99,6 +104,7 @@ public class ConsoleEmitter extends DefaultEmitter
     /* (non-Javadoc)
      * @see datascript.emit.Emitter#endSequence(antlr.collections.AST)
      */
+    @Override
     public void endSequence(AST s)
     {
         SequenceType struct = (SequenceType)s;
@@ -108,6 +114,7 @@ public class ConsoleEmitter extends DefaultEmitter
     /* (non-Javadoc)
      * @see datascript.emit.Emitter#beginUnion(antlr.collections.AST)
      */
+    @Override
     public void beginUnion(AST u)
     {
         UnionType union = (UnionType)u;
@@ -117,12 +124,14 @@ public class ConsoleEmitter extends DefaultEmitter
     /* (non-Javadoc)
      * @see datascript.emit.Emitter#endUnion(antlr.collections.AST)
      */
+    @Override
     public void endUnion(AST u)
     {
         UnionType union = (UnionType)u;
         System.out.println("end " + union.getName());
     }
 
+    @Override
     public void beginEnumeration(AST e)
     {
         EnumType enumType = (EnumType)e;
@@ -132,18 +141,21 @@ public class ConsoleEmitter extends DefaultEmitter
     /* (non-Javadoc)
      * @see datascript.emit.Emitter#endUnion(antlr.collections.AST)
      */
+    @Override
     public void endEnumeration(AST e)
     {
         EnumType enumType = (EnumType)e;
         System.out.println("end " + enumType.getName());
     }
 
+    @Override
     public void beginEnumItem(AST e)
     {
         EnumItem item = (EnumItem)e;
         System.out.println("begin " + item.getName());
     }
 
+    @Override
     public void endEnumItem(AST e)
     {
         EnumItem item = (EnumItem)e;

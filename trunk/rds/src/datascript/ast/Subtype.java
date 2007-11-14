@@ -139,6 +139,7 @@ public class Subtype extends TokenAST implements TypeInterface
     }
 
 
+    @Override
     public String toString()
     {
         return "SUBTYPE";

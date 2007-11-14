@@ -80,12 +80,12 @@ public class ObjectArray<E> implements Array<E>, SizeOf
     }
 
 
-    @SuppressWarnings("unchecked")
+    @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof ObjectArray)
         {
-            ObjectArray<E> that = (ObjectArray<E>) obj;
+            ObjectArray<?> that = (ObjectArray<?>) obj;
             return (this.data.equals(that.data));
         }
         return super.equals(obj);

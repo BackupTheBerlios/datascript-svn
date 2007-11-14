@@ -49,6 +49,7 @@ public class SequenceType extends CompoundType
     }
 
 
+    @Override
     public IntegerValue sizeof(Context ctxt)
     {
         IntegerValue eight = new IntegerValue(8);
@@ -89,6 +90,7 @@ public class SequenceType extends CompoundType
     }
 
 
+    @Override
     public boolean isMember(Context ctxt, Value val)
     {
         // do something like
@@ -98,6 +100,7 @@ public class SequenceType extends CompoundType
     }
 
 
+    @Override
     public String toString()
     {
         return "SEQUENCE";

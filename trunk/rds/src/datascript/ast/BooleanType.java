@@ -81,6 +81,7 @@ public class BooleanType extends TokenAST implements TypeInterface
     }
 
 
+    @Override
     public String toString()
     {
         return "boolean";

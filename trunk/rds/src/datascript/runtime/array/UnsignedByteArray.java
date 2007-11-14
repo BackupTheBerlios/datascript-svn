@@ -90,6 +90,7 @@ public class UnsignedByteArray implements Array<Short>, SizeOf
     }
 
 
+    @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof UnsignedByteArray)

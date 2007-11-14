@@ -85,6 +85,7 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
     }
 
 
+    @Override
     public void writeByte(int value) throws IOException
     {
         if (bitOffset == 0)
@@ -98,6 +99,7 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
     }
 
 
+    @Override
     public void writeBytes(String value) throws IOException
     {
         if (bitOffset == 0)
@@ -111,6 +113,7 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
         }
     }
     
+    @Override
     public void writeShort(int value) throws IOException
     {
         if (bitOffset == 0)
@@ -124,6 +127,7 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
     }
 
 
+    @Override
     public void writeInt(int value) throws IOException
     {
         if (bitOffset == 0)
@@ -143,6 +147,7 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
     }
 
 
+    @Override
     public void writeLong(long value) throws IOException
     {
         if (bitOffset == 0)

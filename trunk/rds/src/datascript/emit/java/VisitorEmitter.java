@@ -60,6 +60,7 @@ public class VisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginRoot(AST rootNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
@@ -77,6 +78,7 @@ public class VisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endRoot()
     {
         try
@@ -92,6 +94,7 @@ public class VisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginSequence(AST s)
     {
         SequenceType sequence = (SequenceType) s;
@@ -101,11 +104,13 @@ public class VisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endSequence(AST s)
     {
     }
 
 
+    @Override
     public void beginUnion(AST u)
     {
         UnionType union = (UnionType) u;
@@ -115,11 +120,13 @@ public class VisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endUnion(AST u)
     {
     }
 
 
+    @Override
     public void beginEnumeration(AST e)
     {
         EnumType enumType = (EnumType) e;
@@ -129,11 +136,13 @@ public class VisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endEnumeration(AST e)
     {
     }
 
 
+    @Override
     public void beginSqlInteger(AST s)
     {
         SqlIntegerType integerType = (SqlIntegerType) s;
@@ -143,6 +152,7 @@ public class VisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endSqlInteger(AST s)
     {
     }
@@ -157,6 +167,7 @@ public class VisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public String getPackageImports()
     {
         StringBuilder buffer = new StringBuilder();

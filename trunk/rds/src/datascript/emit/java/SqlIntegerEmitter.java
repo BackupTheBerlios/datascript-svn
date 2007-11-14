@@ -117,6 +117,7 @@ public class SqlIntegerEmitter extends CompoundEmitter
     }
 
 
+    @Override
     public void setWriter(PrintWriter writer)
     {
         this.writer = writer;

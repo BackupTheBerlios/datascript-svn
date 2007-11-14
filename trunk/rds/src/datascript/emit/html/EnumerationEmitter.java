@@ -93,6 +93,7 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
     }
 
 
+    @Override
     public String getPackageName()
     {
         return enumeration.getScope().getPackage().getPackageName();

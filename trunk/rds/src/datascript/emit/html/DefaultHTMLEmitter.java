@@ -101,6 +101,7 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
     }
 
 
+    @Override
     public void beginPackage(AST p)
     {
         currentPackage = Package.lookup(p);

@@ -70,12 +70,14 @@ public class ContentEmitter extends DefaultHTMLEmitter
     }
 
 
+    @Override
     public void beginRoot(AST root)
     {
         setCurrentFolder(contentFolder);
     }
 
 
+    @Override
     public void endPackage(AST p)
     {
         for (String typeName : currentPackage.getLocalTypeNames())

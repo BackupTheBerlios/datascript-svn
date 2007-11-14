@@ -93,6 +93,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     }
 
 
+    @Override
     public void endPackage(AST p)
     {
         for (String typeName : currentPackage.getLocalTypeNames())
@@ -108,6 +109,7 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     }
 
 
+    @Override
     public String getPackageName()
     {
         return packageName;

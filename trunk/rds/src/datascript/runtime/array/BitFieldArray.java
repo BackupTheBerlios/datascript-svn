@@ -100,6 +100,7 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
     }
 
 
+    @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof BitFieldArray)

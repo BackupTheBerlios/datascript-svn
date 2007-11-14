@@ -132,6 +132,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginRoot(AST rootNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
@@ -149,6 +150,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endRoot()
     {
         try
@@ -164,6 +166,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginSequence(AST s)
     {
         sequence = (SequenceType) s;
@@ -187,6 +190,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginUnion(AST u)
     {
         union = (UnionType) u;
@@ -210,6 +214,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginEnumeration(AST e)
     {
         enumeration = (EnumType) e;
@@ -226,6 +231,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginSqlInteger(AST s)
     {
         sqlinteger = (SqlIntegerType) s;

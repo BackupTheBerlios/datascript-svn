@@ -62,6 +62,7 @@ public class BitFieldType extends IntegerType
     BigInteger lowerBound, upperBound;
 
 
+    @Override
     public int getLength()
     {
         Value value = getLengthExpression().getValue();
@@ -70,6 +71,7 @@ public class BitFieldType extends IntegerType
     }
 
 
+    @Override
     public Expression getLengthExpression()
     {
         if (lengthExpr == null)
@@ -91,6 +93,7 @@ public class BitFieldType extends IntegerType
     }
 
 
+    @Override
     public IntegerValue sizeof(Context ctxt)
     {
         IntegerValue eight = new IntegerValue(8);
@@ -103,12 +106,14 @@ public class BitFieldType extends IntegerType
     }
 
 
+    @Override
     public IntegerValue bitsizeof(Context ctxt)
     {
         return new IntegerValue(getLength());
     }
 
 
+    @Override
     public boolean isMember(Context ctxt, Value val)
     {
         /** @TODO handle variable length! */
@@ -124,6 +129,7 @@ public class BitFieldType extends IntegerType
     }
 
 
+    @Override
     public String toString()
     {
         return "BitField";

@@ -45,6 +45,7 @@ public class BooleanValue extends Value implements Comparable<Object>
     private boolean bval;
 
 
+    @Override
     public boolean booleanValue()
     {
         return bval;
@@ -58,6 +59,7 @@ public class BooleanValue extends Value implements Comparable<Object>
 
 
     // boolean can implement compareTo only partially
+    @Override
     public int compareTo(Object o)
     {
         BooleanValue obval = (BooleanValue) o;
@@ -65,6 +67,7 @@ public class BooleanValue extends Value implements Comparable<Object>
     }
 
 
+    @Override
     public String toString()
     {
         return "\"" + bval + "\"";
@@ -77,6 +80,7 @@ public class BooleanValue extends Value implements Comparable<Object>
     }
 
 
+    @Override
     public TypeInterface getType()
     {
         return BooleanType.booleanType;

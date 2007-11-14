@@ -63,6 +63,7 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
     }
 
 
+    @Override
     public void beginRoot(AST rootNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
@@ -159,6 +160,7 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
     }
 
 
+    @Override
     public String getElementVisitor(Field field)
     {
         String result = null;

@@ -90,6 +90,7 @@ public class ShortArray implements Array<Short>, SizeOf
     }
 
 
+    @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof ShortArray)

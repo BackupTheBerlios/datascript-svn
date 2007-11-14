@@ -35,7 +35,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +50,8 @@ import java.util.Set;
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
+
+
 
 /**
  * This class represents a DataScript package which provides a separate lexical
@@ -101,31 +106,31 @@ public class Package extends Scope
         DEFAULT.packagePath = new ArrayList<String>();
         DEFAULT.packagePath.add("__default__");
     }
-	
+
     /** Map of all packages in the project. */
     private static Map<String, Package> nameToPackage = new HashMap<String, Package>();
-    
+
     /** Map of all packages in the project. */
     private static Map<TokenAST, Package> nodeToPackage = new HashMap<TokenAST, Package>();
-    
+
     /** The root package, i.e. the one first parsed. */
     private static Package root = null;
-    
+
     /** The PACKAGE node of the AST defining this package. */
     private TokenAST node;
-    
+
     /** The fully qualified package name, e.g. "com.acme.foo.bar". */
     private String packageName;
-    
+
     /** List of the package name parts, e.g. ["com", "acme", "foo", "bar"] */
     private List<String> packagePath;
-    
+
     /** Maps all type names defined in this package to the corresponding type. */
     private Map<String, TypeInterface> localTypes;
-    
+
     // TODO: implement single type imports: "import com.acme.foo.bar.MyType;"
     //private Map<String, TypeInterface> importedTypes;
-    
+
     /** 
      * Maps the fully qualified name of each imported package to the 
      * corresponding package. At first, the value of each entry is null, just
@@ -134,11 +139,12 @@ public class Package extends Scope
      */
     private Map<String, Package> importedPackages;
 
-    
+
     private Package()
-    {   	
+    {
     }
-    
+
+
     /**
      * Constructs a Package object for an AST node of type PACKAGE.
      * @param packageNode the AST node
@@ -149,14 +155,15 @@ public class Package extends Scope
         //importedTypes = new HashMap<String, TypeInterface>();
         importedPackages = new HashMap<String, Package>();
         setPackageName(packageNode);
-        
+
         // If this is the first package, then it is root.
         if (root == null)
         {
             root = this;
         }
     }
-    
+
+
     /**
      * Finds a package with a given name.
      * @param packageName   a fully qualified package name
@@ -166,7 +173,8 @@ public class Package extends Scope
     {
         return nameToPackage.get(packageName);
     }
-    
+
+
     /**
      * Finds a package for a given AST node of type PACKAGE.
      * @param node AST node
@@ -176,7 +184,8 @@ public class Package extends Scope
     {
         return nodeToPackage.get(node);
     }
-    
+
+
     /**
      * Returns the root package, i.e. the one first seen by the parser.
      * @return root package
@@ -185,7 +194,8 @@ public class Package extends Scope
     {
         return root;
     }
-    
+
+
     /**
      * Executes the link actions for all packages. In each package, the 
      * package imports must be resolved first.
@@ -199,7 +209,8 @@ public class Package extends Scope
         }
         //dumpAll();
     }
-    
+
+
     // only for debugging
     public static void dumpAll()
     {
@@ -212,7 +223,8 @@ public class Package extends Scope
             }
         }
     }
-    
+
+
     /**
      * Maps each imported package name to the corresponding Package object.
      */
@@ -221,18 +233,20 @@ public class Package extends Scope
         for (String importedName : importedPackages.keySet())
         {
             Package importedPackage = nameToPackage.get(importedName);
-            
+
             // The parser should have complained if there is no package for 
             // the given name. Thus this case should never occur, so we throw
             // an exception instead of logging an error.
             if (importedPackage == null)
             {
                 //throw new RuntimeException("no package " + importedPackage);
-                ToolContext.logError(this.node, "no package " + importedPackage);
+                ToolContext
+                        .logError(this.node, "no package " + importedPackage);
             }
             importedPackages.put(importedName, importedPackage);
         }
     }
+
 
     /**
      * Returns all names of imported packages of the current package
@@ -278,20 +292,23 @@ public class Package extends Scope
             ToolContext.logError(node, "duplicate package " + packageName);
         }
     }
-    
+
+
     /**
      * Stores a type symbol in the underlying Scope object <em>and</em> in the
      * local types map.
      * @param name      AST node for type name
      * @param typeNode  AST node for type definition
      */
+    @Override
     public void setTypeSymbol(AST name, Object typeNode)
-    {   
+    {
         TypeInterface type = (TypeInterface) typeNode;
         localTypes.put(name.getText(), type);
         super.setSymbol(name, (TypeInterface) type);
     }
-    
+
+
     /**
      * Finds a local type by name.
      * @param name   local name within the current package
@@ -301,11 +318,13 @@ public class Package extends Scope
     {
         return localTypes.get(name);
     }
-    
+
+
     public Set<String> getLocalTypeNames()
     {
-    	return localTypes.keySet();
+        return localTypes.keySet();
     }
+
 
     /**
      * Adds a package import to the list of imported packages. A warning is 
@@ -316,9 +335,8 @@ public class Package extends Scope
     {
         boolean first = true;
         StringBuilder buffer = new StringBuilder();
-        for (AST child = node.getFirstChild(); 
-             child != null;
-             child = child.getNextSibling())
+        for (AST child = node.getFirstChild(); child != null; child = child
+                .getNextSibling())
         {
             if (first)
             {
@@ -333,14 +351,16 @@ public class Package extends Scope
         String packageName = buffer.toString();
         if (importedPackages.containsKey(packageName))
         {
-            ToolContext.logWarning((TokenAST)node, "duplicate import of package " + packageName);
+            ToolContext.logWarning((TokenAST) node,
+                    "duplicate import of package " + packageName);
         }
         else
         {
             importedPackages.put(packageName, null);
         }
     }
-    
+
+
     /**
      * Stores import of a single type (import com.acme.foo.MyType;).
      * TODO: Not yet implemented.
@@ -348,10 +368,10 @@ public class Package extends Scope
      */
     public void addSingleImport(TokenAST node)
     {
-        
+
     }
 
-    
+
     /**
      * Finds a type with a given name. If the type is not a local type, the
      * type will be looked up by its local name within each imported package.
@@ -361,6 +381,7 @@ public class Package extends Scope
      * package
      * @param name      local type name
      */
+    @Override
     public TypeInterface getType(String name)
     {
         TypeInterface result = localTypes.get(name);
@@ -368,8 +389,7 @@ public class Package extends Scope
         {
             for (Package p : importedPackages.values())
             {
-                if (p == null)
-                    continue;
+                if (p == null) continue;
                 TypeInterface externalType = p.getLocalType(name);
                 if (externalType != null)
                 {
@@ -379,7 +399,8 @@ public class Package extends Scope
                     }
                     else
                     {
-                        ToolContext.logError(null, "ambiguous type reference '"+ name + "'");
+                        ToolContext.logError(null, "ambiguous type reference '"
+                                + name + "'");
                         result = null;
                         break;
                     }
@@ -389,7 +410,7 @@ public class Package extends Scope
         return result;
     }
 
-    
+
     /**
      * Returns the fully qualified name of this package
      * @return e.g. "com.acme.foo.bar"
@@ -416,7 +437,8 @@ public class Package extends Scope
         }
         return packageName;
     }
-    
+
+
     /**
      * Returns this list of subpackage names for the current package.
      * @return e.g. ["com", "acme", "foo", "bar"]
@@ -426,23 +448,25 @@ public class Package extends Scope
         if (packagePath == null)
         {
             packagePath = new ArrayList<String>();
-            for (AST child = node.getFirstChild(); 
-                child != null;  
-                child = child.getNextSibling())
+            for (AST child = node.getFirstChild(); child != null; child = child
+                    .getNextSibling())
             {
                 packagePath.add(child.getText());
             }
         }
         return packagePath;
     }
-    
+
+
+    @Override
     public Package getPackage()
     {
         return this;
     }
-    
+
+
     public boolean isUserDefined()
     {
-    	return (this != BUILTIN) && (this != DEFAULT); 
+        return (this != BUILTIN) && (this != DEFAULT);
     }
 }

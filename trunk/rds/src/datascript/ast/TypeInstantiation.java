@@ -91,6 +91,7 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
     }
 
 
+    @Override
     public String toString()
     {
         return "instantiation of " + compound;

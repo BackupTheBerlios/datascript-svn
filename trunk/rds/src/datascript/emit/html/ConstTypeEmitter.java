@@ -84,6 +84,7 @@ public class ConstTypeEmitter extends DefaultHTMLEmitter
     }
 
 
+    @Override
     public String getPackageName()
     {
         return consttype.getPackage().getPackageName();

@@ -82,6 +82,7 @@ public class IntegerType extends TokenAST implements TypeInterface
     }
 
 
+    @Override
     public String toString()
     {
         return "integer";

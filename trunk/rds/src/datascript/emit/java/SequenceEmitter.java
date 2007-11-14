@@ -79,6 +79,7 @@ public class SequenceEmitter extends CompoundEmitter
         }
 
 
+        @Override
         public void emit(PrintWriter writer, Configuration cfg) throws Exception
         {
             if (tpl == null)
@@ -171,6 +172,7 @@ public class SequenceEmitter extends CompoundEmitter
     }
 
 
+    @Override
     public CompoundType getCompoundType()
     {
         return seq;

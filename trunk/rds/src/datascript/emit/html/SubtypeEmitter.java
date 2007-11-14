@@ -83,6 +83,7 @@ public class SubtypeEmitter extends DefaultHTMLEmitter
     }
 
 
+    @Override
     public String getPackageName()
     {
         return subtype.getPackage().getPackageName();

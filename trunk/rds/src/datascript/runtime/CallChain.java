@@ -35,11 +35,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.runtime;
+
 
 import java.util.Stack;
 
-@SuppressWarnings({"unchecked", "serial"})
+
+
+@SuppressWarnings("serial")
 public class CallChain extends Stack<Object>
 {
 
@@ -62,21 +67,26 @@ public class CallChain extends Stack<Object>
         // null))]).obj;
     }
 
+
     public void push(String name, Object obj)
     {
         push(new Record(name, obj));
     }
+
 
     private class Record
     {
         String name; // assumed to be interned!
         Object obj;
 
+
+        @Override
         public boolean equals(Object obj)
         {
             // return this.name == ((Record)obj).name;
             return this.name.equals(((Record) obj).name);
         }
+
 
         Record(String name, Object obj)
         {

@@ -79,7 +79,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.17.3 (13 Nov 2007)";
+    private static final String VERSION = "rds 0.17.3.1 (14 Nov 2007)";
 
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -121,6 +121,7 @@ public class DataScriptTool implements Parameters
          *            found.
          * @return The <code>arguments</code> String array.
          */
+        @Override
         protected String[] flatten(Options options, String[] arguments,
                 boolean stopAtNonOption)
         {

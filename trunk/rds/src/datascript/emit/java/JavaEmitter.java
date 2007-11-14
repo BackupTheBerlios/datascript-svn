@@ -63,6 +63,7 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginTranslationUnit(AST rootNode, AST unitNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
@@ -70,6 +71,7 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginSequence(AST s)
     {
         SequenceType sequence = (SequenceType) s;
@@ -81,6 +83,7 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endSequence(AST s)
     {
         sequenceEmitter.end(cfg);
@@ -88,6 +91,7 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginUnion(AST u)
     {
         UnionType union = (UnionType) u;
@@ -100,6 +104,7 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endUnion(AST u)
     {
         unionEmitter.end(cfg);
@@ -107,6 +112,7 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginEnumeration(AST e)
     {
         EnumType enumType = (EnumType) e;
@@ -119,12 +125,14 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endEnumeration(AST e)
     {
         writer.close();
     }
 
 
+    @Override
     public void beginSubtype(AST s)
     {
         Subtype subtype = (Subtype) s;
@@ -137,12 +145,14 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endSubtype(AST s)
     {
         writer.close();
     }
 
 
+    @Override
     public void beginSqlDatabase(AST s)
     {
         SqlDatabaseType db = (SqlDatabaseType) s;
@@ -155,12 +165,14 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endSqlDatabase(AST s)
     {
         writer.close();
     }
 
 
+    @Override
     public void beginSqlTable(AST s)
     {
         SqlTableType table = (SqlTableType) s;
@@ -172,12 +184,14 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endSqlTable(AST s)
     {
         writer.close();
     }
 
 
+    @Override
     public void beginSqlInteger(AST s)
     {
         SqlIntegerType integerType = (SqlIntegerType) s;
@@ -189,6 +203,7 @@ public class JavaEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endSqlInteger(AST s)
     {
         writer.close();

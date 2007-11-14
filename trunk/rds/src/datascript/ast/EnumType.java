@@ -95,12 +95,14 @@ public class EnumType extends SetType
     }
 
 
+    @Override
     public String toString()
     {
         return "ENUM";
     }
 
 
+    @Override
     public Scope getScope()
     {
         return scope;

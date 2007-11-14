@@ -62,6 +62,7 @@ public class ConstEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginRoot(AST rootNode)
     {
         findAllPackageNames(rootNode, allPackageNames);
@@ -79,6 +80,7 @@ public class ConstEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void endRoot()
     {
         try
@@ -94,6 +96,7 @@ public class ConstEmitter extends JavaDefaultEmitter
     }
 
 
+    @Override
     public void beginConst(AST c)
     {
         constType = (ConstType) c;

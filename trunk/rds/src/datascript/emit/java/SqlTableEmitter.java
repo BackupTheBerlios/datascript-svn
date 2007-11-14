@@ -184,6 +184,7 @@ public class SqlTableEmitter extends CompoundEmitter
     }
 
 
+    @Override
     public CompoundType getCompoundType()
     {
         return tableType;
@@ -196,6 +197,7 @@ public class SqlTableEmitter extends CompoundEmitter
     }
 
 
+    @Override
     public void setWriter(PrintWriter writer)
     {
         super.setWriter(writer);

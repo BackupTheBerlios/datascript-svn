@@ -55,6 +55,7 @@ public class ByteArrayBitStreamReader extends BitStreamReader
         length = b.length;
     }
     
+    @Override
     public int read() throws IOException
     {
         checkClosed();
@@ -67,6 +68,7 @@ public class ByteArrayBitStreamReader extends BitStreamReader
         return val;
     }
     
+    @Override
     public int read(byte[] b, int off, int len) throws IOException 
     {
         checkClosed();
@@ -78,11 +80,13 @@ public class ByteArrayBitStreamReader extends BitStreamReader
         return nbytes;
     }
 
+    @Override
     public long length() 
     {
         return length;
     }
 
+    @Override
     public void seek(long pos) throws IOException 
     {
         checkClosed();

@@ -74,6 +74,7 @@ public class LineError extends Error
     }
 
 
+    @Override
     public String toString()
     {
         if (n == null) return super.toString();

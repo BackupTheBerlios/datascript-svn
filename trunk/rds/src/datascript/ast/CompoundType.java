@@ -35,7 +35,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 package datascript.ast;
+
 
 import java.util.List;
 import java.util.Stack;
@@ -47,10 +50,11 @@ import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
 
 
+
 abstract public class CompoundType extends TokenAST implements TypeInterface
 {
     protected int id;
-    
+
     protected Vector<Field> fields = new Vector<Field>();
     private Vector<FunctionType> functions = new Vector<FunctionType>();
     private Vector<Parameter> parameters = new Vector<Parameter>();
@@ -62,16 +66,18 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     int byteOrder;
 
     private Scope scope;
-    
+
     private Package pkg;
 
     private String name;
 
     private CompoundType parent;
-    
+
     private Token doc;
 
+
     abstract public IntegerValue sizeof(Context ctxt);
+
 
     abstract public boolean isMember(Context ctxt, Value val);
 
@@ -82,35 +88,35 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     {
         id = TypeRegistry.registerType(this);
     }
-    
+
+
     public CompoundType getParent()
     {
         return parent;
     }
-/*
-    public void addParameter(String param)
-    {
-        if (parameters == null)
-        {
-            parameters = new Vector<String>();
-        }
-        parameters.addElement(param);
-    }
-*/
+
+
+    /*
+     * public void addParameter(String param) { if (parameters == null) {
+     * parameters = new Vector<String>(); } parameters.addElement(param); }
+     */
     public boolean isParameter(String param)
     {
         return (parameters != null) && parameters.contains(param);
     }
+
 
     public List<Parameter> getParameters()
     {
         return parameters;
     }
 
+
     public Parameter getParameterAt(int index)
     {
         return parameters.get(index);
     }
+
 
     public int getParameterCount()
     {
@@ -122,6 +128,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     {
         return fields.size() == 0;
     }
+
 
     public String getName()
     {
@@ -140,6 +147,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         return name;
     }
 
+
     public String getDocumentation()
     {
         String result = "";
@@ -149,11 +157,13 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         }
         return result;
     }
-    
+
+
     public void setDocumentation(Token t)
     {
-    	doc = t;
+        doc = t;
     }
+
 
     public void addContainer(CompoundType f)
     {
@@ -163,7 +173,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         }
     }
 
- 
+
     /**
      * @return true if 'this' is contained in compound type 'f'
      */
@@ -171,6 +181,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     {
         return isContainedIn(f, new Stack<CompoundType>());
     }
+
 
     /**
      * The "is contained" relationship may contain cycles use a stack to avoid
@@ -206,11 +217,13 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     {
         return fields;
     }
-    
+
+
     public int getNumFields()
     {
         return fields.size();
     }
+
 
     public void addField(Field f)
     {
@@ -218,15 +231,18 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         fields.addElement(f);
     }
 
+
     public Field getField(int i)
     {
         return fields.elementAt(i);
     }
 
+
     public Scope getScope()
     {
         return scope;
     }
+
 
     public void setScope(Scope scope, Package pkg)
     {
@@ -235,17 +251,21 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         scope.setOwner(this);
     }
 
+
+    @Override
     public String toString()
     {
         return name;
     }
 
+
     public Value castFrom(Value val)
     {
-        throw new Error("casting compounds not implemented in " + this.getClass().getName());
+        throw new Error("casting compounds not implemented in "
+                + this.getClass().getName());
     }
 
-    
+
     public void storeParameters()
     {
         AST node = getFirstChild().getNextSibling();
@@ -260,36 +280,44 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
             }
         }
     }
-    
+
+
     private void storeParameter(AST param)
     {
         AST type = param.getFirstChild();
         AST id = type.getNextSibling();
-        Parameter p = new Parameter(id.getText(), (TypeInterface)type);
+        Parameter p = new Parameter(id.getText(), (TypeInterface) type);
         parameters.add(p);
         scope.setSymbol(id, p);
     }
-    
+
+
     public int getLength()
     {
-        throw new InternalError("getLength() not implemented in " + this.getClass().getName());
+        throw new InternalError("getLength() not implemented in "
+                + this.getClass().getName());
     }
-    
+
+
     public Expression getLengthExpression()
     {
-        throw new InternalError("getLengthExpression() not implemented in " + this.getClass().getName());
+        throw new InternalError("getLengthExpression() not implemented in "
+                + this.getClass().getName());
     }
+
 
     public Package getPackage()
     {
-    	return pkg;
+        return pkg;
     }
-    
+
+
     public void addFunction(AST function)
     {
         functions.add((FunctionType) function);
     }
-    
+
+
     public List<FunctionType> getFunctions()
     {
         return functions;

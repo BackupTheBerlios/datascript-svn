@@ -72,6 +72,7 @@ public class SqlIntegerType extends CompoundType
     }
 
 
+    @Override
     public IntegerValue sizeof(Context ctxt)
     {
         IntegerValue eight = new IntegerValue(8);
@@ -104,6 +105,7 @@ public class SqlIntegerType extends CompoundType
     }
 
 
+    @Override
     public boolean isMember(Context ctxt, Value val)
     {
         throw new UnsupportedOperationException("isMember not implemented in "
@@ -111,12 +113,14 @@ public class SqlIntegerType extends CompoundType
     }
 
 
+    @Override
     public String toString()
     {
         return "SQL_INTEGER";
     }
 
 
+    @Override
     public String getDocumentation()
     {
         String result = "";

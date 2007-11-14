@@ -278,6 +278,7 @@ public class XmlExtension extends XMLFilterImpl implements Extension
      * 'main' for xml output
      * @see org.xml.sax.helpers.XMLFilterImpl#parse(org.xml.sax.InputSource)
      */
+    @Override
     public void parse(InputSource is) throws SAXException
     {
         handler = getContentHandler();
