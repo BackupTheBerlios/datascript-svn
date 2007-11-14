@@ -12,5 +12,10 @@
 	<classpathentry kind="lib" path="lib/commons-cli-1.1.jar" sourcepath="D:/eclipse/commons-cli-1.1/commons-cli-1.1-src.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/freemarker.jar"/>
+	<classpathentry kind="src" path=".apt_generated">
+		<attributes>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

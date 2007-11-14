@@ -64,16 +64,6 @@ tokens
 }
 
 
-{
-    private ToolContext context;
-    
-    public void setToolContext(ToolContext context)
-    {
-        this.context = context;
-    }
-}
-
-
 
 
 // an identifier.  Note that testLiterals is set to true!  This means

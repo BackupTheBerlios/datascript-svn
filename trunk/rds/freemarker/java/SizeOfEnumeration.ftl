@@ -39,6 +39,7 @@
 -->
 
 
+    @Override
     public void visit(${enumPackageName}.${name} node, Object arg)
     {
         __bitsize += node.bitsizeof();

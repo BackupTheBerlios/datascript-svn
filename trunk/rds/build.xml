@@ -173,7 +173,7 @@
 
 
   <target name="compile" depends="prepare, antlr" description="Compiles all project files">
-    <javac destdir="${classes}" debug="on" target="1.5">
+    <javac destdir="${classes}" debug="on">
       <classpath>
         <pathelement path="lib/freemarker.jar" />
         <pathelement path="lib/commons-cli-1.1.jar" />

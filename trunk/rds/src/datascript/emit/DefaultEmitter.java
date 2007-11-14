@@ -43,6 +43,7 @@ package datascript.emit;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -136,6 +137,17 @@ public class DefaultEmitter implements Emitter
     public String getRdsVersion()
     {
         return RDS_VERSION;
+    }
+
+
+    /**
+     * Calculates the actual time and returns a formattet string that follow the 
+     * ISO 8601 standard (i.e. "2007-13-11T12:08:56.235-0700")
+     * @return      actual time as a ISO 8601 formattet string
+     */
+    public String getTimeStamp()
+    {
+        return String.format("%1$tFT%1$tT.%1$tL%1$tz", Calendar.getInstance());
     }
 
 
