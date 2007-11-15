@@ -1,8 +1,17 @@
-xsltproc  --stringparam body.start.indent 0in --stringparam title.margin.left 0in --stringparam fop.extensions 1 --stringparam section.autolabel 1 --stringparam paper.type A4 /usr/share/xml/docbook/stylesheet/nwalsh/1.69.0/fo/docbook.xsl DataScriptLanguageOverview.xml > DataScriptLanguageOverview.fo
+~/work/fop-0.94/fop \
+-param section.autolabel 1 \
+-param paper.type A4 \
+-param fop1.extensions 1 \
+-xml DataScriptLanguageOverview.xml \
+-xsl /usr/share/xml/docbook/stylesheet/nwalsh/1.71.1/fo/docbook.xsl \
+-pdf DataScriptLanguageOverview.pdf 
 
-fop DataScriptLanguageOverview.fo DataScriptLanguageOverview.pdf
 
-xsltproc  --stringparam body.start.indent 0in --stringparam title.margin.left 0in --stringparam fop.extensions 1 --stringparam section.autolabel 1 --stringparam paper.type A4 /usr/share/xml/docbook/stylesheet/nwalsh/1.69.0/fo/docbook.xsl InstallationGuide.xml > InstallationGuide.fo
-
-fop InstallationGuide.fo InstallationGuide.pdf
-
+~/work/fop-0.94/fop \
+-param section.autolabel 1 \
+-param paper.type A4 \
+-param fop1.extensions 1 \
+-xml InstallationGuide.xml \
+-xsl /usr/share/xml/docbook/stylesheet/nwalsh/1.71.1/fo/docbook.xsl \
+-pdf InstallationGuide.pdf 
+                                                                    
