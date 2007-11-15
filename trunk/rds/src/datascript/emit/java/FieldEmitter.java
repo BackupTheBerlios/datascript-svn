@@ -125,7 +125,7 @@ public abstract class FieldEmitter
 
     public String getJavaTypeName()
     {
-        return TypeNameEmitter.getTypeName(field.getFieldType());
+        return TypeNameEmitter.getTypeName(field);
     }
 
 
@@ -176,6 +176,10 @@ public abstract class FieldEmitter
     
     public boolean getIsSimple()
     {
+        if (field.getOptionalClause() != null)
+        {
+            return false;
+        }
         boolean result = false;
         if (type instanceof StdIntegerType)
         {

@@ -53,7 +53,7 @@ Optional
         assertEquals(a, opt.getA());
         assertEquals(tag == 99, opt.hasB());
         if (tag == 99)
-            assertEquals(b, opt.getB());
+            assertEquals(b, opt.getB().intValue());
         assertEquals(tag == 98, opt.hasIa());
         if (tag == 98)
         {

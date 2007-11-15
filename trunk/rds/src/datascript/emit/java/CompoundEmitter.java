@@ -718,8 +718,11 @@ abstract public class CompoundEmitter
 
     private void writeIntegerValue(String value, IntegerType type)
     {
+        Long l = 4L;
+        int i =  new Long(l).intValue();
         String methodSuffix;
-        String cast = "";
+        String castPrefix = "";
+        String castSuffix = "";
         String arg = "";
         switch (type.getType())
         {
@@ -741,7 +744,8 @@ abstract public class CompoundEmitter
 
             case DataScriptParserTokenTypes.UINT8:
                 methodSuffix = "Byte";
-                cast = "(short) ";
+                castPrefix = "new Long(";
+                castSuffix = ").shortValue()";
                 break;
 
             case DataScriptParserTokenTypes.UINT16:
@@ -750,7 +754,8 @@ abstract public class CompoundEmitter
 
             case DataScriptParserTokenTypes.UINT32:
                 methodSuffix = "UnsignedInt";
-                cast = "(int) ";
+                castPrefix = "new Long(";
+                castSuffix = ").intValue()";
                 break;
 
             case DataScriptParserTokenTypes.UINT64:
@@ -772,7 +777,7 @@ abstract public class CompoundEmitter
                     if (length < 64)
                     {
                         methodSuffix = "Bits";
-                        cast = "(" + TypeNameEmitter.getTypeName(type) + ") ";
+                        castPrefix = "(" + TypeNameEmitter.getTypeName(type) + ") ";
                     }
                     else
                     {
@@ -788,8 +793,9 @@ abstract public class CompoundEmitter
         buffer.append("__out.write");
         buffer.append(methodSuffix);
         buffer.append("(");
-        buffer.append(cast);
+        buffer.append(castPrefix);
         buffer.append(value);
+        buffer.append(castSuffix);
         if (arg.length() != 0)
         {
             buffer.append(", ");

@@ -174,8 +174,8 @@ public class LabelTest extends TestCase
         tile.setB3(b3);
         byte[] blob = DataScriptIO.write(tile);
         
-        assertEquals(5, tile.getHeader().getOffset1());
-        assertEquals(8, tile.getHeader().getOffset3());
+        assertEquals(5, tile.getHeader().getOffset1().intValue());
+        assertEquals(8, tile.getHeader().getOffset3().intValue());
         
         TileWithOptionalBlocks tile2 = DataScriptIO.read(TileWithOptionalBlocks.class, blob);
         assertEquals(tile2, tile);

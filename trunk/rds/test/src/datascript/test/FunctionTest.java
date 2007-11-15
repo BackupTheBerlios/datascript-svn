@@ -41,7 +41,7 @@ public class FunctionTest extends TestCase
         else
         {
             result.setVal1((short)254);
-            result.setVal3(aValue);
+            result.setVal3(new Long(aValue));
         }
         return result;
     }

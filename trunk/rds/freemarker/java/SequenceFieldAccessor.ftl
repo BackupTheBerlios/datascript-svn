@@ -56,7 +56,7 @@
 
     public boolean ${indicatorName}()
     {
-        return ${optionalClause};
+        return ${name} != null;
     }
 
 </#if>

@@ -42,6 +42,7 @@ import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
 import datascript.ast.EnumType;
+import datascript.ast.Field;
 import datascript.ast.IntegerType;
 import datascript.ast.StdIntegerType;
 import datascript.ast.StringType;
@@ -106,9 +107,28 @@ public class TypeNameEmitter
         }
         return result;
     }
+    
+    public static String getTypeName(Field field)
+    {
+        TypeInterface type = field.getFieldType();
+        type = TypeReference.resolveType(type);
+
+        if (field.getOptionalClause() != null)
+        {            
+            if (type instanceof StdIntegerType)
+            {
+                return getNullableTypeName((StdIntegerType) type);
+            }
+            else if (type instanceof BitFieldType)
+            {
+                return getNullableTypeName((BitFieldType) type);
+            }
+        }
+        return getTypeName(type);
+    }
 
 
-    protected static String getTypeName(StdIntegerType t)
+    private static String getTypeName(StdIntegerType t)
     {
         switch (t.getType())
         {
@@ -136,7 +156,35 @@ public class TypeNameEmitter
     }
 
 
-    protected static String getTypeName(BitFieldType t)
+    private static String getNullableTypeName(StdIntegerType t)
+    {
+        switch (t.getType())
+        {
+            case DataScriptParserTokenTypes.INT8:
+                return "Byte";
+
+            case DataScriptParserTokenTypes.UINT8:
+            case DataScriptParserTokenTypes.INT16:
+                return "Short";
+
+            case DataScriptParserTokenTypes.UINT16:
+            case DataScriptParserTokenTypes.INT32:
+                return "Integer";
+
+            case DataScriptParserTokenTypes.UINT32:
+            case DataScriptParserTokenTypes.INT64:
+                return "Long";
+
+            case DataScriptParserTokenTypes.UINT64:
+                return "BigInteger";
+
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
+
+
+    private static String getTypeName(BitFieldType t)
     {
         int length = t.getLength();
         if (length == 0)
@@ -154,20 +202,38 @@ public class TypeNameEmitter
     }
 
 
-    protected static String getTypeName(CompoundType compound)
+    private static String getNullableTypeName(BitFieldType t)
+    {
+        int length = t.getLength();
+        if (length == 0)
+            return "BigInteger";
+        else if (length < 8)
+            return "Byte";
+        else if (length < 16)
+            return "Short";
+        else if (length < 32)
+            return "Integer";
+        else if (length < 64)
+            return "Long";
+        else
+            return "BigInteger";
+    }
+
+
+    private static String getTypeName(CompoundType compound)
     {
         return compound.getName();                
     }
 
 
-    protected static String getTypeName(TypeInstantiation inst)
+    private static String getTypeName(TypeInstantiation inst)
     {
         CompoundType compound = inst.getBaseType();
         return compound.getName();        
     }
 
 
-    protected static String getTypeName(ArrayType array)
+    private static String getTypeName(ArrayType array)
     {
         TypeInterface elType = array.getElementType();
         if (elType instanceof IntegerType)
@@ -260,7 +326,7 @@ public class TypeNameEmitter
     }
 
 
-    protected static String getClassName(BitFieldType t)
+    private static String getClassName(BitFieldType t)
     {
         int length = t.getLength();
         if (length == 0)

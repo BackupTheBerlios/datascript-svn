@@ -52,6 +52,7 @@ TileWithOptionalBlocks
 {
     TileHeader2    header;
 
+align(8):
 header.offset1:    
     VarBlock      b1   if header.hasBlock1 == 1;
 
