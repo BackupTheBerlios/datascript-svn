@@ -161,6 +161,8 @@ public class LabelTest extends TestCase
         header.setHasBlock1((byte)1);
         header.setHasBlock2((byte)0);
         header.setHasBlock3((byte)1);
+        header.setOffset1(0);
+        header.setOffset3(0);
 
         VarBlock b1 = new VarBlock();
         b1.setNumItems(1);

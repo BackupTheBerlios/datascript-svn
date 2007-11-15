@@ -152,6 +152,10 @@
         if (${field.optionalClause})
         {
         </#if><#t>
+        <#if field.hasAlignment>
+        ${indent}if (bitoffset % #{field.alignmentValue} != 0)
+            ${indent}bitoffset = ((bitoffset / #{field.alignmentValue}) + 1) * #{field.alignmentValue};
+        </#if>
         <#if field.labelExpression??><#t>
         ${indent}${field.labelSetter}((${field.labelTypeName})Util.bitsToBytes(bitoffset));
             <#assign LabeledFieldCnt=LabeledFieldCnt-1>
@@ -168,10 +172,6 @@
             <#assign bitsizeof>${field.getterName}().bitLength()</#assign>
         <#else>
             <#assign bitsizeof=field.bitsizeof>
-        </#if>
-        <#if field.hasAlignment>
-        ${indent}if (bitoffset % #{field.alignmentValue} != 0)
-            ${indent}bitoffset = ((bitoffset / #{field.alignmentValue}) + 1) * #{field.alignmentValue};
         </#if>
         ${indent}bitoffset += ${bitsizeof};	// ${field.name}
         <#if field.optionalClause??>
