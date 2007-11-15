@@ -1,7 +1,7 @@
 package alignment;
 
 
-foo
+Foo
 {
     uint8    f;
 };
@@ -15,7 +15,11 @@ align(8):
     bit:1    flag;
 
 align(8):
-    foo      f[2];
+    Foo      f[2];
+
+align(8):
+    uint16   c;
+        
 label1:
     bit:4    b;
 };

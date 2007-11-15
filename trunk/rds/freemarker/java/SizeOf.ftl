@@ -55,7 +55,7 @@ public class __SizeOf extends ${rootPackageName}.__DepthFirstVisitor
     @Override
     public void alignto(int n)
     {
-        __bitsize = ((__bitsize / n) + 1) * n;
+        __bitsize = (((__bitsize-1) / n) + 1) * n;
     }
 
 
