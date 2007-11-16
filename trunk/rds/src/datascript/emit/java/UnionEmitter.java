@@ -98,12 +98,6 @@ public class UnionEmitter extends CompoundEmitter
         {
             return field.toString();
         }
-
-
-        public String getClassName()
-        {
-            return TypeNameEmitter.getClassName(field.getFieldType());
-        }
     }
 
 
@@ -164,12 +158,12 @@ public class UnionEmitter extends CompoundEmitter
             {
                 param.emit(writer, cfg);
             }
+
             for (CompoundFunctionEmitter func : functions)
             {
                 func.emit(writer, cfg);
             }
 
-            
 
             tpl = cfg.getTemplate("java/UnionRead.ftl");
             tpl.process(this, writer);

@@ -272,11 +272,11 @@ choiceMemberList
     ;
     
 choiceMember
-    : choiceCases choiceAlternative
+    : choiceCases 
     ;
     
 choiceCases
-    : #(CASE (expression)+)
+    : #(CASE (expression)+ choiceAlternative)
     ;
     
 choiceAlternative

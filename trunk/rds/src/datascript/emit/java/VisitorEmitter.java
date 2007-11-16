@@ -43,6 +43,7 @@ package datascript.emit.java;
 import java.util.Set;
 
 import antlr.collections.AST;
+import datascript.ast.ChoiceType;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
@@ -122,6 +123,22 @@ public class VisitorEmitter extends JavaDefaultEmitter
 
     @Override
     public void endUnion(AST u)
+    {
+    }
+
+
+    @Override
+    public void beginChoice(AST c)
+    {
+        ChoiceType choice = (ChoiceType) c;
+        String typeName = getTypeName(choice);
+        typeName = choice.getPackage().getPackageName() + "." + typeName;
+        emitVisitor(typeName);
+    }
+
+
+    @Override
+    public void endChoice(AST c)
     {
     }
 

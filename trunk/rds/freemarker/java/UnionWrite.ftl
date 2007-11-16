@@ -64,6 +64,8 @@
                 ${field.writeField}
                 break;
 </#list>
+            default:
+                throw new IOException("no match in union");
         }
     }
 

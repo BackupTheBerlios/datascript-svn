@@ -8,18 +8,22 @@ Container
 
 choice Content on Container.tag
 {
+    /** if it's variant A */
     case 1:   VariantA  a;
 
+    /** variant B is only possible with cases 2-4 */
     case 2:
     case 3:
     case 4:   VariantB  b;
 
+    /** else take the default variant */
     default:  VariantC  c;       
 };
 
 subtype int8  VariantA;
 subtype int16 VariantB;
 subtype int32 VariantC;
+
 
 
 ParamContainer
@@ -34,7 +38,6 @@ enum uint8 Selector
     GREY,
     WHITE    
 };
-
 
 choice ParamContent(Selector sel) on sel
 {

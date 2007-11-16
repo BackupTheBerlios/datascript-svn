@@ -38,13 +38,12 @@
  */
 -->
 
-
     public ${className}()
     {
     }
 
 
-    public ${className}(String __filename${formalParameterList}) throws IOException
+    public ${className}(String __filename${formalParameterList}) throws Exception
     {
         FileBitStreamReader __in = new FileBitStreamReader(__filename);
         __cc = new CallChain();
@@ -53,20 +52,20 @@
     }
 
 
-    public ${className}(BitStreamReader __in${formalParameterList}) throws IOException
+    public ${className}(BitStreamReader __in${formalParameterList}) throws Exception
     {
         __cc = new CallChain();
         read(__in, __cc${actualParameterList});
     }
 
 
-    public ${className}(BitStreamReader __in, CallChain __cc${formalParameterList}) throws IOException 
+    public ${className}(BitStreamReader __in, CallChain __cc${formalParameterList}) throws Exception 
     {
         read(__in, __cc${actualParameterList});
     }
 
 
-    public void read(BitStreamReader __in, CallChain __cc${formalParameterList}) throws IOException 
+    public void read(BitStreamReader __in, CallChain __cc${formalParameterList}) throws Exception 
     {
         this.__cc = __cc;
 <#list choiceType.parameters as param>
@@ -77,22 +76,39 @@
         {
             __cc.push("${className}", this);
             __fpos = __in.getBitPosition();
-            switch (${selector})
+            try
             {
-<#list fields as field>
-    <#list field.cases as c>
-                case ${c}:
-    </#list>
-                    ${field.readField}
-                    break;
+                switch (${choiceType.selector})
+                {
+<#assign hasDefault = false>
+<#list members as member>
+    <#if !member.isDefault>
+        <#list member.cases as c>
+                    case ${c}:
+        </#list>
+                        ${member.readField}
+                        break;
+    <#else>
+                    default:
+                        ${member.readField}
+        <#assign hasDefault = true>
+    </#if>
 </#list>
-<#if choiceType.default??>
-                default:
-<#/if>              ${choiceType.default.readField}
-            }     
+<#if !hasDefault>
+                    default:
+                        throw new IOException("no match in choice");
+</#if>
+                }
+            }
+            catch (Exception __e1)
+            {
+                __in.setBitPosition(__fpos);
+                throw __e1;
+            }
         }
-        finally 
-        { 
-            __cc.pop(); 
+        finally
+        {
+            __cc.pop();
         }
     }
+

@@ -275,9 +275,11 @@ unionDeclaration
     ;
 
 choiceDeclaration
-    :  #(c:CHOICE i:ID             { scope().setTypeSymbol(i, c);
+    :  #(c:CHOICE 
+         i:ID                      { scope().setTypeSymbol(i, c);
                                      pushScope();
-                                     ((ChoiceType)c).setScope(scope(), pkg); } 
+                                     ((ChoiceType)c).setScope(scope(), pkg); 
+                                   } 
          (parameterList)? 
          expression 
          choiceMemberList 
@@ -286,27 +288,35 @@ choiceDeclaration
                                      ((ChoiceType)c).storeParameters();
                                    }
     ;
-    
+
 choiceMemberList
     :  #(MEMBERS (choiceMember)+ (defaultChoice)?)
     ;
-    
+
 choiceMember
-    : choiceCases choiceAlternative
+    : choiceCases 
     ;
-    
+
 choiceCases
-    : #(CASE (expression)+)
+    : #(CASE (expression)+ choiceAlternative)
     ;
-    
+
 choiceAlternative
-    : #(FIELD typeReference ID)
+    : #(FIELD                      { Field f = (Field)#FIELD; } 
+        typeReference 
+        (i:ID                      { scope().setSymbol(i, f);
+                                     f.setName(i);
+                                     CompoundType ct = (CompoundType)scope().getOwner();
+                                     ct.addField(f);
+                                   }
+        )? 
+      )
     ;
-    
+
 defaultChoice
     : #(DEFAULT choiceAlternative)        
-    ;   
-     
+    ;
+
 memberList
     : #(MEMBERS (declaration)*)
     ;

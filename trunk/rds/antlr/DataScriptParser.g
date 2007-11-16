@@ -399,7 +399,7 @@ sequenceDeclaration!
           }
         } 
     ;
-    
+
 choiceDeclaration!
     : c:CHOICE n:ID (p:parameterList)? ON! t:choiceTag
       m:choiceMemberList
@@ -411,9 +411,9 @@ choiceDeclaration!
         ch.setDocumentation(t); 
       }
     ;
-    
+
 choiceTag
-    : postfixExpression   
+    : postfixExpression 
       // TODO: We just want ID (DOT ID)*, and not a general postfixExpression
     ;          
 
@@ -421,25 +421,26 @@ choiceMemberList
     : LCURLY! (choiceMember)+ (defaultChoice)? (functionList)? RCURLY!
       { #choiceMemberList = #([MEMBERS, "CHOICE_MEMBERS"], #choiceMemberList); }
     ;
-    
+
 choiceMember
-    : choiceCases choiceAlternative SEMICOLON!
+    : choiceCases 
     ;
-    
+
 choiceCases
-    : CASE^ expression COLON! (CASE! expression COLON!)*
+    : CASE^ expression COLON! (CASE! expression COLON!)* choiceAlternative SEMICOLON!
     ;
 
 choiceAlternative!
-   :  t:typeReference
-      (f:ID)? 
-      (a:arrayRange {#t = #([ARRAY], t, a); } )?
-      { #choiceAlternative = #([FIELD], t, f); }
-   ;
-    
+    :  t:typeReference
+       (f:ID)? 
+       (a:arrayRange {#t = #([ARRAY], t, a); } )?
+       { #choiceAlternative = #([FIELD], t, f); }
+    ;
+
 defaultChoice
-    :  DEFAULT^ COLON! choiceAlternative SEMICOLON!        
+    :  DEFAULT^ COLON! choiceAlternative SEMICOLON!
     ;   
+
 
 memberList
     :   LCURLY! declarationList (f:functionList)? RCURLY!

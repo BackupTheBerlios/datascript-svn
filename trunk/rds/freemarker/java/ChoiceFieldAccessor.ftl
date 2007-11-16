@@ -38,35 +38,14 @@
  */
 -->
 
-
-    public void visit(${unionPackageName}.${unionType.name} node, Object arg)
+    public ${javaTypeName} ${getterName}() throws IOException
     {
-<#if getStartType()?? && getStartType()?has_content>
-        ${startType}
-</#if>
-        try
-        {
-            __cc.push("${unionType.name}", this);        
-            switch (node.getChoiceTag())
-            {
-<#list fields as field>
-                case ${unionPackageName}.${unionType.name}.CHOICE_${field.name}:
-                    ${field.visitor};
-                    break;
-</#list>
-                default:
-                    throw new IOException("no match in union");
-            }
-        }
-        catch (IOException __exc)
-        {
-            __exc.printStackTrace();
-        }
-        finally
-        {
-            __cc.pop();
-        }
-<#if getEndType()?? && getEndType()?has_content>
-        ${endType}
-</#if>
+        return (${className})__objectChoice;
     }
+
+
+    public void ${setterName}(${javaTypeName} ${name})
+    {
+        __objectChoice = ${name};
+    }
+

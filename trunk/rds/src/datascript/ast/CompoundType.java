@@ -55,12 +55,12 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
 {
     protected int id;
 
-    protected Vector<Field> fields = new Vector<Field>();
-    private Vector<FunctionType> functions = new Vector<FunctionType>();
-    private Vector<Parameter> parameters = new Vector<Parameter>();
+    protected final Vector<Field> fields = new Vector<Field>();
+    private final Vector<FunctionType> functions = new Vector<FunctionType>();
+    private final Vector<Parameter> parameters = new Vector<Parameter>();
 
     // / set of compound types that can contain this type
-    private Vector<CompoundType> containers = new Vector<CompoundType>();
+    private final Vector<CompoundType> containers = new Vector<CompoundType>();
 
     // / one of TypeInterface.NOBYTEORDER, BIGENDIAN, LITTLEENDIAN
     int byteOrder;
@@ -271,7 +271,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         AST node = getFirstChild().getNextSibling();
         if (node.getType() == DataScriptParserTokenTypes.PARAMLIST)
         {
-            parameters = new Vector<Parameter>(node.getNumberOfChildren());
+            parameters.clear();
             AST p = node.getFirstChild();
             while (p != null)
             {

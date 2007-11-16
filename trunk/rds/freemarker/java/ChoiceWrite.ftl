@@ -1,3 +1,4 @@
+<#--
 /* BSD License
  *
  * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
@@ -35,67 +36,47 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+-->
 
-
-package datascript.ast;
-
-
-/**
- * This class represents a parameter inside the body of a condition definition
- * or for a compound type
- */
-public class Parameter
-{
-    private String name;
-
-    private TypeInterface type;
-
-
-    public Parameter(String name, TypeInterface type)
+    public void write(String __filename) throws Exception 
     {
-        this.name = name;
-        this.type = type;
+        FileBitStreamWriter __out = new FileBitStreamWriter(__filename);
+        __cc = new CallChain();
+        write(__out, __cc);
+        __out.close();
     }
 
 
-    public TypeInterface getType()
+    public void write(BitStreamWriter __out) throws Exception 
     {
-        return (type);
+        __cc = new CallChain();
+        write(__out, __cc);
     }
 
 
-    public String getName()
+    public void write(BitStreamWriter __out, CallChain __cc) throws Exception 
     {
-        return (name);
-    }
-
-
-    public String getCanonicalTypeName()
-    {
-        return type.getClass().getCanonicalName();
-    }
-
-
-    public int getBitFieldLength()
-    {
-        if (type instanceof BitFieldType)
-            return ((BitFieldType)type).getLength();
-        throw new RuntimeException("type of field " + name + "is not a BitFieldType");
-    }
-
-
-    public boolean getIsSimple()
-    {
-        boolean result = false;
-        if (type instanceof StdIntegerType)
+        this.__cc = __cc;
+        switch (${choiceType.selector})
         {
-            result = ((StdIntegerType)type).getType() != datascript.antlr.DataScriptParserTokenTypes.UINT64;            
+<#assign hasDefault = false>
+<#list members as member>
+    <#if !member.isDefault>
+        <#list member.cases as c>
+            case ${c}:
+        </#list>
+                ${member.writeField}
+                break;
+    <#else>
+            default:
+                ${member.writeField}
+        <#assign hasDefault = true>
+    </#if>
+</#list>
+<#if !hasDefault>
+            default:
+                throw new IOException("no match in choice");
+</#if>
         }
-        else if (type instanceof BitFieldType)
-        {
-            BitFieldType bitField = (BitFieldType) type;
-            result = 0 < bitField.getLength() && bitField.getLength() < 64;
-        }
-        return result;
     }
-}
+

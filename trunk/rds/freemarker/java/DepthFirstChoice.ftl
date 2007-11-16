@@ -39,23 +39,31 @@
 -->
 
 
-    public void visit(${unionPackageName}.${unionType.name} node, Object arg)
+    public void visit(${choicePackageName}.${choiceType.name} node, Object arg)
     {
-<#if getStartType()?? && getStartType()?has_content>
-        ${startType}
-</#if>
         try
         {
-            __cc.push("${unionType.name}", this);        
-            switch (node.getChoiceTag())
+            __cc.push("${choiceType.name}", this);        
+            switch (${selector})
             {
-<#list fields as field>
-                case ${unionPackageName}.${unionType.name}.CHOICE_${field.name}:
-                    ${field.visitor};
-                    break;
+<#assign hasDefault = false>
+<#list members as member>
+    <#if !member.isDefault>
+        <#list member.cases as c>
+                    case ${c}:
+        </#list>
+                        ${member.visitor};
+                        break;
+    <#else>
+                    default:
+                        ${member.visitor};
+        <#assign hasDefault = true>
+    </#if>
 </#list>
-                default:
-                    throw new IOException("no match in union");
+<#if !hasDefault>
+                    default:
+                        throw new IOException("no match in choice");
+</#if>
             }
         }
         catch (IOException __exc)
@@ -66,7 +74,4 @@
         {
             __cc.pop();
         }
-<#if getEndType()?? && getEndType()?has_content>
-        ${endType}
-</#if>
     }

@@ -44,13 +44,19 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import datascript.antlr.util.ToolContext;
+import antlr.collections.AST;
+import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.ChoiceType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
+import datascript.ast.EnumType;
+import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.FunctionType;
+import datascript.ast.IntegerExpression;
+import datascript.ast.IntegerType;
 import datascript.ast.Parameter;
+import datascript.ast.TypeInterface;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -61,48 +67,125 @@ public class ChoiceEmitter extends CompoundEmitter
     private final List<CompoundFunctionEmitter> functions = 
         new ArrayList<CompoundFunctionEmitter>();
 
-    private final List<ChoiceFieldEmitter> fields = 
-        new ArrayList<ChoiceFieldEmitter>();
+    private final List<ChoiceMemberEmitter> members = 
+        new ArrayList<ChoiceMemberEmitter>();
 
     private ChoiceType choice;
 
 
 
-    public static class ChoiceFieldEmitter extends FieldEmitter
+    public static class ChoiceMemberEmitter
     {
+        private final CompoundEmitter global;
+        protected final AST member;
+
+        private Field field = null;
         private static Template tpl = null;
 
 
-        public ChoiceFieldEmitter(Field f, CompoundEmitter j)
+        public ChoiceMemberEmitter(AST choiceMember, CompoundEmitter choiceEmitter)
         {
-            super(f, j);
+            member = choiceMember;
+            global = choiceEmitter;
         }
 
 
-        @Override
         public void emit(PrintWriter writer, Configuration cfg) throws Exception
         {
             if (tpl == null)
-                tpl = cfg.getTemplate("java/UnionFieldAccessor.ftl");
+                tpl = cfg.getTemplate("java/ChoiceFieldAccessor.ftl");
             tpl.process(this, writer);
         }
 
 
-        public String getCheckerName()
+        private Field getField()
         {
-            return AccessorNameEmitter.getCheckerName(field);
+            if (field != null)
+                return field;
+
+            AST node = member.getFirstChild();
+            while (node != null)
+            {
+                int type = node.getType();
+                if (type == DataScriptParserTokenTypes.FIELD)
+                {
+                    field = (Field)node;
+                    break;
+                }
+                node = node.getNextSibling();
+            }
+            return field;
         }
 
 
-        public String getText()
+        public String getName()
         {
-            return field.toString();
+            return getField().getName();
+        }
+
+
+        public String getJavaTypeName()
+        {
+            return TypeNameEmitter.getTypeName(getField().getFieldType());
         }
 
 
         public String getClassName()
         {
-            return TypeNameEmitter.getClassName(field.getFieldType());
+            return TypeNameEmitter.getClassName((TypeInterface) getField().getFirstChild());
+        }
+
+
+        public String getGetterName()
+        {
+            return AccessorNameEmitter.getGetterName(getField());
+        }
+
+
+        public String getSetterName()
+        {
+            return AccessorNameEmitter.getSetterName(getField());
+        }
+
+
+        public String getReadField()
+        {
+            return global.readField(getField());
+        }
+
+
+        public String getWriteField()
+        {
+            return global.writeField(getField());
+        }
+
+
+        public boolean getIsDefault()
+        {
+            return member.getType() == DataScriptParserTokenTypes.DEFAULT;
+        }
+
+
+        public List<Expression> getCases()
+        {
+            List<Expression> caseList = new ArrayList<Expression>();
+
+            AST node = member.getFirstChild();
+            while (node != null)
+            {
+                if (node instanceof Expression)
+                {
+                    TypeInterface type = ((Expression)node).getExprType();
+                    if (!(type instanceof Field))
+                    {
+                        Expression e = (Expression)node;
+                        caseList.add(e);
+                    }
+                }
+                node = node.getNextSibling();
+            }
+
+            return caseList;
         }
     }
 
@@ -126,15 +209,14 @@ public class ChoiceEmitter extends CompoundEmitter
         return choice;
     }
 
+
     public void begin(Configuration cfg)
     {
-        fields.clear();
-        for (Field field : choice.getFields())
+        members.clear();
+        for (AST choiceMember : choice.getMembers())
         {
-            if (field.getAlignment() != null)
-                ToolContext.logError(field, "align is not allowed in union");
-            ChoiceFieldEmitter fe = new ChoiceFieldEmitter(field, this);
-            fields.add(fe);
+            ChoiceMemberEmitter me = new ChoiceMemberEmitter(choiceMember, this);
+            members.add(me);
         }
         params.clear();
         for (Parameter param : choice.getParameters())
@@ -152,24 +234,24 @@ public class ChoiceEmitter extends CompoundEmitter
 
         try
         {
-            Template tpl = cfg.getTemplate("java/UnionBegin.ftl");
+            Template tpl = cfg.getTemplate("java/ChoiceBegin.ftl");
             tpl.process(this, writer);
 
-            for (ChoiceFieldEmitter field : fields)
+            for (ChoiceMemberEmitter choiceMember : members)
             {
-                field.emit(writer, cfg);
+                choiceMember.emit(writer, cfg);
             }
 
             for (CompoundParameterEmitter param : params)
             {
                 param.emit(writer, cfg);
             }
+
             for (CompoundFunctionEmitter func : functions)
             {
                 func.emit(writer, cfg);
             }
 
-            
 
             tpl = cfg.getTemplate("java/ChoiceRead.ftl");
             tpl.process(this, writer);
@@ -199,9 +281,9 @@ public class ChoiceEmitter extends CompoundEmitter
     }
 
 
-    public List<ChoiceFieldEmitter> getFields()
+    public List<ChoiceMemberEmitter> getMembers()
     {
-        return fields;
+        return members;
     }
 
 }

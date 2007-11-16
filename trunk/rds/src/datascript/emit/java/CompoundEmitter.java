@@ -718,8 +718,6 @@ abstract public class CompoundEmitter
 
     private void writeIntegerValue(String value, IntegerType type)
     {
-        Long l = 4L;
-        int i =  new Long(l).intValue();
         String methodSuffix;
         String castPrefix = "";
         String castSuffix = "";

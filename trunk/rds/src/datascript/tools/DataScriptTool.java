@@ -79,7 +79,7 @@ import datascript.ast.Scope;
 
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.17.5 (15 Nov 2007)";
+    private static final String VERSION = "rds 0.17.6 (16 Nov 2007)";
 
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -353,7 +353,7 @@ public class DataScriptTool implements Parameters
     }
 
 
-    public static String getPackageFile(AST node)
+    private static String getPackageFile(AST node)
     {
         AST sibling = node.getFirstChild();
         String fileName = sibling.getText();

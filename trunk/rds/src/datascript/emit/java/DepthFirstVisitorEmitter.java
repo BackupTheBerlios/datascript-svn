@@ -40,6 +40,7 @@
 package datascript.emit.java;
 
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,7 @@ import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
+import datascript.ast.ChoiceType;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import datascript.ast.Expression;
@@ -57,6 +59,8 @@ import datascript.ast.SqlIntegerType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
+import datascript.emit.java.ChoiceEmitter.ChoiceMemberEmitter;
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 
@@ -64,10 +68,12 @@ import freemarker.template.Template;
 public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 {
     private final List<SequenceFieldEmitter> fields = new ArrayList<SequenceFieldEmitter>();
+    private final List<ChoiceMemberEmitter> members = new ArrayList<ChoiceMemberEmitter>();
     protected SequenceType sequence;
     protected UnionType union;
     protected EnumType enumeration;
     protected SqlIntegerType sqlinteger;
+    protected ChoiceType choice;
     protected static final ExpressionEmitter exprEmitter = new ExpressionEmitter();
 
 
@@ -125,8 +131,82 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     }
 
 
-    public DepthFirstVisitorEmitter(String outPathName,
-            String defaultPackageName)
+
+    public static class ChoiceMemberEmitter
+    {
+        private final DepthFirstVisitorEmitter global;
+        protected final AST member;
+
+        private Field field = null;
+
+
+        public ChoiceMemberEmitter(AST choiceMember, DepthFirstVisitorEmitter choiceEmitter)
+        {
+            member = choiceMember;
+            global = choiceEmitter;
+        }
+
+
+        private Field getField()
+        {
+            if (field != null)
+                return field;
+
+            AST node = member.getFirstChild();
+            while (node != null)
+            {
+                int type = node.getType();
+                if (type == DataScriptParserTokenTypes.FIELD)
+                {
+                    field = (Field)node;
+                    break;
+                }
+                node = node.getNextSibling();
+            }
+            return field;
+        }
+
+
+        public boolean getIsDefault()
+        {
+            return member.getType() == DataScriptParserTokenTypes.DEFAULT;
+        }
+
+
+        public List<Expression> getCases()
+        {
+            List<Expression> caseList = new ArrayList<Expression>();
+
+            AST node = member.getFirstChild();
+            while (node != null)
+            {
+                if (node instanceof Expression)
+                {
+                    TypeInterface type = ((Expression)node).getExprType();
+                    if (!(type instanceof Field))
+                    {
+                        Expression e = (Expression)node;
+                        caseList.add(e);
+                    }
+                }
+                node = node.getNextSibling();
+            }
+
+            return caseList;
+        }
+
+
+        public String getVisitor()
+        {
+            TypeInterface type = getField().getFieldType();
+            return global.getVisitor(type, "node."
+                    + AccessorNameEmitter.getGetterName(getField()) + "()");
+        }
+    }
+
+
+
+    public DepthFirstVisitorEmitter(String outPathName, String defaultPackageName)
     {
         super(outPathName, defaultPackageName);
     }
@@ -215,6 +295,30 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 
 
     @Override
+    public void beginChoice(AST c)
+    {
+        choice = (ChoiceType) c;
+
+        members.clear();
+        for (AST choiceMember : choice.getMembers())
+        {
+            ChoiceMemberEmitter fe = new ChoiceMemberEmitter(choiceMember, this);
+            members.add(fe);
+        }
+
+        try
+        {
+            Template tpl = cfg.getTemplate("java/DepthFirstChoice.ftl");
+            tpl.process(this, writer);
+        }
+        catch (Exception e)
+        {
+            throw new DataScriptException(e);
+        }
+    }
+
+
+    @Override
     public void beginEnumeration(AST e)
     {
         enumeration = (EnumType) e;
@@ -269,6 +373,12 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     }
 
 
+    public ChoiceType getChoiceType()
+    {
+        return choice;
+    }
+
+
     public EnumType getEnumerationType()
     {
         return enumeration;
@@ -290,6 +400,12 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     public String getUnionPackageName()
     {
         return union.getPackage().getPackageName();
+    }
+
+
+    public String getChoicePackageName()
+    {
+        return choice.getPackage().getPackageName();
     }
 
 
@@ -432,5 +548,19 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     public List<SequenceFieldEmitter> getFields()
     {
         return fields;
+    }
+
+
+    public List<ChoiceMemberEmitter> getMembers()
+    {
+        return members;
+    }
+
+
+    public String getSelector()
+    {
+        int type = choice.getType();
+        String selector = choice.getSelector("node");
+        return selector;
     }
 }

@@ -41,6 +41,7 @@ package datascript.emit.java;
 
 
 import antlr.collections.AST;
+import datascript.ast.ChoiceType;
 import datascript.ast.Subtype;
 import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
@@ -55,6 +56,7 @@ public class JavaEmitter extends JavaDefaultEmitter
 {
     private SequenceEmitter sequenceEmitter;
     private UnionEmitter unionEmitter;
+    private ChoiceEmitter choiceEmitter;
 
 
     public JavaEmitter(String outPathName, String defaultPackageName)
@@ -108,6 +110,27 @@ public class JavaEmitter extends JavaDefaultEmitter
     public void endUnion(AST u)
     {
         unionEmitter.end(cfg);
+        writer.close();
+    }
+
+
+    @Override
+    public void beginChoice(AST c)
+    {
+        ChoiceType choice = (ChoiceType) c;
+        String typeName = getTypeName(choice);
+        openOutputFile(dir, typeName + JAVA_EXT);
+        choiceEmitter = new ChoiceEmitter(this, choice);
+        choiceEmitter.setWriter(writer);
+
+        choiceEmitter.begin(cfg);
+    }
+
+
+    @Override
+    public void endChoice(AST c)
+    {
+        choiceEmitter.end(cfg);
         writer.close();
     }
 

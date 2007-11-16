@@ -39,20 +39,20 @@
 
 package datascript.ast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
 import datascript.antlr.DataScriptParserTokenTypes;
+import datascript.antlr.util.TokenAST;
+import datascript.emit.java.ExpressionEmitter;
 import antlr.collections.AST;
 
 
 @SuppressWarnings("serial")
 public class ChoiceType extends CompoundType
 {
-    private Expression selector;
-
-
-    public ChoiceType()
-    {
-
-    }
+    private String selector = null;
 
 
     @Override
@@ -100,17 +100,75 @@ public class ChoiceType extends CompoundType
     }
 
 
-    public Expression getSelector()
+    public AST getSelectorAST()
     {
-        if (selector == null)
+        AST node = getFirstChild().getNextSibling();
+        while (node != null && !(node instanceof Expression))
         {
-            AST node = getFirstChild().getNextSibling();
-            if (node.getType() == DataScriptParserTokenTypes.PARAMLIST)
-            {
-                node = node.getNextSibling();
-            }
-            selector = (Expression) node;
+            node = node.getNextSibling();
         }
+
+        return node;
+    }
+
+
+    public String getSelector()
+    {
+        if (selector != null)
+            return selector;
+
+        AST node = getSelectorAST();
+        if (node != null)
+        {
+            ExpressionEmitter ee = new ExpressionEmitter();
+            selector = ee.emit((Expression) node);
+        }
+
+//        if (selector == null)
+//            throw new ComputeError("missing selector");
         return selector;
+    }
+
+
+    public String getSelector(String compoundName)
+    {
+        AST node = getSelectorAST();
+        if (node != null)
+        {
+            ExpressionEmitter ee = new ExpressionEmitter();
+            selector = ee.emit((Expression) node, compoundName);
+        }
+
+//        if (selector == null)
+//            throw new ComputeError("missing selector");
+        return selector;
+    }
+
+
+    public List<AST> getMembers()
+    {
+        Vector<AST> v = new Vector<AST>();
+
+        // get CHOICE_MEMBERS
+        AST node = getFirstChild().getNextSibling().getNextSibling();
+        while (node != null && node.getType() != DataScriptParserTokenTypes.MEMBERS)
+            node = node.getNextSibling();
+        
+        if (node == null)
+            return v;
+
+        node = node.getFirstChild();
+        while(node != null)
+        {
+            switch (node.getType())
+            {
+            case DataScriptParserTokenTypes.CASE:
+            case DataScriptParserTokenTypes.DEFAULT:
+                v.add(node);
+                break;
+            }
+            node = node.getNextSibling();
+        }
+        return v;
     }
 }

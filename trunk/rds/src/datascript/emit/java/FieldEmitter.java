@@ -129,6 +129,12 @@ public abstract class FieldEmitter
     }
 
 
+    public String getClassName()
+    {
+        return TypeNameEmitter.getClassName(field.getFieldType());
+    }
+
+
     public String getName()
     {
         return field.getName();
@@ -173,7 +179,8 @@ public abstract class FieldEmitter
     {
         return type instanceof StdIntegerType;
     }
-    
+
+
     public boolean getIsSimple()
     {
         if (field.getOptionalClause() != null)
