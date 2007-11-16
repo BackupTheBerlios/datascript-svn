@@ -139,6 +139,11 @@
       by the DataScript parser from any user-defined DataScript model. The
       structure of the metamodel should as closely as possible reflect the
       structure of the AST.</para>
+
+      <para>An <ulink
+      url="https://dstools.svn.sourceforge.net/svnroot/dstools/trunk/rds/test/scripts/datascript/metamodel.ds">initial
+      sketch</ulink> of this metamodel is in the Subversion repository at
+      SourceForge.</para>
     </section>
 
     <section>
@@ -166,14 +171,21 @@
     <section>
       <title>Java Instance Parser </title>
 
-      <para>Refine the first draft of the
-      <literal>DataScriptInstanceParser</literal> interface and implement an
-      instance parser providing this interface. The instance parser first
-      loads a binary DataScript model. Having loaded the model, the parser can
-      parse an instance of a model from a stream. If a
-      <literal>DataScriptInstanceHandler</literal> has been passed to the
-      parser, the parser will fire SAX-style events allowing the instance
-      handler to interpret the content of the binary stream.</para>
+      <para>Refine the first draft of the <ulink
+      url="https://dstools.svn.sourceforge.net/svnroot/dstools/trunk/rds/test/src/datascript/instance/DataScriptInstanceParser.java"><literal>DataScriptInstanceParser</literal></ulink>
+      interface and implement an instance parser providing this interface. The
+      instance parser first loads a binary DataScript model. Having loaded the
+      model, the parser can parse an instance of a model from a stream. If a
+      <literal><ulink
+      url="https://dstools.svn.sourceforge.net/svnroot/dstools/trunk/rds/test/src/datascript/instance/DataScriptInstanceHandler.java">DataScriptInstanceHandler</ulink></literal>
+      has been passed to the parser, the parser will fire SAX-style events
+      allowing the instance handler to interpret the content of the binary
+      stream.</para>
+
+      <para><literal>AstDataScriptInstanceParser</literal> (stored in the same
+      folder) is a rudimentary proof-of-concept implementation of an instance
+      parser that directly works on the AST constructed by rds from a
+      DataScript source file, not on a binary model.</para>
     </section>
 
     <section>
@@ -191,7 +203,7 @@
       <para>Implement a C++ version of the Java instance parser that is
       suitable for an embedded environment and conforms to all coding style
       and design rules of Harman/Becker. The parser shall be reusable as a
-      library and different contexts.</para>
+      library in different contexts.</para>
     </section>
 
     <section>
