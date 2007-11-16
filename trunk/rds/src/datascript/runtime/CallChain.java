@@ -58,13 +58,8 @@ public class CallChain extends Stack<Object>
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
-            System.out
-                    .println("wrong containment - fix me, better error message");
-            throw e;
+            throw new RuntimeException(name + " not found on CallChain");
         }
-
-        // return ((Record)elementData[lastIndexOf(new Record(name,
-        // null))]).obj;
     }
 
 
@@ -83,7 +78,6 @@ public class CallChain extends Stack<Object>
         @Override
         public boolean equals(Object obj)
         {
-            // return this.name == ((Record)obj).name;
             return this.name.equals(((Record) obj).name);
         }
 
