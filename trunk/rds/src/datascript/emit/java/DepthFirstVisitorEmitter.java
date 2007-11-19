@@ -559,7 +559,6 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 
     public String getSelector()
     {
-        int type = choice.getType();
         String selector = choice.getSelector("node");
         return selector;
     }

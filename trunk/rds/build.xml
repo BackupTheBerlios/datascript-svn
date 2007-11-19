@@ -237,7 +237,20 @@
   <!-- ==================================================================== -->
 
   <target name="test.compile" 
-    depends="testBits.gen, testSqlParam.gen, testSql.gen, testPkg.gen, testFunc.gen, testTableImport.gen, testAlignment.gen, testLabel.gen, testLines.gen, testChoices.gen, gif.gen, jar" 
+    depends="
+  	jar, 
+  	gif.gen, 
+  	testBits.gen, 
+  	testSqlParam.gen, 
+  	testSql.gen, 
+  	testPkg.gen, 
+  	testFunc.gen, 
+  	testTableImport.gen, 
+  	testAlignment.gen, 
+  	testLabel.gen, 
+  	testLines.gen, 
+  	testChoices.gen
+  	" 
     description="Builds the test cases">
     <javac destdir="${build}/test/classes" debug="on">
       <classpath>
@@ -251,7 +264,18 @@
   </target>
 
   <target name="test.clean"
-    depends="testBits.clean, testSqlParam.clean, testSql.clean, testPkg.clean, testFunc.clean, testTableImport.clean, testAlignment.clean, testLabel.clean, testLines.clean, testChoices.clean"
+    depends="
+  	testBits.clean, 
+  	testSqlParam.clean, 
+  	testSql.clean, 
+  	testPkg.clean, 
+  	testFunc.clean, 
+  	testTableImport.clean, 
+  	testAlignment.clean, 
+  	testLabel.clean, 
+  	testLines.clean, 
+  	testChoices.clean
+  	"
     description="removes all generated test Java sources and classes">
     <delete dir="${test}/bits" />
   </target>
