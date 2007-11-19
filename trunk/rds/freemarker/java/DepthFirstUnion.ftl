@@ -46,7 +46,7 @@
 </#if>
         try
         {
-            __cc.push("${unionType.name}", this);        
+            __cc.push("${unionType.name}", node);        
             switch (node.getChoiceTag())
             {
 <#list fields as field>

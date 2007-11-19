@@ -43,7 +43,7 @@
     {
         try
         {
-            __cc.push("${choiceType.name}", this);        
+            __cc.push("${choiceType.name}", node);        
             switch (${selector})
             {
 <#assign hasDefault = false>

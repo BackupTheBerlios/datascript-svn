@@ -46,7 +46,7 @@
 </#if>
         try
         {
-            __cc.push("${sequenceType.name}", this);        
+            __cc.push("${sequenceType.name}", node);        
 <#list fields as field>
     <#if field.getOptionalClause()?has_content>
             if (node.${field.indicatorName}<#--${field.optionalClause}-->)
