@@ -78,11 +78,11 @@
             __fpos = __in.getBitPosition();
             try
             {
-                switch (${choiceType.selector})
+                switch (${selector})
                 {
 <#assign hasDefault = false>
 <#list members as member>
-    <#if !member.isDefault>
+    <#if member.cases?has_content>
         <#list member.cases as c>
                     case ${c}:
         </#list>

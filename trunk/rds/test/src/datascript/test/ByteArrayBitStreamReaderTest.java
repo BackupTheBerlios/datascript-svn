@@ -26,6 +26,7 @@ public class ByteArrayBitStreamReaderTest extends TestCase
         super(name);
     }
 
+    @Override
     protected void setUp() throws Exception
     {
         baos = new ByteArrayOutputStream();
@@ -47,6 +48,7 @@ public class ByteArrayBitStreamReaderTest extends TestCase
         in = new ByteArrayBitStreamReader(baos.toByteArray());
     }
 
+    @Override
     protected void tearDown() throws Exception
     {
         in.close();

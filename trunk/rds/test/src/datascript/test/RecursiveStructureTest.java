@@ -21,6 +21,7 @@ public class RecursiveStructureTest extends TestCase
     private File file = new File(fileName);
 
 
+    @Override
     protected void tearDown() throws Exception
     {
         super.tearDown();

@@ -22,6 +22,7 @@ public class ByteArrayBitStreamStringTest extends TestCase
 {
     private ByteArrayBitStreamReader in;
 
+    @Override
     protected void tearDown()
     {
         try

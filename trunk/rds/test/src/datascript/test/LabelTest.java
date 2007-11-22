@@ -37,6 +37,7 @@ public class LabelTest extends TestCase
     /*
      * @see TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception
     {
         file.delete();

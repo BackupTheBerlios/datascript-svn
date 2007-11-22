@@ -55,7 +55,7 @@
   <property name="test" value="${basedir}/test/src" />
 
   <!-- Example sources -->
-  <property name="examples" value="${basedir}/examples" />
+  <property name="examples" value="${test}/datascript/examples" />
 
 
   <!-- All products of the build go here. -->
@@ -467,7 +467,7 @@
     <delete dir="${test.gen}/gif" />
   </target>
 
-  <target name="gif.run" depends="test.compile" description="Runs the gif-example">
+  <target name="gif.run" depends="gif.gen" description="Runs the gif-example">
     <junit printsummary="no" fork="on" dir="${examples}">
       <classpath>
         <pathelement path="${build}/examples/classes" />

@@ -6,18 +6,31 @@ Container
     Content  content;
 };
 
+/**
+ *  This is a very important note
+ */
 choice Content on Container.tag
 {
-    /** if it's variant A */
-    case 1:   VariantA  a;
+    case 1:
+        /** 
+         * choice member comment 
+         * if it's variant A
+         */
+        VariantA  a;
 
-    /** variant B is only possible with cases 2-4 */
     case 2:
     case 3:
-    case 4:   VariantB  b;
+    case 4:
+        /** 
+         * variant B is only possible with cases 2-4
+         */
+        VariantB  b;
 
-    /** else take the default variant */
-    default:  VariantC  c;       
+    default:
+        /** 
+         *  else take the default variant
+         */
+        VariantC  c;       
 };
 
 subtype int8  VariantA;

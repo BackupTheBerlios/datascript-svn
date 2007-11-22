@@ -44,6 +44,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import antlr.collections.AST;
+
+import datascript.antlr.DataScriptParserTokenTypes;
+import datascript.ast.ChoiceCase;
+import datascript.ast.ChoiceType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
 import datascript.ast.Expression;
@@ -58,6 +63,7 @@ import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
+import datascript.emit.html.ExpressionEmitter;
 import freemarker.template.Template;
 
 
@@ -65,8 +71,8 @@ import freemarker.template.Template;
 public class CompoundEmitter extends DefaultHTMLEmitter
 {
     private CompoundType compound;
-    private List<FieldEmitter> fields = new ArrayList<FieldEmitter>();
-    private ExpressionEmitter exprEmitter = new ExpressionEmitter();
+    private final List<FieldEmitter> fields = new ArrayList<FieldEmitter>();
+    private final ExpressionEmitter exprEmitter = new ExpressionEmitter();
 
 
     public CompoundEmitter()
@@ -75,9 +81,11 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         directory = new File(directory, contentFolder);
     }
 
+
+
     public static class FieldEmitter
     {
-        private Field field;
+        private final Field field;
         private static final TypeNameEmitter tne = new TypeNameEmitter();
 
 
@@ -146,10 +154,42 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     }
 
 
+
     public void emit(CompoundType compound)
     {
         this.compound = compound;
         fields.clear();
+
+        if (compound instanceof ChoiceType)
+            emitChoiceType();
+        else
+            emitCompoundType();
+    }
+
+
+    private void emitChoiceType()
+    {
+        try
+        {
+            Template tpl = cfg.getTemplate("html/choice.html.ftl");
+
+            setCurrentFolder(contentFolder);
+
+            File outputDir = new File(directory, compound.getPackage().getPackageName());
+            openOutputFile(outputDir, compound.getName() + HTML_EXT);
+
+            tpl.process(this, writer);
+            writer.close();
+        }
+        catch (Exception exc)
+        {
+            throw new DataScriptException(exc);
+        }
+    }
+
+
+    private void emitCompoundType()
+    {
         for (Field field : compound.getFields())
         {
             FieldEmitter fe = new FieldEmitter(field);
@@ -184,6 +224,10 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         {
             return "Union";
         }
+        else if (compound instanceof ChoiceType)
+        {
+            return "Choice";
+        }
         else if (compound instanceof SqlDatabaseType)
         {
             return "SQL Database";
@@ -214,6 +258,10 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         if (compound instanceof SequenceType)
         {
             return "";
+        }
+        else if (compound instanceof ChoiceType)
+        {
+            return "choice ";
         }
         else if (compound instanceof UnionType)
         {
@@ -254,6 +302,29 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     public CompoundType getType()
     {
         return compound;
+    }
+
+
+    public ChoiceType getChoiceType()
+    {
+        return (ChoiceType) compound;
+    }
+
+
+    public String getSelector()
+    {
+        String selector = null;
+
+        AST node = ((ChoiceType)compound).getSelectorAST();
+        if (node != null)
+        {
+            ExpressionEmitter ee = new ExpressionEmitter();
+            selector = ee.emit((Expression) node);
+        }
+
+//        if (selector == null)
+//            throw new ComputeError("missing selector");
+        return selector;
     }
 
 

@@ -24,6 +24,7 @@ public class BitStreamStringTest extends TestCase
     private File file = new File(fileName);
     private FileBitStreamReader in;
 
+    @Override
     protected void tearDown()
     {
         try

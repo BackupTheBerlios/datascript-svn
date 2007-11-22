@@ -48,6 +48,7 @@ import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
+import datascript.ast.ChoiceMember;
 import datascript.ast.ChoiceType;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
@@ -135,12 +136,12 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     public static class ChoiceMemberEmitter
     {
         private final DepthFirstVisitorEmitter global;
-        protected final AST member;
+        protected final ChoiceMember member;
 
         private Field field = null;
 
 
-        public ChoiceMemberEmitter(AST choiceMember, DepthFirstVisitorEmitter choiceEmitter)
+        public ChoiceMemberEmitter(ChoiceMember choiceMember, DepthFirstVisitorEmitter choiceEmitter)
         {
             member = choiceMember;
             global = choiceEmitter;
@@ -300,7 +301,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         choice = (ChoiceType) c;
 
         members.clear();
-        for (AST choiceMember : choice.getMembers())
+        for (ChoiceMember choiceMember : choice.getChoiceMembers())
         {
             ChoiceMemberEmitter fe = new ChoiceMemberEmitter(choiceMember, this);
             members.add(fe);
@@ -559,7 +560,17 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 
     public String getSelector()
     {
-        String selector = choice.getSelector("node");
+        String selector = null;
+
+        AST node = choice.getSelectorAST();
+        if (node != null)
+        {
+            ExpressionEmitter ee = new ExpressionEmitter();
+            selector = ee.emit((Expression) node, "node");
+        }
+
+//        if (selector == null)
+//            throw new ComputeError("missing selector");
         return selector;
     }
 }

@@ -46,6 +46,8 @@ import java.util.List;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
+import datascript.ast.ChoiceCase;
+import datascript.ast.ChoiceMember;
 import datascript.ast.ChoiceType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
@@ -77,13 +79,12 @@ public class ChoiceEmitter extends CompoundEmitter
     public static class ChoiceMemberEmitter
     {
         private final CompoundEmitter global;
-        protected final AST member;
+        protected final ChoiceMember member;
 
-        private Field field = null;
         private static Template tpl = null;
 
 
-        public ChoiceMemberEmitter(AST choiceMember, CompoundEmitter choiceEmitter)
+        public ChoiceMemberEmitter(ChoiceMember choiceMember, CompoundEmitter choiceEmitter)
         {
             member = choiceMember;
             global = choiceEmitter;
@@ -98,94 +99,53 @@ public class ChoiceEmitter extends CompoundEmitter
         }
 
 
-        private Field getField()
-        {
-            if (field != null)
-                return field;
-
-            AST node = member.getFirstChild();
-            while (node != null)
-            {
-                int type = node.getType();
-                if (type == DataScriptParserTokenTypes.FIELD)
-                {
-                    field = (Field)node;
-                    break;
-                }
-                node = node.getNextSibling();
-            }
-            return field;
-        }
-
-
         public String getName()
         {
-            return getField().getName();
-        }
-
-
-        public String getJavaTypeName()
-        {
-            return TypeNameEmitter.getTypeName(getField().getFieldType());
-        }
-
-
-        public String getClassName()
-        {
-            return TypeNameEmitter.getClassName((TypeInterface) getField().getFirstChild());
-        }
-
-
-        public String getGetterName()
-        {
-            return AccessorNameEmitter.getGetterName(getField());
-        }
-
-
-        public String getSetterName()
-        {
-            return AccessorNameEmitter.getSetterName(getField());
-        }
-
-
-        public String getReadField()
-        {
-            return global.readField(getField());
-        }
-
-
-        public String getWriteField()
-        {
-            return global.writeField(getField());
-        }
-
-
-        public boolean getIsDefault()
-        {
-            return member.getType() == DataScriptParserTokenTypes.DEFAULT;
+            return member.getField().getName();
         }
 
 
         public List<Expression> getCases()
         {
-            List<Expression> caseList = new ArrayList<Expression>();
+            if (member instanceof ChoiceCase)
+                return ((ChoiceCase)member).getCases();
+            return null;
+        }
 
-            AST node = member.getFirstChild();
-            while (node != null)
-            {
-                if (node instanceof Expression)
-                {
-                    TypeInterface type = ((Expression)node).getExprType();
-                    if (!(type instanceof Field))
-                    {
-                        Expression e = (Expression)node;
-                        caseList.add(e);
-                    }
-                }
-                node = node.getNextSibling();
-            }
 
-            return caseList;
+        public String getJavaTypeName()
+        {
+            return TypeNameEmitter.getTypeName(member.getField().getFieldType());
+        }
+
+
+        public String getClassName()
+        {
+            return TypeNameEmitter.getClassName((TypeInterface) member.getField().getFirstChild());
+        }
+
+
+        public String getGetterName()
+        {
+            return AccessorNameEmitter.getGetterName(member.getField());
+        }
+
+
+        public String getSetterName()
+        {
+            return AccessorNameEmitter.getSetterName(member.getField());
+        }
+
+
+        public String getReadField()
+        {
+            return global.readField(member.getField());
+        }
+
+
+        public String getWriteField()
+        {
+            return global.writeField(member.getField());
         }
     }
 
@@ -213,7 +173,7 @@ public class ChoiceEmitter extends CompoundEmitter
     public void begin(Configuration cfg)
     {
         members.clear();
-        for (AST choiceMember : choice.getMembers())
+        for (ChoiceMember choiceMember : choice.getChoiceMembers())
         {
             ChoiceMemberEmitter me = new ChoiceMemberEmitter(choiceMember, this);
             members.add(me);
@@ -278,6 +238,23 @@ public class ChoiceEmitter extends CompoundEmitter
         {
             throw new DataScriptException(e);
         }
+    }
+
+
+    public String getSelector()
+    {
+        String selector = null;
+
+        AST node = choice.getSelectorAST();
+        if (node != null)
+        {
+            ExpressionEmitter ee = new ExpressionEmitter();
+            selector = ee.emit((Expression) node);
+        }
+
+//        if (selector == null)
+//            throw new ComputeError("missing selector");
+        return selector;
     }
 
 

@@ -42,6 +42,7 @@ public class AlignmentTest extends TestCase
     }
 
 
+    @Override
     protected void tearDown() throws Exception
     {
         file.delete();

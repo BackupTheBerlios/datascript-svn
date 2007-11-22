@@ -28,10 +28,12 @@ public class OptionalTest extends TestCase
         super(name);
     }
 
+    @Override
     protected void setUp() throws Exception
     {
     }
 
+    @Override
     protected void tearDown() throws Exception
     {
         file.delete();

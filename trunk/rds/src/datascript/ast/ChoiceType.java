@@ -52,7 +52,8 @@ import antlr.collections.AST;
 @SuppressWarnings("serial")
 public class ChoiceType extends CompoundType
 {
-    private String selector = null;
+    Vector<ChoiceMember> choiceMembers = null;
+    ChoiceDefault choiceDefault = null;
 
 
     @Override
@@ -112,42 +113,12 @@ public class ChoiceType extends CompoundType
     }
 
 
-    public String getSelector()
+    public List<ChoiceMember> getChoiceMembers()
     {
-        if (selector != null)
-            return selector;
+        if (choiceMembers != null)
+            return choiceMembers;
 
-        AST node = getSelectorAST();
-        if (node != null)
-        {
-            ExpressionEmitter ee = new ExpressionEmitter();
-            selector = ee.emit((Expression) node);
-        }
-
-//        if (selector == null)
-//            throw new ComputeError("missing selector");
-        return selector;
-    }
-
-
-    public String getSelector(String compoundName)
-    {
-        AST node = getSelectorAST();
-        if (node != null)
-        {
-            ExpressionEmitter ee = new ExpressionEmitter();
-            selector = ee.emit((Expression) node, compoundName);
-        }
-
-//        if (selector == null)
-//            throw new ComputeError("missing selector");
-        return selector;
-    }
-
-
-    public List<AST> getMembers()
-    {
-        Vector<AST> v = new Vector<AST>();
+        choiceMembers = new Vector<ChoiceMember>();
 
         // get CHOICE_MEMBERS
         AST node = getFirstChild().getNextSibling().getNextSibling();
@@ -155,7 +126,7 @@ public class ChoiceType extends CompoundType
             node = node.getNextSibling();
         
         if (node == null)
-            return v;
+            return choiceMembers;
 
         node = node.getFirstChild();
         while(node != null)
@@ -163,12 +134,14 @@ public class ChoiceType extends CompoundType
             switch (node.getType())
             {
             case DataScriptParserTokenTypes.CASE:
+                choiceMembers.add((ChoiceCase)node);
+                break;
             case DataScriptParserTokenTypes.DEFAULT:
-                v.add(node);
+                choiceMembers.add((ChoiceDefault)node);
                 break;
             }
             node = node.getNextSibling();
         }
-        return v;
+        return choiceMembers;
     }
 }

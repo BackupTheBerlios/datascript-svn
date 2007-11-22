@@ -61,12 +61,12 @@ tokens
     BIG="big";
     BIT="bit"<AST=datascript.ast.BitFieldType>;
     BLOCK;
-    CASE="case";
+    CASE="case"<AST=datascript.ast.ChoiceCase>;
     CAST;
     CHOICE="choice"<AST=datascript.ast.ChoiceType>;
     COMMENT;
     CONST="const"<AST=datascript.ast.ConstType>;
-    DEFAULT="default";
+    DEFAULT="default"<AST=datascript.ast.ChoiceDefault>;
     DIVIDE<AST=datascript.ast.IntegerExpression>;
     DOC;
     DOT<AST=datascript.ast.Expression>;
@@ -209,7 +209,6 @@ conditionDefinition
     :   "condition"^ ID parameterList conditionBlock
     ;
 
-
 parameterList 
     :   LPAREN! (parameterDefinition ( COMMA! parameterDefinition )* )? RPAREN!
         { #parameterList = #([PARAMLIST, "paramlist"], #parameterList); }
@@ -230,7 +229,6 @@ parameterDefinition
           } 
       }
     ;
-
 
 conditionExpression
     : expression
@@ -301,17 +299,13 @@ fieldDefinition!
             }
             else 
             {
-                if (doc.getType() == ARRAY)
+                switch (doc.getType())
                 {
-                    doc = doc.getFirstChild();
-                }
-                if (doc.getType() == INST)
-                {
-                    doc = doc.getFirstChild();
-                }
-                if (doc.getType() == TYPEREF)                     
-                {
-                    doc = doc.getFirstChild();
+                	case ARRAY:
+                    case INST:
+                    case TYPEREF:
+                        doc = doc.getFirstChild();
+                        break;
                 }
             }
             Token docToken = ((TokenAST)doc).getHiddenBefore();
@@ -371,12 +365,13 @@ paramTypeInstantiation
     ;
 
 sequenceDeclaration!
-    :   (modifier)* 
-        (u:"union")? 
-        (n:ID)?
-        (p:parameterList)? 
-        m:memberList        
-        { if (u == null)
+    : (modifier)* 
+      (u:"union")? 
+      (n:ID)?
+      (p:parameterList)? 
+      m:memberList        
+      { 
+      	  if (u == null)
           {
               #sequenceDeclaration = #([SEQUENCE], n, p, m);
               if (n == null)
@@ -391,13 +386,13 @@ sequenceDeclaration!
           }
           else
           {
-              #sequenceDeclaration = #([UNION], n, p, m); 
+              #sequenceDeclaration = #([UNION], n, p, m);
               UnionType s = (UnionType) #sequenceDeclaration;
               FileNameToken first = (FileNameToken) u;
               Token t = first.getHiddenBefore();
-              s.setDocumentation(t);              
+              s.setDocumentation(t);
           }
-        } 
+      }
     ;
 
 choiceDeclaration!
@@ -431,14 +426,20 @@ choiceCases
     ;
 
 choiceAlternative!
-    :  t:typeReference
-       (f:ID)? 
-       (a:arrayRange {#t = #([ARRAY], t, a); } )?
-       { #choiceAlternative = #([FIELD], t, f); }
+    : t:typeReference
+      (f:ID)? 
+      (a:arrayRange {#t = #([ARRAY], t, a); } )?
+      {
+        #choiceAlternative = #([FIELD], t, f);
+
+        Token docToken = ((TokenAST)#t.getFirstChild()).getHiddenBefore();
+        Field field = (Field) #choiceAlternative;
+        field.setDocumentation(docToken);
+      }
     ;
 
 defaultChoice
-    :  DEFAULT^ COLON! choiceAlternative SEMICOLON!
+    : DEFAULT^ COLON! choiceAlternative SEMICOLON!
     ;   
 
 

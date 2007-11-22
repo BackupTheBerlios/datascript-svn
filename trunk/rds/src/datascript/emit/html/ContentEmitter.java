@@ -53,10 +53,10 @@ import datascript.ast.TypeInterface;
 
 public class ContentEmitter extends DefaultHTMLEmitter
 {
-    private CompoundEmitter ce;
-    private EnumerationEmitter ee;
-    private SubtypeEmitter se;
-    private ConstTypeEmitter cte;
+    private final CompoundEmitter ce;
+    private final EnumerationEmitter ee;
+    private final SubtypeEmitter se;
+    private final ConstTypeEmitter cte;
 
 
     public ContentEmitter()

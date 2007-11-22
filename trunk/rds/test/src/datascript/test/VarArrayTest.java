@@ -45,6 +45,7 @@ public class VarArrayTest extends TestCase
     /*
      * @see TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception
     {
     }
@@ -53,6 +54,7 @@ public class VarArrayTest extends TestCase
     /*
      * @see TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception
     {
         file.delete();
