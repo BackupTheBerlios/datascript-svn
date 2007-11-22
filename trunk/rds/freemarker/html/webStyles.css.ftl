@@ -169,6 +169,11 @@ th
 	padding-left:5.5ex;
 }
 
+#tabIdent2
+{
+	padding-left:11ex;
+}
+
 .selectedpackagelist
 {
 	margin-left:0em;

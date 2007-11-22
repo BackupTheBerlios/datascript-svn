@@ -27,9 +27,27 @@
   <#assign c = field.constraint>
         <tr>
           <td valign="top" id="tabIdent"><@linkedtype field.type/><@arglist field/></td>
-          <td valign="bottom"><a href="#${fname}" class="fieldLink">${fname}</a>${array}${opt}${c};</td>
+          <td valign="bottom">
+            <a href="#${fname}" class="fieldLink">${fname}</a>${array}${opt}${c};</td>
         </tr>
 </#list>
+<#if functions?has_content>
+      </tbody>
+      </table>
+      <table>
+      <tbody id="tabIdent">
+  <#list functions as function>
+	<tr><td colspan=2 id="tabIdent">&nbsp;</td></tr>
+        <tr>
+          <td colspan=2 valign="top" id="tabIdent">function ${function.returnTypeName} ${function.funtionType.name}()</td>
+        </tr>
+        <tr><td colspan=2 id="tabIdent">{</td></tr>
+        <tr>
+          <td valign="top" id="tabIdent2">return</td>
+          <td>${function.result}</td></tr>
+        <tr><td colspan=2 id="tabIdent">}</td></tr>
+  </#list>
+</#if>
         <tr><td colspan=3>};</td></tr>
       </tbody>
       </table>

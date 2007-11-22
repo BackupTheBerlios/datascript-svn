@@ -53,6 +53,7 @@ import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
 import datascript.ast.Expression;
 import datascript.ast.Field;
+import datascript.ast.FunctionType;
 import datascript.ast.SequenceType;
 import datascript.ast.SqlDatabaseType;
 import datascript.ast.SqlIntegerType;
@@ -73,6 +74,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     private CompoundType compound;
     private final List<FieldEmitter> fields = new ArrayList<FieldEmitter>();
     private final ExpressionEmitter exprEmitter = new ExpressionEmitter();
+    private final List<FunctionEmitter> functions = new ArrayList<FunctionEmitter>();
 
 
     public CompoundEmitter()
@@ -83,13 +85,46 @@ public class CompoundEmitter extends DefaultHTMLEmitter
 
 
 
+    public class FunctionEmitter
+    {
+        private final FunctionType function;
+        private final ExpressionEmitter ee = new ExpressionEmitter();
+
+
+        public FunctionEmitter(FunctionType fctn)
+        {
+            function = fctn;
+        }
+
+
+        public FunctionType getFuntionType()
+        {
+            return function;
+        }
+
+
+        public String getReturnTypeName()
+        {
+            String returnTypeName = TypeNameEmitter.getTypeName(function.getReturnType());
+            return returnTypeName;
+        }
+
+
+        public String getResult()
+        {
+            return ee.emit(function.getResult());
+        }
+    }
+
+
+
     public static class FieldEmitter
     {
         private final Field field;
         private static final TypeNameEmitter tne = new TypeNameEmitter();
 
 
-        FieldEmitter(Field f)
+        public FieldEmitter(Field f)
         {
             this.field = f;
         }
@@ -194,6 +229,11 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         {
             FieldEmitter fe = new FieldEmitter(field);
             fields.add(fe);
+        }
+        for (FunctionType fctn : compound.getFunctions())
+        {
+            FunctionEmitter fe = new FunctionEmitter(fctn);
+            functions.add(fe);
         }
         try
         {
@@ -340,6 +380,12 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     public List<FieldEmitter> getFields()
     {
         return fields;
+    }
+
+
+    public List<FunctionEmitter> getFunctions()
+    {
+        return functions;
     }
 
 
