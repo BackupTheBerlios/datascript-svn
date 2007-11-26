@@ -290,7 +290,7 @@ choiceDeclaration
     ;
 
 choiceMemberList
-    :  #(MEMBERS (choiceMember)+ (defaultChoice)?)
+    :  #(MEMBERS (choiceMember)+ (defaultChoice)? (functionList)?)
     ;
 
 choiceMember

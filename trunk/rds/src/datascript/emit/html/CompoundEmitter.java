@@ -194,6 +194,12 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     {
         this.compound = compound;
         fields.clear();
+        functions.clear();
+        for (FunctionType fctn : compound.getFunctions())
+        {
+            FunctionEmitter fe = new FunctionEmitter(fctn);
+            functions.add(fe);
+        }
 
         if (compound instanceof ChoiceType)
             emitChoiceType();
@@ -229,11 +235,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         {
             FieldEmitter fe = new FieldEmitter(field);
             fields.add(fe);
-        }
-        for (FunctionType fctn : compound.getFunctions())
-        {
-            FunctionEmitter fe = new FunctionEmitter(fctn);
-            functions.add(fe);
         }
         try
         {

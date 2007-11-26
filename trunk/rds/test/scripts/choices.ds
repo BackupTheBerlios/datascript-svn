@@ -30,7 +30,12 @@ choice Content on Container.tag
         /** 
          *  else take the default variant
          */
-        VariantC  c;       
+        VariantC  c;
+
+    function uint32 sensless()
+    {
+        return 1;
+    }
 };
 
 subtype int8  VariantA;

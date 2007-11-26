@@ -44,7 +44,7 @@
         <tr><td colspan=2 id="tabIdent">{</td></tr>
         <tr>
           <td valign="top" id="tabIdent2">return</td>
-          <td>${function.result}</td></tr>
+          <td>${function.result};</td></tr>
         <tr><td colspan=2 id="tabIdent">}</td></tr>
   </#list>
 </#if>

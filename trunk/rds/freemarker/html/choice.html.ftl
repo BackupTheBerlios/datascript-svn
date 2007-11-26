@@ -49,6 +49,23 @@
           </td>
         </tr>
 </#list>
+<#if functions?has_content>
+      </tbody>
+      </table>
+      <table>
+      <tbody id="tabIdent">
+  <#list functions as function>
+	<tr><td colspan=4 id="tabIdent">&nbsp;</td></tr>
+        <tr>
+          <td colspan=4 valign="top" id="tabIdent">function ${function.returnTypeName} ${function.funtionType.name}()</td>
+        </tr>
+        <tr><td colspan=4 id="tabIdent">{</td></tr>
+        <tr>
+          <td valign="top" id="tabIdent2">return</td>
+          <td colspan=3>${function.result};</td></tr>
+        <tr><td colspan=4 id="tabIdent">}</td></tr>
+  </#list>
+</#if>
         <tr><td colspan=4>};</td></tr>
       </tbody>
       </table>
