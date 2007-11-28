@@ -25,7 +25,7 @@ import junit.framework.TestCase;
  * @author HWedekind
  * 
  */
-public class CoicesTest extends TestCase
+public class ChoiceTest extends TestCase
 {
     private FileImageOutputStream os;
     private String wFileName = "CoicesTest.data";
@@ -38,7 +38,7 @@ public class CoicesTest extends TestCase
      * 
      * @param name
      */
-    public CoicesTest(String name)
+    public ChoiceTest(String name)
     {
         super(name);
     }

@@ -373,14 +373,14 @@
 
   <!-- ==================================================================== -->
 
-  <target name="testChoices.gen" depends="jar" description="Generates parser for test cases" unless="testCoices.uptodate">
+  <target name="testChoices.gen" depends="jar" description="Generates parser for test cases" unless="testChoices.uptodate">
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
       <arg line="-c -out ${test.gen} -src ${ds.src} -java_e choices.ds" />
     </java>
   </target>
 
   <target name="testChoices.clean" description="removes all generated test Java sources and classes">
-    <delete dir="${test.gen}/coices" />
+    <delete dir="${test.gen}/choices" />
   </target>
 
   <!-- ==================================================================== -->
