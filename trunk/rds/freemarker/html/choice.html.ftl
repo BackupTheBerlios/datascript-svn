@@ -37,16 +37,20 @@
         </tr>
         <tr>
           <td></td>
+    <#if member.field?has_content>
           <td valign="bottom">
-    <#assign fname = member.field.name>
-    <#assign array = member.field.arrayRange!"">
-    <#assign opt = member.field.optionalClause!"">
-    <#assign c = member.field.constraint!"">
+      <#assign fname = member.field.name>
+      <#assign array = member.field.arrayRange!"">
+      <#assign opt = member.field.optionalClause!"">
+      <#assign c = member.field.constraint!"">
             <@linkedtype member.fieldType/><@arglist member.field/>
           </td>
           <td valign="bottom">
             <a href="#${fname}" class="fieldLink">${fname}</a>${array}${opt}${c};
           </td>
+    <#else>
+          <td colspan=2>;</td>
+    </#if>
         </tr>
 </#list>
 <#if functions?has_content>
@@ -77,10 +81,14 @@
     
     <dl>
 <#list choiceType.choiceMembers as member>
-      <dt class="memberItem"><a name="${member.field.name}">${member.field.name}:</a></dt>  
+  <#if member.field?has_content>
+      <dt class="memberItem">
+        <a name="${member.field.name}">${member.field.name}:</a>
+      </dt>  
       <dd class="memberDetail">
       <@comment member.fieldDocumentation/>
       </dd>
+  </#if>
 </#list>
     </dl>
 

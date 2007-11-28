@@ -199,6 +199,9 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 
         public String getVisitor()
         {
+            if (getField() == null)
+                return "";
+
             TypeInterface type = getField().getFieldType();
             return global.getVisitor(type, "node."
                     + AccessorNameEmitter.getGetterName(getField()) + "()");

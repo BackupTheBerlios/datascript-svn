@@ -260,7 +260,7 @@ choiceAlternative
     ;
     
 defaultChoice
-    : #(DEFAULT choiceAlternative)        
+    : #(DEFAULT (choiceAlternative)?)        
     ;   
      
 memberList

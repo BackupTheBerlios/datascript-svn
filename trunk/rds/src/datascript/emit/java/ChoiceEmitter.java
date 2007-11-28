@@ -51,6 +51,7 @@ import datascript.ast.ChoiceType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
 import datascript.ast.Expression;
+import datascript.ast.Field;
 import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
 import datascript.ast.TypeInterface;
@@ -94,6 +95,12 @@ public class ChoiceEmitter extends CompoundEmitter
         }
 
 
+        public ChoiceMember getMember()
+        {
+            return member;
+        }
+
+
         public String getName()
         {
             return member.getField().getName();
@@ -110,7 +117,10 @@ public class ChoiceEmitter extends CompoundEmitter
 
         public String getJavaTypeName()
         {
-            return TypeNameEmitter.getTypeName(member.getField().getFieldType());
+            Field field = member.getField();
+            if (field == null)
+                return "";
+            return TypeNameEmitter.getTypeName(field.getFieldType());
         }
 
 
@@ -134,13 +144,19 @@ public class ChoiceEmitter extends CompoundEmitter
 
         public String getReadField()
         {
-            return global.readField(member.getField());
+            Field field = member.getField();
+            if (field == null)
+                return ";";
+            return global.readField(field);
         }
 
 
         public String getWriteField()
         {
-            return global.writeField(member.getField());
+            Field field = member.getField();
+            if (field == null)
+                return ";";
+            return global.writeField(field);
         }
     }
 
@@ -194,7 +210,8 @@ public class ChoiceEmitter extends CompoundEmitter
 
             for (ChoiceMemberEmitter choiceMember : members)
             {
-                choiceMember.emit(writer, cfg);
+                if (choiceMember.getMember().getField() != null)
+                    choiceMember.emit(writer, cfg);
             }
 
             for (CompoundParameterEmitter param : params)
