@@ -276,7 +276,7 @@ choiceMember
     ;
     
 choiceCases
-    : #(CASE (expression)+ choiceAlternative)
+    : #(CASE (expression)+ (choiceAlternative)?)
     ;
     
 choiceAlternative
@@ -284,7 +284,7 @@ choiceAlternative
     ;
     
 defaultChoice
-    : #(DEFAULT choiceAlternative)        
+    : #(DEFAULT (choiceAlternative)?)        
     ;   
      
 memberList

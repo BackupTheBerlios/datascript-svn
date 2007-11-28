@@ -252,7 +252,7 @@ choiceMember
     ;
     
 choiceCases
-    : #(CASE (expression)+ choiceAlternative)
+    : #(CASE (expression)+ (choiceAlternative)?)
     ;
     
 choiceAlternative

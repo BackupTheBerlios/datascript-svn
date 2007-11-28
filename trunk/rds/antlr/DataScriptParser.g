@@ -422,7 +422,7 @@ choiceMember
     ;
 
 choiceCases
-    : CASE^ expression COLON! (CASE! expression COLON!)* choiceAlternative SEMICOLON!
+    : CASE^ expression COLON! (CASE! expression COLON!)* (choiceAlternative)? SEMICOLON!
     ;
 
 choiceAlternative!
@@ -439,7 +439,7 @@ choiceAlternative!
     ;
 
 defaultChoice
-    : DEFAULT^ COLON! choiceAlternative SEMICOLON!
+    : DEFAULT^ COLON! (choiceAlternative)? SEMICOLON!
     ;   
 
 

@@ -11,13 +11,13 @@ import java.io.IOException;
 
 import javax.imageio.stream.FileImageOutputStream;
 
+import junit.framework.TestCase;
 import choices.Container;
 import choices.Content;
 import choices.ParamContainer;
 import choices.ParamContent;
 import choices.Selector;
-
-import junit.framework.TestCase;
+import datascript.runtime.io.DataScriptIO;
 
 
 
@@ -31,26 +31,6 @@ public class ChoiceTest extends TestCase
     private String wFileName = "CoicesTest.data";
     private String fileName = "choicestest.bin";
     private File file = new File(fileName);
-
-
-    /**
-     * Constructor for BitStreamReaderTest.
-     * 
-     * @param name
-     */
-    public ChoiceTest(String name)
-    {
-        super(name);
-    }
-
-
-    /*
-     * @see TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception
-    {
-    }
 
 
     /*
@@ -218,5 +198,16 @@ public class ChoiceTest extends TestCase
         ParamContainer b2 = new ParamContainer(wFileName);
         checkParamContainer(b2, size, Selector.WHITE.getValue(), 0x5a5a5a5a);
         assertTrue(b.equals(b2));
+    }
+    
+    public void testParamChoices3()
+    {
+        ParamContainer container = new ParamContainer();
+        container.setSelector(Selector.GREY);
+        container.setContent(new ParamContent());
+        
+        byte[] blob = DataScriptIO.write(container);
+        
+        assertEquals(1, blob.length);
     }
 }

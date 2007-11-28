@@ -25,6 +25,11 @@ choice Content on Container.tag
          * variant B is only possible with cases 2-4
          */
         VariantB  b;
+        
+    case 5:
+    case 6:
+        // empty
+          ;    
 
     default:
         /** 
@@ -61,6 +66,8 @@ choice ParamContent(Selector sel) on sel
 {
     case BLACK:  Black black;
     case WHITE:  White white;
+    default:
+           /*empty*/ ;
 };
 
 subtype int16  Black;

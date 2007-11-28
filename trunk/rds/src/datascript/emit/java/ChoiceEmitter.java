@@ -45,18 +45,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import antlr.collections.AST;
-import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.ChoiceCase;
 import datascript.ast.ChoiceMember;
 import datascript.ast.ChoiceType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
-import datascript.ast.EnumType;
 import datascript.ast.Expression;
-import datascript.ast.Field;
 import datascript.ast.FunctionType;
-import datascript.ast.IntegerExpression;
-import datascript.ast.IntegerType;
 import datascript.ast.Parameter;
 import datascript.ast.TypeInterface;
 import freemarker.template.Configuration;
