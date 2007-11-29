@@ -40,9 +40,9 @@
 package datascript.ast;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
 
 import antlr.Token;
 import antlr.collections.AST;
@@ -55,12 +55,12 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
 {
     protected int id;
 
-    protected final Vector<Field> fields = new Vector<Field>();
-    private final Vector<FunctionType> functions = new Vector<FunctionType>();
-    private final Vector<Parameter> parameters = new Vector<Parameter>();
+    protected final List<Field> fields = new ArrayList<Field>();
+    private final List<FunctionType> functions = new ArrayList<FunctionType>();
+    private final List<Parameter> parameters = new ArrayList<Parameter>();
 
     // / set of compound types that can contain this type
-    private final Vector<CompoundType> containers = new Vector<CompoundType>();
+    private final List<CompoundType> containers = new ArrayList<CompoundType>();
 
     // / one of TypeInterface.NOBYTEORDER, BIGENDIAN, LITTLEENDIAN
     int byteOrder;
@@ -169,7 +169,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     {
         if (!containers.contains(f))
         {
-            containers.addElement(f);
+            containers.add(f);
         }
     }
 
@@ -198,7 +198,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         /* check whether any container of 'this' is contained in 'f' */
         for (int i = 0; i < containers.size(); i++)
         {
-            CompoundType c = (CompoundType) containers.elementAt(i);
+            CompoundType c = (CompoundType) containers.get(i);
             if (seen.search(c) == -1)
             {
                 seen.push(c);
@@ -228,13 +228,13 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     public void addField(Field f)
     {
         // TODO: Main.assertThat(!fields.contains(f));
-        fields.addElement(f);
+        fields.add(f);
     }
 
 
     public Field getField(int i)
     {
-        return fields.elementAt(i);
+        return fields.get(i);
     }
 
 

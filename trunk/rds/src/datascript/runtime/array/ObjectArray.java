@@ -40,13 +40,14 @@
 package datascript.runtime.array;
 
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
-import datascript.runtime.io.Writer;
 import datascript.runtime.io.BitStreamWriter;
+import datascript.runtime.io.Writer;
 
 
 
@@ -59,7 +60,7 @@ public class ObjectArray<E> implements Array<E>, SizeOf
 
     public ObjectArray(int length)
     {
-        this(new Vector<E>(length));
+        this(new ArrayList<E>(length));
     }
 
 
@@ -71,7 +72,7 @@ public class ObjectArray<E> implements Array<E>, SizeOf
 
     public ObjectArray<E> typedMap(Mapping<E> m)
     {
-        Vector<E> result = new Vector<E>(data.size());
+        List<E> result = new ArrayList<E>(data.size());
         for (int i = 0; i < data.size(); i++)
         {
             result.add(i, m.map(data.get(i)));
@@ -110,7 +111,7 @@ public class ObjectArray<E> implements Array<E>, SizeOf
 
     public Array<E> map(Mapping<E> m)
     {
-        Vector<E> result = new Vector<E>(data.size());
+        List<E> result = new ArrayList<E>(data.size());
         for (int i = 0; i < data.size(); i++)
         {
             result.add(i, m.map(data.get(i)));

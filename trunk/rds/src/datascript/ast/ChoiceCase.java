@@ -43,12 +43,7 @@ package datascript.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-import antlr.Token;
 import antlr.collections.AST;
-import datascript.antlr.DataScriptParserTokenTypes;
-import datascript.antlr.util.TokenAST;
-import datascript.emit.html.Comment;
-import datascript.emit.html.LinkedType;
 
 
 

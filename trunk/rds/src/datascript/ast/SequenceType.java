@@ -68,7 +68,7 @@ public class SequenceType extends CompoundType
 
         for (int i = 0; i < fields.size(); i++)
         {
-            Field fi = (Field) fields.elementAt(i);
+            Field fi = (Field) fields.get(i);
             /*
              * TODO: 
              * try

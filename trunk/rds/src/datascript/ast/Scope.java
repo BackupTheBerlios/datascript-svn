@@ -37,9 +37,9 @@
  */
 package datascript.ast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
@@ -83,7 +83,7 @@ public class Scope implements Context, LinkAction
      * All children of this scope post a link action for themselved on creation.
      * Thus when linking this scope, all subscopes will be linked automatically.
      */
-    private List<LinkAction> linkActions = new Vector<LinkAction>();
+    private List<LinkAction> linkActions = new ArrayList<LinkAction>();
 
     /**
      * Constructs scope without parent.

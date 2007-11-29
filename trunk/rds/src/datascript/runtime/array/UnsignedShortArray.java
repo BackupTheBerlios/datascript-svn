@@ -41,6 +41,8 @@ package datascript.runtime.array;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
@@ -64,7 +66,7 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
             // throw new RuntimeException("variable length " + getClass() + "
             // not implemented");
 
-            java.util.Vector<Integer> v = new java.util.Vector<Integer>();
+            List<Integer> v = new ArrayList<Integer>();
             long __afpos = 0;
             try
             {

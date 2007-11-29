@@ -40,9 +40,6 @@
 package datascript.ast;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;

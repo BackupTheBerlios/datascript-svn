@@ -40,8 +40,8 @@
 package datascript.ast;
 
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
@@ -58,7 +58,7 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
     /** Reference to a compound type with a parameter list. */
     private CompoundType compound;
 
-    private Vector<Expression> arguments;
+    private List<Expression> arguments;
 
 
     public TypeInstantiation()
@@ -164,7 +164,7 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
         }
 
         // Iterate over arguments
-        arguments = new Vector<Expression>();
+        arguments = new ArrayList<Expression>();
         AST arg = refType.getNextSibling();
         for (int paramIndex = 0; 
              paramIndex < numParams; 
