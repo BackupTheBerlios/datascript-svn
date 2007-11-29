@@ -40,7 +40,6 @@
 package datascript.emit.java;
 
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +59,6 @@ import datascript.ast.SqlIntegerType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
-import datascript.emit.java.ChoiceEmitter.ChoiceMemberEmitter;
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 

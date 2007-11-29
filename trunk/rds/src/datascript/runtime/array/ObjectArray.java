@@ -42,7 +42,6 @@ package datascript.runtime.array;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;

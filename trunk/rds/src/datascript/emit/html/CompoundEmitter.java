@@ -45,9 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import antlr.collections.AST;
-
-import datascript.antlr.DataScriptParserTokenTypes;
-import datascript.ast.ChoiceCase;
 import datascript.ast.ChoiceType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
@@ -64,7 +61,6 @@ import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
-import datascript.emit.html.ExpressionEmitter;
 import freemarker.template.Template;
 
 
