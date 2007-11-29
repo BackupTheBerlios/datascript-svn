@@ -72,3 +72,23 @@ choice ParamContent(Selector sel) on sel
 
 subtype int16  Black;
 subtype uint32 White;
+
+
+ParamContainer2
+{
+    Selector  selector;
+    ParamContent2(selector)  content;
+};
+
+
+/**
+ * We do not cover all selector values in this
+ * choice. Reading a selector value GREY shall cause a
+ * runtime exception.
+ */
+choice ParamContent2(Selector sel) on sel
+{
+    case BLACK:  Black black;
+    case WHITE:  White white;
+};
+

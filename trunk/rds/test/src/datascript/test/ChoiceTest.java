@@ -15,7 +15,9 @@ import junit.framework.TestCase;
 import choices.Container;
 import choices.Content;
 import choices.ParamContainer;
+import choices.ParamContainer2;
 import choices.ParamContent;
+import choices.ParamContent2;
 import choices.Selector;
 import datascript.runtime.io.DataScriptIO;
 
@@ -28,7 +30,7 @@ import datascript.runtime.io.DataScriptIO;
 public class ChoiceTest extends TestCase
 {
     private FileImageOutputStream os;
-    private String wFileName = "CoicesTest.data";
+    private String wFileName = "ChoicesTest.data";
     private String fileName = "choicestest.bin";
     private File file = new File(fileName);
 
@@ -209,5 +211,22 @@ public class ChoiceTest extends TestCase
         byte[] blob = DataScriptIO.write(container);
         
         assertEquals(1, blob.length);
+    }
+
+    public void testParamChoicesWithException()
+    {
+        ParamContainer2 container = new ParamContainer2();
+        container.setSelector(Selector.GREY);
+        container.setContent(new ParamContent2());
+        
+        try
+        {
+            DataScriptIO.write(container);
+            fail("IOException expected");
+        }
+        catch (Exception exc)
+        {
+            assertEquals("java.io.IOException: no match in choice", exc.getMessage());            
+        }        
     }
 }
