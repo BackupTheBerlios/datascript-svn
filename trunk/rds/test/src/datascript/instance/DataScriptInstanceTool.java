@@ -103,7 +103,10 @@ public class DataScriptInstanceTool implements Parameters
     private String fileName;
     private String srcPathName;
     private String outPathName;
+
+    @SuppressWarnings("unused")
     private String instanceFileName;
+
     private String typeName;
     private boolean checkSyntax;
 

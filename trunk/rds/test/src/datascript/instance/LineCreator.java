@@ -32,8 +32,9 @@ public class LineCreator implements Runnable
             writer.close();
 
             FileBitStreamReader reader = new FileBitStreamReader("lines.dat");
+
+            @SuppressWarnings("unused")
             LineGeometries geometries = new LineGeometries(reader);
-            int numGeoms = geometries.getNumGeometries();
         }
         catch (IOException e)
         {

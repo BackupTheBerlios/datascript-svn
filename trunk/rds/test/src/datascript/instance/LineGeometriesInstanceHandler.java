@@ -7,15 +7,14 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import datascript.runtime.array.ObjectArray;
-
 import lines.LineGeometries;
 import lines.LineGeometry;
 import lines.Offset;
+import datascript.runtime.array.ObjectArray;
 
 public class LineGeometriesInstanceHandler implements DataScriptInstanceHandler
 {
-    private static final int GEOMETRIES = 1;
+    //private static final int GEOMETRIES = 1;
     private static final int NUM_POINTS = 3;
     private static final int OFFSETS = 5;
     private static final int X = 7;
@@ -35,6 +34,7 @@ public class LineGeometriesInstanceHandler implements DataScriptInstanceHandler
         int y;
     }
     
+    @SuppressWarnings("serial")
     class Line extends ArrayList<Point>
     {
         Line(int numPoints)
