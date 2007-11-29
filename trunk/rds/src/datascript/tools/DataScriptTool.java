@@ -76,10 +76,16 @@ import datascript.ast.ParserException;
 import datascript.ast.Scope;
 
 
-
+/**
+ * Entry point of rds.
+ * TODO: Refactor this class.
+ * 
+ * @author HWellmann
+ *
+ */
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.17.11 (28 Nov 2007)";
+    private static final String VERSION = "rds 0.18 (29 Nov 2007)";
 
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -158,7 +164,7 @@ public class DataScriptTool implements Parameters
 
     public void getOptions(org.apache.commons.cli.Options rdsOptions, String[] args)
     {
-        org.apache.commons.cli.Option rdsOption;
+        Option rdsOption;
 
         rdsOption = new Option("h", "help", false, "prints this help text and exit");
         rdsOption.setRequired(false);
@@ -179,18 +185,15 @@ public class DataScriptTool implements Parameters
     }
 
 
-    public void parseArguments(String[] args)
+    public void parseArguments(String[] args) throws ParseException
     {
+        if (args.length > 0)
+        {
+            fileName = args[args.length-1];
+        }
         getOptions(rdsOptions, args);
-        CmdLineParser parser = new CmdLineParser();
-        try
-        {
-            cli = parser.parse(rdsOptions, args, true);
-        }
-        catch (org.apache.commons.cli.ParseException pe)
-        {
-            System.err.println(pe.getMessage());
-        }
+        Parser parser = new CmdLineParser();
+        cli = parser.parse(rdsOptions, args, false);
     }
 
 
@@ -202,7 +205,12 @@ public class DataScriptTool implements Parameters
         checkSyntax = cli.hasOption('c');
         srcPathName = cli.getOptionValue("src");
         outPathName = cli.getOptionValue("out");
-        //fileName = cli.getOptionValue("");
+        
+        if (fileName == null)
+            return false;
+        
+        // normalize slashes and backslashes
+        fileName = new File(fileName).getPath();
 
         if (outPathName == null || outPathName.length() == 0)
         {
@@ -217,20 +225,15 @@ public class DataScriptTool implements Parameters
                 outPathName = outPathName.substring(0, i);
         }
 
-        if (fileName == null)
-            return false;
         return true;
     }
 
 
-    private void prepareExtensions(String[] args) throws IOException,
+    private void prepareExtensions() throws IOException,
             InstantiationException, IllegalAccessException
     {
         if (cli == null)
             return;
-
-        // normalize slashes and backslashes
-        fileName = new File(args[args.length - 1]).getPath();
 
         extensions = new ArrayList<Extension>();
         ServiceLoader<Extension> loader = 
@@ -241,17 +244,6 @@ public class DataScriptTool implements Parameters
             Extension extension = it.next();
             extensions.add(extension);
             extension.getOptions(rdsOptions);
-        }
-
-        CmdLineParser parser = new CmdLineParser();
-        try
-        {
-            cli = parser.parse(rdsOptions, args, false);
-        }
-        catch (ParseException pe)
-        {
-            HelpFormatter hf = new HelpFormatter();
-            hf.printHelp(pe.getMessage(), rdsOptions);
         }
 
         for (Extension extension : extensions)
@@ -488,27 +480,33 @@ public class DataScriptTool implements Parameters
 
 
     /******** End of Parameters interface ******* */
-
-    public static void main(String[] args)
+    
+    
+    private void execute(String[] args)
     {
-        System.out.println(VERSION);
-        DataScriptTool dsTool = new DataScriptTool();
-        dsTool.parseArguments(args);
         try
         {
-            dsTool.prepareExtensions(args);
-            if (!dsTool.checkArguments() || dsTool.cli.hasOption('h'))
+            parseArguments(args);
+            prepareExtensions();
+            if (!checkArguments() || cli.hasOption('h'))
             {
                 org.apache.commons.cli.HelpFormatter hf = 
                     new org.apache.commons.cli.HelpFormatter();
-                hf.printHelp("rds <options> \"filename\"", "options are:", dsTool.rdsOptions, "\t\"filename\"    main DataScript source file", false);
-                dsTool.printExtensions();
+                hf.printHelp("rds <options> \"filename\"", "options are:", 
+                        rdsOptions, 
+                        "\t\"filename\"    main DataScript source file", false);
+                printExtensions();
             }
             else
             {
-                dsTool.parseDatascript();
-                dsTool.emitDatascript();
+                parseDatascript();
+                emitDatascript();
             }
+        }
+        catch (ParseException pe)
+        {
+            HelpFormatter hf = new HelpFormatter();
+            hf.printHelp(pe.getMessage(), rdsOptions);
         }
         catch (DataScriptException exc)
         {
@@ -522,7 +520,13 @@ public class DataScriptTool implements Parameters
         {
             exc.printStackTrace();
         }
-        System.out.println("done.");
     }
 
+    public static void main(String[] args)
+    {
+        System.out.println(VERSION);
+        DataScriptTool dsTool = new DataScriptTool();
+        dsTool.execute(args);
+        System.out.println("done.");        
+    }
 }
