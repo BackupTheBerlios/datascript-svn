@@ -119,6 +119,11 @@
         <include name="freemarker/java/**.ftl" />
       </fileset>
     </copy>
+    <copy todir="${classes}">
+      <fileset dir="${basedir}/services/all">
+        <include name="META-INF/**" />
+      </fileset>
+    </copy>
   </target>
 
 
