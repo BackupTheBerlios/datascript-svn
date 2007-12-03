@@ -94,7 +94,7 @@ public class HtmlExtension implements Extension
 
     public void getOptions(org.apache.commons.cli.Options rdsOptions)
     {
-        org.apache.commons.cli.Option rdsOption;
+        Option rdsOption;
 
         rdsOption = new Option("doc", false, 
                 "enables generation of Javadoc-style documentation");

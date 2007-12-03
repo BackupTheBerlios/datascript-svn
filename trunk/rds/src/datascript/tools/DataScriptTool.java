@@ -85,7 +85,7 @@ import datascript.ast.Scope;
  */
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.18 (29 Nov 2007)";
+    private static final String VERSION = "rds 0.18.1 (3 Dez 2007)";
 
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -95,15 +95,19 @@ public class DataScriptTool implements Parameters
 
     private final DataScriptEmitter emitter = new DataScriptEmitter();
 
-    private List<Extension> extensions;
+    private final List<Extension> extensions = new ArrayList<Extension>();
 
-    /* Properties for command line parameters */
-    private final Options rdsOptions = new Options();
+    /* Options that this tool accepts from comandline */
+    private final Options rdsOptionsToAccept = new Options();
+    /* Contains all Options that comes actually from comandline */
     private CommandLine cli = null;
+
+    /* Different Properties for holding values from the comandline */
     private String fileName = null;
     private String srcPathName = null;
     private String outPathName = null;
     private boolean checkSyntax = false;
+
 
     private class CmdLineParser extends org.apache.commons.cli.Parser
     {
@@ -162,38 +166,34 @@ public class DataScriptTool implements Parameters
     }
 
 
-    public void getOptions(org.apache.commons.cli.Options rdsOptions, String[] args)
-    {
-        Option rdsOption;
-
-        rdsOption = new Option("h", "help", false, "prints this help text and exit");
-        rdsOption.setRequired(false);
-        rdsOptions.addOption(rdsOption);
-
-        rdsOption = new Option("c", false, "check syntax");
-        rdsOption.setRequired(false);
-        rdsOptions.addOption(rdsOption);
-
-        rdsOption = new Option("out", true,
-                "path to the directory in which the generated code is stored");
-        rdsOption.setRequired(false);
-        rdsOptions.addOption(rdsOption);
-
-        rdsOption = new Option("src", true, "path to DataScript source files");
-        rdsOption.setRequired(false);
-        rdsOptions.addOption(rdsOption);
-    }
-
-
     public void parseArguments(String[] args) throws ParseException
     {
         if (args.length > 0)
         {
             fileName = args[args.length-1];
         }
-        getOptions(rdsOptions, args);
-        Parser parser = new CmdLineParser();
-        cli = parser.parse(rdsOptions, args, false);
+
+        Option rdsOption;
+
+        rdsOption = new Option("h", "help", false, "prints this help text and exit");
+        rdsOption.setRequired(false);
+        rdsOptionsToAccept.addOption(rdsOption);
+
+        rdsOption = new Option("c", false, "check syntax");
+        rdsOption.setRequired(false);
+        rdsOptionsToAccept.addOption(rdsOption);
+
+        rdsOption = new Option("out", true,
+                "path to the directory in which the generated code is stored");
+        rdsOption.setRequired(false);
+        rdsOptionsToAccept.addOption(rdsOption);
+
+        rdsOption = new Option("src", true, "path to DataScript source files");
+        rdsOption.setRequired(false);
+        rdsOptionsToAccept.addOption(rdsOption);
+
+        CmdLineParser parser = new CmdLineParser();
+        cli = parser.parse(rdsOptionsToAccept, args, true);
     }
 
 
@@ -229,13 +229,17 @@ public class DataScriptTool implements Parameters
     }
 
 
+    /**
+     * Installs all extensions that are configured in the services manifest and
+     * detects all options of each extension installed.
+     *  
+     * @throws IOException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     private void prepareExtensions() throws IOException,
             InstantiationException, IllegalAccessException
     {
-        if (cli == null)
-            return;
-
-        extensions = new ArrayList<Extension>();
         ServiceLoader<Extension> loader = 
             ServiceLoader.load(Extension.class, getClass().getClassLoader());
         Iterator<Extension> it = loader.iterator();
@@ -243,15 +247,25 @@ public class DataScriptTool implements Parameters
         {
             Extension extension = it.next();
             extensions.add(extension);
-            extension.getOptions(rdsOptions);
-        }
-
-        for (Extension extension : extensions)
-        {
+            extension.getOptions(rdsOptionsToAccept);
             extension.setParameter(this);
         }
     }
 
+
+    private void printExtensions()
+    {
+        ServiceLoader<Extension> loader = ServiceLoader.load(Extension.class);
+        Iterator<Extension> it = loader.iterator();
+        while (it.hasNext())
+        {
+            Extension ext = it.next();
+            System.out.println("Extension: " + ext.getClass().getName());
+        }
+    }
+
+
+    /******** functions depend on the datascript compiler ********/
 
     public void parseDatascript() throws Exception
     {
@@ -415,19 +429,7 @@ public class DataScriptTool implements Parameters
     }
 
 
-    private void printExtensions()
-    {
-        ServiceLoader<Extension> loader = ServiceLoader.load(Extension.class);
-        Iterator<Extension> it = loader.iterator();
-        while (it.hasNext())
-        {
-            Extension ext = it.next();
-            System.out.println("Extension: " + ext.getClass().getName());
-        }
-    }
-
-
-    /******** Implementation of Parameters interface ******* */
+    /******** Implementation of Parameters interface ********/
 
     public String getVersion()
     {
@@ -486,14 +488,14 @@ public class DataScriptTool implements Parameters
     {
         try
         {
-            parseArguments(args);
             prepareExtensions();
+            parseArguments(args);
             if (!checkArguments() || cli.hasOption('h'))
             {
                 org.apache.commons.cli.HelpFormatter hf = 
                     new org.apache.commons.cli.HelpFormatter();
                 hf.printHelp("rds <options> \"filename\"", "options are:", 
-                        rdsOptions, 
+                        rdsOptionsToAccept, 
                         "\t\"filename\"    main DataScript source file", false);
                 printExtensions();
             }
@@ -506,7 +508,7 @@ public class DataScriptTool implements Parameters
         catch (ParseException pe)
         {
             HelpFormatter hf = new HelpFormatter();
-            hf.printHelp(pe.getMessage(), rdsOptions);
+            hf.printHelp(pe.getMessage(), rdsOptionsToAccept);
         }
         catch (DataScriptException exc)
         {

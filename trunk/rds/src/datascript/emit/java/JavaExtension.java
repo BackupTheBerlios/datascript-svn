@@ -147,7 +147,7 @@ public class JavaExtension implements Extension
 
     public void getOptions(org.apache.commons.cli.Options rdsOptions)
     {
-        org.apache.commons.cli.Option rdsOption;
+        Option rdsOption;
 
         rdsOption = new Option("pkg", true, 
                 "\"packagename\"\tJava package name for types without a DataScript package");

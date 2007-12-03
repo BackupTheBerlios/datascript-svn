@@ -120,7 +120,7 @@ public class XmlExtension extends XMLFilterImpl implements Extension
 
     public void getOptions(org.apache.commons.cli.Options rdsOptions)
     {
-        org.apache.commons.cli.Option rdsOption;
+        Option rdsOption;
 
         rdsOption = new Option("xml", false, 
                 "enables generation of a XML file of the syntaxtree");

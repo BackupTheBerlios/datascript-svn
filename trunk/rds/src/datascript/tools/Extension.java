@@ -40,6 +40,8 @@
 package datascript.tools;
 
 
+import org.apache.commons.cli.Options;
+
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.util.TokenAST;
 
@@ -77,10 +79,9 @@ public interface Extension
 
 
     /**
-     * Parse all arguments from the commandline parameterlist that are necessary
-     * for this extension.
+     * Detects all options that this extension accepts from comandline
      * 
-     * @param rdsOptions
+     * @param rdsOptions    this is the returnparameter of all options this extension accepts
      */
-    public void getOptions(org.apache.commons.cli.Options rdsOptions);
+    public void getOptions(Options rdsOptions);
 }
