@@ -127,7 +127,7 @@ public class Comment
                 child = child.getNextSibling();
             }
 
-            Package packegeRoot = Package.getRoot();
+            //Package packegeRoot = Package.getRoot();
             while (child != null
                     && child.getType() == DocCommentParserTokenTypes.AT)
             {
@@ -145,8 +145,8 @@ public class Comment
                 String head = parts[0];
                 String tail = (parts.length == 2) ? parts[1] : "";
 
-                Object typeOrSymbol = packegeRoot.getTypeOrSymbol(head);
-                String tagName = (typeOrSymbol != null)? "seelink" : child.getText();
+                //Object typeOrSymbol = packegeRoot.getTypeOrSymbol(head);
+                String tagName = (Package.typeOrSymbolExists(head))? "seelink" : child.getText();
                 Tag tag = new Tag(tagName, head, tail);
                 tags.add(tag);
 

@@ -225,6 +225,20 @@ public class Package extends Scope
     }
 
 
+    public static boolean typeOrSymbolExists(String name)
+    {
+        for (Package p : nameToPackage.values())
+        {
+            for (String t : p.localTypes.keySet())
+            {
+                if (t.equals(name))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+
     /**
      * Maps each imported package name to the corresponding Package object.
      */
