@@ -226,7 +226,7 @@ public class ChoiceTest extends TestCase
         }
         catch (Exception exc)
         {
-            assertEquals("java.io.IOException: no match in choice", exc.getMessage());            
+            assertEquals("java.io.IOException: no match in choice: GREY", exc.getMessage());            
         }        
     }
 }

@@ -78,7 +78,7 @@ public enum ${name} implements SizeOf
                 return ${item.name};
 </#list>
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("unknown ${name} " + v);
         }
     }
 

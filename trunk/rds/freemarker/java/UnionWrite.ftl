@@ -65,7 +65,7 @@
                 break;
 </#list>
             default:
-                throw new IOException("no match in union");
+                throw new IOException("no match in union: " + __choiceTag);
         }
     }
 

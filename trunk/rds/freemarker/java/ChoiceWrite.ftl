@@ -75,7 +75,7 @@
 </#list>
 <#if !hasDefault>
             default:
-                throw new IOException("no match in choice");
+                throw new IOException("no match in choice: " + ${selector});
 </#if>
         }
     }
