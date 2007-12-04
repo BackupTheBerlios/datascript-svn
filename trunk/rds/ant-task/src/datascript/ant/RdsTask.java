@@ -92,7 +92,7 @@ public class RdsTask extends Task {
 	private String pkg;
 	private boolean clean = false;
 	
-    private File ext;
+    private String ext;
     
     private Vector<Argument> arguments = new Vector<Argument>();
 
@@ -150,7 +150,7 @@ public class RdsTask extends Task {
 		this.pkg = pkg;
 	}	
 	
-	public File getExt() {
+	public String getExt() {
         return ext;
     }
 
@@ -158,7 +158,7 @@ public class RdsTask extends Task {
      * The extension directory, this parameter is optional
      * @param ext
      */
-    public void setExt(File ext) {
+    public void setExt(String ext) {
         this.ext = ext;
     }
 
@@ -238,9 +238,9 @@ public class RdsTask extends Task {
 			throw new BuildException(getPath().toString()+" does not exist.");
 		}
         
-        if( ! getExt().exists() )
+        if( getExt() != null )
         {
-            throw new BuildException(getExt().toString()+" does not exist.");
+            System.out.println("Warning: Parameter -ext is depricated.");
         }
 						
 	}
@@ -270,7 +270,7 @@ public class RdsTask extends Task {
 		}
 		else
 		{
-			System.out.println("the generate sources are up to date.");
+			System.out.println("Generated sources are up to date.");
 		}
 	}
     
@@ -288,11 +288,6 @@ public class RdsTask extends Task {
         argsList.add(getPkg());
         argsList.add("-out");
         argsList.add(getOut().toString());
-        if( getExt() != null )
-        {
-            argsList.add("-ext");
-            argsList.add(getExt().toString());
-        }
         
         for( Argument a : arguments)
         {            
