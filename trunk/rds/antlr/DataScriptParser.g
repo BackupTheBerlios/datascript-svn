@@ -307,7 +307,7 @@ fieldDefinition!
             {
                 switch (doc.getType())
                 {
-                	case ARRAY:
+                    case ARRAY:
                     case INST:
                     case TYPEREF:
                         doc = doc.getFirstChild();
@@ -438,7 +438,16 @@ choiceAlternative!
       {
         #choiceAlternative = #([FIELD], t, f);
 
-        Token docToken = ((TokenAST)#t.getFirstChild()).getHiddenBefore();
+        AST doc = #t;  
+        switch (doc.getType())
+        {
+            case ARRAY:
+            case INST:
+            case TYPEREF:
+                doc = doc.getFirstChild();
+                break;
+            }
+        Token docToken = ((TokenAST)doc).getHiddenBefore();
         Field field = (Field) #choiceAlternative;
         field.setDocumentation(docToken);
       }
