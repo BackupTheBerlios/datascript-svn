@@ -57,6 +57,7 @@ public class EnumItem extends TokenAST
     private EnumType enumType;
     private IntegerValue value;
     private String name;
+    private Token documentation;
 
 
     public EnumItem()
@@ -80,15 +81,15 @@ public class EnumItem extends TokenAST
     }
 
 
+    public void setDocumentation(Token doc)
+    {
+        documentation = doc;
+    }
+
+
     public String getDocumentation()
     {
-        String result = "";
-        Token t = getHiddenBefore();
-        if (t != null && t.getType() == DataScriptParserTokenTypes.DOC)
-        {
-            result = t.getText();
-        }
-        return result;
+        return (documentation == null) ? "" : documentation.getText();
     }
 
 

@@ -248,7 +248,13 @@ enumMemberList
 
 enumItem
     : ID ( ASSIGN! constantExpression )?
-      { #enumItem = #([ITEM], enumItem); }
+      { #enumItem = #([ITEM], enumItem);
+
+        AST doc = #enumItem.getFirstChild();
+        Token docToken = ((TokenAST)doc).getHiddenBefore();
+        EnumItem enumItem = (EnumItem) #enumItem;
+        enumItem.setDocumentation(docToken); 
+      }
     ;
 
 bitmaskDeclaration
