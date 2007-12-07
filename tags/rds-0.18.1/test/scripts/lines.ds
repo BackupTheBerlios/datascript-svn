@@ -1,0 +1,27 @@
+package lines;
+
+LineGeometries
+{
+    int32         numGeometries;
+    LineGeometry  geometries[numGeometries];
+};
+
+LineGeometry
+{
+    int16         numPoints;
+    Point         anchor;
+    Offset        offsets[numPoints];
+};
+
+Point
+{
+    int32         x;
+    int32         y;  
+};
+
+Offset
+{
+    int16         dx;
+    int16         dy;  
+};
+
