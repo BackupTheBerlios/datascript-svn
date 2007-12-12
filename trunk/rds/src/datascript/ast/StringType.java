@@ -115,7 +115,7 @@ public class StringType extends TokenAST implements TypeInterface
     @Override
     public String toString()
     {
-        return "STRING";
+        return "string";
     }
 
 
