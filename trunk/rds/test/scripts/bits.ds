@@ -12,7 +12,7 @@ Cluster
 
 subtype uint8 MagicCode;
 
-const uint8 UNDEFINED_MAGIC_CODE = 0;
+const MagicCode UNDEFINED_MAGIC_CODE = 0;
 
 UseOfConst(MagicCode defaultMagicCode)
 {

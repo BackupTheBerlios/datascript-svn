@@ -62,10 +62,30 @@ public class TypeNameEmitter
     }
 
 
+    public static boolean isBuiltinType(TypeInterface t)
+    {
+        if (t instanceof StdIntegerType ||
+            t instanceof BitFieldType ||
+            t instanceof StringType)
+        {
+            return true;
+        }
+        else if (t instanceof ArrayType)
+        {
+            return isBuiltinType(((ArrayType)t).getElementType());
+        }
+        
+        return false;
+    }
+
+
     public static String getTypeName(TypeInterface t)
     {
         String result = null;
         t = TypeReference.resolveType(t);
+        if (t instanceof Subtype)
+            t = ((Subtype) t).getBaseType();
+
         if (t instanceof StdIntegerType)
         {
             result = getTypeName((StdIntegerType) t);
@@ -94,7 +114,7 @@ public class TypeNameEmitter
         else if (t instanceof Subtype)
         {
             TypeInterface base = ((Subtype)t).getBaseType();
-            base = TypeReference.resolveType(base);
+            //base = TypeReference.resolveType(base);
             result = getTypeName(base);            
         }
         else if (t instanceof StringType)
@@ -107,11 +127,14 @@ public class TypeNameEmitter
         }
         return result;
     }
-    
+
+
     public static String getTypeName(Field field)
     {
         TypeInterface type = field.getFieldType();
         type = TypeReference.resolveType(type);
+        if (type instanceof Subtype)
+            type = ((Subtype) type).getBaseType();
 
         if (field.getOptionalClause() != null)
         {            
@@ -282,6 +305,9 @@ public class TypeNameEmitter
     {
         String result = null;
         t = TypeReference.resolveType(t);
+        if (t instanceof Subtype)
+            t = ((Subtype) t).getBaseType();
+
         if (t instanceof StdIntegerType)
         {
             result = getClassName((StdIntegerType) t);
