@@ -41,9 +41,13 @@ package datascript.emit.java;
 
 
 import java.io.PrintWriter;
+import java.util.Calendar;
 
+import datascript.ast.DataScriptException;
 import datascript.ast.Subtype;
+import datascript.ast.TypeInterface;
 import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 
 
@@ -57,7 +61,7 @@ public class SubtypeEmitter
     private Subtype subtype;
 
 
-    // private PrintWriter writer;
+    private PrintWriter writer;
     // private SubtypeTmpl subtypeTmpl;
 
     public SubtypeEmitter(JavaEmitter j, Subtype s)
@@ -82,15 +86,13 @@ public class SubtypeEmitter
 
     public void setWriter(PrintWriter writer)
     {
-        // this.writer = writer;
+        this.writer = writer;
     }
 
 
     public void emit(Configuration cfg, Subtype subtype2)
     {
 
-        /*
-         * this does not generates serious content
         try
         {
             Template tpl = cfg.getTemplate("java/SubtypeTmpl.ftl");
@@ -100,7 +102,6 @@ public class SubtypeEmitter
         {
             throw new DataScriptException(e);
         }
-        */
     }
 
 
@@ -109,6 +110,17 @@ public class SubtypeEmitter
     public String getRdsVersion()
     {
         return global.getRdsVersion();
+    }
+
+
+    /**
+     * Calculates the actual time and returns a formattet string that follow the 
+     * ISO 8601 standard (i.e. "2007-13-11T12:08:56.235-0700")
+     * @return      actual time as a ISO 8601 formattet string
+     */
+    public String getTimeStamp()
+    {
+        return String.format("%1$tFT%1$tT.%1$tL%1$tz", Calendar.getInstance());
     }
 
 
@@ -138,6 +150,15 @@ public class SubtypeEmitter
 
     public String getSuperClassName()
     {
-        return TypeNameEmitter.getTypeName(subtype.getBaseType()); //"Object";
+        TypeInterface baseType = subtype.getBaseType();
+        if (TypeNameEmitter.isBuiltinType(baseType))
+            return "Object";
+        return TypeNameEmitter.getTypeName(baseType);
+    }
+
+
+    public String getClassName()
+    {
+        return subtype.getName();
     }
 }

@@ -51,8 +51,11 @@ ${packageImports}
  * TODO: no typedef possible in Java, so we have to substitute every
  * "${className}" to "${superClassName}"
  **/
-/*
 class ${className} extends ${superClassName}
 {
+    /**
+     * This class was intentionally kept empty.
+     * Subtypes are resolved automatically during compiling the datascript
+     **/
 }
-*/
+
