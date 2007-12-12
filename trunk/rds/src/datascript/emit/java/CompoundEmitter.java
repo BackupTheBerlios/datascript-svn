@@ -60,6 +60,7 @@ import datascript.ast.IntegerType;
 import datascript.ast.StringType;
 import datascript.ast.Parameter;
 import datascript.ast.StdIntegerType;
+import datascript.ast.Subtype;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
@@ -291,6 +292,11 @@ abstract public class CompoundEmitter
         buffer = new StringBuilder();
         TypeInterface type = field.getFieldType();
         type = TypeReference.resolveType(type);
+        if (type instanceof Subtype)
+        {
+            type = ((Subtype) type).getBaseType();
+        }
+
         if (type instanceof IntegerType)
         {
             readIntegerField(field, (IntegerType) type);
@@ -478,6 +484,10 @@ abstract public class CompoundEmitter
         boolean cast = false;
         Parameter param = type.getParameterAt(paramIndex);
         TypeInterface paramType = TypeReference.resolveType(param.getType());
+        if (paramType instanceof Subtype)
+        {
+            paramType = ((Subtype) paramType).getBaseType();
+        }
         if (paramType instanceof StdIntegerType)
         {
             StdIntegerType intType = (StdIntegerType) paramType;
@@ -677,6 +687,11 @@ abstract public class CompoundEmitter
         buffer = new StringBuilder();
         TypeInterface type = field.getFieldType();
         type = TypeReference.resolveType(type);
+        if (type instanceof Subtype)
+        {
+            type = ((Subtype) type).getBaseType();
+        }
+
         if (type instanceof IntegerType)
         {
             writeIntegerField(field, (IntegerType) type);

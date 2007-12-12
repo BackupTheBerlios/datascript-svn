@@ -56,6 +56,7 @@ import datascript.ast.Field;
 import datascript.ast.IntegerType;
 import datascript.ast.SequenceType;
 import datascript.ast.SqlIntegerType;
+import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
@@ -425,6 +426,10 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     public String getVisitor(TypeInterface type, String nodeName)
     {
         type = TypeReference.resolveType(type);
+        if (type instanceof Subtype)
+        {
+            type = ((Subtype) type).getBaseType();
+        }
         Expression length = null;
         StringBuilder buffer = new StringBuilder();
         if (type instanceof IntegerType)

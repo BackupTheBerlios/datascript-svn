@@ -49,6 +49,7 @@ import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
 import datascript.ast.StringType;
+import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import freemarker.template.Template;
@@ -92,6 +93,10 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
     public String getVisitor(TypeInterface type, String nodeName, String fieldName)
     {
         type = TypeReference.resolveType(type);
+        if (type instanceof Subtype)
+        {
+            type = ((Subtype) type).getBaseType();
+        }
         Expression length = null;
         StringBuilder buffer = new StringBuilder();
         if (type instanceof IntegerType)

@@ -45,6 +45,7 @@ import java.io.PrintWriter;
 import datascript.ast.BitFieldType;
 import datascript.ast.Field;
 import datascript.ast.StdIntegerType;
+import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 
@@ -58,7 +59,7 @@ public abstract class FieldEmitter
     protected PrintWriter writer;
 
     private final CompoundEmitter global;
-    private final TypeInterface type;
+    private TypeInterface type;
     private String optional = null;
     private String constraint = null;
     private String label = null;
@@ -69,6 +70,10 @@ public abstract class FieldEmitter
         global = j;
         field = f;
         type = TypeReference.resolveType(field.getFieldType());
+        if (type instanceof Subtype)
+        {
+            type = ((Subtype) type).getBaseType();
+        }
     }
 
 

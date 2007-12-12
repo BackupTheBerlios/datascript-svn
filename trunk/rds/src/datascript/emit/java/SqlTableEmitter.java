@@ -57,6 +57,7 @@ import datascript.ast.Parameter;
 import datascript.ast.SqlIntegerType;
 import datascript.ast.SqlTableType;
 import datascript.ast.StringType;
+import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import freemarker.template.Configuration;
@@ -101,6 +102,10 @@ public class SqlTableEmitter extends CompoundEmitter
         public int getTypeSize()
         {
             TypeInterface ftype = TypeReference.resolveType(field.getFieldType());
+            if (ftype instanceof Subtype)
+            {
+                ftype = ((Subtype) ftype).getBaseType();
+            }
             if ((ftype instanceof SqlIntegerType) || (ftype instanceof IntegerType))
             {
                 int typeSize = field.sizeof(null).integerValue().intValue();
@@ -136,6 +141,10 @@ public class SqlTableEmitter extends CompoundEmitter
             {
                 int count = ftype.getLength();
                 ftype = TypeReference.resolveType(((ArrayType) ftype).getElementType());
+                if (ftype instanceof Subtype)
+                {
+                    ftype = ((Subtype) ftype).getBaseType();
+                }
                 if (!(ftype instanceof IntegerType))
                     retval = "BLOB";
                 else if (((IntegerType)ftype).getType() == DataScriptParserTokenTypes.UINT8)

@@ -57,6 +57,7 @@ import datascript.ast.SqlIntegerType;
 import datascript.ast.SqlMetadataType;
 import datascript.ast.SqlPragmaType;
 import datascript.ast.SqlTableType;
+import datascript.ast.Subtype;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
