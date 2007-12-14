@@ -25,7 +25,7 @@
   <#assign array = field.arrayRange!"">
   <#assign opt = field.optionalClause>
   <#assign c = field.constraint>
-        <tr>
+        <tr class="codeMember">
           <td valign="top" id="tabIdent"><@linkedtype field.type/><@arglist field/></td>
           <td valign="bottom">
             <a href="#${fname}" class="fieldLink">${fname}</a>${array}${opt}${c};</td>

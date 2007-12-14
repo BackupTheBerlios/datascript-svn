@@ -138,6 +138,12 @@ th
 	font-size:1.5em;
 }
 
+.docuTag span:first-child 
+{
+	font-weight:bold;
+	text-transform:capitalize;
+}
+
 .docuCode
 {
 	background-color:#FFFFFF;
@@ -150,18 +156,18 @@ th
 	font-family:monospace;
 }
 
-.docuTag span:first-child 
-{
-	font-weight:bold;
-	text-transform:capitalize;
-}
-
 .docuCode tr td
 {
 	border-width:0px;
 	border-style:none;
 	border-collapse:collapse;
 	padding:0px;
+}
+
+.docuCode table tbody#tabIdent tr.codeMember td
+{
+	padding-top:.25em;
+	padding-bottom:.25em;
 }
 
 #tabIdent
