@@ -74,6 +74,10 @@ public class TypeNameEmitter
         {
             return isBuiltinType(((ArrayType)t).getElementType());
         }
+        else if (t instanceof Subtype)
+        {
+            return isBuiltinType(((Subtype)t).getBaseType());
+        }
         
         return false;
     }

@@ -46,6 +46,7 @@ import java.util.Calendar;
 import datascript.ast.DataScriptException;
 import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
+import datascript.ast.TypeReference;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -151,6 +152,8 @@ public class SubtypeEmitter
     public String getSuperClassName()
     {
         TypeInterface baseType = subtype.getBaseType();
+        if (baseType instanceof TypeReference)
+            baseType = TypeReference.resolveType(baseType);
         if (TypeNameEmitter.isBuiltinType(baseType))
             return "Object";
         return TypeNameEmitter.getTypeName(baseType);
