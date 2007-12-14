@@ -92,11 +92,7 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
 
     public String getVisitor(TypeInterface type, String nodeName, String fieldName)
     {
-        type = TypeReference.resolveType(type);
-        if (type instanceof Subtype)
-        {
-            type = ((Subtype) type).getBaseType();
-        }
+        type = TypeReference.getBaseType(type);
         Expression length = null;
         StringBuilder buffer = new StringBuilder();
         if (type instanceof IntegerType)

@@ -231,17 +231,17 @@ public class Expression extends TokenAST
         {
             Field field = (Field) obj;
             field.setUsedInExpression(true);
-            type = TypeReference.resolveType(field.getFieldType());
+            type = TypeReference.getBaseType(field.getFieldType());
         }
         else if (obj instanceof Parameter)
         {
             Parameter param = (Parameter) obj;
-            type = TypeReference.resolveType(param.getType());
+            type = TypeReference.getBaseType(param.getType());
         }
         else if (obj instanceof TypeReference)
         {
             TypeReference ref = (TypeReference) obj;
-            type = TypeReference.resolveType(ref);
+            type = TypeReference.getBaseType(ref);
         }
         else if (obj instanceof EnumType)
         {
@@ -336,7 +336,7 @@ public class Expression extends TokenAST
         if (obj instanceof Field)
         {
             Field field = (Field) obj;
-            type = TypeReference.resolveType(field.getFieldType());
+            type = TypeReference.getBaseType(field.getFieldType());
         }
         else if (obj instanceof FunctionType)
         {
@@ -349,7 +349,7 @@ public class Expression extends TokenAST
         else if (obj instanceof Parameter)
         {
             Parameter param = (Parameter) obj;
-            type = TypeReference.resolveType(param.getType());
+            type = TypeReference.getBaseType(param.getType());
         }
         else 
         {
@@ -569,11 +569,23 @@ public class Expression extends TokenAST
         TypeInterface t1, t2;
 
         if (type1 instanceof ConstType)
-            t1 = TypeReference.resolveType(((ConstType) type1).getBaseType());
-        else t1 = type1;
+        {
+            t1 = ((ConstType) type1).getBaseType();
+            t1 = TypeReference.getBaseType(t1);
+        }
+        else
+        {
+            t1 = type1;
+        }
         if (type2 instanceof ConstType)
-            t2 = TypeReference.resolveType(((ConstType) type2).getBaseType());
-        else t2 = type2;
+        {
+            t2 = ((ConstType) type2).getBaseType();
+            t2 = TypeReference.getBaseType(t2);
+        }
+        else
+        {
+            t2 = type2;
+        }
 
         if (t1 instanceof IntegerType && (t2 instanceof IntegerType))
         {

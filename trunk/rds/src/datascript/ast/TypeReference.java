@@ -216,14 +216,27 @@ public class TypeReference extends TokenAST implements TypeInterface,
     }
 
 
+    static public TypeInterface getBaseType(TypeInterface type)
+    {
+        while (true)
+        {
+            if (type instanceof TypeReference)
+                type = ((TypeReference) type).refType;
+            else if (type instanceof Subtype)
+                type = ((Subtype) type).getBaseType();
+            else 
+                break;
+        }
+        return type;
+    }
+
+
     static public TypeInterface resolveType(TypeInterface type)
     {
         while (true)
         {
             if (type instanceof TypeReference)
                 type = ((TypeReference) type).refType;
-//            else if (type instanceof Subtype)
-//                type = ((Subtype) type).getBaseType();
             else 
                 break;
         }

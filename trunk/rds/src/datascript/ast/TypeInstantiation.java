@@ -131,7 +131,7 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
         TypeReference refType = (TypeReference) getFirstChild();
 
         // lookup referenced type
-        TypeInterface p = TypeReference.resolveType(refType);
+        TypeInterface p = TypeReference.getBaseType(refType);
 
         // this must be a compound type
         if (!(p instanceof CompoundType))
@@ -178,7 +178,7 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
                 Parameter param = compound.getParameterAt(paramIndex);
                 // Resolve the type.
                 TypeInterface paramType = param.getType();
-                paramType = TypeReference.resolveType(paramType);
+                paramType = TypeReference.getBaseType(paramType);
 
                 // Types must be compatible.
                 if (!Expression.checkCompatibility(paramType, expr

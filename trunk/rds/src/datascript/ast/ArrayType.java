@@ -130,7 +130,8 @@ public class ArrayType extends TokenAST implements TypeInterface
     public TypeInterface getElementType()
     {
         TypeInterface type = (TypeInterface) getFirstChild();
-        return TypeReference.resolveType(type);
+        type = TypeReference.getBaseType(type);
+        return type;
     }
 
 

@@ -291,11 +291,7 @@ abstract public class CompoundEmitter
     {
         buffer = new StringBuilder();
         TypeInterface type = field.getFieldType();
-        type = TypeReference.resolveType(type);
-        if (type instanceof Subtype)
-        {
-            type = ((Subtype) type).getBaseType();
-        }
+        type = TypeReference.getBaseType(type);
 
         if (type instanceof IntegerType)
         {
@@ -483,11 +479,8 @@ abstract public class CompoundEmitter
     {
         boolean cast = false;
         Parameter param = type.getParameterAt(paramIndex);
-        TypeInterface paramType = TypeReference.resolveType(param.getType());
-        if (paramType instanceof Subtype)
-        {
-            paramType = ((Subtype) paramType).getBaseType();
-        }
+        TypeInterface paramType = TypeReference.getBaseType(param.getType());
+
         if (paramType instanceof StdIntegerType)
         {
             StdIntegerType intType = (StdIntegerType) paramType;
@@ -620,8 +613,7 @@ abstract public class CompoundEmitter
         for (Parameter param : compound.getParameters())
         {
             String paramName = param.getName();
-            TypeInterface paramType = TypeReference
-                    .resolveType(param.getType());
+            TypeInterface paramType = TypeReference.getBaseType(param.getType());
 
             String typeName = TypeNameEmitter.getTypeName(paramType);
             formal.append(", ");
@@ -686,11 +678,7 @@ abstract public class CompoundEmitter
     {
         buffer = new StringBuilder();
         TypeInterface type = field.getFieldType();
-        type = TypeReference.resolveType(type);
-        if (type instanceof Subtype)
-        {
-            type = ((Subtype) type).getBaseType();
-        }
+        type = TypeReference.getBaseType(type);
 
         if (type instanceof IntegerType)
         {

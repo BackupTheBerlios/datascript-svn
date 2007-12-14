@@ -101,11 +101,7 @@ public class SqlTableEmitter extends CompoundEmitter
 
         public int getTypeSize()
         {
-            TypeInterface ftype = TypeReference.resolveType(field.getFieldType());
-            if (ftype instanceof Subtype)
-            {
-                ftype = ((Subtype) ftype).getBaseType();
-            }
+            TypeInterface ftype = TypeReference.getBaseType(field.getFieldType());
             if ((ftype instanceof SqlIntegerType) || (ftype instanceof IntegerType))
             {
                 int typeSize = field.sizeof(null).integerValue().intValue();
@@ -135,16 +131,12 @@ public class SqlTableEmitter extends CompoundEmitter
         public String getSqlType()
         {
             String retval;
-            TypeInterface ftype = TypeReference.resolveType(field.getFieldType());
+            TypeInterface ftype = TypeReference.getBaseType(field.getFieldType());
 
             if (ftype instanceof ArrayType)
             {
                 int count = ftype.getLength();
-                ftype = TypeReference.resolveType(((ArrayType) ftype).getElementType());
-                if (ftype instanceof Subtype)
-                {
-                    ftype = ((Subtype) ftype).getBaseType();
-                }
+                ftype = TypeReference.getBaseType(((ArrayType) ftype).getElementType());
                 if (!(ftype instanceof IntegerType))
                     retval = "BLOB";
                 else if (((IntegerType)ftype).getType() == DataScriptParserTokenTypes.UINT8)

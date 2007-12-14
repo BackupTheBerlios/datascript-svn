@@ -69,11 +69,7 @@ public abstract class FieldEmitter
     {
         global = j;
         field = f;
-        type = TypeReference.resolveType(field.getFieldType());
-        if (type instanceof Subtype)
-        {
-            type = ((Subtype) type).getBaseType();
-        }
+        type = TypeReference.getBaseType(field.getFieldType());
     }
 
 
@@ -219,9 +215,15 @@ public abstract class FieldEmitter
 
 
     /*
-     * public String getTypeName() { TypeInterface type = field.getFieldType();
-     * type = TypeReference.resolveType(type); return global.getTypeName(type); }
+     * public String getTypeName()
+     * {
+     *     TypeInterface type = field.getFieldType();
+     *     type = TypeReference.getBaseType(type);
+     *     return global.getTypeName(type);
+     * }
      */
+
+
     public Field getField()
     {
         return field;

@@ -82,9 +82,7 @@ public class TypeNameEmitter
     public static String getTypeName(TypeInterface t)
     {
         String result = null;
-        t = TypeReference.resolveType(t);
-        if (t instanceof Subtype)
-            t = ((Subtype) t).getBaseType();
+        t = TypeReference.getBaseType(t);
 
         if (t instanceof StdIntegerType)
         {
@@ -114,7 +112,7 @@ public class TypeNameEmitter
         else if (t instanceof Subtype)
         {
             TypeInterface base = ((Subtype)t).getBaseType();
-            //base = TypeReference.resolveType(base);
+//            base = TypeReference.getBaseType(base);
             result = getTypeName(base);            
         }
         else if (t instanceof StringType)
@@ -132,9 +130,7 @@ public class TypeNameEmitter
     public static String getTypeName(Field field)
     {
         TypeInterface type = field.getFieldType();
-        type = TypeReference.resolveType(type);
-        if (type instanceof Subtype)
-            type = ((Subtype) type).getBaseType();
+        type = TypeReference.getBaseType(type);
 
         if (field.getOptionalClause() != null)
         {            
@@ -304,9 +300,7 @@ public class TypeNameEmitter
     public static String getClassName(TypeInterface t)
     {
         String result = null;
-        t = TypeReference.resolveType(t);
-        if (t instanceof Subtype)
-            t = ((Subtype) t).getBaseType();
+        t = TypeReference.getBaseType(t);
 
         if (t instanceof StdIntegerType)
         {

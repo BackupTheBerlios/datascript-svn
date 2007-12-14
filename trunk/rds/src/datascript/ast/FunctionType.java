@@ -80,8 +80,7 @@ public class FunctionType extends TokenAST implements TypeInterface
             AST ast = getFirstChild();
             name = ast.getText();
             ast = ast.getNextSibling();
-            returnType = (TypeInterface) ast;
-            returnType = TypeReference.resolveType(returnType);
+            returnType = TypeReference.getBaseType((TypeInterface) ast);
             result = (Expression) ast.getNextSibling().getFirstChild();
         }
     }

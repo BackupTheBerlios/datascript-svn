@@ -103,6 +103,12 @@ public class ChoiceMember extends TokenAST
     }
 
 
+    /**
+     * This method is for the html emitter and detects the type of a field in a 
+     * choice.
+     * 
+     * @return type of field
+     */
     public LinkedType getFieldType()
     {
         TypeInterface type = getField().getFieldType();
