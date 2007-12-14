@@ -43,7 +43,7 @@ Type
     NameId   typeName;
     Category category;
     int32    size;
-    TypeInfo info;
+    TypeInfo(category) info;
 };
 
 enum int8 Category
@@ -53,18 +53,23 @@ enum int8 Category
     ENUM,
     SUBTYPE,
     SEQUENCE,
-    UNION    
+    UNION,
+    ARRAY 
 };
 
-union TypeInfo
+const int8 useExpression = 0;
+
+union TypeInfo (Category category)
 {
-    BuiltInInfo      builtInInfo      : Type.category == Category.BUILTIN;
-    //BitfieldInfo     bitfieldInfo     : Type.category == Category.BITFIELD;
-    //EnumerationInfo  enumerationInfo  : Type.category == Category.ENUMERATION;
-    //SubtypeInfo      subtypeInfo      : Type.category == Category.SUBTYPE;
-    SequenceInfo     sequenceInfo     : Type.category == Category.SEQUENCE;
-    //UnionInfo        unionInfo        : Type.category == Category.UNION;
+    BuiltInInfo        builtInInfo      : category == Category.BUILTIN;
+    BitfieldInfo       bitfieldInfo     : category == Category.BITFIELD;
+    EnumInfo           enumInfo         : category == Category.ENUM;
+    //SubtypeInfo      subtypeInfo      : category == Category.SUBTYPE;
+    SequenceInfo       sequenceInfo     : category == Category.SEQUENCE;
+    UnionInfo          unionInfo        : category == Category.UNION;
+    ArrayInfo          arrayInfo        : category == Category.ARRAY;
 };
+
 
 enum int8 BuiltInInfo
 {
@@ -79,14 +84,58 @@ enum int8 BuiltInInfo
     STRING
 };
 
-SequenceInfo
-{
-    int16    numFields;
-    FieldId  fields[numFields];
-};
 
 subtype int32 FieldId;
 subtype int32 TypeRef;
+
+
+BitfieldInfo
+{
+    uint32        numBits;   // see DataScript Language Overview 3.2 (The length is not limited)
+    ExpressionId  exprId    if useExpression == numBits;
+};
+
+
+EnumInfo
+{
+    // The bits length of the enum element
+    int8 bits;
+
+    // Lits of constants
+    uint32     numConsts;
+    bit<bits>  consts[numConsts];
+};
+
+
+CompoundInfo
+{
+    // Parameters list
+    int8       numParams;
+    ParamInfo  params[numParams];
+
+    // Fields list
+    int16      numFields;
+    FieldId    fields[numFields];
+};
+
+
+ParamInfo
+{
+    TypeRef type;
+    NameId  nameId;     // !!! Probably, it is not necessary to store name of parameters 
+};
+
+
+subtype CompoundInfo SequenceInfo;
+subtype CompoundInfo UnionInfo;
+
+
+ArrayInfo
+{
+    TypeRef       elementType;  // reference to the type of the array element
+    ExpressionId  lengthExpr;   // defines array length calculation expression 
+};
+
 
 Field
 {
@@ -97,64 +146,170 @@ Field
     bit:1    hasConstraint;
     bit:1    hasAlignment;
     bit:1    hasLabel;
+    bit:1        hasArguments;
 
 align(8):
-    ExpressionId  optional if isOptional;
-    ExpressionId  constraint if hasConstraint;
-    int32         alignment if hasAlignment;
-    ExpressionId  label if hasLabel;    
+    ExpressionId  optional   if 0 != isOptional;
+    ExpressionId  constraint if 0 != hasConstraint;
+    int32         alignment  if 0 != hasAlignment;
+    ExpressionId  label      if 0 != hasLabel;
+    ExpressionId  arguments  if 0 != hasArguments;      
 };
+
 
 subtype int32 ExpressionId;
 
+
+//Expression
+//{
+//    TypeId  type;
+//    bit:1   isConstant;
+//    bit:7   arity;
+//    ExpressionInfo info;
+//    Value   value if isConstant;
+//};
+
+
 Expression
 {
-    TypeId  type;
-    bit:1   isConstant;
-    bit:7   arity;
-    ExpressionInfo info;
-    Value   value if isConstant;
+    Arity arity;
+    ExpressionInfo(arity) info;
 };
 
 
-union ExpressionInfo
+enum uint8 Arity
 {
-    Atom    atom    : Expression.arity == 0;
-    Unary   unary   : Expression.arity == 1;
-    Binary  binary  : Expression.arity == 2;
-    Ternary ternary : Expression.arity == 3;
+        ATOM,
+        UNARY,
+        BINARY,
+        TERNARY
 };
+
+                    
+union ExpressionInfo (Arity arity)
+{
+    Atom    atom    : arity == Arity.ATOM;
+    Unary   unary   : arity == Arity.UNARY;
+    Binary  binary  : arity == Arity.BINARY;
+    Ternary ternary : arity == Arity.TERNARY;
+};
+
 
 Atom
 {
-    int8 dummy;
+        AtomType type;
+    AtomInfo(type) info;
 };
+
 
 Unary
 {
-    Operator      op;
+    UnaryOperator op;
     ExpressionId  arg1;
 };
+
 
 Binary
 {
-    Operator      op;
+    BinaryOperator op;
     ExpressionId  arg1;
     ExpressionId  arg2;
 };
+
 
 Ternary
 {
-    Operator      op;
-    ExpressionId  arg1;
-    ExpressionId  arg2;
-    ExpressionId  arg3;
+    TernaryOperator op;
+    ExpressionId    arg1;
+    ExpressionId    arg2;
+    ExpressionId    arg3;
 };
+
+enum int8 AtomType
+{
+    CONST,                              // define explicit and implicit constants (integer literal, enumeration and e.t.) 
+    LOCAL_FIELD_REF,    // Reference to the field of the current compound type
+    GLOBAL_FIELD_REF,   // Reference to the global field
+    PARAM_REF                   // Reference to the parameter
+};
+
+
+union AtomInfo(AtomType type)
+{
+        Value          value     : type == AtomType.CONST;
+        LocalFieldRef  lfieldRef : type == AtomType.LOCAL_FIELD_REF;
+        GlobalFieldRef gfieldRef : type == AtomType.GLOBAL_FIELD_REF;
+        ParamRef       paramRef  : type == AtomType.PARAM_REF;
+        
+        // Probably, the definition has not completed yet. 
+};
+
 
 subtype int64 Value;
 
-enum uint8 Operator
+
+enum int8 UnaryOperator 
 {
-    PLUS,
-    MINUS
+        UPLUS,
+        UMINUS,
+        TILDE,
+        BANG,
+        LPAREN,
+        INDEX,
+        LENGTHOF,
+        SIZEOF,
+        BITSIZEOF,
+        SUM,
+        FUNCTIONCALL
 };
+
+enum int8 BinaryOperator
+{
+        COMMA,
+        LOGICALOR,
+        LOGICALAND,
+        OR,
+        XOR,
+        AND,
+        EQ,
+        NE,
+        LT,
+        LE,
+        GE,
+        GT,
+        LSHIFT,
+        RSHIFT,
+        PLUS,
+        MINUS,
+        MULTIPLY,
+        DIVIDE,
+        MODULO,
+        ARRAYELEM,
+        DOT
+};
+  
+enum int8 TernaryOperator
+{
+        QUESTIONMARK
+};
+
+
+LocalFieldRef
+{
+        int16   fieldIndex;             // field index in the current compound type 
+};
+
+
+GlobalFieldRef
+{
+        TypeRef type;                   // Reference to the compound type
+        int16   fieldIndex;             // field index in the compound type 
+};
+
+
+ParamRef
+{
+        int8    paramIndex;             // index  in the parameters list of the current compound type
+        int16   fieldIndex;             // field index in the compound type 
+};
+
