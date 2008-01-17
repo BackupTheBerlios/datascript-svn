@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import antlr.collections.AST;
 import datascript.ast.DataScriptException;
@@ -53,7 +55,7 @@ import freemarker.template.Template;
 
 public class PackageEmitter extends DefaultHTMLEmitter
 {
-    private List<String> packages = new ArrayList<String>();
+    private final Set<String> packages = new TreeSet<String>();
 
 
     public PackageEmitter() throws IOException, URISyntaxException
@@ -88,7 +90,7 @@ public class PackageEmitter extends DefaultHTMLEmitter
     }
 
 
-    public List<String> getPackages()
+    public Set<String> getPackages()
     {
         return packages;
     }
