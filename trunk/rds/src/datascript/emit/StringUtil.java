@@ -37,6 +37,8 @@
  */
 package datascript.emit;
 
+import java.util.List;
+
 public class StringUtil
 {
     public static String firstToUpper(String s)
@@ -44,6 +46,26 @@ public class StringUtil
         String first = s.substring(0, 1);
         StringBuilder buffer  = new StringBuilder(first.toUpperCase());
         buffer.append(s.substring(1, s.length()));
+        return buffer.toString();
+    }
+
+
+    public static String joinStringList(List<String> strList, String pattern)
+    {
+        StringBuilder buffer = new StringBuilder();
+        boolean first = true;
+        for (String part : strList)
+        {
+            if (first)
+            {
+                first = false;
+            }
+            else
+            {
+                buffer.append(pattern);
+            }
+            buffer.append(part);
+        }
         return buffer.toString();
     }
 }

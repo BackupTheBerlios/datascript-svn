@@ -43,6 +43,7 @@ package datascript.emit.html;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -50,6 +51,7 @@ import java.util.TreeMap;
 
 import antlr.collections.AST;
 import datascript.ast.DataScriptException;
+import datascript.ast.Package;
 import datascript.ast.TypeInterface;
 import freemarker.template.Template;
 
@@ -57,8 +59,9 @@ import freemarker.template.Template;
 
 public class OverviewEmitter extends DefaultHTMLEmitter
 {
-    private Map<String, LinkedType> typeMap = new TreeMap<String, LinkedType>();
-    private HashSet<String> packageNames = new HashSet<String>();
+    private final Map<String, LinkedType> typeMap = new TreeMap<String, LinkedType>();
+    private final Map<String, Boolean> doubleTypeNames = new HashMap<String, Boolean>();
+    private final HashSet<String> packageNames = new HashSet<String>();
     private String packageName;
 
 
@@ -80,6 +83,19 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     {
         try
         {
+            for (String packageName : datascript.ast.Package.getPackageNames())
+            {
+                Package pkg = Package.lookup(packageName);
+                for (String typeName : pkg.getLocalTypeNames())
+                {
+                    boolean isDoubleDefinedType = doubleTypeNames.get(typeName);
+                    TypeInterface t = pkg.getLocalType(typeName);
+                    LinkedType linkedType = new LinkedType(t, isDoubleDefinedType);
+                    typeName = typeName + "." + pkg.getReversePackageName();
+                    typeMap.put(typeName, linkedType);
+                }
+            }
+
             Template tpl = cfg.getTemplate("html/overview.html.ftl");
             openOutputFile(directory, "overview" + HTML_EXT);
 
@@ -98,11 +114,11 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     {
         for (String typeName : currentPackage.getLocalTypeNames())
         {
-            TypeInterface t = currentPackage.getLocalType(typeName);
-            LinkedType linkedType = new LinkedType(t);
-            typeMap.put(typeName, linkedType);
+            if (doubleTypeNames.containsKey(typeName))
+                doubleTypeNames.put(typeName, true);
+            else
+                doubleTypeNames.put(typeName, false);
         }
-
         String pkgName = currentPackage.getPackageName();
         pkgName = pkgName.replace('.', '_');
         packageNames.add(pkgName);
@@ -119,11 +135,5 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     public Collection<LinkedType> getTypes()
     {
         return typeMap.values();
-    }
-
-
-    public Set<String> getPackages()
-    {
-        return packageNames;
     }
 }

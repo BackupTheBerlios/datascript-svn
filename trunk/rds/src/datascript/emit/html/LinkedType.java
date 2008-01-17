@@ -42,6 +42,7 @@ package datascript.emit.html;
 
 import datascript.ast.ArrayType;
 import datascript.ast.EnumType;
+import datascript.ast.Package;
 import datascript.ast.SequenceType;
 import datascript.ast.SqlDatabaseType;
 import datascript.ast.SqlMetadataType;
@@ -61,6 +62,7 @@ import datascript.ast.UnionType;
 public class LinkedType
 {
     private TypeInterface type;
+    private boolean isDoubleDefinedType;
     private String style;
     private String category = "";
 
@@ -68,6 +70,15 @@ public class LinkedType
     public LinkedType(TypeInterface type)
     {
         this.type = type;
+        this.isDoubleDefinedType = false;
+        init();
+    }
+
+
+    public LinkedType(TypeInterface type, boolean isDoubleDefinedType)
+    {
+        this.type = type;
+        this.isDoubleDefinedType = isDoubleDefinedType;
         init();
     }
 
@@ -92,63 +103,74 @@ public class LinkedType
             if (type instanceof SequenceType)
             {
                 style = "sequenceLink";
-                category += "Sequence";
+                category += createTitle("Sequence");
             }
             else if (type instanceof UnionType)
             {
                 style = "unionLink";
-                category += "Union";
+                category += createTitle("Union");
             }
             else if (type instanceof EnumType)
             {
                 style = "enumLink";
-                category += "Enum";
+                category += createTitle("Enum");
             }
             else if (type instanceof datascript.ast.Subtype)
             {
                 style = "subtypeLink";
-                category += "Subtype";
+                category += createTitle("Subtype");
             }
             else if (type instanceof datascript.ast.ConstType)
             {
                 style = "consttypeLink";
-                category += "Consttype";
+                category += createTitle("Consttype");
             }
             else if (type instanceof SqlMetadataType)
             {
                 style = "sqlMetaLink";
-                category += "SQL Metadata";
+                category += createTitle("SQL Metadata");
             }
             else if (type instanceof SqlPragmaType)
             {
                 style = "sqlPragmaLink";
-                category += "SQL Pragma";
+                category += createTitle("SQL Pragma");
             }
             else if (type instanceof SqlTableType)
             {
                 style = "sqlTableLink";
-                category += "SQL Table";
+                category += createTitle("SQL Table");
             }
             else if (type instanceof SqlDatabaseType)
             {
                 style = "sqlDBLink";
-                category += "SQL Database";
+                category += createTitle("SQL Database");
             }
             else if (type instanceof TypeInstantiation)
             {
                 style = "instantLink";
-                category += "TypeInstantiation";
+                category += createTitle("TypeInstantiation");
             }
             else if (type instanceof TypeReference)
             {
                 style = "referenceLink";
-                category += "TypeReference";
+                category += createTitle("TypeReference");
             }
             else
             {
                 style = "noStyle";
             }
         }
+    }
+
+
+    private String createTitle(String category)
+    {
+        String packageName = "";
+        if (isDoubleDefinedType)
+        {
+            packageName = ", defined in: " + type.getPackage().getPackageName();
+        }
+        return category + packageName;
     }
 
 

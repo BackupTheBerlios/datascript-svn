@@ -50,6 +50,7 @@ import java.util.Set;
 import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
+import datascript.emit.StringUtil;
 
 
 
@@ -122,8 +123,14 @@ public class Package extends Scope
     /** The fully qualified package name, e.g. "com.acme.foo.bar". */
     private String packageName;
 
+    /** The fully qualified package name, e.g. "bar.foo.acme.com". */
+    private String reversePackageName;
+
     /** List of the package name parts, e.g. ["com", "acme", "foo", "bar"] */
     private List<String> packagePath;
+
+    /** List of the package name parts, e.g. ["bar", "foo", "acme", "com"] */
+    private List<String> reversePackagePath;
 
     /** Maps all type names defined in this package to the corresponding type. */
     private Map<String, TypeInterface> localTypes;
@@ -349,8 +356,8 @@ public class Package extends Scope
     {
         boolean first = true;
         StringBuilder buffer = new StringBuilder();
-        for (AST child = node.getFirstChild(); child != null; child = child
-                .getNextSibling())
+        AST child = node.getFirstChild();
+        for (; child != null; child = child.getNextSibling())
         {
             if (first)
             {
@@ -425,6 +432,12 @@ public class Package extends Scope
     }
 
 
+    public static Set<String> getPackageNames()
+    {
+        return nameToPackage.keySet();
+    }
+
+
     /**
      * Returns the fully qualified name of this package
      * @return e.g. "com.acme.foo.bar"
@@ -433,23 +446,25 @@ public class Package extends Scope
     {
         if (packageName == null)
         {
-            StringBuilder buffer = new StringBuilder();
-            boolean first = true;
-            for (String part : getPackagePath())
-            {
-                if (first)
-                {
-                    first = false;
-                }
-                else
-                {
-                    buffer.append('.');
-                }
-                buffer.append(part);
-            }
-            packageName = buffer.toString();
+            packageName = 
+                StringUtil.joinStringList(getPackagePath(), ".");
         }
         return packageName;
+    }
+
+
+    /**
+     * Returns the reverse fully qualified name of this package
+     * @return e.g. "bar.foo.acme.com"
+     */
+    public String getReversePackageName()
+    {
+        if (reversePackageName == null)
+        {
+            reversePackageName = 
+                StringUtil.joinStringList(getReversePackagePath(), ".");
+        }
+        return reversePackageName;
     }
 
 
@@ -462,13 +477,37 @@ public class Package extends Scope
         if (packagePath == null)
         {
             packagePath = new ArrayList<String>();
-            for (AST child = node.getFirstChild(); child != null; child = child
-                    .getNextSibling())
+            AST child = node.getFirstChild();
+            for (; child != null; child = child.getNextSibling())
             {
                 packagePath.add(child.getText());
             }
         }
         return packagePath;
+    }
+
+
+    /**
+     * Returns this list of reverse subpackage names for the current package.
+     * @return e.g. ["bar", "foo", "acme", "com"]
+     */
+    public List<String> getReversePackagePath()
+    {
+        if (reversePackagePath == null)
+        {
+            reversePackagePath = new ArrayList<String>();
+            generateReversePath(reversePackagePath, node.getFirstChild());
+        }
+        return reversePackagePath;
+    }
+
+
+    private void generateReversePath(List<String> reversePackagePath, AST child)
+    {
+        if (child == null)
+            return;
+        generateReversePath(reversePackagePath, child.getNextSibling());
+        reversePackagePath.add(child.getText());
     }
 
 

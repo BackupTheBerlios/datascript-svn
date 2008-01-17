@@ -15,7 +15,7 @@
     </ul>
   </body>
 
-<#list packages as pkg>
+<#list packageNames as pkg>
   <style id="style_${pkg}" type="text/css">
     li#${pkg} { display: none<#--list-item;--> }
   </style>
@@ -23,7 +23,7 @@
 
   <script language="JavaScript">
     var allPackageNameListStyles = new Object();
-<#list packages as pkg>
+<#list packageNames as pkg>
     allPackageNameListStyles.style_${pkg} = getElementStyleFromID("style_${pkg}");
 </#list>
 
