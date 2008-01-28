@@ -92,3 +92,17 @@ choice ParamContent2(Selector sel) on sel
     case WHITE:  White white;
 };
 
+// Functions in CHOICES should work, but currently don't
+
+/*
+choice ParamContent3(uint16 sel) on sel
+{
+    case 1000:  Black black;
+    case 2000:  White white;
+    
+    function uint16 div()
+    {
+        return sel/100;
+    }
+};
+*/

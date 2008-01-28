@@ -485,4 +485,5 @@ expression
     | STRING_LITERAL
     | #(SUM expression)
     | #(EXPLICIT ID)
+    | #(INDEX ID)
     ;

@@ -95,3 +95,15 @@ Foo
     
 };
 
+
+Bla(uint16 metres)
+{
+    uint16   a;
+    
+    function uint16 centimetres()
+    {
+        return metres/100;
+    }
+
+};
+
