@@ -173,6 +173,10 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         }
     }
 
+    public List<CompoundType> getContainers()
+    {
+        return containers;
+    }
 
     /**
      * @return true if 'this' is contained in compound type 'f'

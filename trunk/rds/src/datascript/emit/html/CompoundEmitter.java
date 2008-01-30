@@ -72,6 +72,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     private final List<FieldEmitter> fields = new ArrayList<FieldEmitter>();
     private final ExpressionEmitter exprEmitter = new ExpressionEmitter();
     private final List<FunctionEmitter> functions = new ArrayList<FunctionEmitter>();
+    private final List<CompoundEmitter> containers = new ArrayList<CompoundEmitter>();
 
 
     public CompoundEmitter()
@@ -80,7 +81,26 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         directory = new File(directory, contentFolder);
     }
 
+    public CompoundEmitter(CompoundType cc)
+    {
+        this.compound = cc;
+    }
 
+    public String getName()
+    {
+        return compound == null ? "" : compound.getName();
+    }
+
+    public LinkedType getLinkedType()
+    {
+    	if (compound == null)
+    		return null;
+    	
+        TypeInterface type = (TypeInterface)compound;
+        type = TypeReference.resolveType(type);
+        LinkedType linkedType = new LinkedType(type);
+        return linkedType;
+    }
 
     public class FunctionEmitter
     {
@@ -192,6 +212,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         this.compound = compound;
         fields.clear();
         functions.clear();
+        containers.clear();
         for (FunctionType fctn : compound.getFunctions())
         {
             FunctionEmitter fe = new FunctionEmitter(fctn);
@@ -233,6 +254,12 @@ public class CompoundEmitter extends DefaultHTMLEmitter
             FieldEmitter fe = new FieldEmitter(field);
             fields.add(fe);
         }
+        for (CompoundType compund : compound.getContainers())
+        {
+            CompoundEmitter ce = new CompoundEmitter(compund);
+            containers.add(ce);
+        }
+        
         try
         {
             Template tpl = cfg.getTemplate("html/compound.html.ftl");
@@ -386,6 +413,10 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         return functions;
     }
 
+    public List<CompoundEmitter> getContainers()
+    {
+    	return containers;
+    }
 
     public LinkedType toLinkedType(TypeInterface type1)
     {
