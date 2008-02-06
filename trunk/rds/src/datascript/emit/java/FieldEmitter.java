@@ -45,10 +45,8 @@ import java.io.PrintWriter;
 import datascript.ast.BitFieldType;
 import datascript.ast.Field;
 import datascript.ast.StdIntegerType;
-import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
-
 import freemarker.template.Configuration;
 
 

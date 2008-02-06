@@ -57,7 +57,6 @@ import datascript.ast.Parameter;
 import datascript.ast.SqlIntegerType;
 import datascript.ast.SqlTableType;
 import datascript.ast.StringType;
-import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import freemarker.template.Configuration;

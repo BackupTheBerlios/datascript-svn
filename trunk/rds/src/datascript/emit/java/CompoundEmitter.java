@@ -47,7 +47,6 @@ import java.util.List;
 
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
-
 import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
@@ -57,15 +56,13 @@ import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.FunctionType;
 import datascript.ast.IntegerType;
-import datascript.ast.StringType;
 import datascript.ast.Parameter;
 import datascript.ast.StdIntegerType;
-import datascript.ast.Subtype;
+import datascript.ast.StringType;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.Value;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 

@@ -49,7 +49,6 @@ import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
 import datascript.ast.StringType;
-import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import freemarker.template.Template;

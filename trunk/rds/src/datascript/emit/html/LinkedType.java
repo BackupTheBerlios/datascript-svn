@@ -42,7 +42,6 @@ package datascript.emit.html;
 
 import datascript.ast.ArrayType;
 import datascript.ast.EnumType;
-import datascript.ast.Package;
 import datascript.ast.SequenceType;
 import datascript.ast.SqlDatabaseType;
 import datascript.ast.SqlMetadataType;
