@@ -320,12 +320,13 @@
     </rds-->
 
     <java jar="${jar}/rds.jar" failonerror="true" fork="yes">
-      <arg line="-c -out ${test.gen} -src ${ds.src} bits.ds" />
+      <arg line="-c -out ${test.gen} -src ${ds.src} -java_e bits.ds" />
     </java>
   </target>
 
   <target name="testBits.clean" description="removes all generated test Java sources and classes">
-    <delete dir="${test}/bits" />
+    <delete dir="${test.gen}/bits" />
+  	<delete dir="${test.gen}/bits.*" />
   </target>
 
   <!-- ==================================================================== -->

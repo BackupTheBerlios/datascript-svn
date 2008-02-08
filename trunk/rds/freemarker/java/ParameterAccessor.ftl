@@ -41,12 +41,20 @@
     ${javaTypeName} ${name};
 
     public void ${setterName}(${javaTypeName} ${name}) 
-    { 
-        this.${name} = ${name}; 
+    {
+<#if equalsCanThrowExceptions && isSimple>
+        // check range
+        if ((#{maxVal}L < ${name}) || (${name} < #{minVal}L))
+            throw new RuntimeException("Value " + ${name} + " of parameter '${name}' exceeds the range of type ${typeName}!");
+
+<#else>
+        // do not check range
+</#if>
+        this.${name} = ${name};
     }
 
-    public ${javaTypeName} ${getterName}() 
-    { 
-        return ${name}; 
+    public ${javaTypeName} ${getterName}()
+    {
+        return ${name};
     }
 

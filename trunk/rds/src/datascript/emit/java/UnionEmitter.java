@@ -133,7 +133,7 @@ public class UnionEmitter extends CompoundEmitter
         params.clear();
         for (Parameter param : union.getParameters())
         {
-            CompoundParameterEmitter p = new CompoundParameterEmitter(param);
+            CompoundParameterEmitter p = new CompoundParameterEmitter(param, this);
             params.add(p);
         }
         functions.clear();

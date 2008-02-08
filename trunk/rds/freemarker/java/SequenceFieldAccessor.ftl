@@ -41,15 +41,21 @@
     private ${javaTypeName} ${name};
 
     
-    public ${javaTypeName} ${getterName}() 
-    { 
-        return ${name}; 
+    public ${javaTypeName} ${getterName}()
+    {
+        return ${name};
     }
 
 
-    public void ${setterName}(${javaTypeName} ${name}) 
-    { 
-        this.${name} = ${name}; 
+    public void ${setterName}(${javaTypeName} ${name})
+    {
+<#if equalsCanThrowExceptions && isSimple>
+        // check range
+        if ((#{maxVal}L < ${name}) || (${name} < #{minVal}L))
+            throw new RuntimeException("Value " + ${name} + " of field '${name}' exceeds the range of type ${typeName}!");
+
+</#if>
+        this.${name} = ${name};
     }
 
 <#if optionalClause?? && optionalClause?has_content>

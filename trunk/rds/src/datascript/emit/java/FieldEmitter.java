@@ -47,6 +47,7 @@ import datascript.ast.Field;
 import datascript.ast.StdIntegerType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
+import datascript.emit.java.TypeNameEmitter;
 import freemarker.template.Configuration;
 
 
@@ -128,6 +129,14 @@ public abstract class FieldEmitter
     }
 
 
+    public String getTypeName()
+    {
+        String typeName = datascript.emit.html.TypeNameEmitter.getTypeName(type);
+        typeName = typeName.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+        return typeName;
+    }
+
+
     public String getClassName()
     {
         return TypeNameEmitter.getClassName(field.getFieldType());
@@ -162,7 +171,7 @@ public abstract class FieldEmitter
     {
         if (type instanceof BitFieldType)
             return ((BitFieldType)type).getLength();
-        throw new RuntimeException("type of field " + field.getName() + "is not a BitFieldType");
+        throw new RuntimeException("type of field '" + field.getName() + "' is not a BitFieldType");
     }
 
 
@@ -170,7 +179,7 @@ public abstract class FieldEmitter
     {
         if (type instanceof StdIntegerType)
             return ((StdIntegerType)type).getType() == datascript.antlr.DataScriptParserTokenTypes.UINT64;
-        throw new RuntimeException("type of field " + field.getName() + "is not a StdIntegerType");
+        throw new RuntimeException("type of field '" + field.getName() + "' is not a StdIntegerType");
     }
 
 
@@ -189,7 +198,7 @@ public abstract class FieldEmitter
         boolean result = false;
         if (type instanceof StdIntegerType)
         {
-            result = ((StdIntegerType)type).getType() != datascript.antlr.DataScriptParserTokenTypes.UINT64;            
+            result = (((StdIntegerType)type).getType() != datascript.antlr.DataScriptParserTokenTypes.UINT64);
         }
         else if (type instanceof BitFieldType)
         {
@@ -197,6 +206,37 @@ public abstract class FieldEmitter
             result = 0 < bitField.getLength() && bitField.getLength() < 64;
         }
         return result;
+    }
+
+
+    public long getMinVal()
+    {
+    	if (type instanceof BitFieldType)
+    	{
+            return 0;
+    	}
+        if (type instanceof StdIntegerType)
+        {
+        	StdIntegerType integerType = (StdIntegerType) type;
+        	return integerType.getLowerBound().longValue();
+        }
+    	throw new RuntimeException("type of field '" + field.getName() + "' is not a simple type");
+    }
+
+
+    public long getMaxVal()
+    {
+    	if (type instanceof BitFieldType)
+    	{
+            BitFieldType bitField = (BitFieldType) type;
+            return (1 << bitField.getLength()) -1;
+    	}
+        if (type instanceof StdIntegerType)
+        {
+        	StdIntegerType integerType = (StdIntegerType) type;
+        	return integerType.getUpperBound().longValue();
+        }
+    	throw new RuntimeException("type of field '" + field.getName() + "' is not a simple type");
     }
 
 
@@ -225,5 +265,11 @@ public abstract class FieldEmitter
     public Field getField()
     {
         return field;
+    }
+
+
+    public boolean getEqualsCanThrowExceptions()
+    {
+        return global.getEqualsCanThrowExceptions();
     }
 }

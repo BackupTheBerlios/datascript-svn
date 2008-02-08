@@ -74,7 +74,7 @@ public class BitsParserTest extends TestCase
         bs.write(os);
         os.close();
 
-        bits.BitStruct bits = new bits.BitStruct(fileName);
+        BitStruct bits = new BitStruct(fileName);
         assertEquals(a, bits.getA());
         assertEquals(b, bits.getB());
         assertEquals(c, bits.getC());
@@ -158,5 +158,52 @@ public class BitsParserTest extends TestCase
     public void testEncodeAndDecodeInMemory3() throws Exception
     {
         encodeAndDecodeInMemory(2, 3, 4);
+    }
+
+    public void testRangeCheck()
+    {
+    	try
+    	{
+    		@SuppressWarnings("unused")
+			BitStruct bs = new BitStruct((byte)16, (short)1234, (byte)-1);
+    	}
+	    catch (RuntimeException exc)
+	    {
+	    	assertEquals("Value 16 of field 'a' exceeds the range of type bit<4>!", exc.getMessage());
+	    }
+
+	    BitStruct bs = new BitStruct();
+        try
+        {
+	        bs.setA((byte)16);
+	    }
+	    catch (RuntimeException exc)
+	    {
+	        assertEquals("Value 16 of field 'a' exceeds the range of type bit<4>!", exc.getMessage());            
+	    }
+	    try
+	    {
+	        bs.setB((short)1234);
+	    }
+	    catch (RuntimeException exc)
+	    {
+	        assertEquals("Value 1234 of field 'b' exceeds the range of type uint8!", exc.getMessage());            
+	    }
+        try
+        {
+	        bs.setB((short)-1);
+	    }
+	    catch (RuntimeException exc)
+	    {
+	        assertEquals("Value -1 of field 'b' exceeds the range of type uint8!", exc.getMessage());            
+	    }
+        try
+        {
+        	bs.setC((byte)-1);
+        }
+        catch (RuntimeException exc)
+        {
+            assertEquals("Value -1 of field 'c' exceeds the range of type bit<4>!", exc.getMessage());            
+        }
     }
 }

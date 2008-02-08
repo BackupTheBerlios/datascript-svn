@@ -49,7 +49,9 @@
     )
 public class __ConstType extends ${rootPackageName}.__DepthFirstVisitor
 {
+<#--
     /**
-     * All constant definitions from datascript are definde here
+     * All constant definitions from datascript are defined here
      */
     //static final <type> <identifier> <value>;
+-->

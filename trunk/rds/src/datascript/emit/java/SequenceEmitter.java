@@ -191,7 +191,7 @@ public class SequenceEmitter extends CompoundEmitter
         params.clear();
         for (Parameter param : seq.getParameters())
         {
-            CompoundParameterEmitter p = new CompoundParameterEmitter(param);
+            CompoundParameterEmitter p = new CompoundParameterEmitter(param, this);
             params.add(p);
         }
         functions.clear();

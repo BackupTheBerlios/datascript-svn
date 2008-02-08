@@ -38,25 +38,31 @@
  */
 -->
 
-    public boolean ${checkerName}() 
-    { 
+    public boolean ${checkerName}()
+    {
         return (__choiceTag == CHOICE_${name});
     }
 
 
     public ${javaTypeName} ${getterName}() throws IOException
-    { 
-        if (__choiceTag != CHOICE_${name}) 
+    {
+        if (__choiceTag != CHOICE_${name})
         {
             throw new IOException("__choiceTag = " + __choiceTag + 
                                   " != " + CHOICE_${name});
         }
-        return (${className})__objectChoice; 
+        return (${className})__objectChoice;
     }
 
 
     public void ${setterName}(${javaTypeName} ${name}) 
-    { 
+    {
+<#if equalsCanThrowExceptions && isSimple>
+        // check range
+        if ((#{maxVal}L < ${name}) || (${name} < #{minVal}L))
+            throw new RuntimeException("Value " + ${name} + " of field '${name}' exceeds the range of type ${typeName}!");
+
+</#if>
         __objectChoice = ${text};
         __choiceTag = CHOICE_${text};
     }

@@ -81,6 +81,7 @@ abstract public class CompoundEmitter
     private String formalParams;
     private String actualParams;
 
+
     public static class CompoundFunctionEmitter
     {
         private final FunctionType func;
@@ -122,17 +123,19 @@ abstract public class CompoundEmitter
 
 
 
-
-
     public static class CompoundParameterEmitter
     {
+        private final CompoundEmitter global;
+        private TypeInterface type;
         private final Parameter param;
         private static Template tpl = null;
 
 
-        public CompoundParameterEmitter(Parameter param)
+        public CompoundParameterEmitter(Parameter param, CompoundEmitter j)
         {
+            global = j;
             this.param = param;
+            type = TypeReference.getBaseType(param.getType());
         }
 
 
@@ -166,6 +169,67 @@ abstract public class CompoundEmitter
         public String getSetterName()
         {
             return AccessorNameEmitter.getSetterName(param);
+        }
+
+
+        public String getTypeName()
+        {
+            String typeName = datascript.emit.html.TypeNameEmitter.getTypeName(type);
+            typeName = typeName.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+            return typeName;
+        }
+
+
+        public boolean getIsSimple()
+        {
+            boolean result = false;
+            if (type instanceof StdIntegerType)
+            {
+                result = (((StdIntegerType)type).getType() != datascript.antlr.DataScriptParserTokenTypes.UINT64);
+            }
+            else if (type instanceof BitFieldType)
+            {
+                BitFieldType bitField = (BitFieldType) type;
+                result = 0 < bitField.getLength() && bitField.getLength() < 64;
+            }
+            return result;
+        }
+
+
+        public long getMinVal()
+        {
+        	if (type instanceof BitFieldType)
+        	{
+                return 0;
+        	}
+            if (type instanceof StdIntegerType)
+            {
+            	StdIntegerType integerType = (StdIntegerType) type;
+            	return integerType.getLowerBound().longValue();
+            }
+        	throw new RuntimeException("type of field '" + param.getName() + "' is not a simple type");
+        }
+
+
+        public long getMaxVal()
+        {
+        	if (type instanceof BitFieldType)
+        	{
+                BitFieldType bitField = (BitFieldType) type;
+                return (1 << bitField.getLength()) -1;
+        	}
+            if (type instanceof StdIntegerType)
+            {
+            	StdIntegerType integerType = (StdIntegerType) type;
+            	return integerType.getUpperBound().longValue();
+            }
+        	throw new RuntimeException("type of field '" + param.getName() + "' is not a simple type");
+        }
+
+
+        public boolean getEqualsCanThrowExceptions()
+        {
+            return global.getEqualsCanThrowExceptions();
         }
     }
 
@@ -258,7 +322,7 @@ abstract public class CompoundEmitter
 
     public CompoundEmitter(JavaDefaultEmitter j)
     {
-        this.global = j;
+        global = j;
     }
 
 

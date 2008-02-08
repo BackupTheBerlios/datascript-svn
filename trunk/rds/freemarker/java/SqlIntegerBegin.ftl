@@ -156,7 +156,7 @@ public class ${name} implements ${rootPackageName}.__Visitor.Acceptor, SizeOf
     }
 
 
-    // Contructor for ${name} 
+    // Constructor for ${name} 
     public ${name}(
 <#list fields as field>
         ${field.javaTypeName} ${field.name}<#if field_has_next>, </#if>
@@ -164,8 +164,12 @@ public class ${name} implements ${rootPackageName}.__Visitor.Acceptor, SizeOf
         )
     {
 <#list fields as field>
+    <#if equalsCanThrowExceptions && field.isSimple>
+        if ((#{field.maxVal}L < ${field.name}) || (${field.name} < #{field.minVal}L))
+            throw new RuntimeException("Value " + ${field.name} + " of field '${field.name}' exceeds the range of type ${field.typeName}!");
+    </#if>
         this.${field.name} = ${field.name};
-        this.${field.name} &= #{field.bitmask}L;
+        <#-- this.${field.name} &= #{field.bitmask}L; -->
 </#list>
     }
 

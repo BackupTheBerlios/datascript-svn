@@ -40,7 +40,7 @@
 <#assign LabeledFieldCnt=0>
 
 
-    // Contructor for ${className} 
+    // Constructor for ${className} 
     public ${className}(
 <#list fields as field>
     <#if field.labelExpression??>
@@ -51,6 +51,10 @@
         )
     {
 <#list fields as field>
+	<#if equalsCanThrowExceptions && field.isSimple>
+        if ((#{field.maxVal}L < ${field.name}) || (${field.name} < #{field.minVal}L))
+            throw new RuntimeException("Value " + ${field.name} + " of field '${field.name}' exceeds the range of type ${field.typeName}!");
+	</#if>
         this.${field.name} = ${field.name};
 </#list>
     }

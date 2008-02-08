@@ -210,7 +210,7 @@ public class SqlTableEmitter extends CompoundEmitter
         for (Parameter param : tableType.getParameters())
         {
             CompoundEmitter.CompoundParameterEmitter pe = 
-                new CompoundEmitter.CompoundParameterEmitter(param);
+                new CompoundEmitter.CompoundParameterEmitter(param, this);
             parameters.add(pe);
         }
         fields.clear();
