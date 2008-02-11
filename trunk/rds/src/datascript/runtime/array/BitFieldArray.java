@@ -136,6 +136,12 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
     }
 
 
+    public void setElementAt(BigInteger value, int i)
+    {
+        data[offset + i] = value;
+    }
+
+
     public int length()
     {
         return length;
@@ -157,6 +163,12 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
     }
 
 
+    /**
+     * This function sums up all values of an array and returns the value
+     * 
+     * @return	sum of all array values
+     * @throws Exception
+     */
     public int sum() throws Exception
     {
         long retVal = 0;

@@ -120,9 +120,15 @@ public class UnsignedIntArray implements Array<Long>, SizeOf
     }
 
 
-    public long elementAt(int i)
+    public Long elementAt(int i)
     {
         return data[offset + i];
+    }
+
+
+    public void setElementAt(Long value, int i)
+    {
+        data[offset + i] = value;
     }
 
 
@@ -144,6 +150,12 @@ public class UnsignedIntArray implements Array<Long>, SizeOf
     }
 
 
+    /**
+     * This function sums up all values of an array and returns the value
+     * 
+     * @return	sum of all array values
+     * @throws Exception
+     */
     public int sum() throws Exception
     {
         long retVal = 0;

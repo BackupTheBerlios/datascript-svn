@@ -142,9 +142,15 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
     }
 
 
-    public int elementAt(int i)
+    public Integer elementAt(int i)
     {
         return data[offset + i];
+    }
+
+
+    public void setElementAt(Integer value, int i)
+    {
+        data[offset + i] = value;
     }
 
 
@@ -166,6 +172,12 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
     }
 
 
+    /**
+     * This function sums up all values of an array and returns the value
+     * 
+     * @return	sum of all array values
+     * @throws Exception
+     */
     public int sum() throws Exception
     {
         long retVal = 0;

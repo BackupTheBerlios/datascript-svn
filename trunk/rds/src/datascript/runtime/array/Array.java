@@ -49,4 +49,8 @@ public interface Array<E> extends Writer
     public Array<E> subRange(int begin, int length);
 
     public int length();
+
+    public E elementAt(int i);
+
+    public void setElementAt(E value, int i);
 }

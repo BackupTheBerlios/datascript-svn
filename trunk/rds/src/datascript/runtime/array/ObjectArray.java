@@ -146,6 +146,12 @@ public class ObjectArray<E> implements Array<E>, SizeOf
     }
 
 
+    public void setElementAt(E value, int i)
+    {
+        data.set(i, value);
+    }
+
+
     public int sizeof()
     {
         int sz = 0;

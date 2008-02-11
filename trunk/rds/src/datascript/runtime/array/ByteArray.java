@@ -145,9 +145,15 @@ public class ByteArray implements Array<Byte>, SizeOf
     }
 
 
-    public byte elementAt(int i)
+    public Byte elementAt(int i)
     {
         return data[offset + i];
+    }
+
+
+    public void setElementAt(Byte value, int i)
+    {
+        data[offset + i] = value;
     }
 
 
@@ -169,6 +175,12 @@ public class ByteArray implements Array<Byte>, SizeOf
     }
 
 
+    /**
+     * This function sums up all values of an array and returns the value
+     * 
+     * @return	sum of all array values
+     * @throws Exception
+     */
     public int sum() throws Exception
     {
         long retVal = 0;

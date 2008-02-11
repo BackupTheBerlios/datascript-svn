@@ -148,9 +148,15 @@ public class UnsignedByteArray implements Array<Short>, SizeOf
     }
 
 
-    public short elementAt(int i)
+    public Short elementAt(int i)
     {
         return data[offset + i];
+    }
+
+
+    public void setElementAt(Short value, int i)
+    {
+        data[offset + i] = value;
     }
 
 
@@ -172,6 +178,12 @@ public class UnsignedByteArray implements Array<Short>, SizeOf
     }
 
 
+    /**
+     * This function sums up all values of an array and returns the value
+     * 
+     * @return	sum of all array values
+     * @throws Exception
+     */
     public int sum() throws Exception
     {
         long retVal = 0;

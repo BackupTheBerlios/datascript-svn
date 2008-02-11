@@ -125,6 +125,12 @@ public class StringArray implements Array<String>, SizeOf
     }
 
 
+    public void setElementAt(String value, int i)
+    {
+        data[offset + i] = value;
+    }
+
+
     public int length()
     {
         return length;
