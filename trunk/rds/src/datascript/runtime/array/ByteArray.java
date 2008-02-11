@@ -145,13 +145,13 @@ public class ByteArray implements Array<Byte>, SizeOf
     }
 
 
-    public Byte elementAt(int i)
+    public byte elementAt(int i)
     {
         return data[offset + i];
     }
 
 
-    public void setElementAt(Byte value, int i)
+    public void setElementAt(byte value, int i)
     {
         data[offset + i] = value;
     }

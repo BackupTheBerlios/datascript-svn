@@ -120,13 +120,13 @@ public class UnsignedIntArray implements Array<Long>, SizeOf
     }
 
 
-    public Long elementAt(int i)
+    public long elementAt(int i)
     {
         return data[offset + i];
     }
 
 
-    public void setElementAt(Long value, int i)
+    public void setElementAt(long value, int i)
     {
         data[offset + i] = value;
     }

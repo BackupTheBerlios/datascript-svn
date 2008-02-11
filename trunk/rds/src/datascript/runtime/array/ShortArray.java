@@ -120,13 +120,13 @@ public class ShortArray implements Array<Short>, SizeOf
     }
 
 
-    public Short elementAt(int i)
+    public short elementAt(int i)
     {
         return data[offset + i];
     }
 
 
-    public void setElementAt(Short value, int i)
+    public void setElementAt(short value, int i)
     {
         data[offset + i] = value;
     }

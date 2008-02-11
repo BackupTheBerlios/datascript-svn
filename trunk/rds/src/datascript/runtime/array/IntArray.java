@@ -120,13 +120,13 @@ public class IntArray implements Array<Integer>, SizeOf
     }
 
 
-    public Integer elementAt(int i)
+    public int elementAt(int i)
     {
         return data[offset + i];
     }
 
 
-    public void setElementAt(Integer value, int i)
+    public void setElementAt(int value, int i)
     {
         data[offset + i] = value;
     }
