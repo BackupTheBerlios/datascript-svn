@@ -108,8 +108,15 @@ public class ObjectArray<E> implements Array<E>, SizeOf
 	
 	        for (int i = 0; i < this.data.size(); i++)
 	        {
-	            if (!this.data.get(i).equals(that.data.get(i)))
-	                throw new RuntimeException("index " + i + " do not match.");
+	        	try
+	        	{
+		            if (!this.data.get(i).equals(that.data.get(i)))
+		                throw new RuntimeException("index " + i + " do not match.");
+	        	}
+	        	catch (Exception e)
+	        	{
+	                throw new RuntimeException("Exception on index " + i, e);
+	        	}
 	        }
 	        return true;
         }
