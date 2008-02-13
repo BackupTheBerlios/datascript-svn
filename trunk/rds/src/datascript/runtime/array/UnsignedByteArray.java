@@ -108,8 +108,9 @@ public class UnsignedByteArray implements Array<Short>, SizeOf
         if (obj instanceof UnsignedByteArray)
         {
             UnsignedByteArray that = (UnsignedByteArray) obj;
-	        if (that.sizeof() != this.sizeof())
-	            throw new RuntimeException("size of arrays are different.");
+            // not necessary to loop the array two times
+//	        if (that.sizeof() != this.sizeof())
+//	            throw new RuntimeException("size of arrays are different.");
 	        if (that.data.length != this.data.length)
 	            throw new RuntimeException(
 	                    "count of elements in arrays are different.");

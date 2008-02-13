@@ -97,9 +97,12 @@ public class ObjectArray<E> implements Array<E>, SizeOf
         if (obj instanceof ObjectArray)
         {
             ObjectArray<?> that = (ObjectArray<?>) obj;
-	        if (that.sizeof() != this.sizeof())
-	            throw new RuntimeException("size of arrays are different.");
-	        if (that.data.size() != this.data.size())
+            // not necessary to loop the array two times
+//	        if (that.sizeof() != this.sizeof())
+//	            throw new RuntimeException("size of arrays are different.");
+            int thatLenght = that.data.size();
+            int thisLength = this.data.size();
+	        if (thatLenght != thisLength)
 	            throw new RuntimeException(
 	            		"count of elements in arrays are different.");
 	
