@@ -81,12 +81,19 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
     <#list fields as field>
             if (<#if (field.optionalClause?? && field.optionalClause?has_content)>!(this.${field.name} == null && that.${field.name} == null) && </#if>(<#rt>
             <#if field.canonicalTypeName == "datascript.ast.EnumType"><#t>
+                <#-- EnumType -->
                 <#t>this.${field.name}.getValue() != that.${field.name}.getValue()
             <#elseif (field.canonicalTypeName == "datascript.ast.BitFieldType" && field.bitFieldLength == 0)><#t>
+                <#-- Biginteger -->
                 <#t>this.${field.name}.compareTo(that.${field.name}) != 0
+            <#elseif field.canonicalTypeName == "datascript.ast.ArrayType"><#t>
+                <#-- ArrayType -->
+                <#t>!this.${field.name}.equalsWithException(that.${field.name})
             <#elseif !field.isSimple><#t>
+                <#-- Object -->
                 <#t>!this.${field.name}.equals(that.${field.name})
             <#else><#t>
+                <#-- simple types -->
                 <#t>this.${field.name} != that.${field.name}
             <#t></#if>))  /* ${field.canonicalTypeName} */
                 throw new RuntimeException("Field '${field.name}' is not equal!");

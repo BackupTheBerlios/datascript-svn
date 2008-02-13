@@ -103,20 +103,25 @@ public class LongArray implements Array<Long>, SizeOf
     }
 
 
-    public boolean equalsWithException(LongArray that)
+    public boolean equalsWithException(Object obj)
     {
-        if (that.sizeof() != this.sizeof())
-            throw new RuntimeException("size of arrays are different.");
-        if (that.data.length != this.data.length)
-            throw new RuntimeException(
-                    "count of elements in arrays are different.");
-
-        for (int i = 0; i < this.data.length; i++)
+        if (obj instanceof LongArray)
         {
-            if (this.data[i] != that.data[i])
-                throw new RuntimeException("index " + i + " do not match.");
+            LongArray that = (LongArray) obj;
+	        if (that.sizeof() != this.sizeof())
+	            throw new RuntimeException("size of arrays are different.");
+	        if (that.data.length != this.data.length)
+	            throw new RuntimeException(
+	                    "count of elements in arrays are different.");
+	
+	        for (int i = 0; i < this.data.length; i++)
+	        {
+	            if (this.data[i] != that.data[i])
+	                throw new RuntimeException("index " + i + " do not match.");
+	        }
+	        return true;
         }
-        return true;
+        return super.equals(obj);
     }
 
 

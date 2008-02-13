@@ -126,19 +126,24 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
     }
 
 
-    public boolean equalsWithException(UnsignedShortArray that)
+    public boolean equalsWithException(Object obj)
     {
-        if (that.sizeof() != this.sizeof())
-            throw new RuntimeException("size of arrays are different.");
-        if (that.data.length != this.data.length)
-            throw new RuntimeException("count of elements in arrays are different.");
-
-        for (int i = 0; i < this.data.length; i++)
+        if (obj instanceof UnsignedShortArray)
         {
-            if (this.data[i] != that.data[i])
-                throw new RuntimeException("index " + i + " do not match.");
+            UnsignedShortArray that = (UnsignedShortArray) obj;
+	        if (that.sizeof() != this.sizeof())
+	            throw new RuntimeException("size of arrays are different.");
+	        if (that.data.length != this.data.length)
+	            throw new RuntimeException("count of elements in arrays are different.");
+	
+	        for (int i = 0; i < this.data.length; i++)
+	        {
+	            if (this.data[i] != that.data[i])
+	                throw new RuntimeException("index " + i + " do not match.");
+	        }
+	        return true;
         }
-        return true;
+        return super.equals(obj);
     }
 
 

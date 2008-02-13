@@ -96,6 +96,7 @@ public class ${name} implements ${rootPackageName}.__Visitor.Acceptor, SizeOf
                 <#case "ArrayType">
                 <#case "TypeInstantiation">
                 <#case "StringType">
+                    <#-- this types are not allowed as SQLInteger types -->
                     <#break>
 
                 <#case "StdIntegerType">

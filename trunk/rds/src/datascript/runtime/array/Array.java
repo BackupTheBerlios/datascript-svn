@@ -43,6 +43,8 @@ import datascript.runtime.io.Writer;
 public interface Array<E> extends Writer
 {
     public boolean equals(Object obj);
+   
+    public boolean equalsWithException(Object obj);
 
     public Array<E> map(Mapping<E> m);
 

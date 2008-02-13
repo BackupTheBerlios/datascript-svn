@@ -94,7 +94,11 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
 <#if equalsCanThrowExceptions>
             if (this.__choiceTag != that.__choiceTag)
                 throw new RuntimeException("Field '__choiceTag' is not equal!"); 
-            if (!this.__objectChoice.equals(that.__objectChoice))
+
+            boolean e = (__objectChoice instanceof Array)? 
+                    ((Array<?>)this.__objectChoice).equalsWithException(that.__objectChoice) :
+                    this.__objectChoice.equals(that.__objectChoice);
+            if (!e)
                 throw new RuntimeException("Field '__objectChoice' is not equal!");
             return true;
 <#else>

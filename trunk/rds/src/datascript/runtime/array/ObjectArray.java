@@ -92,19 +92,25 @@ public class ObjectArray<E> implements Array<E>, SizeOf
     }
 
 
-    public boolean equalsWithException(ObjectArray<E> that)
+    public boolean equalsWithException(Object obj)
     {
-        if (that.sizeof() != this.sizeof())
-            throw new RuntimeException("size of arrays are different.");
-        if (that.data.size() != this.data.size())
-            throw new RuntimeException("count of elements in arrays are different.");
-
-        for (int i = 0; i < this.data.size(); i++)
+        if (obj instanceof ObjectArray)
         {
-            if (!this.data.get(i).equals(that.data.get(i)))
-                throw new RuntimeException("index " + i + " do not match.");
+            ObjectArray<?> that = (ObjectArray<?>) obj;
+	        if (that.sizeof() != this.sizeof())
+	            throw new RuntimeException("size of arrays are different.");
+	        if (that.data.size() != this.data.size())
+	            throw new RuntimeException(
+	            		"count of elements in arrays are different.");
+	
+	        for (int i = 0; i < this.data.size(); i++)
+	        {
+	            if (!this.data.get(i).equals(that.data.get(i)))
+	                throw new RuntimeException("index " + i + " do not match.");
+	        }
+	        return true;
         }
-        return true;
+        return super.equals(obj);
     }
 
 

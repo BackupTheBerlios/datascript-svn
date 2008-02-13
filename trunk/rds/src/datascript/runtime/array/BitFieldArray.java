@@ -114,19 +114,25 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
     }
 
 
-    public boolean equalsWithException(BitFieldArray that)
+    public boolean equalsWithException(Object obj)
     {
-        if (that.sizeof() != this.sizeof())
-            throw new RuntimeException("size of arrays are different.");
-        if (that.data.length != this.data.length)
-            throw new RuntimeException("count of elements in arrays are different.");
-
-        for (int i = 0; i < this.length; i++)
+        if (obj instanceof BitFieldArray)
         {
-            if (this.data[i].compareTo(that.data[i]) != 0)
-                throw new RuntimeException("index " + i + " do not match.");
+            BitFieldArray that = (BitFieldArray) obj;
+	        if (that.sizeof() != this.sizeof())
+	            throw new RuntimeException("size of arrays are different.");
+	        if (that.data.length != this.data.length)
+	            throw new RuntimeException(
+	            		"count of elements in arrays are different.");
+	
+	        for (int i = 0; i < this.length; i++)
+	        {
+	            if (this.data[i].compareTo(that.data[i]) != 0)
+	                throw new RuntimeException("index " + i + " do not match.");
+	        }
+	        return true;
         }
-        return true;
+        return super.equals(obj);
     }
 
 

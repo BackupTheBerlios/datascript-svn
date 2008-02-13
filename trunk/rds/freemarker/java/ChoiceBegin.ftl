@@ -82,12 +82,19 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
 <#if equalsCanThrowExceptions>
     <#list choiceType.parameters as param>
             if(<#if param.canonicalTypeName == "datascript.ast.EnumType"><#rt>
+            <#-- EnumType -->
             <#t>this.${param.name}.getValue() != that.${param.name}.getValue()
         <#elseif (param.canonicalTypeName == "datascript.ast.BitFieldType" && param.bitFieldLength == 0)><#t>
+            <#-- Biginteger -->
             <#t>this.${param.name}.compareTo(that.${param.name}) != 0
+        <#elseif param.canonicalTypeName == "datascript.ast.ArrayType"><#t>
+            <#-- ArrayType -->
+            <#t>!this.${param.name}.equalsWithException(that.${param.name})
         <#elseif !param.isSimple><#t>
+            <#-- Object -->
             <#t>!this.${param.name}.equals(that.${param.name})
         <#else><#t>
+            <#-- simple types -->
             this.${param.name} != that.${param.name}
         <#t></#if>)  /* ${param.canonicalTypeName} */
                 throw new RuntimeException("Selector '${param.name}' is not equal!");
@@ -99,12 +106,16 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
             return
     <#list choiceType.parameters as param>
                 (<#if param.canonicalTypeName == "datascript.ast.EnumType"><#rt>
+            <#-- EnumType -->
             <#t>this.${param.name}.getValue() == that.${param.name}.getValue()
         <#elseif (param.canonicalTypeName == "datascript.ast.BitFieldType" && param.bitFieldLength == 0)><#t>
+            <#-- Biginteger -->
             <#t>this.${param.name}.compareTo(that.${param.name}) == 0
         <#elseif !param.isSimple><#t>
+            <#-- Object -->
             <#t>this.${param.name}.equals(that.${param.name})
         <#else><#t>
+            <#-- simple types -->
             this.${param.name} == that.${param.name}
         <#t></#if>) &&   /* ${param.canonicalTypeName} */
     </#list>
