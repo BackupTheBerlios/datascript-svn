@@ -33,8 +33,15 @@ IntegerArray
  */
 CompoundArray
 {
+    /**
+     *  A comment for a simpletype member in a sequence.
+     */
     int16       numItems;
+    /**
+     *  A block comment for a array member in a sequence.
+     */
     ItemA       a[numItems];
+    /** A single line comment for a array member in a sequence.  */
     ItemB       b[numItems];
 };
 

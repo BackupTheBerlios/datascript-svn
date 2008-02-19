@@ -305,13 +305,20 @@ fieldDefinition!
             }
             else 
             {
-                switch (doc.getType())
+                boolean goOn = true;
+                while (goOn)
                 {
-                    case ARRAY:
-                    case INST:
-                    case TYPEREF:
-                        doc = doc.getFirstChild();
-                        break;
+                    switch (doc.getType())
+                    {
+                        case ARRAY:
+                        case INST:
+                        case TYPEREF:
+                            doc = doc.getFirstChild();
+                            break;
+                        default:
+                            goOn = false;
+                            break;
+                    }
                 }
             }
             Token docToken = ((TokenAST)doc).getHiddenBefore();
@@ -365,8 +372,8 @@ typeReference
 paramTypeInstantiation
     :   d:definedType typeArgumentList
         { 
-        	#paramTypeInstantiation = #([INST], paramTypeInstantiation);
-        	((TypeReference)#d).setArgumentsPresent(true); 
+            #paramTypeInstantiation = #([INST], paramTypeInstantiation);
+            ((TypeReference)#d).setArgumentsPresent(true); 
         }
     ;
 
@@ -377,7 +384,7 @@ sequenceDeclaration!
       (p:parameterList)? 
       m:memberList        
       { 
-      	  if (u == null)
+            if (u == null)
           {
               #sequenceDeclaration = #([SEQUENCE], n, p, m);
               if (n == null)
@@ -514,7 +521,7 @@ integerType
     ;
 
 stringType
-    :	STRING
+    :    STRING
     ;
 
 builtinTypeDefaultOrder
@@ -528,7 +535,7 @@ bitField
     ;
 
 modifier
-    :	byteOrderModifier
+    :    byteOrderModifier
     ;
 
 byteOrderModifier
@@ -798,9 +805,9 @@ postfixExpression!
     :   e:primaryExpression  { #postfixExpression = #e; }
         (o:postfixOperand 
                           { if (#o != null)
-                          	{
-                          		AST rhs = #o.getFirstChild(); 
-                            	#postfixExpression= #(o, postfixExpression, rhs);
+                              {
+                                  AST rhs = #o.getFirstChild(); 
+                                #postfixExpression= #(o, postfixExpression, rhs);
                             }
                           }
         )*
