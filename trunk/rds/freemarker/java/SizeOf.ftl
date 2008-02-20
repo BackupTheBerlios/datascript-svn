@@ -165,7 +165,7 @@ public class __SizeOf extends ${rootPackageName}.__DepthFirstVisitor
         a.accept(v, null);
         if (v.__bitsize % 8 != 0) 
         {
-            throw new RuntimeException(String.format("sizeof not integer: %1$d", v.__bitsize / 8.0));
+            throw new RuntimeException("bitsizeof not divisible by 8: " + v.__bitsize);
         }
         return v.__bitsize / 8;
     }

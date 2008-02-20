@@ -154,7 +154,11 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         return length;
     }
 
-
+    public int getNumBits()
+    {
+        return numBits;
+    }
+    
     public int sizeof()
     {
         if ((numBits * length) % 8 != 0) 

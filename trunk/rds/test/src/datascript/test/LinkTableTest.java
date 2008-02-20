@@ -40,7 +40,7 @@ public class LinkTableTest extends TestCase
         }
         os.writeBits(15, 4);
         
-        int size = (int)os.getStreamPosition();
+        int size = (int)os.getBitPosition();
         os.close();
         
         return size;
@@ -48,16 +48,7 @@ public class LinkTableTest extends TestCase
 
     private void checkTableSequence(LinkTable lt, int size)
     { 
-        try
-        {
-            assertEquals(size, lt.sizeof());
-        }
-        catch(RuntimeException e)
-        {
-            // here we expect an exception 
-            // java.lang.RuntimeException: sizeof not integer: 148
-            //System.out.println(e.toString());
-        }
+        assertEquals(size, lt.bitsizeof());
 
         BitFieldArray bfa = lt.getR();
         assertEquals(8, bfa.length());

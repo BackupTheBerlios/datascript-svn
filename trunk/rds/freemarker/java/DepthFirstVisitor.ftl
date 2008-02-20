@@ -154,9 +154,10 @@ public class __DepthFirstVisitor implements ${rootPackageName}.__Visitor
     public void visitArray(BitFieldArray n, Object arg)
     {
         int last = n.length();
+        int numBits = n.getNumBits();
         for (int i = 0; i < last; i++) 
         {
-            visitUInt64(n.elementAt(i), arg);   
+            visitBitField(n.elementAt(i), numBits, arg);   
         }
     }
 
