@@ -80,7 +80,7 @@
           <td valign="top" id="tabIdent">
 <#list containers as container>      
           <#if container.linkedType??>
-          <@linkedtype container.linkedType/>&nbsp;
+          <@linkedtype container.linkedType/><br/>
           </#if>
 </#list>
           </td>

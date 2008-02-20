@@ -42,7 +42,10 @@ package datascript.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
+import java.util.TreeSet;
 
 import antlr.Token;
 import antlr.collections.AST;
@@ -51,7 +54,9 @@ import datascript.antlr.util.TokenAST;
 
 
 
-abstract public class CompoundType extends TokenAST implements TypeInterface
+abstract public class CompoundType 
+    extends TokenAST 
+    implements TypeInterface, Comparable<CompoundType>
 {
     protected int id;
 
@@ -60,7 +65,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     private final List<Parameter> parameters = new ArrayList<Parameter>();
 
     // / set of compound types that can contain this type
-    private final List<CompoundType> containers = new ArrayList<CompoundType>();
+    private final SortedSet<CompoundType> containers = new TreeSet<CompoundType>();
 
     // / one of TypeInterface.NOBYTEORDER, BIGENDIAN, LITTLEENDIAN
     int byteOrder;
@@ -173,7 +178,7 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         }
     }
 
-    public List<CompoundType> getContainers()
+    public Set<CompoundType> getContainers()
     {
         return containers;
     }
@@ -200,9 +205,8 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
         }
 
         /* check whether any container of 'this' is contained in 'f' */
-        for (int i = 0; i < containers.size(); i++)
+        for (CompoundType c : containers)
         {
-            CompoundType c = (CompoundType) containers.get(i);
             if (seen.search(c) == -1)
             {
                 seen.push(c);
@@ -331,5 +335,11 @@ abstract public class CompoundType extends TokenAST implements TypeInterface
     public int getId()
     {
         return id;
+    }
+    
+    @Override
+    public int compareTo(CompoundType o)
+    {
+        return getName().compareTo(o.getName());
     }
 }

@@ -173,9 +173,12 @@ public class TypeReference extends TokenAST implements TypeInterface,
                 ToolContext.logError((TokenAST) getFirstChild(), inner.getName()
                         + " is defined without an argument list");
             }
+            
+            if (outer == null)
+                return;
 
             // Check for circular containment
-            if (outer != null && outer.isContainedIn(inner))
+            if (outer.isContainedIn(inner))
             {
                 ToolContext.logError(this, "circular containment between '"
                         + inner.getName() + "' and '" + outer.getName() + "'");
