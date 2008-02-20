@@ -1,13 +1,11 @@
 <#macro comment doc>
-<div class="docuTag">
 <#if doc.paragraphs?size == 0>
-    &lt;<i>no documentation found</i>&gt;
+<div class="docuTag">&lt;<i>no documentation found</i>&gt;</div>
 <#else>
   <#list doc.paragraphs as para>
-    ${para}
+<div class="docuTag">${para}</div>
   </#list>
 </#if>
-</div>
 <#list doc.tags as tag>
     <div class="docuTag" id="${tag.name?upper_case}">
   <#switch tag.name>
