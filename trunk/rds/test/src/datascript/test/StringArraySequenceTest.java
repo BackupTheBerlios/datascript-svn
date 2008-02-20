@@ -30,7 +30,7 @@ public class StringArraySequenceTest extends TestCase
             os.writeByte(0);
         }
         
-        int size = (int)os.getStreamPosition();
+        int size = (int)os.getBitPosition();
         os.close();
         
         return size;
@@ -38,16 +38,7 @@ public class StringArraySequenceTest extends TestCase
 
     private void checkStringSequence(StringArraySequence sa, int size, String name, String[] testPattern)
     { 
-        try
-        {
-            assertEquals(size, sa.sizeof());
-        }
-        catch(RuntimeException e)
-        {
-        	// here we expect an exception 
-        	// java.lang.RuntimeException: sizeof not integer: 148
-            //System.out.println(e.toString());
-        }
+        assertEquals(size, sa.bitsizeof());
 
         assertEquals(name, sa.getName());
         assertEquals(testPattern.length, sa.getByteCount());

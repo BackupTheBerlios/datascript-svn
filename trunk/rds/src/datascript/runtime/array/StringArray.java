@@ -175,17 +175,14 @@ public class StringArray implements Array<String>, SizeOf
     {
         int size = 0;
         for (int i = offset; i < offset + length; i++)
-            size += data[i].length();
-        return (size + 1) << 3;
+            size += data[i].length() + 1;
+        return size;
     }
 
 
     public int bitsizeof()
     {
-        int size = 0;
-        for (int i = offset; i < offset + length; i++)
-            size += data[i].length();
-        return (size + 1) << 3 * 8;
+        return 8 * sizeof();
     }
 
 }
