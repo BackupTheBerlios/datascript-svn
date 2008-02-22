@@ -48,4 +48,11 @@
     {
         __objectChoice = ${name};
     }
+<#if elementType??>
+
+    public void ${setterName} (List<${elementType}> ${name})
+    {
+        __objectChoice = new ObjectArray<${elementType}>(${name});
+    }
+</#if>    
 

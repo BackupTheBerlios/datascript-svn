@@ -66,4 +66,12 @@
         __objectChoice = ${text};
         __choiceTag = CHOICE_${text};
     }
+<#if elementType??>
+
+    public void ${setterName} (List<${elementType}> ${name})
+    {
+        ${setterName}(new ObjectArray<${elementType}>(${name}));
+    }
+</#if>    
+
 

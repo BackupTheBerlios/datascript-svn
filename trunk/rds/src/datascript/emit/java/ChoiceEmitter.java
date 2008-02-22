@@ -45,15 +45,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import antlr.collections.AST;
+import datascript.ast.ArrayType;
 import datascript.ast.ChoiceCase;
 import datascript.ast.ChoiceMember;
 import datascript.ast.ChoiceType;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
+import datascript.ast.EnumType;
 import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
+import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -158,6 +161,23 @@ public class ChoiceEmitter extends CompoundEmitter
                 return ";";
             return global.writeField(field);
         }
+        
+        public String getElementType()
+        {
+            Field field = member.getField();
+            if (field.getFieldType() instanceof ArrayType)
+            {
+                ArrayType arrayType = (ArrayType) field.getFieldType();
+                TypeInterface elType = arrayType.getElementType();
+                if (elType instanceof CompoundType || 
+                    elType instanceof EnumType ||
+                    elType instanceof TypeInstantiation)
+                {
+                    return TypeNameEmitter.getTypeName(elType);
+                }
+            }
+            return null;
+        }        
     }
 
 
