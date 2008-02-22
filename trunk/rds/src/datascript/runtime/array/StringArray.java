@@ -41,6 +41,8 @@ package datascript.runtime.array;
 
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
@@ -183,6 +185,13 @@ public class StringArray implements Array<String>, SizeOf
     public int bitsizeof()
     {
         return 8 * sizeof();
+    }
+
+
+    @Override
+    public Iterator<String> iterator()
+    {
+        return Arrays.asList(data).iterator();
     }
 
 }

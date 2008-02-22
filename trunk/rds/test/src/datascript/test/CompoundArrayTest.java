@@ -5,14 +5,17 @@ package datascript.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
-import bits.arrays.CompoundArray;
 import bits.ItemA;
 import bits.ItemB;
+import bits.arrays.CompoundArray;
 import datascript.runtime.array.ObjectArray;
+import datascript.runtime.io.DataScriptIO;
 
 /**
  * @author HWellmann
@@ -61,12 +64,27 @@ public class CompoundArrayTest extends TestCase
             ItemA itemA = a.elementAt(i);
             assertEquals(valueA+i, itemA.getValue());
         }
+        int i = 0;
+        for (ItemA itemA : a)
+        {
+            assertEquals(valueA+i, itemA.getValue());
+            i++;
+        }
+        
+        
         ObjectArray<ItemB> b = array.getB();
         assertEquals(numItems, b.length());
-        for (int i = 0; i < numItems; i++)
+        for (i = 0; i < numItems; i++)
         {
             ItemB itemB = b.elementAt(i);
             assertEquals(valueB+i, itemB.getValue());
+        }
+        
+        i = 0;
+        for (ItemB itemB : b)
+        {
+            assertEquals(valueB+i, itemB.getValue());
+            i++;
         }
         assertEquals(size, array.sizeof());
     }
@@ -123,5 +141,27 @@ public class CompoundArrayTest extends TestCase
         CompoundArray array2 = new CompoundArray(wFileName);
         checkArray(array2, size, 5000, 29000, 100000);
         assertTrue(array.equals(array2));
+    }
+    
+    public void testArrayFromList()
+    {
+        CompoundArray ca = new CompoundArray();
+        short numItems = 3;
+        ca.setNumItems(numItems);
+        List<ItemA> a = new ArrayList<ItemA>(numItems);
+        List<ItemB> b = new ArrayList<ItemB>(numItems);
+        for (int i = 0; i < numItems; i++)
+        {
+            ItemA itemA = new ItemA((short)1, 11+i);
+            a.add(itemA);
+            ItemB itemB = new ItemB ((short)2, 22+i);
+            b.add(itemB);
+        }
+        ca.setA(a);
+        ca.setB(b);
+        
+        byte[] blob = DataScriptIO.write(ca);
+        CompoundArray ca2 = DataScriptIO.read(CompoundArray.class, blob);
+        assertEquals(ca, ca2);
     }
 }

@@ -39,7 +39,7 @@
 -->
 <#if isVariable>
                 <#lt>{
-                    Vector<${elType}> v = new Vector<${elType}>();
+                    ArrayList<${elType}> v = new ArrayList<${elType}>();
                     long __afpos = 0;
                     try
                     {
@@ -60,11 +60,11 @@
                     long __maxIndex = ${lengthExpr};
                     if (__maxIndex > Integer.MAX_VALUE)
                         throw new RuntimeException("truncate indexvalue will fail");
-                    Vector<${elType}> v = new Vector<${elType}>((int)__maxIndex);
+                    ArrayList<${elType}> v = new ArrayList<${elType}>((int)__maxIndex);
                     for (int __index = 0; __index < __maxIndex; __index++) 
                     {
                         v.add(${currentElement});
                     }
-                    ${setterName}(new ObjectArray<${elType}>(v));
+                    ${setterName}(v);
                 }
 </#if>

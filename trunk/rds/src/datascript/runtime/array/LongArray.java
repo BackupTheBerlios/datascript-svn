@@ -42,6 +42,7 @@ package datascript.runtime.array;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.util.Iterator;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
@@ -201,4 +202,35 @@ public class LongArray implements Array<Long>, SizeOf
             out.writeLong(data[i]);
         }
     }
+    
+    @Override
+    public Iterator<Long> iterator()
+    {
+        return new LongArrayIterator();
+    }
+    
+    class LongArrayIterator implements Iterator<Long>
+    {
+        private int index;
+
+        @Override
+        public boolean hasNext()
+        {
+            return index < data.length;
+        }
+
+        @Override
+        public Long next()
+        {
+            return data[index++];
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+        
+    }
+    
 }

@@ -41,6 +41,7 @@ package datascript.runtime.array;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import datascript.runtime.CallChain;
@@ -54,7 +55,7 @@ public class ObjectArray<E> implements Array<E>, SizeOf
 {
     // using a Vector for now means we're subject to the limitations
     // Vectors are (i.e., max 2^31-1 elements
-    List<E> data;
+    private List<E> data;
 
 
     public ObjectArray(int length)
@@ -97,30 +98,26 @@ public class ObjectArray<E> implements Array<E>, SizeOf
         if (obj instanceof ObjectArray)
         {
             ObjectArray<?> that = (ObjectArray<?>) obj;
-            // not necessary to loop the array two times
-//	        if (that.sizeof() != this.sizeof())
-//	            throw new RuntimeException("size of arrays are different.");
-            int thatLenght = that.data.size();
+            int thatLength = that.data.size();
             int thisLength = this.data.size();
-	        if (thatLenght != thisLength)
-	            throw new RuntimeException(
-	            		"count of elements in arrays are different.");
-	
-	        for (int i = 0; i < this.data.size(); i++)
-	        {
-	        	try
-	        	{
-		            if (!this.data.get(i).equals(that.data.get(i)))
-		                throw new RuntimeException("index " + i + " do not match.");
-	        	}
-	        	catch (Exception e)
-	        	{
-	                throw new RuntimeException("Exception on index " + i, e);
-	        	}
-	        }
-	        return true;
+            if (thatLength != thisLength)
+                throw new RuntimeException("arrays do not have same length");
+
+            for (int i = 0; i < this.data.size(); i++)
+            {
+                try
+                {
+                    if (!this.data.get(i).equals(that.data.get(i)))
+                        throw new RuntimeException("mismatch at array index " + i);
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException("exception at array index " + i, e);
+                }
+            }
+            return true;
         }
-        return super.equals(obj);
+        return false;
     }
 
 
@@ -199,5 +196,12 @@ public class ObjectArray<E> implements Array<E>, SizeOf
     public List<E> getData()
     {
         return data;
+    }
+
+
+    @Override
+    public Iterator<E> iterator()
+    {
+        return data.iterator();
     }
 }

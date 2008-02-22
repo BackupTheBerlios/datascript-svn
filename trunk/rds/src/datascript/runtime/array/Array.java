@@ -40,7 +40,7 @@ package datascript.runtime.array;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.Writer;
 
-public interface Array<E> extends Writer
+public interface Array<E> extends Writer, Iterable<E>
 {
     public boolean equals(Object obj);
    

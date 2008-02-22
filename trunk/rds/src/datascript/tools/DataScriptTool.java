@@ -85,7 +85,7 @@ import datascript.ast.Scope;
  */
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.20.1 (20 Feb 2008)";
+    private static final String VERSION = "rds 0.21.1 (21 Feb 2008)";
 
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -97,12 +97,16 @@ public class DataScriptTool implements Parameters
 
     private final List<Extension> extensions = new ArrayList<Extension>();
 
-    /* Options that this tool accepts from comandline */
+    /** Commandline options accepted by this tool. */
     private final Options rdsOptionsToAccept = new Options();
-    /* Contains all Options that comes actually from comandline */
+    
+    /** 
+     * All commandline options (some of these are handled by rds extensions,
+     * not by the main tool. 
+     */
     private CommandLine cli = null;
 
-    /* Different Properties for holding values from the comandline */
+    /* Different Properties for holding values from the commandline */
     private String fileName = null;
     private String srcPathName = null;
     private String outPathName = null;

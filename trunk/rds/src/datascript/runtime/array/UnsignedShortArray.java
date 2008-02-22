@@ -42,6 +42,7 @@ package datascript.runtime.array;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import datascript.runtime.CallChain;
@@ -223,4 +224,35 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
             out.writeShort(data[i]);
         }
     }
+    
+    @Override
+    public Iterator<Integer> iterator()
+    {
+        return new IntArrayIterator();
+    }
+    
+    class IntArrayIterator implements Iterator<Integer>
+    {
+        private int index;
+
+        @Override
+        public boolean hasNext()
+        {
+            return index < data.length;
+        }
+
+        @Override
+        public Integer next()
+        {
+            return data[index++];
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+        
+    }
+    
 }

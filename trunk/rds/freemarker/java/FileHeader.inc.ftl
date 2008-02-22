@@ -47,7 +47,8 @@ import datascript.runtime.array.*;
 import datascript.runtime.io.*;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Generated;
 

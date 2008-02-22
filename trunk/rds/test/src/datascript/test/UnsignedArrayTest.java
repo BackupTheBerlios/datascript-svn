@@ -67,10 +67,23 @@ public class UnsignedArrayTest extends TestCase
         {            
             assertEquals(startInt8+i, signed.elementAt(i));
         }
+        int j = 0;
+        for (byte b : signed)
+        {
+            assertEquals(startInt8+j, b);
+            j++;
+        }
+        
         UnsignedByteArray unsigned = array.getUint8List();
         for (int i = 0; i < numElems; i++)
         {            
             assertEquals(startUInt8+i, unsigned.elementAt(i));
+        }
+        j = 0;
+        for (short b : unsigned)
+        {
+            assertEquals(startUInt8+j, b);
+            j++;
         }
 
         ShortArray signed16 = array.getInt16List();
@@ -78,10 +91,23 @@ public class UnsignedArrayTest extends TestCase
         {            
             assertEquals(startInt16+i, signed16.elementAt(i));
         }
+        j = 0;
+        for (short b : signed16)
+        {
+            assertEquals(startInt16+j, b);
+            j++;
+        }
+
         UnsignedShortArray unsigned16 = array.getUint16List();
         for (int i = 0; i < numElems; i++)
         {            
             assertEquals(startUInt16+i, unsigned16.elementAt(i));
+        }
+        j = 0;
+        for (int b : unsigned16)
+        {
+            assertEquals(startUInt16+j, b);
+            j++;
         }
 
         IntArray signed32 = array.getInt32List();
@@ -89,11 +115,28 @@ public class UnsignedArrayTest extends TestCase
         {            
             assertEquals(startInt32+i, signed32.elementAt(i));
         }
+        j = 0;
+        for (int b : signed32)
+        {
+            assertEquals(startInt32+j, b);
+            j++;
+        }
+
+        
         UnsignedIntArray unsigned32 = array.getUint32List();
         for (int i = 0; i < numElems; i++)
         {            
             assertEquals(startUInt32+i, unsigned32.elementAt(i));
         }
+        j = 0;
+        for (long b : unsigned32)
+        {
+            assertEquals(startUInt32+j, b);
+            j++;
+        }
+
+
+        
         assertEquals(size, array.sizeof());
     }
 

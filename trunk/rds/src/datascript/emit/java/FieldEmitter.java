@@ -42,9 +42,13 @@ package datascript.emit.java;
 
 import java.io.PrintWriter;
 
+import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
+import datascript.ast.CompoundType;
+import datascript.ast.EnumType;
 import datascript.ast.Field;
 import datascript.ast.StdIntegerType;
+import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.emit.java.TypeNameEmitter;
@@ -271,5 +275,21 @@ public abstract class FieldEmitter
     public boolean getEqualsCanThrowExceptions()
     {
         return global.getEqualsCanThrowExceptions();
+    }
+    
+    public String getElementType()
+    {
+        if (field.getFieldType() instanceof ArrayType)
+        {
+            ArrayType arrayType = (ArrayType) field.getFieldType();
+            TypeInterface elType = arrayType.getElementType();
+            if (elType instanceof CompoundType || 
+                elType instanceof EnumType ||
+                elType instanceof TypeInstantiation)
+            {
+                return TypeNameEmitter.getTypeName(elType);
+            }
+        }
+        return null;
     }
 }

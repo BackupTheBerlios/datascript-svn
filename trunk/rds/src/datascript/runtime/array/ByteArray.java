@@ -42,6 +42,7 @@ package datascript.runtime.array;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.util.Iterator;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
@@ -237,5 +238,36 @@ public class ByteArray implements Array<Byte>, SizeOf
          * array of length " + length + ">"; } }
          */
         return new String(data, offset, length);
+    }
+
+
+    @Override
+    public Iterator<Byte> iterator()
+    {
+        return new ByteArrayIterator();
+    }
+    
+    class ByteArrayIterator implements Iterator<Byte>
+    {
+        private int index;
+
+        @Override
+        public boolean hasNext()
+        {
+            return index < data.length;
+        }
+
+        @Override
+        public Byte next()
+        {
+            return data[index++];
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+        
     }
 }

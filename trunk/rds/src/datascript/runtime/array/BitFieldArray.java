@@ -42,6 +42,8 @@ package datascript.runtime.array;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import datascript.runtime.CallChain;
 import datascript.runtime.Mapping;
@@ -218,5 +220,12 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         {
             out.writeBigInteger(data[i], numBits);
         }
+    }
+
+
+    @Override
+    public Iterator<BigInteger> iterator()
+    {
+        return Arrays.asList(data).iterator();
     }
 }
