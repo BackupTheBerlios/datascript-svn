@@ -1,0 +1,137 @@
+/**
+ * 
+ */
+package datascript.test;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.stream.FileImageOutputStream;
+
+import junit.framework.TestCase;
+import bits.Block;
+import bits.BlockData;
+import bits.BlockHeader;
+import bits.BlockType;
+import bits.Blocks;
+import datascript.runtime.array.ByteArray;
+import datascript.runtime.array.ObjectArray;
+
+/**
+ * @author HWellmann
+ *
+ */
+public class TypeInstantiationTest extends TestCase
+{
+    private FileImageOutputStream os;
+    private String fileName = "containment.bin";
+    private File file = new File(fileName);
+
+    /**
+     * Constructor for BitStreamReaderTest.
+     * @param name
+     */
+    public TypeInstantiationTest(String name)
+    {
+        super(name);
+    }
+
+    /*
+     * @see TestCase#setUp()
+     */
+    @Override
+    protected void setUp() throws Exception
+    {
+    }
+
+    /*
+     * @see TestCase#tearDown()
+     */
+    @Override
+    protected void tearDown() throws Exception
+    {
+        file.delete();
+    }
+
+    private void writeBytes(int numBytes) throws IOException
+    {
+        for (int i = 0; i < numBytes; i++)
+        {
+            os.writeByte(11+i);
+        }
+    }
+
+    public void testInstantiation2() throws IOException
+    {
+    	int size = 0;
+    	BlockType type = bits.BlockType.SORTED;
+        int magic = 0x0EADBEEF;
+        ByteArray bytes = new ByteArray(new byte[] {11,12,13,14}, 0, 4);
+
+    	BlockHeader header = new BlockHeader(type, size);
+    	BlockData data = new BlockData(magic, bytes);
+    	new Block(header, data);
+    	ObjectArray<Block> blockArray = new ObjectArray<Block>(3);
+    	new Blocks(3, blockArray);
+    }
+    
+    
+    public void testInstantiation() throws Exception
+    {
+        short[] sizes = new short[] { 1, 3, 4 };
+        short numBlocks = (short) sizes.length;
+        byte unsorted = 3;
+        byte sorted = 9;
+        int magic = 0x0EADBEEF;
+        os = new FileImageOutputStream(file);
+        
+        // header
+        os.writeShort(numBlocks);   // numBlocks -> 2
+
+        // block 0
+        os.writeByte(sorted);       // BlockHeader.type -> 1
+        os.writeShort(sizes[0]);    // BlockHeader.size -> 2
+        os.writeInt(magic);         // BlockData.magic -> 4
+        writeBytes(sizes[0]);       // BlockData.bytes -> 1x1
+
+        // block 1
+        os.writeByte(unsorted);
+        os.writeShort(sizes[1]);
+        os.writeInt(magic);
+        writeBytes(sizes[1]);       // BlockData.bytes -> 3x1
+
+        // block 2
+        os.writeByte(sorted);
+        os.writeShort(sizes[2]);
+        os.writeInt(magic);
+        writeBytes(sizes[2]);       // BlockData.bytes -> 4x1
+
+        int sizeof = (int) os.getStreamPosition();
+        os.close();
+
+        Blocks blocks = new Blocks(fileName);
+        assertEquals(numBlocks, blocks.getNumBlocks());
+
+        for (int i = 0; i < numBlocks; i++)
+        {
+            Block block = blocks.getBlocks().elementAt(i);
+            BlockHeader header = block.getHeader();
+            BlockType type = (i % 2 == 0) ? BlockType.SORTED
+                    : BlockType.UNSORTED;
+
+            assertEquals(type, header.getType());
+            assertEquals(sizes[i], header.getSize());
+
+            BlockData data = block.getData();
+            assertEquals(magic, data.getMagic());
+
+            ByteArray bytes = data.getBytes();
+            for (int j = 0; j < sizes[i]; j++)
+            {
+                assertEquals(11 + j, bytes.elementAt(j));
+            }
+        }
+        int bytesize = blocks.sizeof();
+        assertEquals(sizeof, bytesize);
+    }
+}
