@@ -1,0 +1,20 @@
+package tableimport.provider;
+
+
+sql_database Provider
+{
+    TileTable providerTable;
+};
+
+
+sql_table TileTable
+{
+    uint32    id;
+    Tile      tile;
+};
+
+
+Tile
+{
+    int64 dummy;
+};

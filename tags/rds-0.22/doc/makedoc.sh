@@ -1,0 +1,1 @@
+xsltproc  --stringparam body.start.indent 0in --stringparam title.margin.left 0in --stringparam fop.extensions 1 --stringparam section.autolabel 1 --stringparam paper.type A4 /usr/share/xml/docbook/stylesheet/nwalsh/1.71.1/html/docbook.xsl DataScriptLanguageOverview.xml
