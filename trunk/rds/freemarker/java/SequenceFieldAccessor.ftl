@@ -47,6 +47,7 @@
     }
 
 
+    <#if elementType??>@Deprecated</#if>
     public void ${setterName}(${javaTypeName} ${name})
     {
 <#if equalsCanThrowExceptions && isSimple>
@@ -56,14 +57,15 @@
 
 </#if>
         this.${name} = ${name};
-    }    
+    }
+
 <#if elementType??>
 
-    public void ${setterName} (List<${elementType}> ${name})
+    public void ${setterName}(List<${elementType}> ${name})
     {
         this.${name} = new ObjectArray<${elementType}>(${name});
     }
-</#if>    
+</#if>
 
 <#if optionalClause?? && optionalClause?has_content>
 
