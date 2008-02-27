@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.TestCase;
-import datascript.runtime.array.ObjectArray;
 import datascript.runtime.io.ByteArrayBitStreamReader;
 import datascript.runtime.io.ByteArrayBitStreamWriter;
 import datascript.runtime.io.DataScriptIO;
@@ -139,7 +138,7 @@ public class FunctionTest extends TestCase
         item2.setB((short) 14);
         items.add(item2);
         
-        arrayFunc.setValues(new ObjectArray<Item>(items));
+        arrayFunc.setValues(items);
         arrayFunc.setPos(1);
         
         assertEquals(item1, arrayFunc.elem());
@@ -173,7 +172,7 @@ public class FunctionTest extends TestCase
         item2.setB((short) 14);
         items.add(item2);
         
-        outer.setValues(new ObjectArray<Item>(items));
+        outer.setValues(items);
         
         Inner inner = new Inner();
         inner.setIsExplicit((short)0);

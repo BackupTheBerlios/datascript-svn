@@ -111,8 +111,7 @@ public class AlignmentTest extends TestCase
         lf.add(f);
         f = new Foo((short)0xAA);
         lf.add(f);
-        ObjectArray<Foo> fa = new ObjectArray<Foo>(lf);
-        as.setF(fa);
+        as.setF(lf);
         as.setC((short)1000);
         as.setB((byte)13);
         
@@ -150,8 +149,7 @@ public class AlignmentTest extends TestCase
         lf.add(f);
         f = new Foo((short)0xAA);
         lf.add(f);
-        ObjectArray<Foo> fa = new ObjectArray<Foo>(lf);
-        as.setF(fa);
+        as.setF(lf);
         as.setC((short)1000);
         as.setB((byte)13);
         
