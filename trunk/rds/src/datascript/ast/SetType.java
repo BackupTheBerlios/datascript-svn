@@ -43,6 +43,9 @@ package datascript.ast;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import antlr.Token;
 import antlr.collections.AST;
@@ -54,8 +57,10 @@ import datascript.antlr.util.TokenAST;
 @SuppressWarnings("serial")
 public class SetType extends TokenAST implements TypeInterface
 {
-
     protected final HashMap<Object, Value> items = new HashMap<Object, Value>();
+
+    // / set of compound types that can contain this type
+    private final SortedSet<CompoundType> containers = new TreeSet<CompoundType>();
 
     protected int id;
     protected TypeInterface type;
@@ -92,6 +97,21 @@ public class SetType extends TokenAST implements TypeInterface
             result = t.getText();
         }
         return result;
+    }
+
+
+    public void addContainer(CompoundType f)
+    {
+        if (!containers.contains(f))
+        {
+            containers.add(f);
+        }
+    }
+
+
+    public Set<CompoundType> getContainers()
+    {
+        return containers;
     }
 
 

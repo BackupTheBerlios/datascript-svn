@@ -65,10 +65,11 @@
       </dd>
 </#list>
     </dl>
+
 <#assign numOfContainers = 0>    
 <#list containers as container>
-<#assign numOfContainers = containers?size>
-<#break>
+    <#assign numOfContainers = containers?size>
+    <#break>
 </#list>
 <#if (numOfContainers > 0)>
     <h4>Used By</h4>
@@ -77,7 +78,7 @@
       <table>
       <tbody id="tabIdent">
         <tr>
-          <td valign="top" id="tabIdent">
+          <td valign="top">
 <#list containers as container>      
           <#if container.linkedType??>
           <@linkedtype container.linkedType/><br/>

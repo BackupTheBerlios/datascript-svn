@@ -1,4 +1,5 @@
 <#include "comment.html.ftl">
+<#include "linkedtype.html.ftl">
 <html>
   <head>
     <title>enum ${packageName}.${type.name}</title>
@@ -40,6 +41,32 @@
       </dd>
 </#list>
     </dl>
+
+<#assign numOfContainers = 0>    
+<#list containers as container>
+    <#assign numOfContainers = containers?size>
+    <#break>
+</#list>
+<#if (numOfContainers > 0)>
+    <h4>Used By</h4>
+    <table>
+    <tr><td class="docuCode">
+      <table>
+      <tbody id="tabIdent">
+        <tr>
+          <td valign="top">
+<#list containers as container>      
+          <#if container.linkedType??>
+          <@linkedtype container.linkedType/><br/>
+          </#if>
+</#list>
+          </td>
+        </tr>
+      </tbody>
+      </table>
+    </td></tr>
+    </table>
+</#if>
 
   </body>
 </html>

@@ -185,6 +185,11 @@ public class TypeReference extends TokenAST implements TypeInterface,
             }
             inner.addContainer(outer);
         }
+        else if (refType instanceof EnumType)
+        {
+            EnumType inner = (EnumType) refType;
+            inner.addContainer(outer);
+        }
     }
 
 
