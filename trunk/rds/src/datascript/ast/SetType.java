@@ -1,6 +1,6 @@
 /* BSD License
  *
- * Copyright (c) 2006, Harald Wellmann, Harman/Becker Automotive Systems
+ * Copyright (c) 2006, Harald Wellmann, Henrik Wedekind, Harman/Becker Automotive Systems
  * All rights reserved.
  * 
  * This software is derived from previous work
@@ -43,24 +43,18 @@ package datascript.ast;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
-import datascript.antlr.util.TokenAST;
 
 
 
 @SuppressWarnings("serial")
-public class SetType extends TokenAST implements TypeInterface
+public class SetType extends Container 
+implements TypeInterface, Comparable<CompoundType>
 {
     protected final HashMap<Object, Value> items = new HashMap<Object, Value>();
-
-    // / set of compound types that can contain this type
-    private final SortedSet<CompoundType> containers = new TreeSet<CompoundType>();
 
     protected int id;
     protected TypeInterface type;
@@ -68,7 +62,7 @@ public class SetType extends TokenAST implements TypeInterface
 
     protected String name;
 
-    CompoundType ctype; // compound in which this set type is defined
+    Container ctype; // compound in which this set type is defined
 
 
     public SetType()
@@ -97,21 +91,6 @@ public class SetType extends TokenAST implements TypeInterface
             result = t.getText();
         }
         return result;
-    }
-
-
-    public void addContainer(CompoundType f)
-    {
-        if (!containers.contains(f))
-        {
-            containers.add(f);
-        }
-    }
-
-
-    public Set<CompoundType> getContainers()
-    {
-        return containers;
     }
 
 
@@ -197,6 +176,13 @@ public class SetType extends TokenAST implements TypeInterface
     public int getId()
     {
         return id;
+    }
+
+
+    @Override
+    public int compareTo(CompoundType o)
+    {
+        return getName().compareTo(o.getName());
     }
 
 }

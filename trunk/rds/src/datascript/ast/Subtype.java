@@ -43,12 +43,12 @@ package datascript.ast;
 import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
-import datascript.antlr.util.TokenAST;
 
 
 
 @SuppressWarnings("serial")
-public class Subtype extends TokenAST implements TypeInterface
+public class Subtype extends Container 
+implements TypeInterface, Comparable<CompoundType>
 {
     private int id;
     private String name;
@@ -161,5 +161,12 @@ public class Subtype extends TokenAST implements TypeInterface
     public int getId()
     {
         return id;
+    }
+
+
+    @Override
+    public int compareTo(CompoundType o)
+    {
+        return getName().compareTo(o.getName());
     }
 }

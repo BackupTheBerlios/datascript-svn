@@ -113,7 +113,7 @@ public class FunctionType extends TokenAST implements TypeInterface
     }
 
 
-    public CompoundType getOwner()
+    public Container getOwner()
     {
         return owner;
     }

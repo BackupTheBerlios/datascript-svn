@@ -1,5 +1,6 @@
 <#include "comment.html.ftl">
 <#include "linkedtype.html.ftl">
+<#include "usedby.html.ftl">
 <html>
   <head>
     <title>Const ${packageName}.${type.name}</title>
@@ -24,6 +25,8 @@
       </table>
     </td></tr>
     </table>
+
+<@usedby containers/>
     
   </body>
 </html>

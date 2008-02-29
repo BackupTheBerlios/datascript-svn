@@ -41,6 +41,8 @@ package datascript.emit.html;
 
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import antlr.collections.AST;
 import datascript.ast.DataScriptException;
@@ -56,6 +58,8 @@ import freemarker.template.Template;
 abstract public class DefaultHTMLEmitter extends DefaultEmitter
 {
     protected static Configuration cfg = null;
+
+    protected final List<CompoundEmitter> containers = new ArrayList<CompoundEmitter>();
 
     protected static final String contentFolder = "content";
     protected static final String HTML_EXT = ".html";
@@ -98,6 +102,12 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
     public String getRootPackageName()
     {
         return Package.getRoot().getPackageName();
+    }
+
+
+    public List<CompoundEmitter> getContainers()
+    {
+    	return containers;
     }
 
 

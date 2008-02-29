@@ -41,7 +41,9 @@ package datascript.emit.html;
 
 import java.io.File;
 
+import datascript.ast.CompoundType;
 import datascript.ast.ConstType;
+import datascript.ast.Container;
 import datascript.ast.DataScriptException;
 import datascript.ast.TypeInterface;
 import freemarker.template.Template;
@@ -65,6 +67,13 @@ public class ConstTypeEmitter extends DefaultHTMLEmitter
     public void emit(ConstType consttype)
     {
         this.consttype = consttype;
+        containers.clear();
+        for (Container compund : consttype.getContainers())
+        {
+            CompoundEmitter ce = new CompoundEmitter((CompoundType)compund);
+            containers.add(ce);
+        }
+
         try
         {
             Template tpl = cfg.getTemplate("html/const.html.ftl");

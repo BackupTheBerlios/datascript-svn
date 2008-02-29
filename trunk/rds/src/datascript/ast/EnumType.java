@@ -55,7 +55,6 @@ public class EnumType extends SetType
 
     public EnumType()
     {
-
     }
 
 

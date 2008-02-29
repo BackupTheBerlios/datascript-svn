@@ -42,6 +42,8 @@ package datascript.emit.html;
 
 import java.io.File;
 
+import datascript.ast.CompoundType;
+import datascript.ast.Container;
 import datascript.ast.DataScriptException;
 import datascript.ast.Subtype;
 import datascript.ast.TypeInterface;
@@ -64,6 +66,13 @@ public class SubtypeEmitter extends DefaultHTMLEmitter
     public void emit(Subtype s)
     {
         this.subtype = s;
+        containers.clear();
+        for (Container compund : subtype.getContainers())
+        {
+            CompoundEmitter ce = new CompoundEmitter((CompoundType)compund);
+            containers.add(ce);
+        }
+
         try
         {
             Template tpl = cfg.getTemplate("html/subtype.html.ftl");

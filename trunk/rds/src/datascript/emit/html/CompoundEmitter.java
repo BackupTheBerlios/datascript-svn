@@ -47,6 +47,7 @@ import java.util.List;
 import antlr.collections.AST;
 import datascript.ast.ChoiceType;
 import datascript.ast.CompoundType;
+import datascript.ast.Container;
 import datascript.ast.DataScriptException;
 import datascript.ast.Expression;
 import datascript.ast.Field;
@@ -68,10 +69,10 @@ import freemarker.template.Template;
 public class CompoundEmitter extends DefaultHTMLEmitter
 {
     private CompoundType compound;
+
     private final List<FieldEmitter> fields = new ArrayList<FieldEmitter>();
     private final ExpressionEmitter exprEmitter = new ExpressionEmitter();
     private final List<FunctionEmitter> functions = new ArrayList<FunctionEmitter>();
-    private final List<CompoundEmitter> containers = new ArrayList<CompoundEmitter>();
 
 
     public CompoundEmitter()
@@ -80,15 +81,18 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         directory = new File(directory, contentFolder);
     }
 
+
     public CompoundEmitter(CompoundType cc)
     {
         this.compound = cc;
     }
 
+
     public String getName()
     {
         return compound == null ? "" : compound.getName();
     }
+
 
     public LinkedType getLinkedType()
     {
@@ -100,6 +104,8 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         LinkedType linkedType = new LinkedType(type);
         return linkedType;
     }
+
+
 
     public class FunctionEmitter
     {
@@ -209,13 +215,17 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     public void emit(CompoundType compound)
     {
         this.compound = compound;
-        fields.clear();
         functions.clear();
-        containers.clear();
         for (FunctionType fctn : compound.getFunctions())
         {
             FunctionEmitter fe = new FunctionEmitter(fctn);
             functions.add(fe);
+        }
+        containers.clear();
+        for (Container compund : compound.getContainers())
+        {
+            CompoundEmitter ce = new CompoundEmitter((CompoundType)compund);
+            containers.add(ce);
         }
 
         if (compound instanceof ChoiceType)
@@ -248,15 +258,11 @@ public class CompoundEmitter extends DefaultHTMLEmitter
 
     private void emitCompoundType()
     {
+        fields.clear();
         for (Field field : compound.getFields())
         {
             FieldEmitter fe = new FieldEmitter(field);
             fields.add(fe);
-        }
-        for (CompoundType compund : compound.getContainers())
-        {
-            CompoundEmitter ce = new CompoundEmitter(compund);
-            containers.add(ce);
         }
         
         try
@@ -363,7 +369,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     }
 
 
-    public CompoundType getType()
+    public Container getType()
     {
         return compound;
     }
@@ -412,10 +418,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         return functions;
     }
 
-    public List<CompoundEmitter> getContainers()
-    {
-    	return containers;
-    }
 
     public LinkedType toLinkedType(TypeInterface type1)
     {

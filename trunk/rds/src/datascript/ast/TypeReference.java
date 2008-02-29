@@ -173,21 +173,21 @@ public class TypeReference extends TokenAST implements TypeInterface,
                 ToolContext.logError((TokenAST) getFirstChild(), inner.getName()
                         + " is defined without an argument list");
             }
-            
-            if (outer == null)
-                return;
+        }
+
+        if (outer != null && refType instanceof Container)
+        {
+            Container inner = (Container) refType;
 
             // Check for circular containment
-            if (outer.isContainedIn(inner))
+            if (refType instanceof CompoundType)
             {
-                ToolContext.logError(this, "circular containment between '"
-                        + inner.getName() + "' and '" + outer.getName() + "'");
+                if (outer.isContainedIn(inner))
+                {
+                    ToolContext.logError(this, "circular containment between '"
+                            + refType.getName() + "' and '" + outer.getName() + "'");
+                }
             }
-            inner.addContainer(outer);
-        }
-        else if (refType instanceof EnumType)
-        {
-            EnumType inner = (EnumType) refType;
             inner.addContainer(outer);
         }
     }

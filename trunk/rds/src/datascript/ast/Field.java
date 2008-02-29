@@ -52,7 +52,7 @@ public class Field extends TokenAST
 {
     private TypeInterface type;
     private TokenAST name; // null is anonymous
-    private CompoundType compound; // compound type containing this field
+    private Container compound; // compound type containing this field
 
     private TokenAST alignment;
     private TokenAST fieldCondition;
@@ -130,13 +130,13 @@ public class Field extends TokenAST
     }
 
 
-    public CompoundType getCompound()
+    public Container getCompound()
     {
         return compound;
     }
 
 
-    void setCompound(CompoundType compound)
+    void setCompound(Container compound)
     {
         this.compound = compound;
     }

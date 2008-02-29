@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import datascript.ast.CompoundType;
+import datascript.ast.Container;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
@@ -58,7 +59,6 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
 
     private EnumType enumeration;
     private final List<EnumItem> items = new ArrayList<EnumItem>();
-    private final List<CompoundEmitter> containers = new ArrayList<CompoundEmitter>();
 
 
     public EnumerationEmitter()
@@ -72,16 +72,17 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
     {
         this.enumeration = e;
         items.clear();
-        containers.clear();
         for (EnumItem item : e.getItems())
         {
             items.add(item);
         }
-        for (CompoundType compund : enumeration.getContainers())
+        containers.clear();
+        for (Container compund : enumeration.getContainers())
         {
-            CompoundEmitter ce = new CompoundEmitter(compund);
+            CompoundEmitter ce = new CompoundEmitter((CompoundType)compund);
             containers.add(ce);
         }
+
         try
         {
             Template tpl = cfg.getTemplate("html/enumeration.html.ftl");
@@ -143,11 +144,5 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
     public List<EnumItem> getItems()
     {
         return items;
-    }
-
-
-    public List<CompoundEmitter> getContainers()
-    {
-    	return containers;
     }
 }

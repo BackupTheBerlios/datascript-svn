@@ -41,9 +41,11 @@ package datascript.emit.html;
 
 
 import datascript.ast.ArrayType;
+import datascript.ast.ChoiceType;
 import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
 import datascript.ast.SqlDatabaseType;
+import datascript.ast.SqlIntegerType;
 import datascript.ast.SqlMetadataType;
 import datascript.ast.SqlPragmaType;
 import datascript.ast.SqlTableType;
@@ -109,6 +111,11 @@ public class LinkedType
                 style = "unionLink";
                 category += createTitle("Union");
             }
+            else if (type instanceof ChoiceType)
+            {
+                style = "choiceLink";
+                category += createTitle("Choice");
+            }
             else if (type instanceof EnumType)
             {
                 style = "enumLink";
@@ -123,6 +130,11 @@ public class LinkedType
             {
                 style = "consttypeLink";
                 category += createTitle("Consttype");
+            }
+            else if (type instanceof SqlIntegerType)
+            {
+                style = "sqlInteger";
+                category += createTitle("SQL Integer");
             }
             else if (type instanceof SqlMetadataType)
             {

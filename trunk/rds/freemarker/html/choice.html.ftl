@@ -1,6 +1,7 @@
 <#include "comment.html.ftl">
 <#include "linkedtype.html.ftl">
 <#include "param.html.ftl">
+<#include "usedby.html.ftl">
 <html>
   <head>
     <title>${categoryPlainText} ${packageName}.${type.name}</title>
@@ -91,6 +92,8 @@
   </#if>
 </#list>
     </dl>
+
+<@usedby containers/>
 
   </body>
 </html>

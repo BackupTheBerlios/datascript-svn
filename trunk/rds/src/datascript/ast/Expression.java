@@ -258,7 +258,7 @@ public class Expression extends TokenAST
         else if (obj instanceof CompoundType)
         {
             CompoundType compound = (CompoundType) obj;
-            CompoundType owner = (CompoundType) scope.getOwner();
+            Container owner = (Container) scope.getOwner();
             if (owner.isContainedIn(compound))
             {
                 type = compound;
@@ -594,7 +594,7 @@ public class Expression extends TokenAST
         else if (t2 instanceof TypeInstantiation)
         {
             TypeInstantiation inst = (TypeInstantiation) t2;
-            CompoundType base = inst.getBaseType();
+            Container base = inst.getBaseType();
             return t1.equals(base);
         }
         else

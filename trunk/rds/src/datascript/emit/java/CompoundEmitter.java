@@ -50,6 +50,7 @@ import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
+import datascript.ast.Container;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import datascript.ast.Expression;
@@ -747,7 +748,7 @@ abstract public class CompoundEmitter
         }
         else if (type instanceof CompoundType)
         {
-            writeCompoundField(field, (CompoundType) type);
+            writeCompoundField(field, (Container) type);
         }
         else if (type instanceof ArrayType)
         {
@@ -875,7 +876,7 @@ abstract public class CompoundEmitter
     }
 
 
-    private void writeCompoundField(Field field, CompoundType type)
+    private void writeCompoundField(Field field, Container type)
     {
         buffer.append(AccessorNameEmitter.getGetterName(field));
         buffer.append("().write(__out, __cc);");

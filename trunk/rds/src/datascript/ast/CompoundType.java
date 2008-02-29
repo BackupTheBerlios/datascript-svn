@@ -42,20 +42,15 @@ package datascript.ast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Stack;
-import java.util.TreeSet;
 
 import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
-import datascript.antlr.util.TokenAST;
 
 
 
 abstract public class CompoundType 
-    extends TokenAST 
+    extends Container 
     implements TypeInterface, Comparable<CompoundType>
 {
     protected int id;
@@ -64,29 +59,21 @@ abstract public class CompoundType
     private final List<FunctionType> functions = new ArrayList<FunctionType>();
     private final List<Parameter> parameters = new ArrayList<Parameter>();
 
-    // / set of compound types that can contain this type
-    private final SortedSet<CompoundType> containers = new TreeSet<CompoundType>();
-
     // / one of TypeInterface.NOBYTEORDER, BIGENDIAN, LITTLEENDIAN
     int byteOrder;
 
     private Scope scope;
-
     private Package pkg;
-
     private String name;
-
     private CompoundType parent;
-
     private Token doc;
+    protected boolean bfoComputed = false;
 
 
     abstract public IntegerValue sizeof(Context ctxt);
 
 
     abstract public boolean isMember(Context ctxt, Value val);
-
-    protected boolean bfoComputed = false;
 
 
     protected CompoundType()
@@ -167,57 +154,6 @@ abstract public class CompoundType
     public void setDocumentation(Token t)
     {
         doc = t;
-    }
-
-
-    public void addContainer(CompoundType f)
-    {
-        if (!containers.contains(f))
-        {
-            containers.add(f);
-        }
-    }
-
-    public Set<CompoundType> getContainers()
-    {
-        return containers;
-    }
-
-    /**
-     * @return true if 'this' is contained in compound type 'f'
-     */
-    public boolean isContainedIn(CompoundType f)
-    {
-        return isContainedIn(f, new Stack<CompoundType>());
-    }
-
-
-    /**
-     * The "is contained" relationship may contain cycles use a stack to avoid
-     * them. This is a simple DFS path finding algorithm that finds a path from
-     * 'this' to 'f'.
-     */
-    private boolean isContainedIn(CompoundType f, Stack<CompoundType> seen)
-    {
-        if (containers.contains(f))
-        {
-            return true;
-        }
-
-        /* check whether any container of 'this' is contained in 'f' */
-        for (CompoundType c : containers)
-        {
-            if (seen.search(c) == -1)
-            {
-                seen.push(c);
-                if (c.isContainedIn(f, seen))
-                {
-                    return true;
-                }
-                seen.pop();
-            }
-        }
-        return false;
     }
 
 
@@ -337,6 +273,7 @@ abstract public class CompoundType
         return id;
     }
     
+
     @Override
     public int compareTo(CompoundType o)
     {

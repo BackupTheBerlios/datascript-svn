@@ -48,13 +48,31 @@ a.subtypeLink
 	font-style:italic;
 }
 
-a.consttypeLink,
-a.unionLink,
-a.sequenceLink,
+a.noStyle
+{
+    text-decoration:underline blink;
+    color:red;
+}
+
+a.consttypeLink
+{
+    text-decoration:underline;
+    color:gray;
+}
+
+a.sqlInteger,
 a.sqlMetaLink,
 a.sqlPragmaLink,
 a.sqlTableLink,
-a.sqlDBLink,
+a.sqlDBLink
+{
+    text-decoration:underline;
+    color:blue;
+}
+
+a.unionLink,
+a.choiceLink,
+a.sequenceLink,
 a.instantLink,
 a.arrayLink,
 a.referenceLink
