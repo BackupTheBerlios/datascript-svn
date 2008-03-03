@@ -244,6 +244,14 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
         if (bitPosition % alignVal != 0)
         {
             newPosition = ((bitPosition / alignVal) + 1) * alignVal;
+            long bytesToWrite = (newPosition - bitPosition) / 8;
+            if (bytesToWrite > 0)
+            {
+                if ((newPosition - bitPosition) % 8 != 0)
+                    bytesToWrite++;
+                byte b[] = new byte[(int)bytesToWrite];
+                this.write(b, 0, b.length);
+            }
             setBitPosition(newPosition);
         }
     }

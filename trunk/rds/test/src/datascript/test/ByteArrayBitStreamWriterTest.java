@@ -172,4 +172,16 @@ public class ByteArrayBitStreamWriterTest extends TestCase
 
         in.close();
     }
+
+    public void test4() throws Exception
+    {
+        os = new ByteArrayBitStreamWriter();
+        os.writeShort(0x234C);
+        os.writeByte(0xEF);
+        os.alignTo(32);
+        os.close();
+
+        byte[] b = os.toByteArray();
+        assertEquals(b.length * 8, 32);
+    }
 }
