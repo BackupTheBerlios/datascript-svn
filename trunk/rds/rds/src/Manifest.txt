@@ -1,3 +1,0 @@
-Main-Class: datascript.tools.DataScriptTool
-Class-Path: antlr.jar freemarker.jar velocity-dep-1.5.jar
-
