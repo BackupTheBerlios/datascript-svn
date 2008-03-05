@@ -52,7 +52,7 @@ import java.sql.*;
 public class ${name} extends SqlDatabase
 {
 <#list fields as field>
-    private ${field.javaTypeName} ${field.name} = new ${field.javaTypeName}(this);
+    private final ${field.javaTypeName} ${field.name} = new ${field.javaTypeName}(this);
 </#list>
 
 

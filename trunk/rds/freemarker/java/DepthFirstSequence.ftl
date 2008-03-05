@@ -41,9 +41,11 @@
 
     public void visit(${sequencePackageName}.${sequenceType.name} node, Object arg)
     {
+        // StartType
 <#if getStartType()?? && getStartType()?has_content>
         ${startType}
 </#if>
+
         try
         {
             __cc.push("${sequenceType.name}", node);        
@@ -72,6 +74,8 @@
         {
             __cc.pop();
         }
+
+        // EndType
 <#if getEndType()?? && getEndType()?has_content>
         ${endType}
 </#if>

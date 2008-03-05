@@ -41,9 +41,11 @@
 
     public void visit(${sqlIntPackageName}.${sqlIntegerType.name} node, Object arg)
     {
+        // StartType
 <#if getStartType()?? && getStartType()?has_content>
         ${startType}
 </#if>
+
         try
         {
 <#list fields as field>
@@ -61,6 +63,8 @@
         {
             __exc.printStackTrace();
         }
+
+        // EndType
 <#if getEndType()?? && getEndType()?has_content>
         ${endType}
 </#if>

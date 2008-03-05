@@ -41,16 +41,10 @@ package datascript.emit.java;
 
 
 import antlr.collections.AST;
-import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.ArrayType;
-import datascript.ast.BitFieldType;
 import datascript.ast.DataScriptException;
-import datascript.ast.Expression;
 import datascript.ast.Field;
-import datascript.ast.IntegerType;
-import datascript.ast.StringType;
 import datascript.ast.TypeInterface;
-import datascript.ast.TypeReference;
 import freemarker.template.Template;
 
 
@@ -81,85 +75,6 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
     }
 
 
-    public String getVisitor(Field field)
-    {
-        TypeInterface type = field.getFieldType();
-        return getVisitor(type, "node."
-                + AccessorNameEmitter.getGetterName(field) + "()", field.getName());
-    }
-
-
-    public String getVisitor(TypeInterface type, String nodeName, String fieldName)
-    {
-        type = TypeReference.getBaseType(type);
-        Expression length = null;
-        StringBuilder buffer = new StringBuilder();
-        if (type instanceof IntegerType)
-        {
-            buffer.append("visit");
-            IntegerType itype = (IntegerType) type;
-            switch (itype.getType())
-            {
-                case DataScriptParserTokenTypes.INT8:
-                    buffer.append("Int8");
-                    break;
-                case DataScriptParserTokenTypes.UINT8:
-                    buffer.append("UInt8");
-                    break;
-                case DataScriptParserTokenTypes.INT16:
-                    buffer.append("Int16");
-                    break;
-                case DataScriptParserTokenTypes.UINT16:
-                    buffer.append("UInt16");
-                    break;
-                case DataScriptParserTokenTypes.INT32:
-                    buffer.append("Int32");
-                    break;
-                case DataScriptParserTokenTypes.UINT32:
-                    buffer.append("UInt32");
-                    break;
-                case DataScriptParserTokenTypes.INT64:
-                    buffer.append("Int64");
-                    break;
-                case DataScriptParserTokenTypes.UINT64:
-                    buffer.append("UInt64");
-                    break;
-                case DataScriptParserTokenTypes.BIT:
-                    BitFieldType bftype = (BitFieldType) itype;
-                    length = bftype.getLengthExpression();
-                    buffer.append("BitField");
-                    break;
-            }
-            buffer.append("(");
-            buffer.append(nodeName);
-            if (length != null)
-            {
-                buffer.append(", ");
-                buffer.append(exprEmitter.emit(length, "node"));
-            }
-            buffer.append(", \"");
-            buffer.append(fieldName);
-            buffer.append("\")");
-        }
-        else if (type instanceof StringType)
-        {
-            buffer.append("visitString(" + nodeName + ", \"" + fieldName + "\")");
-        }
-        else if (type instanceof ArrayType)
-        {
-            buffer.append("visitArray(" + nodeName + ", \"" + fieldName + "\")");
-        }
-        else
-        {
-            buffer.append(nodeName);
-            buffer.append(".accept(this, \"");
-            buffer.append(fieldName);
-            buffer.append("\")");
-        }
-        return buffer.toString();
-    }
-
-
     @Override
     public String getElementVisitor(Field field)
     {
@@ -176,13 +91,13 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
     }
 
 
-    public String startType()
+    public String getStartType()
     {
         return "startElement(arg);";
     }
 
 
-    public String endType()
+    public String getEndType()
     {
         return "endElement(arg);";
     }

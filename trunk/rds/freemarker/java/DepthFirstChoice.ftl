@@ -41,6 +41,11 @@
 
     public void visit(${choicePackageName}.${choiceType.name} node, Object arg)
     {
+        // StartType
+<#if getStartType()?? && getStartType()?has_content>
+        ${startType}
+</#if>
+    
         try
         {
             __cc.push("${choiceType.name}", node);        
@@ -74,4 +79,9 @@
         {
             __cc.pop();
         }
+
+        // EndType
+<#if getEndType()?? && getEndType()?has_content>
+        ${endType}
+</#if>
     }

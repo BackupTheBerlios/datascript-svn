@@ -56,6 +56,7 @@ import datascript.ast.Field;
 import datascript.ast.IntegerType;
 import datascript.ast.SequenceType;
 import datascript.ast.SqlIntegerType;
+import datascript.ast.StringType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
@@ -93,7 +94,8 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         {
             TypeInterface type = field.getFieldType();
             return global.getVisitor(type, "node."
-                    + AccessorNameEmitter.getGetterName(field) + "()");
+                    + AccessorNameEmitter.getGetterName(field) + "()", 
+                    "\"" + field.getName() + "\"" /*"arg"*/);
         }
 
 
@@ -201,7 +203,8 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 
             TypeInterface type = getField().getFieldType();
             return global.getVisitor(type, "node."
-                    + AccessorNameEmitter.getGetterName(getField()) + "()");
+                    + AccessorNameEmitter.getGetterName(getField()) + "()", 
+                    "\"" + field.getName() + "\"" /*"arg"*/);
         }
     }
 
@@ -422,7 +425,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     }
 
 
-    public String getVisitor(TypeInterface type, String nodeName)
+    public String getVisitor(TypeInterface type, String nodeName, String fieldName)
     {
         type = TypeReference.getBaseType(type);
         Expression length = null;
@@ -470,29 +473,31 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
                 buffer.append(", ");
                 buffer.append(exprEmitter.emit(length, "node"));
             }
-            buffer.append(", arg)");
+            buffer.append(", ");
+            buffer.append(fieldName);
+            buffer.append(")");
         }
-        else if (type instanceof datascript.ast.ArrayType)
+        else if (type instanceof StringType)
         {
-            buffer.append("visitArray(" + nodeName + ", arg)");
+            buffer.append("visitString(" + nodeName + ", " + fieldName + ")");
         }
-        else if (type instanceof datascript.ast.StringType)
+        else if (type instanceof ArrayType)
         {
-            buffer.append("visitString(" + nodeName + ", arg)");
+            buffer.append("visitArray(" + nodeName + ", " + fieldName + ")");
         }
         else
         {
             /*
              * String typeName = typeEmitter.getTypeName(type);
-             * buffer.append("visit"); buffer.append(typeName.substring(0,
-             * 1).toUpperCase()); buffer.append(typeName.substring(1,
-             * typeName.length()));
+             * buffer.append("visit");
+             * buffer.append(typeName.substring(0, 1).toUpperCase());
+             * buffer.append(typeName.substring(1, typeName.length()));
              * 
-             * buffer.append("("); buffer.append(nodeName); buffer.append(",
-             * arg)");
+             * buffer.append("("); 
+             * buffer.append(nodeName); 
+             * buffer.append(", arg)");
              */
-            buffer.append(nodeName);
-            buffer.append(".accept(this, arg)");
+            buffer.append(nodeName + ".accept(this, " + fieldName + ")");
         }
         return buffer.toString();
     }
@@ -519,7 +524,8 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
         {
             ArrayType array = (ArrayType) type;
             TypeInterface elemType = array.getElementType();
-            result = getVisitor(elemType, "__elem");
+            result = getVisitor(elemType, "__elem", 
+                    "\"" + field.getName() + "\"" /*"arg"*/);
         }
 
         return result;

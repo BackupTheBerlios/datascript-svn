@@ -106,9 +106,9 @@ public class __XmlDumper extends XMLFilterImpl implements ${rootPackageName}.__V
     {
         handler = getContentHandler();
         handler.startDocument();
-        //startElement("root");
+        startElement("root");
         acceptor.accept(this, "root");
-        //endElement("root");
+        endElement("root");
         handler.endDocument();
     }
 
