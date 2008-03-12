@@ -169,7 +169,7 @@ public class IntegerValue extends Value implements Comparable<Object>
     @Override
     public String toString()
     {
-        return ival.toString() + "L";
+        return ival.toString();
     }
 
 
