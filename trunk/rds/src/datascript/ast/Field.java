@@ -69,7 +69,7 @@ public class Field extends TokenAST
     }
 
 
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         if (fieldOptionalClause != null)
         {
@@ -80,7 +80,7 @@ public class Field extends TokenAST
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         if (fieldOptionalClause != null)
         {

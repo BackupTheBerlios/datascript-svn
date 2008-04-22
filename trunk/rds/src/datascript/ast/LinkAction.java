@@ -39,5 +39,5 @@ package datascript.ast;
 
 public interface LinkAction
 {
-    void link(Context ctxt);
+    void link(Scope ctxt);
 }

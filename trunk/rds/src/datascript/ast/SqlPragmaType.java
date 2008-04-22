@@ -62,20 +62,20 @@ public class SqlPragmaType extends CompoundType
 
 
     @Override
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         throw new UnsupportedOperationException("sizeof not implemented");
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         throw new UnsupportedOperationException("bitsizeof not implemented");
     }
 
 
     @Override
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         throw new UnsupportedOperationException("isMember not implemented");
     }

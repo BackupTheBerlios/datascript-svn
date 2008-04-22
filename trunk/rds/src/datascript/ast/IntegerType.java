@@ -56,21 +56,21 @@ public class IntegerType extends TokenAST implements TypeInterface
         id = TypeRegistry.registerType(this);        
     }
     
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         throw new ComputeError(
                 "not computing generic sizeof of unknown integer");
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         throw new ComputeError(
                 "not computing generic bitsizeof of unknown integer");
     }
 
 
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         throw new InternalError("IntegerType.isMember not implemented");
     }

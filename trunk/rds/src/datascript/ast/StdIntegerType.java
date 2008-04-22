@@ -102,7 +102,7 @@ public class StdIntegerType extends IntegerType
 
 
     @Override
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         IntegerValue eight = new IntegerValue(8);
         IntegerValue size = bitsizeof(ctxt);
@@ -115,7 +115,7 @@ public class StdIntegerType extends IntegerType
 
 
     @Override
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         switch (getType())
         {
@@ -224,7 +224,7 @@ public class StdIntegerType extends IntegerType
      * integer (via integerValue()) and then a simple range comparison
      */
     @Override
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         try
         {

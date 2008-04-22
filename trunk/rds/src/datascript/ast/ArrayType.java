@@ -94,7 +94,7 @@ public class ArrayType extends TokenAST implements TypeInterface
     }
 
 
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         IntegerValue eight = new IntegerValue(8);
 
@@ -107,14 +107,14 @@ public class ArrayType extends TokenAST implements TypeInterface
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         IntegerValue size = ((TypeReference) getFirstChild()).bitsizeof(ctxt);
         return size.multiply(new IntegerValue(getLength()));
     }
 
 
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         throw new ComputeError("isMember() not implemented in "
                 + this.getClass().getName());

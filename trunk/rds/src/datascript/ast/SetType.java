@@ -117,7 +117,7 @@ implements TypeInterface, Comparable<CompoundType>
      * TODO: not clear what this means - finding out whether it's a valid
      * combination of non-disjoint bitmask entries takes some work
      */
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         Iterator<Object> it = items.keySet().iterator();
         while (it.hasNext())
@@ -131,13 +131,13 @@ implements TypeInterface, Comparable<CompoundType>
     }
 
 
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         return getBaseType().sizeof(ctxt);
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         return getBaseType().bitsizeof(ctxt);
     }

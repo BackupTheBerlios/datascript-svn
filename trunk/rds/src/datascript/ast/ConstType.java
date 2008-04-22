@@ -85,19 +85,19 @@ implements TypeInterface, Comparable<CompoundType>
     }
 
 
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         return getBaseType().sizeof(ctxt);
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         return getBaseType().bitsizeof(ctxt);
     }
 
 
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         return getBaseType().isMember(ctxt, val);
     }

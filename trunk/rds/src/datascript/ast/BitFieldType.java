@@ -94,7 +94,7 @@ public class BitFieldType extends IntegerType
 
 
     @Override
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         IntegerValue eight = new IntegerValue(8);
         IntegerValue size = bitsizeof(ctxt);
@@ -107,14 +107,14 @@ public class BitFieldType extends IntegerType
 
 
     @Override
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         return new IntegerValue(getLength());
     }
 
 
     @Override
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         /** @TODO handle variable length! */
         try

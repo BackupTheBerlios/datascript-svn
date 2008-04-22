@@ -137,7 +137,7 @@ public class FunctionType extends TokenAST implements TypeInterface
     }
 
 
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         throw new UnsupportedOperationException();
     }
@@ -149,13 +149,13 @@ public class FunctionType extends TokenAST implements TypeInterface
     }
 
 
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         throw new UnsupportedOperationException();
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         throw new UnsupportedOperationException();
     }

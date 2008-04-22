@@ -50,7 +50,7 @@ public class SequenceType extends CompoundType
 
 
     @Override
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         IntegerValue eight = new IntegerValue(8);
         IntegerValue size = bitsizeof(ctxt);
@@ -62,7 +62,7 @@ public class SequenceType extends CompoundType
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         IntegerValue size = new IntegerValue(0);
 
@@ -91,7 +91,7 @@ public class SequenceType extends CompoundType
 
 
     @Override
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         // do something like
         // if val.getType() == this

@@ -46,11 +46,29 @@ import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
 
 /**
- * This class implements the Context interface and thus provides a lexical 
- * scope for symbols. In addition, it stores link actions to be resolved within
- * this scope after parsing all translation units.
+ * A Scope is a lexical scope which maps names to objects. A name must be
+ * unique in its scope. This is also true for different object categories:
+ * e.g. a type name cannot be reused as a field name in the same scope.
+ * <p> 
+ * A scope may have a parent scope. Names of the parent
+ * scope are visible in the current scope, but may be shadowed.
+ * <p>
+ * Packages have their own scope. All top level types defined in the package
+ * are within the package scope. The package scope has no parent scope. 
+ * A top level compound or enumeration type defines its own scope. The field or
+ * item names of this type are contained in this scope.
+ * <p>
+ * A compound type B defined within a compound type A is located in the scope
+ * of A. It defines its own scope B with parent scope A.
+ * <p>
+ * Note: Scope is the only class implementing the Context interface. Context
+ * and Scope are inherited from datascript 0.1. I am not sure if the 
+ * distinction makes sense - maybe we should stick with the Scope terminology
+ * and simply drop this Context interface.
+ * 
+ * @author HWellmann
  */
-public class Scope implements Context, LinkAction
+public class Scope implements LinkAction
 {
 	/** 
 	 * Symbol table containing local symbols defined within the current scope.
@@ -107,6 +125,13 @@ public class Scope implements Context, LinkAction
         }
     }
 
+    /**
+     * Each compound type defines its own lexical scope. The parent of this is
+     * the one owned by the enclosing compound or by the defining package 
+     * otherwise
+     * @return the compound type owning this scope, or null, if this scope does
+     * not belong to a compound.
+     */
     public TypeInterface getOwner()
     {
         return owner;
@@ -132,8 +157,13 @@ public class Scope implements Context, LinkAction
         currentField = f;
     }
     
-    /**
-     * get this symbol from this or a parent scope
+    /** 
+     * Returns the object for the given name, or null if no such name is 
+     * visible. If the name is not defined in the current scope, it is
+     * recursively looked up in the parent scope. The recursion terminates
+     * at the enclosing package scope, which has no parent.
+     * @param symbol   name to be looked up
+     * @return corresponding object, or null
      */
     public Object getSymbol(String name)
     {
@@ -143,6 +173,22 @@ public class Scope implements Context, LinkAction
         return obj;
     }
     
+    /**
+     * Looks up a type with a given name in the current scope (including
+     * recursion to enclosing scopes). If the type name is not visible at
+     * in the current package scope, it will also be looked up in imported
+     * packages.
+     * <p>
+     * 
+     * The result may be null if
+     * <ul>
+     * <li>The name is not defined.</li>
+     * <li>The name is not visible.</li>
+     * <li>The name does not belong to a type.</li>
+     * </ul>
+     * @param name
+     * @return a type with the given name, or null
+     */
     public TypeInterface getType(String name)
     {
         Object obj = getSymbol(name);
@@ -191,10 +237,10 @@ public class Scope implements Context, LinkAction
     }
 
     /**
-     * Adds an entry to the symbol table of this scope. Logs an error if a
-     * a symbol with the given name is already defined in the current scope.
-     * @param node  syntax tree node containing the symbol (getText())
-     * @param obj	corresponding object
+     * Adds a name with its corresponding object to the current scope.
+     * @pre The name is not yet defined in the current scope.
+     * @param node    name to be added
+     * @param obj       object with this name
      */
     public void setSymbol(AST node, Object obj)
     {
@@ -205,10 +251,12 @@ public class Scope implements Context, LinkAction
     }
 
     /**
-     * Same as setSymbol. Only for package scopes, types receive a special
-     * handling.
-     * @param node  syntax tree node containing the symbol (getText())
-     * @param obj	corresponding object
+     * Adds a name with its corresponding object to the current scope and
+     * marks it as a type name.
+     * @pre The name is not yet defined in the current scope.
+     * @pre The object is a TypeInterface.
+     * @param node    name to be added
+     * @param obj       object with this name
      */
     public void setTypeSymbol(AST node, Object type)
     {
@@ -216,17 +264,38 @@ public class Scope implements Context, LinkAction
         getPackage().setTypeSymbol(node, type);
     }
     
-    public Context getParentScope()
+    /**
+     * Each compound type defines its own lexical scope. The parent of this is
+     * the one owned by the enclosing compound or by the defining package 
+     * otherwise
+     * @return the compound type owning this scope, or null, if this scope does
+     * not belong to a compound.
+     */
+    public Scope getParentScope()
     {
         return parentScope;
     }
 
+    /**
+     * Registers a link action to be resolved in this scope at a later stage.
+     * A link action is posted for each type reference. The reference will 
+     * be resolved to the type object of that name.
+     * 
+     * Note that for a field definition {@code Foo myFoo;}, the name 
+     * {@code myFoo} maps to a type reference, whereas the defining occurrence
+     * of the name {@code Foo} maps to the type object for {@code Foo}. 
+     * 
+     * @param act       link action
+     */
     public void postLinkAction(LinkAction act)
     {
         linkActions.add(act);
     }
 
-    public void link(Context ctxt)
+    /**
+     * Executes all link actions in the given scope.
+     */
+    public void link(Scope ctxt)
     {
         for (LinkAction l : linkActions)
         {

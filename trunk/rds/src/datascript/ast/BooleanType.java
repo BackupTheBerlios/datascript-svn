@@ -57,19 +57,19 @@ public class BooleanType extends TokenAST implements TypeInterface
         id = TypeRegistry.registerType(this);      
     }
 
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         throw new ComputeError("cannot apply sizeof to boolean type");
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         return new IntegerValue(1);
     }
 
 
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         return (val instanceof BooleanValue);
     }

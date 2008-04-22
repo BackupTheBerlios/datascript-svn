@@ -54,7 +54,7 @@ TileWithOptionalBlocks
 
 align(8):
 header.offset1:    
-    VarBlock      b1   if header.hasBlock1 == 1;
+    LinkBlock      b1   if header.hasBlock1 == 1;
 
 header.offset2:
     DataBlock      b2   if header.hasBlock2 == 1;
@@ -75,8 +75,34 @@ align(8):
     uint16         offset3   if hasBlock3 == 1;
 };
 
-VarBlock
+
+LinkBlock
 {
-    uint16    numItems;
-    uint8     items[numItems];
+    uint16         numAttrs;
+    Attributes     attrs[numAttrs];
+    
+    uint16 	   numLinks;
+    Link           links[numLinks];
 };
+
+Link
+{
+    int32          linkId;
+    uint16         attrIndex;
+    int32          extra    if attr().foo == 1;
+    
+    function Attributes attr()
+    {
+        return LinkBlock.attrs[attrIndex];
+    }
+};
+
+
+
+Attributes
+{
+    int16          foo;
+    int16          bla;
+};
+
+

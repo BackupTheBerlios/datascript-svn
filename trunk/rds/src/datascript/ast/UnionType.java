@@ -51,7 +51,7 @@ public class UnionType extends CompoundType
 
 
     @Override
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         IntegerValue size = ((Field) fields.get(0)).sizeof(ctxt);
         for (int i = 1; i < fields.size(); i++)
@@ -65,7 +65,7 @@ public class UnionType extends CompoundType
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         IntegerValue size = ((Field) fields.get(0)).bitsizeof(ctxt);
         for (int i = 1; i < fields.size(); i++)
@@ -80,7 +80,7 @@ public class UnionType extends CompoundType
 
 
     @Override
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         // do something like
         // if val.getType() == this

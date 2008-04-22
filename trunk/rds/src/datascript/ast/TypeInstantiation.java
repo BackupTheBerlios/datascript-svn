@@ -67,19 +67,19 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
     }
 
 
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         throw new ComputeError(this + " sizeof not implemented");
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         throw new ComputeError(this + " bitsizeof not implemented");
     }
 
 
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         throw new ComputeError(this + " isMember not implemented");
     }

@@ -70,10 +70,10 @@ abstract public class CompoundType
     protected boolean bfoComputed = false;
 
 
-    abstract public IntegerValue sizeof(Context ctxt);
+    abstract public IntegerValue sizeof(Scope ctxt);
 
 
-    abstract public boolean isMember(Context ctxt, Value val);
+    abstract public boolean isMember(Scope ctxt, Value val);
 
 
     protected CompoundType()

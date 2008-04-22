@@ -136,7 +136,7 @@ public class TypeReference extends TokenAST implements TypeInterface,
      * Links this reference to the corresponding type and logs an error if there
      * is a cycle in the containment hierarchy.
      */
-    public void link(Context ctxt)
+    public void link(Scope ctxt)
     {
         CompoundType outer = (CompoundType) ctxt.getOwner();
 
@@ -193,19 +193,19 @@ public class TypeReference extends TokenAST implements TypeInterface,
     }
 
 
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         return refType.sizeof(ctxt);
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         return refType.bitsizeof(ctxt);
     }
 
 
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         return refType.isMember(ctxt, val);
     }

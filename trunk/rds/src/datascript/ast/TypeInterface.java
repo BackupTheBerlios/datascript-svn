@@ -53,7 +53,7 @@ public interface TypeInterface
      * @throws ComputeError
      *             if not known
      */
-    IntegerValue sizeof(Context ctxt);
+    IntegerValue sizeof(Scope ctxt);
 
     /**
      * Return size of bits of this type, if known.
@@ -61,12 +61,12 @@ public interface TypeInterface
      * @throws ComputeError
      *             if not known
      */
-    IntegerValue bitsizeof(Context ctxt);
+    IntegerValue bitsizeof(Scope ctxt);
 
     /**
      * Is this val a member of this type in this context?
      */
-    boolean isMember(Context ctxt, Value val);
+    boolean isMember(Scope ctxt, Value val);
 
     /**
      * Return a value of this type, cast from another value

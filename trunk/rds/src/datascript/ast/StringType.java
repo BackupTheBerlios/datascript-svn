@@ -55,19 +55,19 @@ public class StringType extends TokenAST implements TypeInterface
         id = TypeRegistry.registerType(this);        
     }
     
-    public IntegerValue sizeof(Context ctxt)
+    public IntegerValue sizeof(Scope ctxt)
     {
         throw new ComputeError("sizeof String not known");
     }
 
 
-    public IntegerValue bitsizeof(Context ctxt)
+    public IntegerValue bitsizeof(Scope ctxt)
     {
         throw new ComputeError("bitsizeof String not known");
     }
 
 
-    public boolean isMember(Context ctxt, Value val)
+    public boolean isMember(Scope ctxt, Value val)
     {
         throw new ComputeError("StringType.isMember not implemented");
     }

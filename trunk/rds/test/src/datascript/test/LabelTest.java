@@ -4,22 +4,25 @@
 package datascript.test;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
+import label.Attributes;
 import label.DataBlock;
+import label.Link;
+import label.LinkBlock;
 import label.Tile;
 import label.TileHeader;
 import label.TileHeader2;
 import label.TileWithHeader;
 import label.TileWithOptionalBlocks;
-import label.VarBlock;
 import bits.GlobalLabelSeq;
 import bits.Header;
 import bits.ItemA;
 import bits.LabelledType;
-import datascript.runtime.array.UnsignedByteArray;
+import datascript.runtime.array.ObjectArray;
 import datascript.runtime.io.DataScriptIO;
 
 /**
@@ -154,7 +157,7 @@ public class LabelTest extends TestCase
         assertEquals(tile2, tile);
     }
 
-    public void testTileWithOptionalBlocks()
+    public void testTileWithOptionalBlocks1()
     {
         TileWithOptionalBlocks tile = new TileWithOptionalBlocks();
         TileHeader2 header = new TileHeader2();
@@ -165,10 +168,22 @@ public class LabelTest extends TestCase
         header.setOffset1(0);
         header.setOffset3(0);
 
-        VarBlock b1 = new VarBlock();
-        b1.setNumItems(1);
-        short[] items = {99};
-        b1.setItems(new UnsignedByteArray(items, 0, 1));
+        // offset: 5
+        LinkBlock b1 = new LinkBlock();
+        b1.setNumAttrs(2);
+        ArrayList<Attributes> attrs = new ArrayList<Attributes>(2);
+        attrs.add(new Attributes((short)11, (short)12));
+        attrs.add(new Attributes((short)13, (short)14));
+        b1.setAttrs(new ObjectArray<Attributes>(attrs));
+        
+        b1.setNumLinks(1);
+        ArrayList<Link> links = new ArrayList<Link>(1);
+        Link link = new Link();
+        link.setLinkId(99);
+        link.setAttrIndex(1);
+        links.add(link);
+        b1.setLinks(new ObjectArray<Link>(links));
+        
         tile.setB1(b1);
 
         DataBlock b3 = new DataBlock();
@@ -178,7 +193,50 @@ public class LabelTest extends TestCase
         byte[] blob = DataScriptIO.write(tile);
         
         assertEquals(5, tile.getHeader().getOffset1().intValue());
-        assertEquals(8, tile.getHeader().getOffset3().intValue());
+        assertEquals(23, tile.getHeader().getOffset3().intValue());
+        
+        TileWithOptionalBlocks tile2 = DataScriptIO.read(TileWithOptionalBlocks.class, blob);
+        assertEquals(tile2, tile);
+    }
+
+    public void testTileWithOptionalBlocks2()
+    {
+        TileWithOptionalBlocks tile = new TileWithOptionalBlocks();
+        TileHeader2 header = new TileHeader2();
+        tile.setHeader(header);
+        header.setHasBlock1((byte)1);
+        header.setHasBlock2((byte)0);
+        header.setHasBlock3((byte)1);
+        header.setOffset1(0);
+        header.setOffset3(0);
+
+        // offset: 5
+        LinkBlock b1 = new LinkBlock();
+        b1.setNumAttrs(2);
+        ArrayList<Attributes> attrs = new ArrayList<Attributes>(2);
+        attrs.add(new Attributes((short)11, (short)12));
+        attrs.add(new Attributes((short)1, (short)0));
+        b1.setAttrs(new ObjectArray<Attributes>(attrs));
+        
+        b1.setNumLinks(1);
+        ArrayList<Link> links = new ArrayList<Link>(1);
+        Link link = new Link();
+        link.setLinkId(99);
+        link.setAttrIndex(1);
+        link.setExtra(88);
+        links.add(link);
+        b1.setLinks(new ObjectArray<Link>(links));
+        
+        tile.setB1(b1);
+
+        DataBlock b3 = new DataBlock();
+        b3.setA(30);
+        b3.setB((short)31);
+        tile.setB3(b3);
+        byte[] blob = DataScriptIO.write(tile);
+        
+        assertEquals(5, tile.getHeader().getOffset1().intValue());
+        assertEquals(27, tile.getHeader().getOffset3().intValue());
         
         TileWithOptionalBlocks tile2 = DataScriptIO.read(TileWithOptionalBlocks.class, blob);
         assertEquals(tile2, tile);
