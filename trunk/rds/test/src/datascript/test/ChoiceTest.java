@@ -227,7 +227,7 @@ public class ChoiceTest extends TestCase
         }
         catch (DataScriptError exc)
         {
-            assertEquals("java.io.IOException: no match in choice: GREY", exc.getMessage());            
+            assertEquals("no match in choice: GREY", exc.getMessage());            
         }        
     }
 }

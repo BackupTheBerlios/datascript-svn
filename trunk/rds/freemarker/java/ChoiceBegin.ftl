@@ -97,10 +97,10 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
             <#-- simple types -->
             this.${param.name} != that.${param.name}
         <#t></#if>)  /* ${param.canonicalTypeName} */
-                throw new RuntimeException("Selector '${param.name}' is not equal!");
+                throw new DataScriptError("Selector '${param.name}' is not equal!");
     </#list>
             if (!this.__objectChoice.equals(that.__objectChoice))
-                throw new RuntimeException("Field '__objectChoice' is not equal!");
+                throw new DataScriptError("Field '__objectChoice' is not equal!");
             return true;
 <#else>
             return

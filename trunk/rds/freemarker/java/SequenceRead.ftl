@@ -44,7 +44,7 @@
     }
                 
 
-    public ${className}(String __filename${formalParameterList}) throws Exception 
+    public ${className}(String __filename${formalParameterList}) throws IOException 
     {
         FileBitStreamReader __in = new FileBitStreamReader(__filename);
         __cc = new CallChain();
@@ -53,20 +53,20 @@
     }
 
 
-    public ${className}(BitStreamReader __in${formalParameterList}) throws Exception 
+    public ${className}(BitStreamReader __in${formalParameterList}) throws IOException 
     {
         __cc = new CallChain();
         read(__in, __cc${actualParameterList});
     }
 
 
-    public ${className}(BitStreamReader __in, CallChain __cc${formalParameterList}) throws Exception 
+    public ${className}(BitStreamReader __in, CallChain __cc${formalParameterList}) throws IOException 
     {
         read(__in, __cc${actualParameterList});
     }
 
 
-    public void read(BitStreamReader __in, CallChain __cc${formalParameterList}) throws Exception 
+    public void read(BitStreamReader __in, CallChain __cc${formalParameterList}) throws IOException
     {
         this.__cc = __cc;
 <#list sequenceType.parameters as param>
@@ -89,14 +89,14 @@
         <#if field.labelExpression??>
                     if (__in.getBitPosition() != ${field.labelExpression})
                     {
-                        throw new IOException("wrong offset for field '${field.name}'");
+                        throw new DataScriptError("wrong offset for field '${field.name}'");
                     }
         </#if>
                     ${field.readField}
         <#if field.constraint??>
                     if (!(${field.constraint}))
                     {
-                        throw new IOException("constraint violated");
+                        throw new DataScriptError("constraint violated");
                     }
         </#if>
                 }
@@ -107,21 +107,21 @@
         <#if field.labelExpression??>
                 if (__in.getBitPosition() != ${field.labelExpression})
                 {
-                    throw new IOException("wrong offset for field '${field.name}'");
+                    throw new DataScriptError("wrong offset for field '${field.name}'");
                 }
         </#if>
                 ${field.readField}
         <#if field.constraint??>
                 if (!(${field.constraint}))
                 {
-                    throw new IOException("constraint violated");
+                    throw new DataScriptError("constraint violated");
                 }
         </#if>
     </#if>
 
 </#list>
             }
-            catch (Exception __e1)
+            catch (DataScriptError __e1)
             {
                 __in.setBitPosition(__fpos);
                 throw __e1;

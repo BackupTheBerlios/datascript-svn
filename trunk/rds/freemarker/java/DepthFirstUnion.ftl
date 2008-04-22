@@ -57,10 +57,10 @@
                     break;
 </#list>
                 default:
-                    throw new IOException("no match in union: " + node.getChoiceTag());
+                    throw new DataScriptError("no match in union: " + node.getChoiceTag());
             }
         }
-        catch (IOException __exc)
+        catch (DataScriptError __exc)
         {
             __exc.printStackTrace();
         }

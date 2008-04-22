@@ -96,7 +96,7 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
                 <#-- simple types -->
                 <#t>this.${field.name} != that.${field.name}
             <#t></#if>))  /* ${field.canonicalTypeName} */
-                throw new RuntimeException("Field '${field.name}' is not equal!");
+                throw new DataScriptError("Field '${field.name}' is not equal!");
     </#list>
             return true;
 <#else>

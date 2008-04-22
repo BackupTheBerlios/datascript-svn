@@ -37,10 +37,12 @@
  */ 
 package datascript.runtime.io;
 
+import java.io.IOException;
+
 import datascript.runtime.CallChain;
 
 public interface Writer
 {
 	public void write(datascript.runtime.io.BitStreamWriter out, CallChain cc)
-            throws Exception;
+            throws IOException;
 }

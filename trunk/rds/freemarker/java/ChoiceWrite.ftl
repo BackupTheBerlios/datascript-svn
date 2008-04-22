@@ -38,7 +38,7 @@
  */
 -->
 
-    public void write(String __filename) throws Exception 
+    public void write(String __filename) throws IOException 
     {
         FileBitStreamWriter __out = new FileBitStreamWriter(__filename);
         __cc = new CallChain();
@@ -47,14 +47,14 @@
     }
 
 
-    public void write(BitStreamWriter __out) throws Exception 
+    public void write(BitStreamWriter __out) throws IOException
     {
         __cc = new CallChain();
         write(__out, __cc);
     }
 
 
-    public void write(BitStreamWriter __out, CallChain __cc) throws Exception 
+    public void write(BitStreamWriter __out, CallChain __cc) throws IOException 
     {
         this.__cc = __cc;
         switch (${selector})
@@ -75,7 +75,7 @@
 </#list>
 <#if !hasDefault>
             default:
-                throw new IOException("no match in choice: " + ${selector});
+                throw new DataScriptError("no match in choice: " + ${selector});
 </#if>
         }
     }

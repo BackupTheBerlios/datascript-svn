@@ -109,7 +109,7 @@ public class ${name} implements ${rootPackageName}.__Visitor.Acceptor, SizeOf
                     <#t>this.${field.name} != that.${field.name}
                     <#break>
             </#switch>))  /* ${field.canonicalTypeName} */
-                throw new RuntimeException("Field '${field.name}' is not equal!");
+                throw new DataScriptError("Field '${field.name}' is not equal!");
     </#list>
             return true;
 <#else>
@@ -167,7 +167,7 @@ public class ${name} implements ${rootPackageName}.__Visitor.Acceptor, SizeOf
 <#list fields as field>
     <#if equalsCanThrowExceptions && field.isSimple>
         if ((#{field.maxVal}L < ${field.name}) || (${field.name} < #{field.minVal}L))
-            throw new RuntimeException("Value " + ${field.name} + " of field '${field.name}' exceeds the range of type ${field.typeName}!");
+            throw new DataScriptError("Value " + ${field.name} + " of field '${field.name}' exceeds the range of type ${field.typeName}!");
     </#if>
         this.${field.name} = ${field.name};
         <#-- this.${field.name} &= #{field.bitmask}L; -->

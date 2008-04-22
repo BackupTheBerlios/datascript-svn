@@ -183,7 +183,7 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
      * @return	sum of all array values
      * @throws Exception
      */
-    public int sum() throws Exception
+    public int sum()
     {
         long retVal = 0;
         for (BigInteger bi : data)

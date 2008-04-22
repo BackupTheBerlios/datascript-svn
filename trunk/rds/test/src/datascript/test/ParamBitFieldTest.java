@@ -11,6 +11,7 @@ import javax.imageio.stream.FileImageOutputStream;
 import junit.framework.TestCase;
 import bits.Coord;
 import bits.VarBitField;
+import datascript.runtime.DataScriptError;
 import datascript.runtime.array.BitFieldArray;
 
 /**
@@ -70,7 +71,7 @@ public class ParamBitFieldTest extends TestCase
             fail("RuntimeException expected");
             assertEquals(size, s);
         }
-        catch (RuntimeException exc)
+        catch (DataScriptError exc)
         {
             // expected exception
         }

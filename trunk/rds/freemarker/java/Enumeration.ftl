@@ -94,7 +94,7 @@ public enum ${name} implements SizeOf
 <#if ((enumBitsize % 8) == 0)>
         return ${enumSize};
 <#else>
-	throw new RuntimeException("sizeof not integer: 2L");
+	throw new DataScriptError("sizeof not integer: 2L");
 </#if>
     }
 

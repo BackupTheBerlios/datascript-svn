@@ -49,7 +49,7 @@
                             v.add(${currentElement});
                         }
                     }
-                    catch (IOException __e)
+                    catch (DataScriptError __e)
                     {
                         __in.setBitPosition(__afpos);
                     }
@@ -59,7 +59,7 @@
                 <#lt>{
                     long __maxIndex = ${lengthExpr};
                     if (__maxIndex > Integer.MAX_VALUE)
-                        throw new RuntimeException("truncate indexvalue will fail");
+                        throw new DataScriptError("truncate indexvalue will fail");
                     ArrayList<${elType}> v = new ArrayList<${elType}>((int)__maxIndex);
                     for (int __index = 0; __index < __maxIndex; __index++) 
                     {

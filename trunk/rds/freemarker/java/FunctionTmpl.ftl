@@ -45,7 +45,7 @@
         {
             result = (${returnType})(${result});
         }
-        catch (Exception exc)
+        catch (DataScriptError exc)
         {
             throw new IllegalArgumentException(exc);
         }

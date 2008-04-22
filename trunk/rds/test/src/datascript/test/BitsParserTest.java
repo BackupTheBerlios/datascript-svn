@@ -9,6 +9,7 @@ import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
 import bits.BitStruct;
+import datascript.runtime.DataScriptError;
 import datascript.runtime.io.ByteArrayBitStreamReader;
 import datascript.runtime.io.ByteArrayBitStreamWriter;
 import datascript.runtime.io.FileBitStreamWriter;
@@ -167,7 +168,7 @@ public class BitsParserTest extends TestCase
     		@SuppressWarnings("unused")
 			BitStruct bs = new BitStruct((byte)16, (short)1234, (byte)-1);
     	}
-	    catch (RuntimeException exc)
+	    catch (DataScriptError exc)
 	    {
 	    	assertEquals("Value 16 of field 'a' exceeds the range of type bit<4>!", exc.getMessage());
 	    }
@@ -177,7 +178,7 @@ public class BitsParserTest extends TestCase
         {
 	        bs.setA((byte)16);
 	    }
-	    catch (RuntimeException exc)
+	    catch (DataScriptError exc)
 	    {
 	        assertEquals("Value 16 of field 'a' exceeds the range of type bit<4>!", exc.getMessage());            
 	    }
@@ -185,7 +186,7 @@ public class BitsParserTest extends TestCase
 	    {
 	        bs.setB((short)1234);
 	    }
-	    catch (RuntimeException exc)
+	    catch (DataScriptError exc)
 	    {
 	        assertEquals("Value 1234 of field 'b' exceeds the range of type uint8!", exc.getMessage());            
 	    }
@@ -193,7 +194,7 @@ public class BitsParserTest extends TestCase
         {
 	        bs.setB((short)-1);
 	    }
-	    catch (RuntimeException exc)
+	    catch (DataScriptError exc)
 	    {
 	        assertEquals("Value -1 of field 'b' exceeds the range of type uint8!", exc.getMessage());            
 	    }
@@ -201,7 +202,7 @@ public class BitsParserTest extends TestCase
         {
         	bs.setC((byte)-1);
         }
-        catch (RuntimeException exc)
+        catch (DataScriptError exc)
         {
             assertEquals("Value -1 of field 'c' exceeds the range of type bit<4>!", exc.getMessage());            
         }

@@ -38,9 +38,9 @@
  */
 -->
 
-    public void write(BitStreamWriter __out) throws SQLException, IOException
+    public void write(BitStreamWriter __out)
     {
-        throw new RuntimeException("write() method is not yet implemented");
+        throw new UnsupportedOperationException("write() method is not yet implemented");
     }
     
 }

@@ -43,7 +43,7 @@
     }
 
 
-    public ${className}(String __filename${formalParameterList}) throws Exception
+    public ${className}(String __filename${formalParameterList}) throws IOException
     {
         FileBitStreamReader __in = new FileBitStreamReader(__filename);
         __cc = new CallChain();
@@ -52,20 +52,20 @@
     }
 
 
-    public ${className}(BitStreamReader __in${formalParameterList}) throws Exception
+    public ${className}(BitStreamReader __in${formalParameterList}) throws IOException
     {
         __cc = new CallChain();
         read(__in, __cc${actualParameterList});
     }
 
 
-    public ${className}(BitStreamReader __in, CallChain __cc${formalParameterList}) throws Exception 
+    public ${className}(BitStreamReader __in, CallChain __cc${formalParameterList}) throws IOException 
     {
         read(__in, __cc${actualParameterList});
     }
 
 
-    public void read(BitStreamReader __in, CallChain __cc${formalParameterList}) throws Exception 
+    public void read(BitStreamReader __in, CallChain __cc${formalParameterList}) throws IOException
     {
         this.__cc = __cc;
 <#list choiceType.parameters as param>
@@ -96,11 +96,11 @@
 </#list>
 <#if !hasDefault>
                     default:
-                        throw new IOException("no match in choice: " + ${selector});
+                        throw new DataScriptError("no match in choice: " + ${selector});
 </#if>
                 }
             }
-            catch (Exception __e1)
+            catch (DataScriptError __e1)
             {
                 __in.setBitPosition(__fpos);
                 throw __e1;

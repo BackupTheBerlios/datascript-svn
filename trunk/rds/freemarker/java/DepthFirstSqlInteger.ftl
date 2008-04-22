@@ -59,7 +59,7 @@
     </#if>
 </#list>
         }
-        catch (Exception __exc)
+        catch (DataScriptError __exc)
         {
             __exc.printStackTrace();
         }

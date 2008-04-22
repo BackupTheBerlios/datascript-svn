@@ -67,11 +67,11 @@
 </#list>
 <#if !hasDefault>
                     default:
-                        throw new IOException("no match in choice: " + ${selector});
+                        throw new DataScriptError("no match in choice: " + ${selector});
 </#if>
             }
         }
-        catch (IOException __exc)
+        catch (DataScriptError __exc)
         {
             __exc.printStackTrace();
         }

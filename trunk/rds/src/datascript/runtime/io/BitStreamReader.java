@@ -59,7 +59,7 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
     private ByteBuffer buffer = ByteBuffer.allocate(2048);
     private Charset charset = Charset.forName("UTF-8");
     
-    public long getBitPosition() throws IOException
+    public long getBitPosition()
     {
         long pos = 8 * streamPos + bitOffset;
         return pos;

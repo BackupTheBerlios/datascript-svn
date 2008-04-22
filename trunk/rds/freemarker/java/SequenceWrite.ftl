@@ -53,14 +53,14 @@
 <#list fields as field>
 	<#if equalsCanThrowExceptions && field.isSimple>
         if ((#{field.maxVal}L < ${field.name}) || (${field.name} < #{field.minVal}L))
-            throw new RuntimeException("Value " + ${field.name} + " of field '${field.name}' exceeds the range of type ${field.typeName}!");
+            throw new DataScriptError("Value " + ${field.name} + " of field '${field.name}' exceeds the range of type ${field.typeName}!");
 	</#if>
         this.${field.name} = ${field.name};
 </#list>
     }
 
 
-    public void write(String __filename) throws Exception 
+    public void write(String __filename) throws IOException
     {
         FileBitStreamWriter __out = new FileBitStreamWriter(__filename);
         __cc = new CallChain();
@@ -69,14 +69,14 @@
     }
 
 
-    public void write(BitStreamWriter __out) throws Exception 
+    public void write(BitStreamWriter __out) throws IOException
     {
         __cc = new CallChain();
         write(__out, __cc);
     }
 
 
-    public void write(BitStreamWriter __out, CallChain __cc) throws Exception 
+    public void write(BitStreamWriter __out, CallChain __cc) throws IOException
     {
         this.__cc = __cc;
 <#if LabeledFieldCnt!=0>
@@ -96,7 +96,7 @@
         <#if field.constraint??>
                     if (!(${field.constraint}))
                     {
-                        throw new IOException("constraint violated");
+                        throw new DataScriptError("constraint violated");
                     }
         </#if>
         <#if field.hasAlignment>
@@ -105,7 +105,7 @@
         <#if field.labelExpression??>
                 if (__out.getBitPosition() != ${field.labelExpression})
                 {
-                    throw new IOException("wrong offset for field '${field.name}'");
+                    throw new DataScriptError("wrong offset for field '${field.name}'");
                 }
 
         </#if>
@@ -115,7 +115,7 @@
         <#if field.constraint??>
                 if (!(${field.constraint}))
                 {
-                   throw new IOException("constraint violated");
+                   throw new DataScriptError("constraint violated");
                 }
         </#if>
         <#if field.hasAlignment>
@@ -124,7 +124,7 @@
         <#if field.labelExpression??>
                 if (__out.getBitPosition() != ${field.labelExpression})
                 {
-                    throw new IOException("wrong offset for field '${field.name}'");
+                    throw new DataScriptError("wrong offset for field '${field.name}'");
                 }
 
         </#if>
@@ -132,7 +132,7 @@
     </#if>
 </#list>
             } 
-            catch (Exception __e1) 
+            catch (DataScriptError __e1) 
             {
                 __out.setBitPosition(__fpos);
                 throw __e1;

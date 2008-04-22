@@ -66,7 +66,7 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
     }
 
 
-    public long getBitPosition() throws IOException
+    public long getBitPosition()
     {
         long pos = 8 * streamPos + bitOffset;
         return pos;

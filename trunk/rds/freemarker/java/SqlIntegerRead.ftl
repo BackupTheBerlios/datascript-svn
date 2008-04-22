@@ -51,19 +51,19 @@
     }
 
 
-    public ${name}(${fittingType} __in${formalParameterList}) throws Exception 
+    public ${name}(${fittingType} __in${formalParameterList}) 
     {
         read(__in, new CallChain()${actualParameterList});
     }
 
 
-    public ${name}(${fittingType} __in, CallChain __cc${formalParameterList}) throws Exception 
+    public ${name}(${fittingType} __in, CallChain __cc${formalParameterList}) 
     {
         read(__in, __cc${actualParameterList});
     }
 
 
-    public void read(${fittingType} __in, CallChain __cc${formalParameterList}) throws Exception 
+    public void read(${fittingType} __in, CallChain __cc${formalParameterList}) 
     {
 <#assign shiftBits = 0>
 <#list revFields as field>

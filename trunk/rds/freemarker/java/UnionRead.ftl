@@ -60,7 +60,7 @@
     }
 
 
-    public ${className}(BitStreamReader __in, CallChain __cc${formalParameterList}) throws IOException 
+    public ${className}(BitStreamReader __in, CallChain __cc${formalParameterList}) throws IOException
     {
         read(__in, __cc${actualParameterList});
     }
@@ -85,19 +85,19 @@
     <#if field.constraint??>
                     if (!(${field.constraint}))
                     {
-                        throw new IOException("constraint violated");
+                        throw new DataScriptError("constraint violated");
                     }
     </#if>
                     ${field.readField}
                     break;
                 } 
-                catch (Exception __exc) 
+                catch (DataScriptError __exc) 
                 {
                     __in.setBitPosition(__fpos);
                 }
 
 </#list>
-                throw new IOException("no match in union");
+                throw new DataScriptError("no match in union");
             }     
         }
         finally 

@@ -40,6 +40,7 @@
 package datascript.runtime.array;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -145,7 +146,7 @@ public class ObjectArray<E> implements Array<E>, SizeOf
     }
 
 
-    public void write(BitStreamWriter out, CallChain cc) throws Exception
+    public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
         for (int i = 0; i < data.size(); i++)
         {

@@ -38,7 +38,7 @@
  */
 -->
 
-    public ${javaTypeName} ${getterName}() throws IOException
+    public ${javaTypeName} ${getterName}()
     {
         return (${className})__objectChoice;
     }
