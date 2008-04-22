@@ -45,6 +45,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import datascript.runtime.CallChain;
+import datascript.runtime.DataScriptError;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamWriter;
 import datascript.runtime.io.Writer;
@@ -101,18 +102,18 @@ public class ObjectArray<E> implements Array<E>, SizeOf
             int thatLength = that.data.size();
             int thisLength = this.data.size();
             if (thatLength != thisLength)
-                throw new RuntimeException("arrays do not have same length");
+                throw new DataScriptError("arrays do not have same length");
 
             for (int i = 0; i < this.data.size(); i++)
             {
                 try
                 {
                     if (!this.data.get(i).equals(that.data.get(i)))
-                        throw new RuntimeException("mismatch at array index " + i);
+                        throw new DataScriptError("mismatch at array index " + i);
                 }
                 catch (Exception e)
                 {
-                    throw new RuntimeException("exception at array index " + i, e);
+                    throw new DataScriptError("exception at array index " + i, e);
                 }
             }
             return true;

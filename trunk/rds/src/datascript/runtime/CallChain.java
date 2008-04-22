@@ -58,7 +58,7 @@ public class CallChain extends Stack<Object>
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
-            throw new RuntimeException(name + " not found on CallChain");
+            throw new DataScriptError(name + " not found on CallChain");
         }
     }
 

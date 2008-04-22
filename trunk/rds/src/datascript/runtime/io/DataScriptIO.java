@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import datascript.runtime.CallChain;
+import datascript.runtime.DataScriptError;
 
 /**
  * Convenience class for reading and writing DataScript objects from and to 
@@ -41,7 +42,7 @@ public class DataScriptIO
         }
         catch (Exception exc)
         {
-            throw new RuntimeException(exc);
+            throw new DataScriptError(exc);
         }
     }
     
@@ -67,7 +68,7 @@ public class DataScriptIO
         }
         catch (Exception exc)
         {
-            throw new RuntimeException(exc);
+            throw new DataScriptError(exc);
         }
     }
 
@@ -101,7 +102,7 @@ public class DataScriptIO
             Constructor<E> constructor = findConstructor(clazz, argList);
             if (constructor == null)
             {
-                throw new RuntimeException("no matching constructor");
+                throw new DataScriptError("no matching constructor");
             }
             
             Object[] argArray = new Object[argList.size()];
@@ -112,7 +113,7 @@ public class DataScriptIO
         }
         catch (Exception exc)
         {
-            throw new RuntimeException(exc);
+            throw new DataScriptError(exc);
         }
     }
     

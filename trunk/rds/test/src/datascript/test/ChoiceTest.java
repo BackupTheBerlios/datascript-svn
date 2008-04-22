@@ -19,6 +19,7 @@ import choices.ParamContainer2;
 import choices.ParamContent;
 import choices.ParamContent2;
 import choices.Selector;
+import datascript.runtime.DataScriptError;
 import datascript.runtime.io.DataScriptIO;
 
 
@@ -224,7 +225,7 @@ public class ChoiceTest extends TestCase
             DataScriptIO.write(container);
             fail("IOException expected");
         }
-        catch (Exception exc)
+        catch (DataScriptError exc)
         {
             assertEquals("java.io.IOException: no match in choice: GREY", exc.getMessage());            
         }        

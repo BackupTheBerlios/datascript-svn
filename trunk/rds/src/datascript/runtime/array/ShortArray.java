@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import datascript.runtime.CallChain;
+import datascript.runtime.DataScriptError;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamWriter;
 
@@ -61,7 +62,7 @@ public class ShortArray implements Array<Short>, SizeOf
     {
         if (length == -1)
         {
-            throw new RuntimeException("variable length " + getClass()
+            throw new UnsupportedOperationException("variable length " + getClass()
                     + " not implemented");
         }
         else
@@ -113,13 +114,13 @@ public class ShortArray implements Array<Short>, SizeOf
 //	        if (that.sizeof() != this.sizeof())
 //	            throw new RuntimeException("size of arrays are different.");
 	        if (that.data.length != this.data.length)
-	            throw new RuntimeException(
+	            throw new DataScriptError(
 	                    "count of elements in arrays are different.");
 	
 	        for (int i = 0; i < this.data.length; i++)
 	        {
 	            if (this.data[i] != that.data[i])
-	                throw new RuntimeException("index " + i + " do not match.");
+	                throw new DataScriptError("index " + i + " do not match.");
 	        }
 	        return true;
         }
@@ -159,7 +160,7 @@ public class ShortArray implements Array<Short>, SizeOf
             retVal += si;
         }
         if (retVal > Integer.MAX_VALUE)
-            throw new Exception("result is too big for an integer");
+            throw new DataScriptError("result is too big for an integer");
         return (int) retVal;
     }
 

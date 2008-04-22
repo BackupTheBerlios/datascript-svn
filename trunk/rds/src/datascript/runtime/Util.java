@@ -50,7 +50,7 @@ public class Util
     public static int bitsToBytes(int bits)
     {
         if (bits % 8 > 0)
-            throw new RuntimeException(bits + " is not a multiple of 8");
+            throw new DataScriptError(bits + " is not a multiple of 8");
         return bits / 8;
     }
 
