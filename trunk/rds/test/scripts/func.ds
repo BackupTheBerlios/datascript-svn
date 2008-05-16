@@ -2,7 +2,7 @@ package func;
 
 VarInt
 {
-    uint8	val1;
+    uint8       val1;
     uint16      val2 if val1 == 255;
     uint32      val3 if val1 == 254;
     

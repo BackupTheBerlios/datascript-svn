@@ -206,7 +206,7 @@ paramTypeInstantiation
     ;
     
 sequenceDeclaration
-    :   #(SEQUENCE (ID)? (parameterList)? memberList  (functionList)?)
+    :   #(SEQUENCE (ID)? (parameterList)? memberList (functionList)?)
     ;
 
 unionDeclaration
@@ -214,11 +214,11 @@ unionDeclaration
     ;
 
 choiceDeclaration
-    :  #(CHOICE ID (parameterList)? expression choiceMemberList (functionList)? )
+    :  #(CHOICE ID (parameterList)? expression choiceMemberList)
     ;
     
 choiceMemberList
-    :  #(MEMBERS (choiceMember)+ (defaultChoice)?)
+    :  #(MEMBERS (choiceMember)+ (defaultChoice)? (functionList)?)
     ;
     
 choiceMember

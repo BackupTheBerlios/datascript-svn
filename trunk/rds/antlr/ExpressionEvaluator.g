@@ -263,7 +263,6 @@ choiceDeclaration
                                      { if (exprType instanceof EnumType)
                                            popScope();
          							 }
-         (functionList)? 
         )                          { popScope(); }
     ;
     

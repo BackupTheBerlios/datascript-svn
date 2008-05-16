@@ -239,12 +239,11 @@ choiceDeclaration
          (parameterList)? 
          expression 
          choiceMemberList 
-         (functionList)? 
         )                   { em.endChoice(c); }
     ;
     
 choiceMemberList
-    :  #(MEMBERS (choiceMember)+ (defaultChoice)?)
+    :  #(MEMBERS (choiceMember)+ (defaultChoice)? (functionList)?)
     ;
     
 choiceMember

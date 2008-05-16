@@ -94,7 +94,7 @@ choice ParamContent2(Selector sel) on sel
 
 // Functions in CHOICES should work, but currently don't
 
-/*
+
 choice ParamContent3(uint16 sel) on sel
 {
     case 1000:  Black black;
@@ -105,4 +105,4 @@ choice ParamContent3(uint16 sel) on sel
         return sel/100;
     }
 };
-*/
+

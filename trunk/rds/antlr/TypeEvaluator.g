@@ -283,7 +283,6 @@ choiceDeclaration
          (parameterList)? 
          expression 
          choiceMemberList 
-         (functionList)? 
        )                           { popScope(); 
                                      ((ChoiceType)c).storeParameters();
                                    }
