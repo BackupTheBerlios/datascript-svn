@@ -1,5 +1,21 @@
 package choices;
 
+
+choice ParamContent5(VariantA a, uint8 sel) on sel
+{
+    case 1:     Black black;
+    case 2:     ParamContent3(a) grey;
+    case 3:     White white;
+};
+
+
+choice ParamContent4(VariantA a, Selector sel) on sel
+{
+    case BLACK:     Black black;
+    case GREY:      ParamContent3(a) grey;
+    case WHITE:     White white;
+};
+
 Container
 {
     uint16   tag;
@@ -91,8 +107,6 @@ choice ParamContent2(Selector sel) on sel
     case BLACK:  Black black;
     case WHITE:  White white;
 };
-
-// Functions in CHOICES should work, but currently don't
 
 
 choice ParamContent3(uint16 sel) on sel

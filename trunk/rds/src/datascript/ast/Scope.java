@@ -236,6 +236,15 @@ public class Scope implements LinkAction
         return obj;
     }
 
+
+    public void addSymbolsFrom(Scope s)
+    {
+        for (String key : s.symbolTable.keySet())
+        {
+            symbolTable.put(key, s.symbolTable.get(key));
+        }
+    }
+
     /**
      * Adds a name with its corresponding object to the current scope.
      * @pre The name is not yet defined in the current scope.

@@ -153,11 +153,11 @@ parameterDefinition
 /******************* begin of enumerator stuff *****************/
 
 enumDeclaration
-    : #(e:"enum"                   { pushScope(((EnumType)e).getScope()); }
+    : #(e:"enum"                    { pushScope(((EnumType)e).getScope()); }
         builtinType 
         (ID)? 
         enumMemberList
-      )                            { popScope(); }
+      )                             { popScope(); }
     ;
 
 enumMemberList
@@ -170,9 +170,9 @@ returns [IntegerValue self]
 { self = last.add(new IntegerValue(1)); }
     : #(f:ITEM 
         ID
-        (e:expression              { self = (IntegerValue)((Expression)e).getValue(); }
+        (e:expression               { self = (IntegerValue)((Expression)e).getValue(); }
         )?
-      )                            { ((EnumItem)f).setValue(self); }
+      )                             { ((EnumItem)f).setValue(self); }
     ;
 
 bitmaskDeclaration
@@ -184,7 +184,7 @@ constDeclaration
     ;
 
 fieldDefinition
-    : #(f:FIELD                    { scope().setCurrentField((Field)f); }
+    : #(f:FIELD                     { scope().setCurrentField((Field)f); }
         typeReference 
         (ID)? 
         (fieldInitializer)?
@@ -230,40 +230,45 @@ paramTypeInstantiation
     : #(INST 
         definedType 
         typeArgumentList
-       )                           { ((TypeInstantiation)#INST).checkArguments(); }
+       )                            { ((TypeInstantiation)#INST).checkArguments(); }
     ;
 
 sequenceDeclaration
-    : #(s:SEQUENCE                 { pushScope(((SequenceType)s).getScope()); }
+    : #(s:SEQUENCE                  { pushScope(((SequenceType)s).getScope()); }
         (ID)? 
         (parameterList)? 
         memberList
         (functionList)?
-      )                            { popScope(); }
+      )                             { popScope(); }
           
     ;
 
 unionDeclaration
-    : #(u:UNION                    { pushScope(((UnionType)u).getScope()); }
+    : #(u:UNION                     { pushScope(((UnionType)u).getScope()); }
         (ID)? 
         (parameterList)? 
         memberList
         (functionList)?
-      )                            { popScope(); }
+      )                             { popScope(); }
     ;
 
 choiceDeclaration
-    :  #(c:CHOICE ID                 { pushScope(((ChoiceType)c).getScope()); } 
+    :  #(c:CHOICE                   { pushScope(((ChoiceType)c).getScope()); }
+         ID  
          (parameterList)? 
-         e:expression                { TypeInterface exprType = ((Expression)e).getExprType(); 
-                                       if (exprType instanceof EnumType)
-                                            pushScope(((EnumType)exprType).getScope());
-         							 } 
-         choiceMemberList 
-                                     { if (exprType instanceof EnumType)
-                                           popScope();
-         							 }
-        )                          { popScope(); }
+         e:expression               { TypeInterface exprType = ((Expression)e).getExprType(); 
+                                      if (exprType instanceof EnumType)
+                                      {
+                                      	  Scope newScope = new Scope(scope());
+                                          newScope.addSymbolsFrom(((EnumType)exprType).getScope());
+                                          pushScope(newScope);
+                                          //pushScope(((EnumType)exprType).getScope());
+                                      }
+                                    } 
+         choiceMemberList           { if (exprType instanceof EnumType)
+                                          popScope();
+                                    }
+        )                           { popScope(); }
     ;
     
 choiceMemberList
@@ -360,23 +365,23 @@ typeValue
 /*********************************************************************/
 
 sqlDatabaseDefinition
-    : #(d:SQL_DATABASE             { pushScope(((CompoundType)d).getScope()); }
+    : #(d:SQL_DATABASE              { pushScope(((CompoundType)d).getScope()); }
         ID 
         (sqlPragmaBlock)? 
         (sqlMetadataBlock)?   
         (sqlTableField)+ 
         (sqlConstraint)?
-       )                           { popScope(); }   
+       )                            { popScope(); }   
     ;
 
 sqlPragmaBlock
-    : #(p:SQL_PRAGMA               { pushScope(((CompoundType)p).getScope()); }
+    : #(p:SQL_PRAGMA                { pushScope(((CompoundType)p).getScope()); }
         (sqlPragma)+
-      )                            { popScope(); }   
+      )                             { popScope(); }   
     ;
 
 sqlPragma
-    : #(f:FIELD                    { scope().setCurrentField((Field)f); }
+    : #(f:FIELD                     { scope().setCurrentField((Field)f); }
         sqlPragmaType 
         ID 
         (fieldInitializer)? 
@@ -390,13 +395,13 @@ sqlPragmaType
     ;
 
 sqlMetadataBlock
-    : #(m:SQL_METADATA             { pushScope(((CompoundType)m).getScope()); }
+    : #(m:SQL_METADATA              { pushScope(((CompoundType)m).getScope()); }
         (sqlMetadataField)+
-      )                            { popScope(); }   
+      )                             { popScope(); }   
     ;
 
 sqlMetadataField
-    : #(f:FIELD                    { scope().setCurrentField((Field)f); }
+    : #(f:FIELD                     { scope().setCurrentField((Field)f); }
         typeReference
         ID
         (fieldInitializer)? 
@@ -415,16 +420,16 @@ sqlTableDefinition
     ;
 
 sqlTableDeclaration
-    : #(t:SQL_TABLE                { pushScope(((CompoundType)t).getScope()); }
+    : #(t:SQL_TABLE                 { pushScope(((CompoundType)t).getScope()); }
         ID
         (parameterList)? 
         (sqlFieldDefinition)+
         (sqlConstraint)? 
-      )                            { popScope(); }   
+      )                             { popScope(); }   
     ;
 
 sqlFieldDefinition
-    : #(f:FIELD                    { scope().setCurrentField((Field)f); }
+    : #(f:FIELD                     { scope().setCurrentField((Field)f); }
         typeReference
         ID 
         (fieldCondition)? 
@@ -438,14 +443,14 @@ sqlConstraint
     ;  
 
 sqlIntegerDeclaration
-    : #(s:SQL_INTEGER              { pushScope(((CompoundType)s).getScope()); }
+    : #(s:SQL_INTEGER               { pushScope(((CompoundType)s).getScope()); }
         ID
         (sqlIntegerFieldDefinition)+
-      )                            { popScope(); }
+      )                             { popScope(); }
     ;
 
 sqlIntegerFieldDefinition
-    : #(f:FIELD                    { scope().setCurrentField((Field)f); }
+    : #(f:FIELD                     { scope().setCurrentField((Field)f); }
         integerType 
         ID 
         (fieldCondition)?
@@ -520,15 +525,15 @@ opExpression
     ;   
 
 atom
-    : id:ID                        { ((Expression)id).evaluate(scope()); }
-    | il:INTEGER_LITERAL           { ((IntegerExpression)il).evaluate(scope()); }  
+    : id:ID                         { ((Expression)id).evaluate(scope()); }
+    | il:INTEGER_LITERAL            { ((IntegerExpression)il).evaluate(scope()); }  
     | sl:STRING_LITERAL
     ;
 
 identifier
-    : id:ID                        { ((Expression)id).evaluate(scope()); }
+    : id:ID                         { ((Expression)id).evaluate(scope()); }
     ;
 
 integerExpression
-    : e:expression                 { ((Expression)e).checkInteger(); }
+    : e:expression                  { ((Expression)e).checkInteger(); }
     ;

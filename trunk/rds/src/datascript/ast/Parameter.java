@@ -87,6 +87,14 @@ public class Parameter
     public boolean getIsSimple()
     {
         boolean result = false;
+        if (type instanceof TypeReference)
+        {
+            type = TypeReference.resolveType(type);
+        }
+        if (type instanceof Subtype)
+        {
+            type = ((Subtype)type).getBaseType();
+        }
         if (type instanceof StdIntegerType)
         {
             result = ((StdIntegerType)type).getType() != datascript.antlr.DataScriptParserTokenTypes.UINT64;            

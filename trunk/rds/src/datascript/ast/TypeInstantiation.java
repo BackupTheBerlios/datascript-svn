@@ -164,7 +164,7 @@ public class TypeInstantiation extends TokenAST implements TypeInterface
         }
 
         // Iterate over arguments
-        arguments = new ArrayList<Expression>();
+        arguments = new ArrayList<Expression>(numParams);
         AST arg = refType.getNextSibling();
         for (int paramIndex = 0; 
              paramIndex < numParams; 
