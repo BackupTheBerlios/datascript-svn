@@ -1,0 +1,9 @@
+package mini;
+
+subtype uint16 MyType;
+
+MySeq
+{
+    uint32  id;
+    MyType  type;
+};

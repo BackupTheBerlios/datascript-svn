@@ -1,0 +1,114 @@
+package func;
+
+VarInt
+{
+    uint8       val1;
+    uint16      val2 if val1 == 255;
+    uint32      val3 if val1 == 254;
+    
+    function uint32 value()
+    {
+        return (val1 == 255) ? val2 : (val1 == 254) ? val3 : val1;
+    }
+};
+
+VarList
+{
+    VarInt      numItems;
+    int32       items[numItems.value()];
+};
+
+// ---------------------------------------------------------------------------
+
+ArrayFunc
+{
+    uint16     numElems;
+    Item       values[numElems];
+    uint16     pos;
+    
+    function Item elem()
+    {
+        return values[pos];
+    }
+};
+
+Item
+{
+    uint8      a;
+    uint8      b;
+};
+
+
+// ---------------------------------------------------------------------------
+
+OuterArray
+{
+    uint16     numElems;
+    Item       values[numElems];
+    bit:1      dummy if numElems == 0;
+    Inner      inner;
+};
+
+Inner
+{
+    uint8     isExplicit;
+    ItemRef   ref;
+    int32     extra if ref.elem().a == 20;
+    
+};
+
+
+union ItemRef
+{
+    Item      item : Inner.isExplicit == 1;
+    uint8     pos  : Inner.isExplicit == 0;
+
+    function Item elem()
+    {
+        return (Inner.isExplicit == 1) 
+            ? item 
+            : OuterArray.values[position()];
+    }
+    
+    function uint8 position()
+    {
+        return pos;
+    }
+};
+
+
+// ---------------------------------------------------------------------------
+
+Foo
+{
+    uint8     pos;
+
+    function uint8 position()
+    {
+        return pos;
+    }
+
+    function uint8 elem()
+    {
+        return position();
+    }
+    
+};
+
+
+Bla(uint16 metres)
+{
+    uint16   a;
+    
+    function uint16 centimetres()
+    {
+        return metres/100;
+    }
+
+};
+
+ParamCall
+{
+    Bla(100)   bla;
+    uint16     cm = bla.centimetres();
+};
