@@ -259,6 +259,31 @@ public class Expression extends TokenAST
         {
             CompoundType compound = (CompoundType) obj;
             Container owner = (Container) scope.getOwner();
+            
+            // FIXME: The following seems to be a hack. It works, but the logic
+            // of owners and parent scope definitely needs some documentation
+            // and cleanup. The problem that was fixed: RoutingTile could
+            // not be resolved in the following example.
+//
+//            choice RoutingAttributeInfo(AttributeSource attrSource) on attrSource
+//            {
+//                case FOO:
+//                     ... ;
+//
+//                /** Returns the attribute set for the current routing feature. */
+//                function FixedRoadAttributeSet attr()
+//                {
+//                    return (attrSource == AttributeSource.EXPLICIT)
+//                        ? fixedAttributes
+//                        : RoutingTile.fixedRoadAttributeSetList.attributeList[listIndex()];
+//                }
+//            };
+
+            
+            if (owner == null)
+            {
+                owner = (Container) scope.getParentScope().getOwner();
+            }
             if (owner.isContainedIn(compound))
             {
                 type = compound;
@@ -306,6 +331,11 @@ public class Expression extends TokenAST
         Expression op2 = op2();
         TypeInterface t = op1.getExprType();
         String symbol = op2.getText();
+        if (t instanceof TypeInstantiation)
+        {
+            TypeInstantiation typeInst = (TypeInstantiation) t;
+            t = typeInst.getBaseType();
+        }
         if (t instanceof CompoundType)
         {
             CompoundType compound = (CompoundType) t;

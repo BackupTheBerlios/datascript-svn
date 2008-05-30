@@ -107,3 +107,8 @@ Bla(uint16 metres)
 
 };
 
+ParamCall
+{
+    Bla(100)   bla;
+    uint16     cm = bla.centimetres();
+};
