@@ -81,7 +81,6 @@ import datascript.ast.Scope;
  * TODO: Refactor this class.
  * 
  * @author HWellmann
- *
  */
 public class DataScriptTool implements Parameters
 {
