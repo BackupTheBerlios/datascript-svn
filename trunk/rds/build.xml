@@ -303,6 +303,26 @@
     </junit>
   </target>
 
+  <target name="test.batch" depends="test.compile" description="Runs the unit tests">
+    <mkdir dir="build/test-results"/>
+    <junit printsummary="no" fork="yes" dir="${build}">
+      <jvmarg value="-Djava.library.path=${lib}" />
+      <classpath>
+        <pathelement path="${build}/test/classes" />
+        <pathelement path="${jar}/rds-runtime.jar" />
+        <pathelement path="${lib}/sqlitejdbc.jar" />
+        <pathelement path="${lib}/commons-cli-1.1.jar" />
+      </classpath>
+      <batchtest todir="build/test-results">
+        <fileset dir="${test}">
+          <include name="**/*Test.java" />
+        </fileset>
+        <formatter type="plain" usefile="false" />
+        <formatter type="xml" />
+      </batchtest>
+    </junit>
+  </target>
+
   <!-- ==================================================================== -->
 
   <target name="testBits.gen" depends="jar" description="Generates parser for test cases" unless="testBits.uptodate">
