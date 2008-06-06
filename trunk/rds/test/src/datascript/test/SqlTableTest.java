@@ -197,26 +197,32 @@ public class SqlTableTest extends TestCase
         columns = metaData.getColumns(null, null, "levels", "levelNr");
         typeName = columns.getString("TYPE_NAME");
         assertEquals(typeName, "INTEGER");
+        columns.close();
 
         columns = metaData.getColumns(null, null, "levels", "level");
         typeName = columns.getString("TYPE_NAME");
         assertEquals(typeName, "BLOB");
+        columns.close();
 
         columns = metaData.getColumns(null, null, "levels", "val1");
         typeName = columns.getString("TYPE_NAME");
         assertEquals(typeName, "CHAR(3)");
+        columns.close();
 
         columns = metaData.getColumns(null, null, "levels", "val2");
         typeName = columns.getString("TYPE_NAME");
         assertEquals(typeName, "INTEGER");
+        columns.close();
 
         columns = metaData.getColumns(null, null, "levels", "val3");
         typeName = columns.getString("TYPE_NAME");
         assertEquals(typeName, "INTEGER");
+        columns.close();
 
         columns = metaData.getColumns(null, null, "levels", "val4");
         typeName = columns.getString("TYPE_NAME");
         assertEquals(typeName, "BLOB");
+        columns.close();
 
         db.close();
     }
