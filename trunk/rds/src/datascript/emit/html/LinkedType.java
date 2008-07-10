@@ -174,14 +174,14 @@ public class LinkedType
     }
 
 
-    private String createTitle(String category)
+    private String createTitle(String cat)
     {
         String packageName = "";
         if (isDoubleDefinedType)
         {
             packageName = ", defined in: " + type.getPackage().getPackageName();
         }
-        return category + packageName;
+        return cat + packageName;
     }
 
 

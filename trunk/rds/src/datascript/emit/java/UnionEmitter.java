@@ -80,11 +80,11 @@ public class UnionEmitter extends CompoundEmitter
 
 
         @Override
-        public void emit(PrintWriter writer, Configuration cfg) throws Exception
+        public void emit(PrintWriter pw, Configuration cfg) throws Exception
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/UnionFieldAccessor.ftl");
-            tpl.process(this, writer);
+            tpl.process(this, pw);
         }
 
 

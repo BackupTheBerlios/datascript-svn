@@ -64,9 +64,9 @@ public class ConstTypeEmitter extends DefaultHTMLEmitter
     }
 
 
-    public void emit(ConstType consttype)
+    public void emit(ConstType constType)
     {
-        this.consttype = consttype;
+        this.consttype = constType;
         containers.clear();
         for (Container compund : consttype.getContainers())
         {

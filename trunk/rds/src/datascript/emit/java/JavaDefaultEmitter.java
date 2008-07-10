@@ -101,7 +101,7 @@ public class JavaDefaultEmitter extends DefaultEmitter
             return;
         AST sibling = unitNode;
 
-        if (sibling.getType() == DataScriptParserTokenTypes.TRANSLATION_UNIT);
+        if (sibling.getType() == DataScriptParserTokenTypes.TRANSLATION_UNIT)
         {
             sibling = unitNode.getFirstChild();
             while (sibling != null && sibling.getType() != DataScriptParserTokenTypes.PACKAGE)
@@ -113,7 +113,7 @@ public class JavaDefaultEmitter extends DefaultEmitter
         if (sibling.getType() == DataScriptParserTokenTypes.PACKAGE)
         {
             sibling = sibling.getFirstChild();
-            File file = null;
+            File file = new File(".");
             while (sibling != null)
             {                
                 file = new File(file, sibling.getText());

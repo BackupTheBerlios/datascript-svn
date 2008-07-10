@@ -99,7 +99,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     	if (compound == null)
     		return null;
 
-        TypeInterface type = (TypeInterface)compound;
+        TypeInterface type = compound;
         type = TypeReference.resolveType(type);
         LinkedType linkedType = new LinkedType(type);
         return linkedType;
@@ -212,23 +212,23 @@ public class CompoundEmitter extends DefaultHTMLEmitter
 
 
 
-    public void emit(CompoundType compound)
+    public void emit(CompoundType compnd)
     {
-        this.compound = compound;
+        this.compound = compnd;
         functions.clear();
-        for (FunctionType fctn : compound.getFunctions())
+        for (FunctionType fctn : compnd.getFunctions())
         {
             FunctionEmitter fe = new FunctionEmitter(fctn);
             functions.add(fe);
         }
         containers.clear();
-        for (Container compund : compound.getContainers())
+        for (Container compund : compnd.getContainers())
         {
             CompoundEmitter ce = new CompoundEmitter((CompoundType)compund);
             containers.add(ce);
         }
 
-        if (compound instanceof ChoiceType)
+        if (compnd instanceof ChoiceType)
             emitChoiceType();
         else
             emitCompoundType();

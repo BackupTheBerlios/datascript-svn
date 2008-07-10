@@ -64,7 +64,6 @@ public class SqlIntegerEmitter extends CompoundEmitter
 
     private int totalTypeSize;
     private SqlIntegerType integerType;
-    private PrintWriter writer;
 
 
 

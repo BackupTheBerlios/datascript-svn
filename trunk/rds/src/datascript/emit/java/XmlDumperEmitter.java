@@ -91,12 +91,14 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
     }
 
 
+    @Override
     public String getStartType()
     {
         return "startElement(arg);";
     }
 
 
+    @Override
     public String getEndType()
     {
         return "endElement(arg);";

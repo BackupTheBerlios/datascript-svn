@@ -40,8 +40,6 @@
 package datascript.emit.html;
 
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -56,10 +54,8 @@ public class PackageEmitter extends DefaultHTMLEmitter
     private final Set<String> packages = new TreeSet<String>();
 
 
-    public PackageEmitter() throws IOException, URISyntaxException
+    public PackageEmitter()
     {
-        super();
-        // TODO Auto-generated constructor stub
     }
 
 

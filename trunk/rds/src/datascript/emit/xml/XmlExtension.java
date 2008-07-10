@@ -84,7 +84,7 @@ public class XmlExtension extends XMLFilterImpl implements Extension
     /* (non-Javadoc)
      * @see datascript.tools.Extension#generate(datascript.antlr.DataScriptEmitter, datascript.ast.TokenAST)
      */
-    public void generate(DataScriptEmitter emitter, TokenAST rootNode)
+    public void generate(DataScriptEmitter emitter, TokenAST root)
             throws Exception
     {
         if (params == null)
@@ -104,7 +104,7 @@ public class XmlExtension extends XMLFilterImpl implements Extension
             fileName = "datascript.xml";
         }
         File outputFile = new File(params.getOutPathName(), fileName);
-        this.rootNode = rootNode;
+        this.rootNode = root;
         FileOutputStream os = new FileOutputStream(outputFile);
 
         TransformerFactory tf = TransformerFactory.newInstance();

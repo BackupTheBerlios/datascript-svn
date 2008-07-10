@@ -76,9 +76,9 @@ public class CallChain extends Stack<Object>
 
 
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(Object other)
         {
-            return this.name.equals(((Record) obj).name);
+            return this.name.equals(((Record) other).name);
         }
 
 

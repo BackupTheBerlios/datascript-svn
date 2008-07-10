@@ -49,7 +49,7 @@ import datascript.antlr.util.TokenAST;
 @SuppressWarnings("serial")
 public class EnumType extends SetType
 {
-    private TokenAST members;
+    TokenAST members;
     private Scope scope;
 
 
@@ -61,10 +61,10 @@ public class EnumType extends SetType
     public int size()
     {
         int count = 0;
-        Iterator<EnumItem> items = getItems().iterator();
-        while (items.hasNext())
+        Iterator<EnumItem> it = getItems().iterator();
+        while (it.hasNext())
         {
-            items.next();
+            it.next();
             count++;
         }
         return count;

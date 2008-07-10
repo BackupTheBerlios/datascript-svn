@@ -76,7 +76,7 @@ public abstract class FieldEmitter
     }
 
 
-    abstract public void emit(PrintWriter writer, Configuration cfg) throws Exception;
+    abstract public void emit(PrintWriter w, Configuration cfg) throws Exception;
 
 
     public String getReadField()

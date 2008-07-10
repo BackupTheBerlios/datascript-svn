@@ -301,16 +301,16 @@ public class Package extends Scope
     private void setPackageName(AST n)
     {
         this.node = (TokenAST) n;
-        String packageName = getPackageName();
-        Package p = nameToPackage.get(packageName);
+        String pkgName = getPackageName();
+        Package p = nameToPackage.get(pkgName);
         if (p == null)
         {
-            nameToPackage.put(packageName, this);
+            nameToPackage.put(pkgName, this);
             nodeToPackage.put(node, this);
         }
         else
         {
-            ToolContext.logError(node, "duplicate package " + packageName);
+            ToolContext.logError(node, "duplicate package " + pkgName);
         }
     }
 
@@ -326,7 +326,7 @@ public class Package extends Scope
     {
         TypeInterface type = (TypeInterface) typeNode;
         localTypes.put(name.getText(), type);
-        super.setSymbol(name, (TypeInterface) type);
+        super.setSymbol(name, type);
     }
 
 
@@ -350,13 +350,13 @@ public class Package extends Scope
     /**
      * Adds a package import to the list of imported packages. A warning is 
      * emitted for multiple imports of the same package.
-     * @param node  IMPORT AST node
+     * @param n  IMPORT AST node
      */
-    public void addPackageImport(AST node)
+    public void addPackageImport(AST n)
     {
         boolean first = true;
         StringBuilder buffer = new StringBuilder();
-        AST child = node.getFirstChild();
+        AST child = n.getFirstChild();
         for (; child != null; child = child.getNextSibling())
         {
             if (first)
@@ -369,15 +369,15 @@ public class Package extends Scope
             }
             buffer.append(child.getText());
         }
-        String packageName = buffer.toString();
-        if (importedPackages.containsKey(packageName))
+        String pkgName = buffer.toString();
+        if (importedPackages.containsKey(pkgName))
         {
-            ToolContext.logWarning((TokenAST) node,
-                    "duplicate import of package " + packageName);
+            ToolContext.logWarning((TokenAST) n,
+                    "duplicate import of package " + pkgName);
         }
         else
         {
-            importedPackages.put(packageName, null);
+            importedPackages.put(pkgName, null);
         }
     }
 
@@ -387,7 +387,7 @@ public class Package extends Scope
      * TODO: Not yet implemented.
      * @param node IMPORT AST node
      */
-    public void addSingleImport(TokenAST node)
+    public void addSingleImport(TokenAST n)
     {
 
     }
@@ -502,12 +502,12 @@ public class Package extends Scope
     }
 
 
-    private void generateReversePath(List<String> reversePackagePath, AST child)
+    private void generateReversePath(List<String> reversePkgPath, AST child)
     {
         if (child == null)
             return;
-        generateReversePath(reversePackagePath, child.getNextSibling());
-        reversePackagePath.add(child.getText());
+        generateReversePath(reversePkgPath, child.getNextSibling());
+        reversePkgPath.add(child.getText());
     }
 
 

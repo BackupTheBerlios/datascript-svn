@@ -399,7 +399,7 @@ abstract public class CompoundEmitter
     }
 
 
-    private static void readIntegerValue(StringBuilder buffer, Field field, IntegerType type)
+    static void readIntegerValue(StringBuilder buffer, Field field, IntegerType type)
     {
         String methodSuffix;
         String cast = "";
@@ -506,19 +506,19 @@ abstract public class CompoundEmitter
     }
 
 
-    private static void appendArguments(StringBuilder buffer, TypeInstantiation inst)
+    static void appendArguments(StringBuilder buffer, TypeInstantiation inst)
     {
         CompoundType compound = inst.getBaseType();
         Iterable<Expression> arguments = inst.getArguments();
         if (arguments != null)
         {
-            ExpressionEmitter exprEmitter = new ExpressionEmitter();
+            ExpressionEmitter ee = new ExpressionEmitter();
             int argIndex = 0;
             for (Expression arg : arguments)
             {
                 buffer.append(", ");
                 boolean cast = emitTypeCast(buffer, compound, arg, argIndex);
-                String javaArg = exprEmitter.emit(arg);
+                String javaArg = ee.emit(arg);
                 buffer.append(javaArg);
                 if (cast)
                 {
@@ -717,22 +717,22 @@ abstract public class CompoundEmitter
         if (label == null)
             return null;
 
-        StringBuilder buffer = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         AST labelBase = label.getNextSibling();
         if (labelBase != null)
         {
             String name = labelBase.getText();
-            buffer.append("((");
-            buffer.append(name);
-            buffer.append(")__cc.find(\"");
-            buffer.append(name);
-            buffer.append("\")).");
+            builder.append("((");
+            builder.append(name);
+            builder.append(")__cc.find(\"");
+            builder.append(name);
+            builder.append("\")).");
         }
-        buffer.append("__fpos + 8*");
+        builder.append("__fpos + 8*");
         String labelExpr = exprEmitter.emit(label);
-        buffer.append(labelExpr);
+        builder.append(labelExpr);
 
-        return buffer.toString();
+        return builder.toString();
     }
 
 

@@ -80,11 +80,11 @@ public class SequenceEmitter extends CompoundEmitter
 
 
         @Override
-        public void emit(PrintWriter writer, Configuration cfg) throws Exception
+        public void emit(PrintWriter pw, Configuration cfg) throws Exception
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/SequenceFieldAccessor.ftl");
-            tpl.process(this, writer);
+            tpl.process(this, pw);
         }
 
 
@@ -137,16 +137,16 @@ public class SequenceEmitter extends CompoundEmitter
             {
                 Expression op1 = expr.op1();
                 String symbol = op1.getText();
-                Field field = (Field) op1.getScope().getTypeOrSymbol(symbol);
-                String getter = AccessorNameEmitter.getGetterName(field);
+                Field f = (Field) op1.getScope().getTypeOrSymbol(symbol);
+                String getter = AccessorNameEmitter.getGetterName(f);
                 buffer.append(getter);
                 buffer.append("().");
                 appendLabelSetter(buffer, expr.op2());
             }
             else
             {                
-                Field field = (Field) expr.getScope().getTypeOrSymbol(expr.getText());
-                buffer.append(AccessorNameEmitter.getSetterName(field));
+                Field f = (Field) expr.getScope().getTypeOrSymbol(expr.getText());
+                buffer.append(AccessorNameEmitter.getSetterName(f));
             }            
         }
 

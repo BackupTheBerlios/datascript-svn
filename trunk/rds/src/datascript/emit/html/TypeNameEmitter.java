@@ -158,7 +158,7 @@ public class TypeNameEmitter
         else if (t instanceof TypeInstantiation)
         {
             TypeInstantiation inst = (TypeInstantiation)t;
-            CompoundType compound = (CompoundType)inst.getBaseType();
+            CompoundType compound = inst.getBaseType();
             result = compound.getName();
         }
         else if (t instanceof ArrayType)
@@ -172,8 +172,8 @@ public class TypeNameEmitter
         }
         else
         {
-            t = TypeReference.resolveType(t);
-            result = t.toString();
+            TypeInterface res = TypeReference.resolveType(t);
+            result = res.toString();
         }
 
         return result;

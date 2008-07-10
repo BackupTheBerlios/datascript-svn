@@ -91,7 +91,7 @@ public class SqlIntegerType extends CompoundType
 
         for (int i = 0; i < fields.size(); i++)
         {
-            Field fi = (Field) fields.get(i);
+            Field fi = fields.get(i);
             /*
              * TODO: try { StdIntegerType b =
              * StdIntegerType.getBuiltinType(fi.getFieldType()); if (b

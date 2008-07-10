@@ -124,10 +124,10 @@ public class Expression extends TokenAST
     }
 
 
-    public void evaluate(Scope scope)
+    public void evaluate(Scope s)
     {
         //System.out.println("evaluating " + getText() + " in " + scope.getOwner());
-        this.scope = scope;
+        this.scope = s;
         switch (getType())
         {
 
@@ -355,14 +355,14 @@ public class Expression extends TokenAST
 
     private void evaluateCompoundMember(CompoundType compound, String symbol)
     {
-        Scope scope = compound.getScope();
-        Object obj = scope.getSymbol(symbol);
+        Scope compoundScope = compound.getScope();
+        Object obj = compoundScope.getSymbol(symbol);
         if (obj == null)
         {
             ToolContext.logError(this, "'" + symbol
                     + "' undefined in current scope");
         }
-        op2().scope = scope;
+        op2().scope = compoundScope;
         if (obj instanceof Field)
         {
             Field field = (Field) obj;
@@ -390,15 +390,15 @@ public class Expression extends TokenAST
 
     private void evaluateEnumerationItem(EnumType enumeration, String symbol)
     {
-        Scope scope = enumeration.getScope();
-        Object obj = scope.getSymbol(symbol);
+        Scope enumScope = enumeration.getScope();
+        Object obj = enumScope.getSymbol(symbol);
         if (obj == null)
         {
             ToolContext.logError(this, "'" + symbol
                     + "' undefined in enumeration '" + enumeration.getName()
                     + "'");
         }
-        op2().scope = scope;
+        op2().scope = enumScope;
         EnumItem item = (EnumItem) obj;
         value = item.getValue();
         type = item.getEnumType();

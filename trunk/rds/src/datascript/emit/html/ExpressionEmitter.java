@@ -70,9 +70,9 @@ public class ExpressionEmitter
         return buffer.toString();
     }
     
-    public String emit(Expression expr, String compoundName)
+    public String emit(Expression expr, String compndName)
     {
-        this.compoundName = compoundName;
+        this.compoundName = compndName;
         buffer = new StringBuilder();
         append(expr);
         return buffer.toString();

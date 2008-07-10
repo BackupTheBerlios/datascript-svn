@@ -53,10 +53,10 @@ public class UnionType extends CompoundType
     @Override
     public IntegerValue sizeof(Scope ctxt)
     {
-        IntegerValue size = ((Field) fields.get(0)).sizeof(ctxt);
+        IntegerValue size = fields.get(0).sizeof(ctxt);
         for (int i = 1; i < fields.size(); i++)
         {
-            if (size.compareTo(((Field) fields.get(i)).sizeof(ctxt)) != 0)
+            if (size.compareTo(fields.get(i).sizeof(ctxt)) != 0)
             {
                 throw new ComputeError("sizeof is ambiguous");
             }
@@ -67,10 +67,10 @@ public class UnionType extends CompoundType
 
     public IntegerValue bitsizeof(Scope ctxt)
     {
-        IntegerValue size = ((Field) fields.get(0)).bitsizeof(ctxt);
+        IntegerValue size = fields.get(0).bitsizeof(ctxt);
         for (int i = 1; i < fields.size(); i++)
         {
-            if (size.compareTo(((Field) fields.get(i)).bitsizeof(ctxt)) != 0)
+            if (size.compareTo(fields.get(i).bitsizeof(ctxt)) != 0)
             {
                 throw new ComputeError("bitsizeof is ambiguous");
             }

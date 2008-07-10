@@ -229,10 +229,10 @@ abstract public class CompoundType
     private void storeParameter(AST param)
     {
         AST type = param.getFirstChild();
-        AST id = type.getNextSibling();
-        Parameter p = new Parameter(id.getText(), (TypeInterface) type);
+        AST paramId = type.getNextSibling();
+        Parameter p = new Parameter(paramId.getText(), (TypeInterface) type);
         parameters.add(p);
-        scope.setSymbol(id, p);
+        scope.setSymbol(paramId, p);
     }
 
 

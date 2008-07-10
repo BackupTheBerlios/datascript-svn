@@ -40,8 +40,6 @@
 package datascript.emit.html;
 
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,10 +63,8 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     private String packageName;
 
 
-    public OverviewEmitter() throws IOException, URISyntaxException
+    public OverviewEmitter()
     {
-        super();
-        // TODO Auto-generated constructor stub
     }
 
 
@@ -83,9 +79,9 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     {
         try
         {
-            for (String packageName : datascript.ast.Package.getPackageNames())
+            for (String pkgName : datascript.ast.Package.getPackageNames())
             {
-                Package pkg = Package.lookup(packageName);
+                Package pkg = Package.lookup(pkgName);
                 for (String typeName : pkg.getLocalTypeNames())
                 {
                     boolean isDoubleDefinedType = doubleTypeNames.get(typeName);

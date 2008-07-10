@@ -119,8 +119,8 @@ public class TypeReference extends TokenAST implements TypeInterface,
             AST node = getFirstChild();
             for (; node != null; node = node.getNextSibling())
             {
-                String name = node.getText();
-                b.append(name);
+                String n = node.getText();
+                b.append(n);
                 if (node.getNextSibling() != null)
                 {
                     b.append(".");
@@ -136,20 +136,20 @@ public class TypeReference extends TokenAST implements TypeInterface,
      * Links this reference to the corresponding type and logs an error if there
      * is a cycle in the containment hierarchy.
      */
-    public void link(Scope ctxt)
+    public void link(Scope scope)
     {
-        CompoundType outer = (CompoundType) ctxt.getOwner();
-
+        CompoundType outer = (CompoundType) scope.getOwner();
+        Scope ctxt = scope;
         // From left to right, link each part of a nested reference.
         AST node = getFirstChild();
         for (; node != null; node = node.getNextSibling())
         {
-            String name = node.getText();
-            refType = ctxt.getType(name);
+            String n = node.getText();
+            refType = ctxt.getType(n);
             // System.out.println("Linking " + name + " in scope " + outerName);
             if (refType == null)
             {
-                ToolContext.logError((TokenAST) node, "'" + name
+                ToolContext.logError((TokenAST) node, "'" + n
                         + "' is undefined");
             }
             if (refType instanceof CompoundType)
@@ -224,8 +224,9 @@ public class TypeReference extends TokenAST implements TypeInterface,
     }
 
 
-    static public TypeInterface getBaseType(TypeInterface type)
+    static public TypeInterface getBaseType(TypeInterface t)
     {
+        TypeInterface type = t;
         while (true)
         {
             if (type instanceof TypeReference)
@@ -239,8 +240,9 @@ public class TypeReference extends TokenAST implements TypeInterface,
     }
 
 
-    static public TypeInterface resolveType(TypeInterface type)
+    static public TypeInterface resolveType(TypeInterface t)
     {
+        TypeInterface type = t;
         while (true)
         {
             if (type instanceof TypeReference)

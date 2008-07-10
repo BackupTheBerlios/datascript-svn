@@ -50,7 +50,7 @@ public abstract class SqlDatabase
         READONLY,
         WRITE,
         CREATE
-    };
+    }
 
     public SqlDatabase(String fileName, Mode mode) throws SQLException, ClassNotFoundException
     {

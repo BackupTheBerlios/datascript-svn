@@ -425,9 +425,9 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     }
 
 
-    public String getVisitor(TypeInterface type, String nodeName, String fieldName)
+    public String getVisitor(TypeInterface t, String nodeName, String fieldName)
     {
-        type = TypeReference.getBaseType(type);
+        TypeInterface type = TypeReference.getBaseType(t);
         Expression length = null;
         StringBuilder buffer = new StringBuilder();
         if (type instanceof IntegerType)

@@ -86,46 +86,46 @@ public class TypeNameEmitter
     public static String getTypeName(TypeInterface t)
     {
         String result = null;
-        t = TypeReference.getBaseType(t);
+        TypeInterface baseType = TypeReference.getBaseType(t);
 
-        if (t instanceof StdIntegerType)
+        if (baseType instanceof StdIntegerType)
         {
-            result = getTypeName((StdIntegerType) t);
+            result = getTypeName((StdIntegerType) baseType);
         }
-        else if (t instanceof BitFieldType)
+        else if (baseType instanceof BitFieldType)
         {
-            result = getTypeName((BitFieldType) t);
+            result = getTypeName((BitFieldType) baseType);
         }
-        else if (t instanceof CompoundType)
+        else if (baseType instanceof CompoundType)
         {
-            result = getTypeName((CompoundType) t);
+            result = getTypeName((CompoundType) baseType);
         }
-        else if (t instanceof EnumType)
+        else if (baseType instanceof EnumType)
         {
-            EnumType enumeration = (EnumType) t;
+            EnumType enumeration = (EnumType) baseType;
             result = enumeration.getName();
         }
-        else if (t instanceof TypeInstantiation)
+        else if (baseType instanceof TypeInstantiation)
         {
-            result = getTypeName((TypeInstantiation)t);
+            result = getTypeName((TypeInstantiation)baseType);
         }
-        else if (t instanceof ArrayType)
+        else if (baseType instanceof ArrayType)
         {
-            result = getTypeName((ArrayType) t);            
+            result = getTypeName((ArrayType) baseType);            
         }
-        else if (t instanceof Subtype)
+        else if (baseType instanceof Subtype)
         {
-            TypeInterface base = ((Subtype)t).getBaseType();
+            TypeInterface base = ((Subtype)baseType).getBaseType();
 //            base = TypeReference.getBaseType(base);
             result = getTypeName(base);            
         }
-        else if (t instanceof StringType)
+        else if (baseType instanceof StringType)
         {
             result = "String";            
         }
         else
         {
-            throw new InternalError("unhandled type = " + t.toString());
+            throw new InternalError("unhandled type = " + baseType.toString());
         }
         return result;
     }
@@ -304,19 +304,19 @@ public class TypeNameEmitter
     public static String getClassName(TypeInterface t)
     {
         String result = null;
-        t = TypeReference.getBaseType(t);
+        TypeInterface baseType = TypeReference.getBaseType(t);
 
-        if (t instanceof StdIntegerType)
+        if (baseType instanceof StdIntegerType)
         {
-            result = getClassName((StdIntegerType) t);
+            result = getClassName((StdIntegerType) baseType);
         }
-        else if (t instanceof BitFieldType)
+        else if (baseType instanceof BitFieldType)
         {
-            result = getClassName((BitFieldType) t);
+            result = getClassName((BitFieldType) baseType);
         }
         else
         {
-            result = getTypeName(t);
+            result = getTypeName(baseType);
         }
         return result;
     }
