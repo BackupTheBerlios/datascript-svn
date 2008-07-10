@@ -77,6 +77,129 @@ union ItemRef
 };
 
 
+OuterArray1
+{
+    uint16     numElems;
+    Item       values[numElems];
+    bit:1      dummy if numElems == 0;
+    Inner1      inner;
+};
+
+Inner1
+{
+    uint8     isExplicit;
+    ItemRef1   ref;
+    int32     extra if ref.elem().a == 20;
+    
+};
+
+
+choice ItemRef1 on Inner1.isExplicit
+{
+    case 1:
+        Item      item;
+        
+    case 0:    
+        uint8     pos;
+
+    function Item elem()
+    {
+        return (Inner1.isExplicit == 1) 
+            ? item 
+            : OuterArray1.values[position()];
+    }
+    
+    function uint8 position()
+    {
+        return pos;
+    }
+};
+
+
+OuterArray2
+{
+    uint16     numElems;
+    Item       values[numElems];
+    bit:1      dummy if numElems == 0;
+    Inner2      inner;
+};
+
+Inner2
+{
+    uint8     isExplicit;
+    ItemRef2(isExplicit)   ref;
+    int32     extra if ref.elem().a == 20;
+    
+};
+
+
+choice ItemRef2(uint8 isExplicit) on isExplicit
+{
+    case 1:
+        Item      item;
+        
+    case 0:    
+        uint8     pos;
+
+    function Item elem()
+    {
+        return (isExplicit == 1) 
+            ? item 
+            : OuterArray2.values[position()];
+    }
+    
+    function uint8 position()
+    {
+        return pos;
+    }
+};
+
+
+enum bit:1 Bool
+{
+    FALSE,
+    TRUE
+};
+
+OuterArray3
+{
+    uint16     numElems;
+    Item       values[numElems];
+    bit:1      dummy if numElems == 0;
+    Inner3      inner;
+};
+
+Inner3
+{
+    Bool     isExplicit;
+    ItemRef3(isExplicit)   ref;
+    int32     extra if ref.elem().a == 20;
+    
+};
+
+
+choice ItemRef3(Bool isExplicit) on isExplicit
+{
+    case TRUE:
+        Item      item;
+        
+    case FALSE:    
+        uint8     pos;
+
+    function Item elem()
+    {
+        return (isExplicit == Bool.TRUE) 
+            ? item 
+            : OuterArray3.values[position()];
+    }
+    
+    function uint8 position()
+    {
+        return pos;
+    }
+};
+
+
 // ---------------------------------------------------------------------------
 
 Foo

@@ -13,10 +13,14 @@ import datascript.runtime.io.ByteArrayBitStreamReader;
 import datascript.runtime.io.ByteArrayBitStreamWriter;
 import datascript.runtime.io.DataScriptIO;
 import func.ArrayFunc;
+import func.Bool;
 import func.Inner;
+import func.Inner3;
 import func.Item;
 import func.ItemRef;
+import func.ItemRef3;
 import func.OuterArray;
+import func.OuterArray3;
 import func.VarInt;
 
 /**
@@ -177,6 +181,44 @@ public class FunctionTest extends TestCase
         Inner inner = new Inner();
         inner.setIsExplicit((short)0);
         ItemRef ref = new ItemRef();
+        ref.setPos((short)1);
+        inner.setRef(ref);
+        inner.setExtra(4711);
+        
+        outer.setInner(inner);
+        
+        byte[] bytes = DataScriptIO.write(outer);        
+        OuterArray outer2 = DataScriptIO.read(OuterArray.class, bytes);
+        
+        assertEquals(outer, outer2);
+    }
+
+    public void testEncodeDecodeOuterArray3() throws Exception
+    {
+        OuterArray3 outer = new OuterArray3();
+        outer.setNumElems(3);
+        List<Item> items = new ArrayList<Item>();
+
+        Item item0 = new Item();
+        item0.setA((short) 12);
+        item0.setB((short) 13);
+        items.add(item0);
+
+        Item item1 = new Item();
+        item1.setA((short) 20);
+        item1.setB((short) 18);
+        items.add(item1);
+
+        Item item2 = new Item();
+        item2.setA((short) 17);
+        item2.setB((short) 14);
+        items.add(item2);
+        
+        outer.setValues(items);
+        
+        Inner3 inner = new Inner3();
+        inner.setIsExplicit(Bool.FALSE);
+        ItemRef3 ref = new ItemRef3();
         ref.setPos((short)1);
         inner.setRef(ref);
         inner.setExtra(4711);
