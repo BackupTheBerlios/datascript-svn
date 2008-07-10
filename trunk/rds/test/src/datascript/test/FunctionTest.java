@@ -226,7 +226,7 @@ public class FunctionTest extends TestCase
         outer.setInner(inner);
         
         byte[] bytes = DataScriptIO.write(outer);        
-        OuterArray outer2 = DataScriptIO.read(OuterArray.class, bytes);
+        OuterArray3 outer2 = DataScriptIO.read(OuterArray3.class, bytes);
         
         assertEquals(outer, outer2);
     }

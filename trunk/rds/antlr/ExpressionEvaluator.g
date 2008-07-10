@@ -259,10 +259,8 @@ choiceDeclaration
          e:expression               { TypeInterface exprType = ((Expression)e).getExprType(); 
                                       if (exprType instanceof EnumType)
                                       {
-                                      	  Scope newScope = new Scope(scope());
-                                          newScope.addSymbolsFrom(((EnumType)exprType).getScope());
+                                      	  Scope newScope = new Scope(scope(), ((EnumType)exprType).getScope());
                                           pushScope(newScope);
-                                          //pushScope(((EnumType)exprType).getScope());
                                       }
                                     } 
          choiceMemberList           { if (exprType instanceof EnumType)

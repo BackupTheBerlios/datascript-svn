@@ -70,15 +70,15 @@ import datascript.antlr.util.ToolContext;
  */
 public class Scope implements LinkAction
 {
-	/** 
-	 * Symbol table containing local symbols defined within the current scope.
-	 * Each symbol is mapped to an Object.
-	 */
-	private HashMap<String, Object> symbolTable = new HashMap<String, Object>();
+    /**
+     * Symbol table containing local symbols defined within the current scope.
+     * Each symbol is mapped to an Object.
+     */
+    private HashMap<String, Object> symbolTable = new HashMap<String, Object>();
 
-	/**
-	 * Scope containing the current one. null for the package scope.
-	 */
+    /**
+     * Scope containing the current one. null for the package scope.
+     */
     private Scope parentScope;
     
     /**
@@ -123,6 +123,26 @@ public class Scope implements LinkAction
         {
             parentScope.postLinkAction(this);
         }
+    }
+
+    /**
+     * Constructs scope with given parent and posts a link action for this scope
+     * with the parent. The symbol table of this scope is the union of the 
+     * parent scope and the sibling scope.
+     * 
+     * TODO: Check if this is a good solution. Expression scopes could do
+     * with a thorough refactoring.
+     * 
+     * @param parentScope       parent of current scope
+     * @param siblingScope      another scope whose symbol table is to be merged
+     *                          into the current one.
+     */
+    public Scope(Scope parentScope, Scope siblingScope)
+    {
+        this.parentScope = parentScope;
+        parentScope.postLinkAction(this);
+        symbolTable.putAll(parentScope.symbolTable);
+        symbolTable.putAll(siblingScope.symbolTable);
     }
 
     /**
@@ -217,7 +237,7 @@ public class Scope implements LinkAction
             }
             else
             {
-                return ((Scope)parentScope).getDefiningType(name);
+                return parentScope.getDefiningType(name);
             }
         }
         else
@@ -236,14 +256,6 @@ public class Scope implements LinkAction
         return obj;
     }
 
-
-    public void addSymbolsFrom(Scope s)
-    {
-        for (String key : s.symbolTable.keySet())
-        {
-            symbolTable.put(key, s.symbolTable.get(key));
-        }
-    }
 
     /**
      * Adds a name with its corresponding object to the current scope.
