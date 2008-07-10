@@ -113,12 +113,13 @@ public class JavaDefaultEmitter extends DefaultEmitter
         if (sibling.getType() == DataScriptParserTokenTypes.PACKAGE)
         {
             sibling = sibling.getFirstChild();
-            File file = new File(".");
-            while (sibling != null)
+            File file = null;
+            do
             {                
                 file = new File(file, sibling.getText());
                 sibling = sibling.getNextSibling();
-            }
+            } 
+            while (sibling != null);
             packageName = file.getPath().replace(File.separatorChar, '.');
             dir = new File(packagePath, file.getPath());
         }
