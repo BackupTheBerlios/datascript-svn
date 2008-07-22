@@ -46,6 +46,7 @@ import java.util.List;
 
 import antlr.collections.AST;
 import datascript.ast.ArrayType;
+import datascript.ast.BitFieldType;
 import datascript.ast.ChoiceCase;
 import datascript.ast.ChoiceMember;
 import datascript.ast.ChoiceType;
@@ -56,8 +57,11 @@ import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
+import datascript.ast.StdIntegerType;
+import datascript.ast.Subtype;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
+import datascript.ast.TypeReference;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -77,13 +81,13 @@ public class ChoiceEmitter extends CompoundEmitter
 
     public static class ChoiceMemberEmitter
     {
-        private final CompoundEmitter global;
+        private final ChoiceEmitter global;
         protected final ChoiceMember member;
 
         private static Template tpl = null;
 
 
-        public ChoiceMemberEmitter(ChoiceMember choiceMember, CompoundEmitter choiceEmitter)
+        public ChoiceMemberEmitter(ChoiceMember choiceMember, ChoiceEmitter choiceEmitter)
         {
             member = choiceMember;
             global = choiceEmitter;
@@ -162,6 +166,7 @@ public class ChoiceEmitter extends CompoundEmitter
             return global.writeField(field);
         }
         
+
         public String getElementType()
         {
             Field field = member.getField();
@@ -177,7 +182,64 @@ public class ChoiceEmitter extends CompoundEmitter
                 }
             }
             return null;
-        }        
+        }
+
+
+        public String getSelector()
+        {
+            return global.getSelector();
+        }
+
+
+        public boolean getSelectorIsSimple()
+        {
+            boolean result = false;
+            
+            Expression node = (Expression)global.choice.getSelectorAST();
+            if (node != null)
+            {
+                TypeInterface type = node.getExprType();
+                if (type instanceof TypeReference)
+                {
+                    type = TypeReference.resolveType(type);
+                }
+                if (type instanceof Subtype)
+                {
+                    type = ((Subtype)type).getBaseType();
+                }
+                if (type instanceof StdIntegerType)
+                {
+                    result = ((StdIntegerType)type).getType() != datascript.antlr.DataScriptParserTokenTypes.UINT64;            
+                }
+                else if (type instanceof BitFieldType)
+                {
+                    BitFieldType bitField = (BitFieldType) type;
+                    result = 0 < bitField.getLength() && bitField.getLength() < 64;
+                }
+            }
+            return result;
+        }
+
+
+        public String getSelectorType()
+        {
+            String selType = null;
+
+            Expression node = (Expression)global.choice.getSelectorAST();
+            if (node != null)
+            {
+                TypeInterface exprType = node.getExprType();
+                selType = TypeNameEmitter.getTypeName(exprType);
+            }
+
+            return selType;
+        }
+
+
+        public boolean getEqualsCanThrowExceptions()
+        {
+            return global.getEqualsCanThrowExceptions();
+        }
     }
 
 

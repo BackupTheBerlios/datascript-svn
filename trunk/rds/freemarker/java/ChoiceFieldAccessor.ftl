@@ -40,9 +40,19 @@
 
     public ${javaTypeName} ${getterName}()
     {
+<#if equalsCanThrowExceptions>
+    <#if member.cases?has_content>
+        ${selectorType} sel = ${selector};
+        boolean isCorrectType = false <#rt>
+        <#list cases as c>
+                || sel == <#if !selectorIsSimple>${selectorType}.</#if>${c} <#t>
+        </#list>;<#lt>
+        if (!isCorrectType)
+            throw new DataScriptError("Type mismatch in choice!");
+    </#if>
+</#if>
         return (${className})__objectChoice;
     }
-
 
     public void ${setterName}(${javaTypeName} ${name})
     {
