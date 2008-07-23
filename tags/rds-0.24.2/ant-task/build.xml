@@ -1,0 +1,65 @@
+<!--
+ * rds-ant contains an ant task, which may execute rds
+ *
+ * In regards to the ADIT build environment, there is the following process
+ * to create rds-ant.jar
+ *
+ * rds-ant does not depend rds in terms of class dependency. Hence it might
+ * be created without even the knowledge of rds. RDS itself is invoked via
+ * reflection, this allows compilation of rds related classes and calling
+ * of rds in the same ant file. See javadoc in datascript.ant.RdsTask for
+ * more information.
+ * 
+ -->
+
+    <project name="rds ant-task" basedir="." default="install">
+
+    <property name="dir.rds-home" location="${basedir}/.."/>
+   
+    <property name="dir.lib" location="${dir.rds-home}/dist"/>
+    <property name="dir.build" value="${basedir}/build"/>
+    <property name="dir.bin" location="${dir.build}/bin"/>
+    <property name="dir.src" location="${basedir}/src"/>
+    <property name="dir.dist" location="${basedir}/dist"/>
+    <property name="file.dist" location="${dir.dist}/rds-ant.jar"/>
+  
+    
+    <path id="path.classpath">
+        <pathelement path="${ant.library.dir}/ant.jar"/>      
+    </path>
+        
+    <target name="init">
+        <mkdir dir="${dir.build}"/>
+        <mkdir dir="${dir.bin}"/>   
+        <mkdir dir="${dir.dist}"/>   
+    </target>
+ 
+    <target name="clean">
+        <delete dir="${dir.build}"/>
+    	<delete dir="${dir.dist}"/>
+    </target>   
+
+    <target name="compile" depends="init">
+        <javac 
+            srcdir="${dir.src}"
+            destdir="${dir.bin}" 
+            debug="true">
+            <classpath>
+                <path refid="path.classpath" />
+            </classpath>            
+        </javac>
+    </target>
+    
+    <target name="dist" depends="compile">
+        <jar destfile="${file.dist}">
+            <fileset dir="${dir.bin}">
+                <include name="datascript/**"/>         
+            </fileset>                        
+        </jar>
+    </target>
+       
+    <target name="install" depends="dist">
+        <copy file="${file.dist}" todir="${dir.rds-home}/lib/"/>
+    </target>   
+           
+</project>
