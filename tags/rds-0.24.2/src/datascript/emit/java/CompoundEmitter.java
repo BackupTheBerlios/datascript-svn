@@ -242,12 +242,14 @@ abstract public class CompoundEmitter
 
         private final Field field;
         private final ArrayType array;
+        private final CompoundEmitter global;
 
 
-        public ArrayEmitter(Field field, ArrayType array)
+        public ArrayEmitter(Field field, ArrayType array, CompoundEmitter j)
         {
             this.field = field;
             this.array = array;
+            this.global = j;
         }
 
 
@@ -315,7 +317,12 @@ abstract public class CompoundEmitter
                 buffer.append(")");
             }
             return buffer.toString();
-            
+        }
+
+
+        public boolean getEqualsCanThrowExceptions()
+        {
+            return global.getEqualsCanThrowExceptions();
         }
     }
 
@@ -571,7 +578,7 @@ abstract public class CompoundEmitter
         {
             try
             {
-                ArrayEmitter ae = new ArrayEmitter(field, array);
+                ArrayEmitter ae = new ArrayEmitter(field, array, this);
                 Template tpl = global.getTemplateConfig().getTemplate(
                         "java/ArrayRead.ftl");
                 tpl.process(ae, writer);
@@ -928,7 +935,7 @@ abstract public class CompoundEmitter
         {
             try
             {
-                ArrayEmitter ae = new ArrayEmitter(field, array);
+                ArrayEmitter ae = new ArrayEmitter(field, array, this);
                 Template tpl = global.getTemplateConfig().getTemplate(
                         "java/ArrayWrite.ftl");
                 tpl.process(ae, writer);

@@ -63,7 +63,20 @@
                     ArrayList<${elType}> v = new ArrayList<${elType}>((int)__maxIndex);
                     for (int __index = 0; __index < __maxIndex; __index++) 
                     {
+<#if equalsCanThrowExceptions>
+                        ${elType} __newElType;
+                        try
+                        {
+                            __newElType = ${currentElement};
+                            v.add(__newElType);
+                        }
+                        catch(DataScriptError dse)
+                        {
+                            throw new DataScriptError("invalid ${elType} item in array at index " + __index, dse);
+                        }
+<#else>
                         v.add(${currentElement});
+</#if>
                     }
                     ${setterName}(v);
                 }

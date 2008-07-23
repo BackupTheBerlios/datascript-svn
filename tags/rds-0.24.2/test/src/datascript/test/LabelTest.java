@@ -22,7 +22,6 @@ import bits.GlobalLabelSeq;
 import bits.Header;
 import bits.ItemA;
 import bits.LabelledType;
-import datascript.runtime.array.ObjectArray;
 import datascript.runtime.io.DataScriptIO;
 
 /**
@@ -174,7 +173,7 @@ public class LabelTest extends TestCase
         ArrayList<Attributes> attrs = new ArrayList<Attributes>(2);
         attrs.add(new Attributes((short)11, (short)12));
         attrs.add(new Attributes((short)13, (short)14));
-        b1.setAttrs(new ObjectArray<Attributes>(attrs));
+        b1.setAttrs(attrs);
         
         b1.setNumLinks(1);
         ArrayList<Link> links = new ArrayList<Link>(1);
@@ -182,7 +181,7 @@ public class LabelTest extends TestCase
         link.setLinkId(99);
         link.setAttrIndex(1);
         links.add(link);
-        b1.setLinks(new ObjectArray<Link>(links));
+        b1.setLinks(links);
         
         tile.setB1(b1);
 
@@ -216,7 +215,7 @@ public class LabelTest extends TestCase
         ArrayList<Attributes> attrs = new ArrayList<Attributes>(2);
         attrs.add(new Attributes((short)11, (short)12));
         attrs.add(new Attributes((short)1, (short)0));
-        b1.setAttrs(new ObjectArray<Attributes>(attrs));
+        b1.setAttrs(attrs);
         
         b1.setNumLinks(1);
         ArrayList<Link> links = new ArrayList<Link>(1);
@@ -225,7 +224,7 @@ public class LabelTest extends TestCase
         link.setAttrIndex(1);
         link.setExtra(88);
         links.add(link);
-        b1.setLinks(new ObjectArray<Link>(links));
+        b1.setLinks(links);
         
         tile.setB1(b1);
 
