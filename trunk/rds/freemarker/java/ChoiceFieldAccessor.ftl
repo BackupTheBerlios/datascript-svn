@@ -40,7 +40,7 @@
 
     public ${javaTypeName} ${getterName}()
     {
-<#if equalsCanThrowExceptions>
+<#-- if equalsCanThrowExceptions>
     <#if member.cases?has_content>
         ${selectorType} sel = ${selector};
         boolean isCorrectType = false <#rt>
@@ -50,7 +50,7 @@
         if (!isCorrectType)
             throw new DataScriptError("Type mismatch in choice!");
     </#if>
-</#if>
+</#if -->
         return (${className})__objectChoice;
     }
 
