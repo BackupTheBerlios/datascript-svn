@@ -98,6 +98,16 @@ public class SqlTableEmitter extends CompoundEmitter
         }
 
 
+        public String getCompoundType()
+        {
+            TypeInterface t = field.getFieldType();
+            t = TypeReference.resolveType(t);
+            if (t instanceof CompoundType)
+                return t.getName();
+            return "";
+        }
+
+
         public int getTypeSize()
         {
             TypeInterface ftype = TypeReference.getBaseType(field.getFieldType());

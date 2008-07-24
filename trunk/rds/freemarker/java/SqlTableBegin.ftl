@@ -65,9 +65,8 @@ public class ${name}
 
     public void createTable(String __tableName) throws SQLException
     {
-        Connection dbc = db.getConnection();
         this.tableName = __tableName;
-        Statement st = dbc.createStatement();
+
         StringBuilder query = new StringBuilder("CREATE TABLE ");
         query.append(__tableName);
 <#list fields as field>
@@ -81,6 +80,53 @@ public class ${name}
 <#else>
         query.append(")");
 </#if>
-        st.executeUpdate(query.toString());        
+        Connection dbc = db.getConnection();
+        Statement st = dbc.createStatement();
+        st.executeUpdate(query.toString());
+    }
+
+
+    public void validate(ValidationListener listener)
+    {
+// selects all rows from the table
+        StringBuilder query = new StringBuilder("SELECT ");
+<#list fields as field>
+        query.append("${field.name}<#if field_has_next>, </#if>");
+</#list>
+        query.append(" FROM " + this.tableName);
+
+        int primaryKey = 0;
+        try
+        {
+            Connection dbc = db.getConnection();
+            Statement st = dbc.createStatement();
+            ResultSet resultSet = st.executeQuery(query.toString());
+
+            // for each row
+            while (resultSet.next())
+            {
+                // for each BLOB column
+<#list fields as field>
+                // SQLType: ${field.sqlType}
+    <#if field.sqlType = "BLOB">
+        <#assign cType = field.compoundType>
+        <#if cType?has_content>
+
+                byte[] ${field.name}Blob = resultSet.getBytes("${field.name}");
+                // find the corresponding DataScript type and
+                // decode the column with this type
+                ${cType} ${field.name}Data = DataScriptIO.read(${cType}.class, ${field.name}Blob);
+        </#if>
+    <#elseif field.sqlType = "INTEGER">
+                primaryKey = resultSet.getInt("${field.name}");
+    </#if>
+</#list>
+            }
+        }
+        catch (Exception e)
+        {
+            // on exception: notify listener
+            listener.onError(this.tableName, primaryKey, e);
+        }
     }
 

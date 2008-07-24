@@ -103,6 +103,18 @@ public class ${name} extends SqlDatabase
 </#if>
     }
 
+
+    @Override
+    public void validate(ValidationListener listener)
+    {
+<#if fields?size != 0>
+        // validate user defined tables
+    <#list fields as field>
+        ${field.name}.validate(listener);
+    </#list>
+</#if>
+    }
+
 }
 
 // END OF FILE

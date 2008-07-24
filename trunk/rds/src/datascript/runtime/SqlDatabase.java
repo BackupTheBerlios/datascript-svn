@@ -69,5 +69,7 @@ public abstract class SqlDatabase
     }
     
     public abstract void createSchema() throws SQLException;
+    
+    public abstract void validate(ValidationListener listener);
 }
 

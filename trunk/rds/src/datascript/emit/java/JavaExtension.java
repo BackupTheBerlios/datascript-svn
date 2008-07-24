@@ -74,6 +74,7 @@ public class JavaExtension implements Extension
         try
         {
             boolean generateExceptions = params.argumentExists("-java_e");
+            generateExceptions |= params.argumentExists("-debug");
             String defaultPackageName = "";
             try
             {
@@ -154,8 +155,13 @@ public class JavaExtension implements Extension
         rdsOption.setRequired(false);
         rdsOptions.addOption(rdsOption);
 
-        rdsOption = new Option("java_e", false, 
+        rdsOption = new Option("debug", false, 
                 "enables throwing exceptions in equals() function, when objects are not equal");
+        rdsOption.setRequired(false);
+        rdsOptions.addOption(rdsOption);
+
+        rdsOption = new Option("java_e", false, 
+                "obsolete! Enables throwing exceptions in equals() function, when objects are not equal");
         rdsOption.setRequired(false);
         rdsOptions.addOption(rdsOption);
     }
