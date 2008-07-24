@@ -215,7 +215,10 @@ public class TypeNameEmitter
     {
         Expression e = t.getLengthExpression();
         if (e != null)
-            return "bit&lt;" + e.getText() + "&gt;";
+        {
+            ExpressionEmitter emitter = new ExpressionEmitter();
+            return "bit&lt;" + emitter.emit(e) + "&gt;";
+        }
         
         int length = t.getLength();        
         if (length == 0)
