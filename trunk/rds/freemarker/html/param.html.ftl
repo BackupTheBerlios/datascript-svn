@@ -17,8 +17,7 @@
     <#if (args?size > 0)>
       (<#t>
       <#list args as arg>
-        ${emitExpression(arg)}
-        <#if arg_has_next>, </#if>
+        ${emitExpression(arg)}<#if arg_has_next>, </#if><#t>
       </#list>
       )<#t>
     </#if>
