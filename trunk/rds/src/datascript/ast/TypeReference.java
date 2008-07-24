@@ -247,7 +247,9 @@ public class TypeReference extends TokenAST implements TypeInterface,
         {
             if (type instanceof TypeReference)
                 type = ((TypeReference) type).refType;
-            else 
+            else if (type instanceof ArrayType)
+                type = resolveType(((ArrayType)type).getElementType());
+            else
                 break;
         }
         return type;
