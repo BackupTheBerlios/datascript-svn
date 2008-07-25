@@ -75,7 +75,7 @@ public class ChoiceEmitter extends CompoundEmitter
     private final List<ChoiceMemberEmitter> members = 
         new ArrayList<ChoiceMemberEmitter>();
 
-    private ChoiceType choice;
+    ChoiceType choice;
 
 
 

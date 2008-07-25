@@ -112,7 +112,7 @@ public class DataScriptTool implements Parameters
     private boolean checkSyntax = false;
 
 
-    private class CmdLineParser extends org.apache.commons.cli.Parser
+    class CmdLineParser extends org.apache.commons.cli.Parser
     {
         /**
          * <p>This implementation of {@link Parser}'s abstract
@@ -195,8 +195,8 @@ public class DataScriptTool implements Parameters
         rdsOption.setRequired(false);
         rdsOptionsToAccept.addOption(rdsOption);
 
-        CmdLineParser parser = new CmdLineParser();
-        cli = parser.parse(rdsOptionsToAccept, args, true);
+        CmdLineParser cliParser = new CmdLineParser();
+        cli = cliParser.parse(rdsOptionsToAccept, args, true);
     }
 
 
@@ -240,8 +240,7 @@ public class DataScriptTool implements Parameters
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    private void prepareExtensions() throws IOException,
-            InstantiationException, IllegalAccessException
+    private void prepareExtensions()
     {
         ServiceLoader<Extension> loader = 
             ServiceLoader.load(Extension.class, getClass().getClassLoader());
@@ -279,7 +278,7 @@ public class DataScriptTool implements Parameters
         context.setPathName(srcPathName);
 
         allPackageFiles.add(fileName);
-        AST unitRoot = (TokenAST) parsePackage();
+        AST unitRoot = parsePackage();
         if (unitRoot != null)
         {
             rootNode.addChild(unitRoot);
@@ -346,12 +345,12 @@ public class DataScriptTool implements Parameters
                         || node.getType() != DataScriptParserTokenTypes.IMPORT)
                     break;
 
-                String fileName = getPackageFile(node);
-                if (!allPackageFiles.contains(fileName))
+                String pkgFileName = getPackageFile(node);
+                if (!allPackageFiles.contains(pkgFileName))
                 {
-                    allPackageFiles.add(fileName);
-                    context.setFileName(fileName);
-                    AST unitRoot = (TokenAST) parsePackage();
+                    allPackageFiles.add(pkgFileName);
+                    context.setFileName(pkgFileName);
+                    AST unitRoot = parsePackage();
                     if (unitRoot != null)
                     {
                         rootNode.addChild(unitRoot);
@@ -382,15 +381,15 @@ public class DataScriptTool implements Parameters
 
     private AST parsePackage() throws Exception
     {
-        String fileName = ToolContext.getFullName();
-        System.out.println("Parsing " + fileName);
+        String pkgFileName = ToolContext.getFullName();
+        System.out.println("Parsing " + pkgFileName);
 
         // set up lexer, parser and token buffer
         try
         {
-            FileInputStream is = new FileInputStream(fileName);
+            FileInputStream is = new FileInputStream(pkgFileName);
             DataScriptLexer lexer = new DataScriptLexer(is);
-            lexer.setFilename(fileName);
+            lexer.setFilename(pkgFileName);
             lexer.setTokenObjectClass("datascript.antlr.util.FileNameToken");
             TokenStreamHiddenTokenFilter filter = new TokenStreamHiddenTokenFilter(
                     lexer);
@@ -410,7 +409,7 @@ public class DataScriptTool implements Parameters
         parser.setContext(context);
 
         // must call this to see file name in error messages
-        parser.setFilename(fileName);
+        parser.setFilename(pkgFileName);
 
         // use custom node class containing line information
         parser.setASTNodeClass("datascript.antlr.util.TokenAST");
