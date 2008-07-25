@@ -80,53 +80,80 @@ public class ${name}
 <#else>
         query.append(")");
 </#if>
-        Connection dbc = db.getConnection();
-        Statement st = dbc.createStatement();
+
+        Statement st = db.getConnection().createStatement();
         st.executeUpdate(query.toString());
     }
 
 
-    public void validate(ValidationListener listener)
+    public void validate(String __tableName, ValidationListener listener)
     {
-// selects all rows from the table
-        StringBuilder query = new StringBuilder("SELECT ");
+<#assign blobFieldList = "">
 <#list fields as field>
-        query.append("${field.name}<#if field_has_next>, </#if>");
+    <#if field.sqlType = "BLOB">
+        <#if blobFieldList != "">
+            <#assign blobFieldList = blobFieldList + ", ">
+        </#if>
+        <#assign blobFieldList = blobFieldList + field.name>
+    </#if>
 </#list>
-        query.append(" FROM " + this.tableName);
+<#if blobFieldList?has_content>
+        String pkName = "";
+        Connection dbc = db.getConnection();
+        try
+        {
+            DatabaseMetaData metaData = dbc.getMetaData();
+            ResultSet rs = metaData.getPrimaryKeys(dbc.getCatalog(), "", __tableName);
+            while (rs.next())
+            {
+                pkName = rs.getString("COLUMN_NAME");
+            }
+        }
+        catch (SQLException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // selects all rows from the table
+        StringBuilder query = new StringBuilder("SELECT ${blobFieldList}");
+        if (pkName.length() > 0)
+            query.append(", " + pkName);
+        query.append(" FROM " + __tableName);
 
         int primaryKey = 0;
         try
         {
-            Connection dbc = db.getConnection();
             Statement st = dbc.createStatement();
             ResultSet resultSet = st.executeQuery(query.toString());
 
             // for each row
             while (resultSet.next())
             {
+                primaryKey = resultSet.getInt(pkName);
                 // for each BLOB column
-<#list fields as field>
-                // SQLType: ${field.sqlType}
-    <#if field.sqlType = "BLOB">
-        <#assign cType = field.compoundType>
-        <#if cType?has_content>
+    <#list fields as field>
+                <#-- // SQLType: ${field.sqlType} -->
+        <#if field.sqlType = "BLOB">
+            <#assign cType = field.compoundType>
+            <#if cType?has_content>
 
                 byte[] ${field.name}Blob = resultSet.getBytes("${field.name}");
                 // find the corresponding DataScript type and
                 // decode the column with this type
                 ${cType} ${field.name}Data = DataScriptIO.read(${cType}.class, ${field.name}Blob);
+            </#if>
         </#if>
-    <#elseif field.sqlType = "INTEGER">
-                primaryKey = resultSet.getInt("${field.name}");
-    </#if>
-</#list>
+    </#list>
             }
         }
-        catch (Exception e)
+        catch (Throwable t)
         {
             // on exception: notify listener
-            listener.onError(this.tableName, primaryKey, e);
+            listener.onError(__tableName, primaryKey, t);
         }
+<#else>
+        // There is nothing to validate...
+</#if>
     }
 

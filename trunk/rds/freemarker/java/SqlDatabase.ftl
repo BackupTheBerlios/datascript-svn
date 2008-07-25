@@ -110,7 +110,7 @@ public class ${name} extends SqlDatabase
 <#if fields?size != 0>
         // validate user defined tables
     <#list fields as field>
-        ${field.name}.validate(listener);
+        ${field.name}.validate("${field.name}", listener);
     </#list>
 </#if>
     }
