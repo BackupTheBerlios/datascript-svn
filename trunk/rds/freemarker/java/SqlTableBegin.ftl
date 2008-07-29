@@ -133,7 +133,7 @@ public class ${name}
                 primaryKey = resultSet.getInt(pkName);
                 // for each BLOB column
     <#list fields as field>
-                // SQLType for "${field.name}": ${field.sqlType}
+                <#-- // SQLType for "${field.name}": ${field.sqlType} -->
         <#if field.sqlType == "BLOB">
             <#assign cType = field.compoundType>
             <#if cType?has_content>
@@ -143,7 +143,7 @@ public class ${name}
                 // decode the column with this type
                 ${cType} ${field.name}Data = DataScriptIO.read(${cType}.class, ${field.name}Blob);
             <#else>
-                // "${field.name}" has no or is no CompoundType (${field.compoundType})
+                // RDS compile error: "${field.name}" has no or is no CompoundType (${field.compoundType})
             </#if>
         </#if>
     </#list>
