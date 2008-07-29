@@ -90,7 +90,7 @@ public class ${name}
     {
 <#assign blobFieldList = "">
 <#list fields as field>
-    <#if field.sqlType = "BLOB">
+    <#if field.sqlType == "BLOB">
         <#if blobFieldList != "">
             <#assign blobFieldList = blobFieldList + ", ">
         </#if>
@@ -133,8 +133,8 @@ public class ${name}
                 primaryKey = resultSet.getInt(pkName);
                 // for each BLOB column
     <#list fields as field>
-                <#-- // SQLType: ${field.sqlType} -->
-        <#if field.sqlType = "BLOB">
+                // SQLType for "${field.name}": ${field.sqlType}
+        <#if field.sqlType == "BLOB">
             <#assign cType = field.compoundType>
             <#if cType?has_content>
 
@@ -142,6 +142,8 @@ public class ${name}
                 // find the corresponding DataScript type and
                 // decode the column with this type
                 ${cType} ${field.name}Data = DataScriptIO.read(${cType}.class, ${field.name}Blob);
+            <#else>
+                // "${field.name}" has no or is no CompoundType (${field.compoundType})
             </#if>
         </#if>
     </#list>

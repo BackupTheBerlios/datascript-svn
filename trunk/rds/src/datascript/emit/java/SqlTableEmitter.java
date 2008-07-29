@@ -57,6 +57,7 @@ import datascript.ast.Parameter;
 import datascript.ast.SqlIntegerType;
 import datascript.ast.SqlTableType;
 import datascript.ast.StringType;
+import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import freemarker.template.Configuration;
@@ -104,6 +105,8 @@ public class SqlTableEmitter extends CompoundEmitter
             t = TypeReference.resolveType(t);
             if (t instanceof CompoundType)
                 return t.getName();
+            if (t instanceof TypeInstantiation)
+                return ((TypeInstantiation) t).getBaseType().getName();
             return "";
         }
 

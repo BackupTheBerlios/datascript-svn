@@ -45,7 +45,7 @@ sql_database SqlTestDb
     sql_table TileTable
     {
     	TileId   tileid;
-        Tile     tile;
+        Tile(tileid)     tile;
         sql "primary key (tileid)";
     } tiles;
     
@@ -54,7 +54,7 @@ sql_database SqlTestDb
 
 
 
-Tile
+Tile(TileId tileid)
 {
     uint16       numFeatures;
     Feature      features[numFeatures];
