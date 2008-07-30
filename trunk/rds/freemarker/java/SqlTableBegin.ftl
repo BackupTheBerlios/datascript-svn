@@ -132,18 +132,25 @@ public class ${name}
             {
                 primaryKey = resultSet.getInt(pkName);
     <#list fields as field>
-                <#-- // SQLType for "${field.name}": ${field.sqlType} -->
+            <#-- // SQLType for "${field.name}": ${field.sqlType} -->
         <#if field.sqlType == "BLOB">
             <#if field.compoundType?has_content>
 
+                try
+                {
                 <#assign cTypeName = field.compoundType.name>
-                byte[] ${field.name}Blob = resultSet.getBytes("${field.name}");
+                    byte[] ${field.name}Blob = resultSet.getBytes("${field.name}");
                 <#assign paramList = "">
                 <#list field.typeParameter as param>
-                Object ${param.name}Param = pListener.getParameterValue(${cTypeName}.class, "${param.name}", primaryKey);
+                    Object ${param.name}Param = pListener.getParameterValue(${cTypeName}.class, "${param.name}", primaryKey);
                     <#assign paramList = paramList + ", ${param.name}Param">
                 </#list>
-                ${cTypeName} ${field.name}Data = DataScriptIO.read(${cTypeName}.class, ${field.name}Blob${paramList});
+                    ${cTypeName} ${field.name}Data = DataScriptIO.read(${cTypeName}.class, ${field.name}Blob${paramList});
+                }
+                catch (Throwable t)
+                {
+                    vListener.onError(__tableName, primaryKey, t);
+                }
             <#else>
                 // RDS compile error: "${field.name}" has no or is no CompoundType
             </#if>
@@ -151,9 +158,8 @@ public class ${name}
     </#list>
             }
         }
-        catch (Throwable t)
+        catch (SQLException t)
         {
-            // on exception: notify listener
             vListener.onError(__tableName, primaryKey, t);
         }
 <#else>
