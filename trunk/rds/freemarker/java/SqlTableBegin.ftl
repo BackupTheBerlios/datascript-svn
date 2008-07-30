@@ -86,7 +86,8 @@ public class ${name}
     }
 
 
-    public void validate(String __tableName, ValidationListener listener)
+    @SuppressWarnings("unused")
+    public void validate(String __tableName, ValidationListener vListener, ParameterListener pListener)
     {
 <#assign blobFieldList = "">
 <#list fields as field>
@@ -121,29 +122,30 @@ public class ${name}
             query.append(", " + pkName);
         query.append(" FROM " + __tableName);
 
-        int primaryKey = 0;
+        int primaryKey = -1;
         try
         {
             Statement st = dbc.createStatement();
             ResultSet resultSet = st.executeQuery(query.toString());
 
-            // for each row
             while (resultSet.next())
             {
                 primaryKey = resultSet.getInt(pkName);
-                // for each BLOB column
     <#list fields as field>
                 <#-- // SQLType for "${field.name}": ${field.sqlType} -->
         <#if field.sqlType == "BLOB">
-            <#assign cType = field.compoundType>
-            <#if cType?has_content>
+            <#if field.compoundType?has_content>
 
+                <#assign cTypeName = field.compoundType.name>
                 byte[] ${field.name}Blob = resultSet.getBytes("${field.name}");
-                // find the corresponding DataScript type and
-                // decode the column with this type
-                ${cType} ${field.name}Data = DataScriptIO.read(${cType}.class, ${field.name}Blob);
+                <#assign paramList = "">
+                <#list field.typeParameter as param>
+                Object ${param.name}Param = pListener.getParameterValue(${cTypeName}.class, "${param.name}", primaryKey);
+                    <#assign paramList = paramList + ", ${param.name}Param">
+                </#list>
+                ${cTypeName} ${field.name}Data = DataScriptIO.read(${cTypeName}.class, ${field.name}Blob${paramList});
             <#else>
-                // RDS compile error: "${field.name}" has no or is no CompoundType (${field.compoundType})
+                // RDS compile error: "${field.name}" has no or is no CompoundType
             </#if>
         </#if>
     </#list>
@@ -152,7 +154,7 @@ public class ${name}
         catch (Throwable t)
         {
             // on exception: notify listener
-            listener.onError(__tableName, primaryKey, t);
+            vListener.onError(__tableName, primaryKey, t);
         }
 <#else>
         // There is nothing to validate...

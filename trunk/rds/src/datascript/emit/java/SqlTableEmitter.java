@@ -99,15 +99,25 @@ public class SqlTableEmitter extends CompoundEmitter
         }
 
 
-        public String getCompoundType()
+        public CompoundType getCompoundType()
         {
             TypeInterface t = field.getFieldType();
             t = TypeReference.resolveType(t);
             if (t instanceof CompoundType)
-                return t.getName();
+                return (CompoundType) t;
             if (t instanceof TypeInstantiation)
-                return ((TypeInstantiation) t).getBaseType().getName();
-            return "";
+                return ((TypeInstantiation) t).getBaseType();
+            return null;
+        }
+
+
+        public List<Parameter> getTypeParameter()
+        {
+            TypeInterface t = field.getFieldType();
+            t = TypeReference.resolveType(t);
+            if (t instanceof TypeInstantiation)
+                return ((TypeInstantiation) t).getBaseType().getParameters();
+            return new ArrayList<Parameter>(0);
         }
 
 
