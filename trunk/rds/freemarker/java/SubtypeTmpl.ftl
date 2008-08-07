@@ -51,6 +51,7 @@ ${packageImports}
  * TODO: no typedef possible in Java, so we have to substitute every
  * "${className}" to "${superClassName}"
  **/
+@SuppressWarnings("all")
 class ${className} extends ${superClassName}
 {
     /**
