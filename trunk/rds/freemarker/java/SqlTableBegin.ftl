@@ -111,10 +111,9 @@ public class ${name}
                 pkName = rs.getString("COLUMN_NAME");
             }
         }
-        catch (SQLException e)
+        catch (SQLException exc)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            vListener.onError(__tableName, 0, exc);
         }
 
         // selects all rows from the table
