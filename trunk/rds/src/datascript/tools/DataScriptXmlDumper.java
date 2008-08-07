@@ -91,7 +91,7 @@ public class DataScriptXmlDumper implements Parameters
                 {
                     allPackageFiles.add(fileName);
                     context.setFileName(fileName);
-                    AST unitRoot = (TokenAST) parsePackage();
+                    AST unitRoot = parsePackage();
                     if (unitRoot != null)
                     {
                         rootNode.addChild(unitRoot);
@@ -296,7 +296,7 @@ public class DataScriptXmlDumper implements Parameters
             int i = 0;
             // dsTool.context.setPathName(args[i++]);
             dsTool.context.setFileName(args[i++]);
-            AST unitRoot = (TokenAST) dsTool.parsePackage();
+            AST unitRoot = dsTool.parsePackage();
             dsTool.rootNode.addChild(unitRoot);
             dsTool.parseImportedPackages(unitRoot);
 

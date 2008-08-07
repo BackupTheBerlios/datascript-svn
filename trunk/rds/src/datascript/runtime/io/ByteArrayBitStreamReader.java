@@ -49,7 +49,7 @@ public class ByteArrayBitStreamReader extends BitStreamReader
     private ByteArrayInputStream bais;
     private long length;
     
-    public ByteArrayBitStreamReader(byte[] b) throws IOException
+    public ByteArrayBitStreamReader(byte[] b)
     {
         bais = new ByteArrayInputStream(b);
         length = b.length;

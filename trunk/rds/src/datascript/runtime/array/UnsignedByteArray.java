@@ -139,11 +139,11 @@ public class UnsignedByteArray implements Array<Short>, SizeOf
     }
 
 
-    public Array<Short> subRange(int begin, int length)
+    public Array<Short> subRange(int begin, int len)
     {
-        if (begin < 0 || begin >= this.length || begin + length > this.length)
+        if (begin < 0 || begin >= this.length || begin + len > this.length)
             throw new ArrayIndexOutOfBoundsException();
-        return new UnsignedByteArray(data, offset + begin, length);
+        return new UnsignedByteArray(data, offset + begin, len);
     }
 
 

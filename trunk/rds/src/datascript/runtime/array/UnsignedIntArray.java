@@ -188,11 +188,11 @@ public class UnsignedIntArray implements Array<Long>, SizeOf
     }
 
 
-    public Array<Long> subRange(int begin, int length)
+    public Array<Long> subRange(int begin, int len)
     {
-        if (begin < 0 || begin >= this.length || begin + length > this.length)
+        if (begin < 0 || begin >= this.length || begin + len > this.length)
             throw new ArrayIndexOutOfBoundsException();
-        return new UnsignedIntArray(data, offset + begin, length);
+        return new UnsignedIntArray(data, offset + begin, len);
     }
 
 

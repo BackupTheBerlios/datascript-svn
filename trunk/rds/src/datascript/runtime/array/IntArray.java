@@ -189,11 +189,11 @@ public class IntArray implements Array<Integer>, SizeOf
     }
 
 
-    public Array<Integer> subRange(int begin, int length)
+    public Array<Integer> subRange(int begin, int len)
     {
-        if (begin < 0 || begin >= this.length || begin + length > this.length)
+        if (begin < 0 || begin >= this.length || begin + len > this.length)
             throw new ArrayIndexOutOfBoundsException();
-        return new IntArray(data, offset + begin, length);
+        return new IntArray(data, offset + begin, len);
     }
 
 

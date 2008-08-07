@@ -94,7 +94,7 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
         }
         else
         {
-            writeBits((long) value, 8);
+            writeBits(value, 8);
         }
     }
 
@@ -122,7 +122,7 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
         }
         else
         {
-            writeBits((long) value, 16);
+            writeBits(value, 16);
         }
     }
 
@@ -136,7 +136,7 @@ public abstract class BitStreamWriter extends MemoryCacheImageOutputStream
         }
         else
         {
-            writeBits((long) value, 32);
+            writeBits(value, 32);
         }
     }
 

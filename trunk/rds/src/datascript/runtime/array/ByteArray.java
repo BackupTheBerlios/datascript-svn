@@ -136,11 +136,11 @@ public class ByteArray implements Array<Byte>, SizeOf
     }
 
 
-    public Array<Byte> subRange(int begin, int length)
+    public Array<Byte> subRange(int begin, int len)
     {
-        if (begin < 0 || begin >= this.length || begin + length > this.length)
+        if (begin < 0 || begin >= this.length || begin + len > this.length)
             throw new ArrayIndexOutOfBoundsException();
-        return new ByteArray(data, offset + begin, length);
+        return new ByteArray(data, offset + begin, len);
     }
 
 
