@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="psi/" kind="src" path="src"/>
-	<classpathentry kind="src" path="build/gen"/>
-	<classpathentry kind="src" output="build/test/classes" path="test/src"/>
-	<classpathentry kind="src" output="build/test/classes" path="build/test/gen"/>
-	<classpathentry kind="src" path="services/all"/>
+	<classpathentry kind="src" path="runtime/src/main/java"/>
+	<classpathentry kind="src" path="core/src/main/java"/>
+	<classpathentry kind="src" path="core/target/generated-sources/antlr"/>
 	<classpathentry kind="lib" path="lib/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc.jar"/>
@@ -12,10 +10,5 @@
 	<classpathentry kind="lib" path="lib/commons-cli-1.1.jar" sourcepath="D:/eclipse/commons-cli-1.1/commons-cli-1.1-src.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/freemarker.jar"/>
-	<classpathentry kind="src" path=".apt_generated">
-		<attributes>
-			<attribute name="optional" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
