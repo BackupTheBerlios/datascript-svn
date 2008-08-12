@@ -6,6 +6,8 @@
 	<classpathentry kind="src" path="java/src/main/java"/>
 	<classpathentry kind="src" path="html/src/main/java"/>
 	<classpathentry kind="src" path="xml/src/main/java"/>
+	<classpathentry kind="src" path="java/src/test/java"/>
+	<classpathentry kind="src" path="java/target/generated-sources/rds"/>
 	<classpathentry kind="lib" path="lib/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc.jar"/>

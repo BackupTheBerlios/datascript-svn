@@ -42,9 +42,9 @@ public class ByteArrayBitStreamStringTest extends TestCase
         PrintStream os = new PrintStream(baos, false, "UTF-8");
         os.print("HAMBURG");
         os.write(0);
-        os.print("MÜNCHEN");
+        os.print("MÃœNCHEN");
         os.write(0);
-        os.print("KÖLN");
+        os.print("KÃ–LN");
         os.write(0);
         os.close();
         in = new ByteArrayBitStreamReader(baos.toByteArray());
@@ -53,10 +53,10 @@ public class ByteArrayBitStreamStringTest extends TestCase
         assertEquals("HAMBURG", hh);
         
         String m = in.readString();
-        assertEquals("MÜNCHEN", m);
+        assertEquals("MÃœNCHEN", m);
 
         String k = in.readString();
-        assertEquals("KÖLN", k);
+        assertEquals("KÃ–LN", k);
     }
     
     private void writeRdsAndReadJdk(String s1, String s2, String s3) throws IOException
@@ -130,7 +130,7 @@ public class ByteArrayBitStreamStringTest extends TestCase
 
     public void testWriteRdsAndReadJdkUmlaut() throws IOException
     {
-        writeRdsAndReadJdk("HAMBURG", "MÜNCHEN", "KÖLN");
+        writeRdsAndReadJdk("HAMBURG", "Mï¿½NCHEN", "Kï¿½LN");
     }
 
     public void testWriteRdsAndReadRds() throws IOException
@@ -140,7 +140,7 @@ public class ByteArrayBitStreamStringTest extends TestCase
 
     public void testWriteRdsAndReadRdsUmlaut() throws IOException
     {
-        writeRdsAndReadRds("HAMBURG", "MÜNCHEN", "KÖLN");        
+        writeRdsAndReadRds("HAMBURG", "Mï¿½NCHEN", "Kï¿½LN");        
     }
 
     public void testWriteAndReadUnaligned() throws IOException
@@ -150,7 +150,7 @@ public class ByteArrayBitStreamStringTest extends TestCase
 
     public void testWriteAndReadUnalignedUmlaut() throws IOException
     {
-        writeRdsAndReadRdsUnaligned("HAMBURG", "MÜNCHEN", "KÖLN");        
+        writeRdsAndReadRdsUnaligned("HAMBURG", "Mï¿½NCHEN", "Kï¿½LN");        
     }
 
 }
