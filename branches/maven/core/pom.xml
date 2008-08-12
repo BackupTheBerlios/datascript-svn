@@ -12,11 +12,11 @@
     <version>0.27.SNAPSHOT</version>    
   </parent>
   <dependencies>
-    <!--dependency>
+    <dependency>
       <groupId>net.sf.dstools.rds</groupId>
       <artifactId>runtime</artifactId>
       <version>0.27.SNAPSHOT</version>
-    </dependency-->
+    </dependency>
     <dependency>
       <groupId>antlr</groupId>
       <artifactId>antlr</artifactId>
