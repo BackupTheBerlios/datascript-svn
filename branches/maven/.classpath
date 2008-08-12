@@ -4,6 +4,8 @@
 	<classpathentry kind="src" path="core/src/main/java"/>
 	<classpathentry kind="src" path="core/target/generated-sources/antlr"/>
 	<classpathentry kind="src" path="java/src/main/java"/>
+	<classpathentry kind="src" path="html/src/main/java"/>
+	<classpathentry kind="src" path="xml/src/main/java"/>
 	<classpathentry kind="lib" path="lib/antlr.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc.jar"/>
