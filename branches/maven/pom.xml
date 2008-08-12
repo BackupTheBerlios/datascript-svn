@@ -11,7 +11,7 @@
     <module>runtime</module>
     <module>java</module>
     <module>html</module>
-    <!--module>xml</module-->
+    <module>xml</module>
   </modules>
   <build>
     <plugins>
