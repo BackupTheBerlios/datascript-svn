@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="runtime/src/main/java"/>
-	<classpathentry kind="src" path="core/src/main/java"/>
-	<classpathentry kind="src" path="core/target/generated-sources/antlr"/>
-	<classpathentry kind="src" path="java/src/main/java"/>
-	<classpathentry kind="src" path="html/src/main/java"/>
-	<classpathentry kind="src" path="xml/src/main/java"/>
-	<classpathentry kind="src" path="java/src/test/java"/>
-	<classpathentry kind="src" path="java/target/generated-sources/rds"/>
-	<classpathentry kind="lib" path="lib/antlr.jar"/>
-	<classpathentry kind="lib" path="lib/junit.jar"/>
-	<classpathentry kind="lib" path="lib/sqlitejdbc.jar"/>
-	<classpathentry kind="lib" path="lib/rds-ant.jar"/>
-	<classpathentry kind="lib" path="lib/commons-cli-1.1.jar" sourcepath="D:/eclipse/commons-cli-1.1/commons-cli-1.1-src.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/freemarker.jar"/>
-	<classpathentry kind="output" path="build/classes"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

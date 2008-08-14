@@ -179,7 +179,6 @@ implements TypeInterface, Comparable<CompoundType>
     }
 
 
-    @Override
     public int compareTo(CompoundType o)
     {
         return getName().compareTo(o.getName());
