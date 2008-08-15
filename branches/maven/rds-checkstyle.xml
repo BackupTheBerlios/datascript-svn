@@ -32,12 +32,76 @@
       <property name="message" value="trailing whitespace"/>
     </module-->
 
+
+    <!-- Naming Conventions -->
+
+    <module name="ConstantName"/>
+    <module name="LocalFinalVariableName"/>
+    <module name="LocalVariableName"/>
+    <module name="MemberName"/>
+    <module name="MethodName"/>
+    <module name="PackageName"/>
+    <module name="ParameterName"/>
+    <module name="StaticVariableName"/>
+    <module name="TypeName"/>
+
+    <!-- Imports -->
+
     <module name="AvoidStarImport"/>
-    <module name="FileLength" />
     <module name="IllegalImport"/>
+    <module name="RedundantImport"/>
+    <module name="UnusedImports"/>
+
+    <!-- Coding -->
+    <module name="DeclarationOrder"/>
+    <module name="DefaultComesLast"/>
+    <module name="EqualsHashCode"/>
+    <module name="ExplicitInitialization"/>
+    <module name="FallThrough"/>
+
+    <module name="HiddenField">
+      <property name="ignoreConstructorParameter" value="true"/>
+      <property name="ignoreSetter" value="true"/>
+    </module>
+
+    <module name="IllegalCatch"/>
     <module name="IllegalInstantiation"/>
     <module name="IllegalThrows"/>
     <module name="InnerAssignment"/>
+    <module name="MagicNumber"/>
+    <module name="MissingSwitchDefault"/>
+    <module name="ModifiedControlVariable"/>
+    <module name="MultipleStringLiterals"/>
+    <module name="MultipleVariableDeclarations"/>
+    <module name="PackageDeclaration"/>
+    <module name="ParameterAssignment"/>
+    <module name="RedundantThrows"/>
+    <module name="SimplifyBooleanExpression"/>
+    <module name="SimplifyBooleanReturn"/>
+    <module name="StringLiteralEquality"/>
+    
+    <module name="NestedIfDepth">
+      <property name="max" value="3"/>
+    </module>	
+
+    <module name="NestedTryDepth"/>
+    <module name="SuperClone"/>
+    <module name="SuperFinalize"/>
+
+    
+
+
+
+
+
+
+
     <module name="JavaNCSS"/>
+
+
+    <module name="IllegalThrows"/>
+    <module name="FileLength" />
+
+
  </module>
 </module>
