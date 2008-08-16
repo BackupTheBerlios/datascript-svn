@@ -68,10 +68,10 @@
     <module name="IllegalInstantiation"/>
     <module name="IllegalThrows"/>
     <module name="InnerAssignment"/>
-    <module name="MagicNumber"/>
+    <!-- module name="MagicNumber"/-->
     <module name="MissingSwitchDefault"/>
     <module name="ModifiedControlVariable"/>
-    <module name="MultipleStringLiterals"/>
+    <!--module name="MultipleStringLiterals"/-->
     <module name="MultipleVariableDeclarations"/>
     <module name="PackageDeclaration"/>
     <module name="ParameterAssignment"/>
