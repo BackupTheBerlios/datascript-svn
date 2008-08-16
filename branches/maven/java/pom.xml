@@ -95,13 +95,13 @@
               <mainClass>datascript.tools.DataScriptTool</mainClass>
               <arguments>
                 <argument>-out</argument>
-                <argument>${project.build.directory}/generated-sources/rds</argument>
+                <argument>${project.build.directory}/generated-test-sources/rds</argument>
                 <argument>-src</argument>
                 <argument>${basedir}/src/test/scripts</argument>
                 <argument>-java_e</argument>
                 <argument>bits.ds</argument>
               </arguments>
-              <testSourceRoot>${project.build.directory}/generated-sources/rds</testSourceRoot>
+              <testSourceRoot>${project.build.directory}/generated-test-sources/rds</testSourceRoot>
             </configuration>
           </execution>
           <execution>
@@ -114,13 +114,13 @@
               <mainClass>datascript.tools.DataScriptTool</mainClass>
               <arguments>
                 <argument>-out</argument>
-                <argument>${project.build.directory}/generated-sources/rds</argument>
+                <argument>${project.build.directory}/generated-test-sources/rds</argument>
                 <argument>-src</argument>
                 <argument>${basedir}/src/test/scripts</argument>
                 <argument>-java_e</argument>
                 <argument>choices.ds</argument>
               </arguments>
-              <testSourceRoot>${project.build.directory}/generated-sources/rds</testSourceRoot>
+              <testSourceRoot>${project.build.directory}/generated-test-sources/rds</testSourceRoot>
             </configuration>
           </execution>
           <execution>
@@ -133,13 +133,13 @@
               <mainClass>datascript.tools.DataScriptTool</mainClass>
               <arguments>
                 <argument>-out</argument>
-                <argument>${project.build.directory}/generated-sources/rds</argument>
+                <argument>${project.build.directory}/generated-test-sources/rds</argument>
                 <argument>-src</argument>
                 <argument>${basedir}/src/test/scripts</argument>
                 <argument>-java_e</argument>
                 <argument>label.ds</argument>
               </arguments>
-              <testSourceRoot>${project.build.directory}/generated-sources/rds</testSourceRoot>
+              <testSourceRoot>${project.build.directory}/generated-test-sources/rds</testSourceRoot>
             </configuration>
           </execution>
           <execution>
@@ -152,13 +152,13 @@
               <mainClass>datascript.tools.DataScriptTool</mainClass>
               <arguments>
                 <argument>-out</argument>
-                <argument>${project.build.directory}/generated-sources/rds</argument>
+                <argument>${project.build.directory}/generated-test-sources/rds</argument>
                 <argument>-src</argument>
                 <argument>${basedir}/src/test/scripts</argument>
                 <argument>-java_e</argument>
                 <argument>sqltest.ds</argument>
               </arguments>
-              <testSourceRoot>${project.build.directory}/generated-sources/rds</testSourceRoot>
+              <testSourceRoot>${project.build.directory}/generated-test-sources/rds</testSourceRoot>
             </configuration>
           </execution>
           <execution>
@@ -171,13 +171,13 @@
               <mainClass>datascript.tools.DataScriptTool</mainClass>
               <arguments>
                 <argument>-out</argument>
-                <argument>${project.build.directory}/generated-sources/rds</argument>
+                <argument>${project.build.directory}/generated-test-sources/rds</argument>
                 <argument>-src</argument>
                 <argument>${basedir}/src/test/scripts</argument>
                 <argument>-java_e</argument>
                 <argument>sqlParameter.ds</argument>
               </arguments>
-              <testSourceRoot>${project.build.directory}/generated-sources/rds</testSourceRoot>
+              <testSourceRoot>${project.build.directory}/generated-test-sources/rds</testSourceRoot>
             </configuration>
           </execution>
           <execution>
@@ -190,13 +190,13 @@
               <mainClass>datascript.tools.DataScriptTool</mainClass>
               <arguments>
                 <argument>-out</argument>
-                <argument>${project.build.directory}/generated-sources/rds</argument>
+                <argument>${project.build.directory}/generated-test-sources/rds</argument>
                 <argument>-src</argument>
                 <argument>${basedir}/src/test/scripts</argument>
                 <argument>-java_e</argument>
                 <argument>func.ds</argument>
               </arguments>
-              <testSourceRoot>${project.build.directory}/generated-sources/rds</testSourceRoot>
+              <testSourceRoot>${project.build.directory}/generated-test-sources/rds</testSourceRoot>
             </configuration>
           </execution>
           <execution>
@@ -209,13 +209,13 @@
               <mainClass>datascript.tools.DataScriptTool</mainClass>
               <arguments>
                 <argument>-out</argument>
-                <argument>${project.build.directory}/generated-sources/rds</argument>
+                <argument>${project.build.directory}/generated-test-sources/rds</argument>
                 <argument>-src</argument>
                 <argument>${basedir}/src/test/scripts</argument>
                 <argument>-java_e</argument>
                 <argument>gif.ds</argument>
               </arguments>
-              <testSourceRoot>${project.build.directory}/generated-sources/rds</testSourceRoot>
+              <testSourceRoot>${project.build.directory}/generated-test-sources/rds</testSourceRoot>
             </configuration>
           </execution>
           <execution>
@@ -228,13 +228,13 @@
               <mainClass>datascript.tools.DataScriptTool</mainClass>
               <arguments>
                 <argument>-out</argument>
-                <argument>${project.build.directory}/generated-sources/rds</argument>
+                <argument>${project.build.directory}/generated-test-sources/rds</argument>
                 <argument>-src</argument>
                 <argument>${basedir}/src/test/scripts</argument>
                 <argument>-java_e</argument>
                 <argument>alignment.ds</argument>
               </arguments>
-              <testSourceRoot>${project.build.directory}/generated-sources/rds</testSourceRoot>
+              <testSourceRoot>${project.build.directory}/generated-test-sources/rds</testSourceRoot>
             </configuration>
           </execution>
           <execution>
@@ -247,13 +247,13 @@
               <mainClass>datascript.tools.DataScriptTool</mainClass>
               <arguments>
                 <argument>-out</argument>
-                <argument>${project.build.directory}/generated-sources/rds</argument>
+                <argument>${project.build.directory}/generated-test-sources/rds</argument>
                 <argument>-src</argument>
                 <argument>${basedir}/src/test/scripts</argument>
                 <argument>-java_e</argument>
                 <argument>lines.ds</argument>
               </arguments>
-              <testSourceRoot>${project.build.directory}/generated-sources/rds</testSourceRoot>
+              <testSourceRoot>${project.build.directory}/generated-test-sources/rds</testSourceRoot>
             </configuration>
           </execution>
         </executions>
