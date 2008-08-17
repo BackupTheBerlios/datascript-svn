@@ -2,14 +2,14 @@
   <parent>
     <artifactId>rds</artifactId>
     <groupId>net.sf.dstools</groupId>
-    <version>${rds.version}</version>
+    <version>0.27.SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sf.dstools</groupId>
   <artifactId>assembly</artifactId>
   <packaging>pom</packaging>
   <name>Relational DataScript Assembly</name>
-  <version>${rds.version}</version>
+  <version>0.27.SNAPSHOT</version>
   <description/>
   
   <properties>

@@ -4,12 +4,13 @@
   <groupId>net.sf.dstools.rds</groupId>
   <artifactId>runtime</artifactId>
   <packaging>bundle</packaging>
-  <version>${rds.version}</version>
+  <version>0.27.SNAPSHOT</version>
   <name>Relational DataScript Runtime Library</name>
   <parent>
     <groupId>net.sf.dstools</groupId>
     <artifactId>rds</artifactId>
-    <version>${rds.version}</version>
+    <version>0.27.SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <build>
     <plugins>

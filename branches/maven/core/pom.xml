@@ -4,13 +4,13 @@
   <groupId>net.sf.dstools.rds</groupId>
   <artifactId>core</artifactId>
   <packaging>bundle</packaging>
-  <version>${rds.version}</version>
+  <version>0.27.SNAPSHOT</version>
   <name>Relational DataScript Core Library</name>
   <parent>
     <groupId>net.sf.dstools</groupId>
     <artifactId>rds</artifactId>
-    <version>${rds.version}</version>
     <relativePath>../pom.xml</relativePath>
+    <version>0.27.SNAPSHOT</version>
   </parent>
   <dependencies>
     <dependency>

@@ -5,7 +5,15 @@
   <artifactId>rds</artifactId>
   <name>Relational DataScript</name>
   <packaging>pom</packaging>
-  <version>${rds.version}</version>
+  <version>0.27.SNAPSHOT</version>
+
+  <properties>
+    <antlr.version>2.7.6</antlr.version>
+    <commmons-cli.version>1.1</commmons-cli.version>
+    <freemarker.version>2.3.9</freemarker.version>
+    <rds.version>${project.version}</rds.version>
+  </properties>
+  
   <modules>
     <module>core</module>
     <module>runtime</module>
@@ -14,13 +22,6 @@
     <module>xml</module>
     <module>assembly</module>
   </modules>
-  <properties>
-    <antlr.version>2.7.6</antlr.version>
-    <commmons-cli.version>1.1</commmons-cli.version>
-    <freemarker.version>2.3.9</freemarker.version>
-    <rds.version>0.27.SNAPSHOT</rds.version>
-  </properties>
-  
   <url>http://dstools.sf.net</url>
   <inceptionYear>2006</inceptionYear>
   <organization>
