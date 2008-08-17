@@ -78,7 +78,7 @@
               ${groupId}.runtime-${rds.version}.jar 
               ${groupId}.xml-${rds.version}.jar 
               antlr-${antlr.version}.jar 
-              commons-cli-${commons-cli.version}.jar 
+              commons-cli-${cli.version}.jar 
               freemarker-${freemarker.version}.jar</Class-Path>
           </instructions>
         </configuration>
