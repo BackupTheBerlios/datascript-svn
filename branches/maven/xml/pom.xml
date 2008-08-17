@@ -4,7 +4,7 @@
   <groupId>net.sf.dstools.rds</groupId>
   <artifactId>xml</artifactId>
   <packaging>bundle</packaging>
-  <version>0.27.SNAPSHOT</version>
+  <version>${rds.version}</version>
   <name>Relational DataScript XML Generator</name>
   <organization>
     <name>Harman/Becker</name>
@@ -12,18 +12,23 @@
   <parent>
     <groupId>net.sf.dstools</groupId>
     <artifactId>rds</artifactId>
-    <version>0.27.SNAPSHOT</version>    
+    <version>${rds.version}</version>
+    <relativePath>../pom.xml</relativePath>    
   </parent>
   <dependencies>
     <dependency>
       <groupId>net.sf.dstools.rds</groupId>
       <artifactId>core</artifactId>
-      <version>0.27.SNAPSHOT</version>
+      <version>${rds.version}</version>
     </dependency>
   </dependencies>
   
   <build>
     <plugins>
+        <!--plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+        </plugin-->
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>

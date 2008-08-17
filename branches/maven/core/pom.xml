@@ -10,6 +10,7 @@
     <groupId>net.sf.dstools</groupId>
     <artifactId>rds</artifactId>
     <version>${rds.version}</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <dependencies>
     <dependency>
@@ -62,19 +63,6 @@
           </execution>
         </executions>
       </plugin>
-      <!--
-        plugin> <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId> <configuration>
-        <archive> <manifest>
-        <mainClass>datascript.tools.DataScriptTool</mainClass>
-        <addClasspath>true</addClasspath> </manifest> <manifestEntries>
-        <Class-Path>rds_javaExtension.jar rds_htmlExtension.jar
-        rds_xmlExtension.jar rds_cppExtension.jar antlr.jar
-        freemarker.jar velocity-dep-1.5.jar
-        commons-cli-1.1.jar</Class-Path> </manifestEntries>
-        <manifestFile>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-        </archive> </configuration> </plugin
-      -->
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
@@ -82,6 +70,16 @@
         <configuration>
           <instructions>
             <Export-Package>datascript.*</Export-Package>
+            <Main-Class>datascript.tools.DataScriptTool</Main-Class>
+            <Class-Path>
+              ${groupId}.cpp-${rds.version}.jar 
+              ${groupId}.html-${rds.version}.jar 
+              ${groupId}.java-${rds.version}.jar 
+              ${groupId}.runtime-${rds.version}.jar 
+              ${groupId}.xml-${rds.version}.jar 
+              antlr-${antlr.version}.jar 
+              commons-cli-${commons-cli.version}.jar 
+              freemarker-${freemarker.version}.jar</Class-Path>
           </instructions>
         </configuration>
       </plugin>

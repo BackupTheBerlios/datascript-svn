@@ -80,6 +80,7 @@
           <!--environmentVariables>
             <PATH>D:\p4\AnacondaDev\Default\plugins\com.harmanbecker.import.sqlite</PATH>
           </environmentVariables-->
+          <forkMode>once</forkMode>
         </configuration>
       </plugin>
 
