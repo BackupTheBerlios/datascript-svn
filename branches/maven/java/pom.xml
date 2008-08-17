@@ -3,57 +3,47 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sf.dstools.rds</groupId>
   <artifactId>java</artifactId>
-  <packaging>jar</packaging>
-  <version>0.27.SNAPSHOT</version>
+  <packaging>bundle</packaging>
+  <version>${rds.version}</version>
   <name>Relational DataScript Java Code Generator</name>
   <parent>
     <groupId>net.sf.dstools</groupId>
     <artifactId>rds</artifactId>
-    <version>0.27.SNAPSHOT</version>    
+    <version>${rds.version}</version>    
   </parent>
   <dependencies>
 
     <dependency>
       <groupId>net.sf.dstools.rds</groupId>
       <artifactId>core</artifactId>
-      <version>0.27.SNAPSHOT</version>
+      <version>${rds.version}</version>
     </dependency>
 
     <dependency>
       <groupId>net.sf.dstools.rds</groupId>
       <artifactId>runtime</artifactId>
-      <version>0.27.SNAPSHOT</version>
+      <version>${rds.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>antlr</groupId>
       <artifactId>antlr</artifactId>
-      <version>2.7.6</version>
     </dependency>
 
     <dependency>
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
-      <version>2.3.9</version>
     </dependency>
 
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
     </dependency>
 
-    <!-- 
-         For loading the sqlitejdbc native library, you have to set PATH
-         or LD_LIBRARY_PATH in the environment before invokin Maven.
-     -->
     <dependency>
       <groupId>org.zentus</groupId>
       <artifactId>sqlitejdbc</artifactId>
-      <version>0.42</version>
-      <scope>test</scope>
     </dependency>  
     
     
@@ -66,10 +56,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>6</source>
-          <target>6</target>
-        </configuration>
       </plugin>
 
       <plugin>
@@ -77,6 +63,23 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <workingDirectory>target</workingDirectory>
+          <systemProperties>
+            <property>
+              <name>java.library.path</name>
+              <value>${project.basedir}/../lib</value>
+            </property>
+            <!--property>
+              <name>org.sqlite.lib.path</name>
+              <value>${project.basedir}\..\lib</value>
+            </property-->
+            <!--property>
+              <name>org.sqlite.lib.name</name>
+              <value>sqlitejdbc.dll</value>
+            </property-->
+          </systemProperties>
+          <!--environmentVariables>
+            <PATH>D:\p4\AnacondaDev\Default\plugins\com.harmanbecker.import.sqlite</PATH>
+          </environmentVariables-->
         </configuration>
       </plugin>
 
@@ -259,7 +262,21 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Export-Package>datascript.emit.java</Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+      
+
 
     </plugins>
   </build>
+  
+  
 </project>

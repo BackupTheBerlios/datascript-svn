@@ -3,25 +3,37 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sf.dstools.rds</groupId>
   <artifactId>html</artifactId>
-  <packaging>jar</packaging>
-  <version>0.27.SNAPSHOT</version>
+  <packaging>bundle</packaging>
+  <version>${rds.version}</version>
   <name>Relational DataScript HTML Generator</name>
   <parent>
     <groupId>net.sf.dstools</groupId>
     <artifactId>rds</artifactId>
-    <version>0.27.SNAPSHOT</version>    
+    <version>${rds.version}</version>
   </parent>
   <dependencies>
     <dependency>
       <groupId>net.sf.dstools.rds</groupId>
       <artifactId>core</artifactId>
-      <version>0.27.SNAPSHOT</version>
+      <version>${rds.version}</version>
     </dependency>
     <dependency>
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
-      <version>2.3.9</version>
     </dependency>
   </dependencies>
-
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Export-Package>datascript.emit.html</Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

@@ -3,24 +3,26 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sf.dstools.rds</groupId>
   <artifactId>runtime</artifactId>
-  <packaging>jar</packaging>
-  <version>0.27.SNAPSHOT</version>
+  <packaging>bundle</packaging>
+  <version>${rds.version}</version>
   <name>Relational DataScript Runtime Library</name>
   <parent>
     <groupId>net.sf.dstools</groupId>
     <artifactId>rds</artifactId>
-    <version>0.27.SNAPSHOT</version>    
+    <version>${rds.version}</version>
   </parent>
-  <dependencies>
-    <!--dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.3.1</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.0.4</version>
-    </dependency-->
-  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Export-Package>datascript.runtime.*</Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

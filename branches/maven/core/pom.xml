@@ -3,21 +3,19 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sf.dstools.rds</groupId>
   <artifactId>core</artifactId>
-  <packaging>jar</packaging>
-  <version>0.27.SNAPSHOT</version>
+  <packaging>bundle</packaging>
+  <version>${rds.version}</version>
   <name>Relational DataScript Core Library</name>
-  
   <parent>
     <groupId>net.sf.dstools</groupId>
     <artifactId>rds</artifactId>
-    <version>0.27.SNAPSHOT</version>    
+    <version>${rds.version}</version>
   </parent>
-  
   <dependencies>
     <dependency>
       <groupId>net.sf.dstools.rds</groupId>
       <artifactId>runtime</artifactId>
-      <version>0.27.SNAPSHOT</version>
+      <version>${rds.version}</version>
     </dependency>
     <dependency>
       <groupId>antlr</groupId>
@@ -35,7 +33,9 @@
       <version>2.3.9</version>
     </dependency>
   </dependencies>
-
+  <organization>
+    <name>HBAS</name>
+  </organization>
   <build>
     <plugins>
       <plugin>
@@ -50,15 +50,9 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>antlr-maven-plugin</artifactId>
         <configuration>
-          <grammars>
-            DataScriptParser.g,
-            DataScriptLexer.g,
-            DataScriptWalker.g,
-            DataScriptEmitter.g,
-            TypeEvaluator.g,
-            ExpressionEvaluator.g,
-            DocComment.g
-          </grammars>
+          <grammars> DataScriptParser.g, DataScriptLexer.g,
+            DataScriptWalker.g, DataScriptEmitter.g, TypeEvaluator.g,
+            ExpressionEvaluator.g, DocComment.g </grammars>
         </configuration>
         <executions>
           <execution>
@@ -68,33 +62,29 @@
           </execution>
         </executions>
       </plugin>
-      
+      <!--
+        plugin> <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId> <configuration>
+        <archive> <manifest>
+        <mainClass>datascript.tools.DataScriptTool</mainClass>
+        <addClasspath>true</addClasspath> </manifest> <manifestEntries>
+        <Class-Path>rds_javaExtension.jar rds_htmlExtension.jar
+        rds_xmlExtension.jar rds_cppExtension.jar antlr.jar
+        freemarker.jar velocity-dep-1.5.jar
+        commons-cli-1.1.jar</Class-Path> </manifestEntries>
+        <manifestFile>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+        </archive> </configuration> </plugin
+      -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
         <configuration>
-          <archive>
-            <!--manifest>
-              <mainClass>datascript.tools.DataScriptTool</mainClass>
-              <addClasspath>true</addClasspath>
-            </manifest>
-            <manifestEntries>
-              <Class-Path>rds_javaExtension.jar 
- rds_htmlExtension.jar 
- rds_xmlExtension.jar 
- rds_cppExtension.jar 
- antlr.jar freemarker.jar 
- velocity-dep-1.5.jar 
- commons-cli-1.1.jar</Class-Path>
-            </manifestEntries-->
-            <manifestFile>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-          </archive>
+          <instructions>
+            <Export-Package>datascript.*</Export-Package>
+          </instructions>
         </configuration>
       </plugin>
-
-      
-      
     </plugins>
   </build>
-
 </project>

@@ -3,9 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sf.dstools.rds</groupId>
   <artifactId>xml</artifactId>
-  <packaging>jar</packaging>
+  <packaging>bundle</packaging>
   <version>0.27.SNAPSHOT</version>
   <name>Relational DataScript XML Generator</name>
+  <organization>
+    <name>Harman/Becker</name>
+  </organization>
   <parent>
     <groupId>net.sf.dstools</groupId>
     <artifactId>rds</artifactId>
@@ -18,5 +21,21 @@
       <version>0.27.SNAPSHOT</version>
     </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Export-Package>datascript.emit.xml</Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
 
 </project>

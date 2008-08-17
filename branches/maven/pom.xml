@@ -5,7 +5,7 @@
   <artifactId>rds</artifactId>
   <name>Relational DataScript</name>
   <packaging>pom</packaging>
-  <version>0.27.SNAPSHOT</version>
+  <version>${rds.version}</version>
   <modules>
     <module>core</module>
     <module>runtime</module>
@@ -13,7 +13,54 @@
     <module>html</module>
     <module>xml</module>
   </modules>
+  <url>http://dstools.sf.net</url>
+  <inceptionYear>2006</inceptionYear>
+  <organization>
+    <name>Harman/Becker Automotive Systems</name>
+    <url>http://www.harmanbecker.com</url>
+  </organization>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>antlr</groupId>
+        <artifactId>antlr</artifactId>
+        <version>2.7.6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.freemarker</groupId>
+        <artifactId>freemarker</artifactId>
+        <version>2.3.9</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>3.8.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.zentus</groupId>
+        <artifactId>sqlitejdbc</artifactId>
+        <version>0.42</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <properties>
+    <rds.version>0.27-SNAPSHOT</rds.version>
+  </properties>
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -23,29 +70,21 @@
           <target>6</target>
         </configuration>
       </plugin>
-      <!--plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>src/assemble/bin.xml</descriptor>
-          </descriptors>
-        </configuration>
-      </plugin-->
+      <!--
+        plugin> <artifactId>maven-assembly-plugin</artifactId>
+        <configuration> <descriptors>
+        <descriptor>src/assemble/bin.xml</descriptor> </descriptors>
+        </configuration> </plugin
+      -->
     </plugins>
   </build>
-  <!--repositories>
-    <repository>
-      <id>thirdparty</id>
-      <name>Thirdparty Repository</name>
-      <layout>default</layout>
-      <url>file:/home/hwe/maven-repo</url>
-      <snapshots>
-        <enabled>false</enabled>
-        <checksumPolicy>ignore</checksumPolicy>
-      </snapshots>
-    </repository>
-  </repositories-->
-  
+  <!--
+    repositories> <repository> <id>thirdparty</id> <name>Thirdparty
+    Repository</name> <layout>default</layout>
+    <url>file:/home/hwe/maven-repo</url> <snapshots>
+    <enabled>false</enabled> <checksumPolicy>ignore</checksumPolicy>
+    </snapshots> </repository> </repositories
+  -->
   <reporting>
     <plugins>
       <plugin>
