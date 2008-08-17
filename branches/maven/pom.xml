@@ -88,6 +88,12 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>javancss-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
   <!--
     repositories> <repository> <id>thirdparty</id> <name>Thirdparty
