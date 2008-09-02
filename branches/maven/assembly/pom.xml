@@ -93,6 +93,13 @@
                   <outputDirectory>${tmp.dir}/bundles</outputDirectory>
                   <destFileName>${prefix}.xml-${rds.version}.jar</destFileName>
                 </artifactItem>
+                <artifactItem>
+                  <groupId>net.sf.dstools</groupId>
+                  <artifactId>sqlite</artifactId>
+                  <version>0.52</version>
+                  <outputDirectory>${tmp.dir}/bundles</outputDirectory>
+                  <destFileName>net.sf.dstools.sqlite-0.52.jar</destFileName>
+                </artifactItem>
               </artifactItems>
             </configuration>
           </execution>

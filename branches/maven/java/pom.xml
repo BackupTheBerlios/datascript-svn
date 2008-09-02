@@ -42,8 +42,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.zentus</groupId>
-      <artifactId>sqlitejdbc</artifactId>
+      <groupId>net.sf.dstools</groupId>
+      <artifactId>sqlite</artifactId>
     </dependency>  
     
     
