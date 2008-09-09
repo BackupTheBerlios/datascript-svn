@@ -19,7 +19,7 @@
     </dependency>
     <dependency>
       <groupId>org.freemarker</groupId>
-      <artifactId>freemarker</artifactId>
+      <artifactId>com.springsource.freemarker</artifactId>
     </dependency>
   </dependencies>
   <build>
