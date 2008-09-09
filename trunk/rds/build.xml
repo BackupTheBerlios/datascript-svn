@@ -40,8 +40,9 @@
 
 <!-- Ant build file for rds 
 
-     NOTE: Due to dependency on JET, this build script needs to be run within 
-     Eclipse and cannot be used in a stand-alone Ant build on the command-line.
+NOTE: This script is obsolete and not adapted to the Maven-friendly
+directory structure of rds 0.27 and higher.
+
 -->
 <project name="rds" default="jar" basedir=".">
 
