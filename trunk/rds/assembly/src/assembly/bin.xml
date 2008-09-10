@@ -9,13 +9,7 @@
   <includeBaseDirectory>true</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <!-- Copy bundles + repository.xml -->
-      <directory>target/tmp</directory>
-      <outputDirectory>/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <!-- Direct resources copy -->
-      <directory>src/main/resources</directory>
+      <directory>target/${dist.name}</directory>
       <outputDirectory>/</outputDirectory>
     </fileSet>
   </fileSets>

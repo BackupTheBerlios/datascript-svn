@@ -13,8 +13,9 @@
   <description/>
   
   <properties>
-    <tmp.dir>${project.build.directory}/tmp</tmp.dir>
     <prefix>net.sf.dstools.rds</prefix>
+    <dist.name>rds-bin-${rds.version}</dist.name>
+    <tmp.dir>${project.build.directory}/${dist.name}</tmp.dir>
   </properties>
   
   <dependencies>
@@ -62,43 +63,43 @@
                   <groupId>net.sf.dstools.rds</groupId>
                   <artifactId>runtime</artifactId>
                   <version>${rds.version}</version>
-                  <outputDirectory>${tmp.dir}/bundles</outputDirectory>
-                  <destFileName>${prefix}.runtime-${rds.version}.jar</destFileName>
+                  <outputDirectory>${tmp.dir}</outputDirectory>
+                  <destFileName>${prefix}.runtime_${rds.version}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>net.sf.dstools.rds</groupId>
                   <artifactId>core</artifactId>
                   <version>${rds.version}</version>
-                  <outputDirectory>${tmp.dir}/bundles</outputDirectory>
-                  <destFileName>${prefix}.core-${rds.version}.jar</destFileName>
+                  <outputDirectory>${tmp.dir}</outputDirectory>
+                  <destFileName>${prefix}.core_${rds.version}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>net.sf.dstools.rds</groupId>
                   <artifactId>java</artifactId>
                   <version>${rds.version}</version>
-                  <outputDirectory>${tmp.dir}/bundles</outputDirectory>
-                  <destFileName>${prefix}.java-${rds.version}.jar</destFileName>
+                  <outputDirectory>${tmp.dir}</outputDirectory>
+                  <destFileName>${prefix}.java_${rds.version}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>net.sf.dstools.rds</groupId>
                   <artifactId>html</artifactId>
                   <version>${rds.version}</version>
-                  <outputDirectory>${tmp.dir}/bundles</outputDirectory>
-                  <destFileName>${prefix}.html-${rds.version}.jar</destFileName>
+                  <outputDirectory>${tmp.dir}</outputDirectory>
+                  <destFileName>${prefix}.html_${rds.version}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>net.sf.dstools.rds</groupId>
                   <artifactId>xml</artifactId>
                   <version>${rds.version}</version>
-                  <outputDirectory>${tmp.dir}/bundles</outputDirectory>
-                  <destFileName>${prefix}.xml-${rds.version}.jar</destFileName>
+                  <outputDirectory>${tmp.dir}</outputDirectory>
+                  <destFileName>${prefix}.xml_${rds.version}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>net.sf.dstools</groupId>
                   <artifactId>sqlite</artifactId>
                   <version>0.52</version>
-                  <outputDirectory>${tmp.dir}/bundles</outputDirectory>
-                  <destFileName>net.sf.dstools.sqlite-0.52.jar</destFileName>
+                  <outputDirectory>${tmp.dir}</outputDirectory>
+                  <destFileName>net.sf.dstools.sqlite_0.52.jar</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -110,8 +111,8 @@
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <excludeGroupIds>net.sf.dstools.rds</excludeGroupIds>
-              <outputDirectory>${tmp.dir}/bundles</outputDirectory>
+              <excludeGroupIds>net.sf.dstools.rds,antlr</excludeGroupIds>
+              <outputDirectory>${tmp.dir}</outputDirectory>
             </configuration>
           </execution>
         </executions>
@@ -126,7 +127,7 @@
               <goal>attached</goal>
             </goals>
             <configuration>
-              <finalName>rds-assembly-${rds.version}</finalName>
+              <finalName>${dist.name}</finalName>
               <descriptors>
                 <descriptor>src/assembly/bin.xml</descriptor>
               </descriptors>

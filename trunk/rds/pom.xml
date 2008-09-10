@@ -25,6 +25,25 @@
   
   <url>http://dstools.sf.net</url>
   <inceptionYear>2006</inceptionYear>
+  <developers>
+  	<developer>
+  		<id>HWellmann</id>
+  		<name>Harald Wellmann</name>
+  		<email>hwellmann@harmanbecker.com</email>
+  		<roles>
+  			<role>Project Manager</role>
+                        <role>Developer</role>
+  		</roles>
+  	</developer>
+  	<developer>
+  		<id>HWedekind</id>
+  		<name>Henrik Wedekind</name>
+  		<email>hwedekind@harmanbecker.com</email>
+  		<roles>
+  			<role>Developer</role>
+  		</roles>
+  	</developer>
+  </developers>
   <organization>
     <name>Harman/Becker Automotive Systems</name>
     <url>http://www.harmanbecker.com</url>
@@ -113,6 +132,7 @@
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
+          <version>1.4.3</version>
           <extensions>true</extensions>
           <configuration>
             <manifestLocation>META-INF</manifestLocation>

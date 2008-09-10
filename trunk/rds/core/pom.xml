@@ -78,14 +78,14 @@
             <Export-Package>datascript.*</Export-Package>
             <Main-Class>datascript.tools.DataScriptTool</Main-Class>
             <Class-Path>
-              ${groupId}.cpp-${rds.version}.jar 
-              ${groupId}.html-${rds.version}.jar 
-              ${groupId}.java-${rds.version}.jar 
-              ${groupId}.runtime-${rds.version}.jar 
-              ${groupId}.xml-${rds.version}.jar 
-              antlr-${antlr.version}.jar 
-              commons-cli-${cli.version}.jar 
-              freemarker-${freemarker.version}.jar</Class-Path>
+              ${groupId}.cpp_${rds.version}.jar 
+              ${groupId}.html_${rds.version}.jar 
+              ${groupId}.java_${rds.version}.jar 
+              ${groupId}.runtime_${rds.version}.jar 
+              ${groupId}.xml_${rds.version}.jar 
+              com.springsource.antlr-${antlr.version}.jar 
+              com.springsource.org.apache.commons.cli-1.1.0.jar 
+              com.springsource.freemarker-${freemarker.version}.jar</Class-Path>
           </instructions>
         </configuration>
       </plugin>
