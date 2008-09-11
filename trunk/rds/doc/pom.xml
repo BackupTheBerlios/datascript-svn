@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>rds</artifactId>
+    <groupId>net.sf.dstools</groupId>
+    <version>0.27.SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>net.sf.dstools</groupId>
+  <artifactId>doc</artifactId>
+  <packaging>pom</packaging>
+  <name>Relational DataScript Documentation</name>
+  <version>0.27.SNAPSHOT</version>
+  <description />
+
+  <properties>
+    <prefix>net.sf.dstools.rds</prefix>
+    <dist.name>rds-bin-${rds.version}</dist.name>
+    <tmp.dir>${project.build.directory}/${dist.name}</tmp.dir>
+  </properties>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-trax</artifactId>
+            <version>1.7.0</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-nodeps</artifactId>
+            <version>1.7.0</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <configuration>
+              <tasks>
+                <ant antfile="build.xml"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
