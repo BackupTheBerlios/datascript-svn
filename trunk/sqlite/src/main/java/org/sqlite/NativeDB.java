@@ -85,7 +85,7 @@ final class NativeDB extends DB
 
 
     /** linked list of all instanced UDFDatas */
-    long udfdatalist = 0;
+    private long udfdatalist = 0;
 
 
     // WRAPPER FUNCTIONS ////////////////////////////////////////////

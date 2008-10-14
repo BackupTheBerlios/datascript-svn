@@ -38,6 +38,7 @@ import java.util.Properties;
 class Conn implements Connection
 {
     private final String url;
+    private final boolean readOnly;
     private DB db = null;
     private MetaData meta = null;
     private boolean autoCommit = true;
@@ -49,6 +50,8 @@ class Conn implements Connection
         db.shared_cache(sharedCache);
     }
     public Conn(String url, String filename) throws SQLException {
+        boolean ro = false;
+
         // check the path to the file exists
         if (!":memory:".equals(filename)) {
             File file = new File(filename).getAbsoluteFile();
@@ -72,14 +75,18 @@ class Conn implements Connection
                     "opening db: '" + filename + "': " +e.getMessage());
             }
             filename = file.getAbsolutePath();
+            if (file.exists())
+                ro = !file.canWrite();
         }
+
+        readOnly = ro;
 
         // TODO: library variable to explicitly control load type
         // attempt to use the Native library first
         try {
             Class<?> nativedb = Class.forName("org.sqlite.NativeDB");
-            if (((Boolean)nativedb.getDeclaredMethod("load")
-                        .invoke(null)).booleanValue())
+            if (((Boolean)nativedb.getDeclaredMethod("load", null)
+                        .invoke(null, null)).booleanValue())
                 db = (DB)nativedb.newInstance();
         } catch (Exception e) { } // fall through to nested library
 
@@ -149,8 +156,10 @@ class Conn implements Connection
 
     public Map<String, Class<?>>  getTypeMap() throws SQLException
         { throw new SQLException("not yet implemented");}
+    public void setTypeMap(Map<String, Class<?>> map) throws SQLException
+        { throw new SQLException("not yet implemented");}
 
-    public boolean isReadOnly() throws SQLException { return false; } // FIXME
+    public boolean isReadOnly() throws SQLException { return readOnly; }
     public void setReadOnly(boolean ro) throws SQLException {}
 
     public DatabaseMetaData getMetaData() {
@@ -326,12 +335,7 @@ class Conn implements Connection
         // TODO Auto-generated method stub
         
     }
-    @Override
-    public void setTypeMap(Map<String, Class<?>> map) throws SQLException
-    {
-        // TODO Auto-generated method stub
-        
-    }
+
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException
     {
