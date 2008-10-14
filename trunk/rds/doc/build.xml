@@ -11,13 +11,13 @@
   <!-- read properties depending on the build machine from an external file -->
   <property file="local.properties" />
   
-  <property name="doc" value="src/main/docbook"/>
+  <property name="doc" value="src/docbkx"/>
 
   <target name="prepare">
     <fail message="Property docbook.home is not set in file local.properties" unless="docbook.home"/>
     <fail message="Property fop.home is not set in file local.properties" unless="fop.home"/>
 
-    <setproxy proxyhost="${http.proxyHost}" proxyport="${http.proxyPort}"/>
+    <!--setproxy proxyhost="${http.proxyHost}" proxyport="${http.proxyPort}"/-->
   </target>
 
   <!-- Define Apache FOP task for PDF generation -->

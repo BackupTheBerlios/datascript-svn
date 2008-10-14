@@ -14,42 +14,41 @@
   <version>0.27.SNAPSHOT</version>
   <description />
 
-  <properties>
-    <prefix>net.sf.dstools.rds</prefix>
-    <dist.name>rds-bin-${rds.version}</dist.name>
-    <tmp.dir>${project.build.directory}/${dist.name}</tmp.dir>
-  </properties>
-
-
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant-trax</artifactId>
-            <version>1.7.0</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant-nodeps</artifactId>
-            <version>1.7.0</version>
-          </dependency>
-        </dependencies>
+        <groupId>com.agilejava.docbkx</groupId>
+        <artifactId>docbkx-maven-plugin</artifactId>
         <executions>
           <execution>
-            <phase>compile</phase>
-            <configuration>
-              <tasks>
-                <ant antfile="build.xml"/>
-              </tasks>
-            </configuration>
             <goals>
-              <goal>run</goal>
+              <goal>generate-html</goal>
+              <goal>generate-pdf</goal>
             </goals>
+            <phase>pre-site</phase>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.docbook</groupId>
+            <artifactId>docbook-xml</artifactId>
+            <version>4.4</version>
+            <scope>runtime</scope>
+          </dependency>
+          <dependency>
+            <groupId>net.sf.offo</groupId>
+            <artifactId>hyphenation</artifactId>
+            <version>1.0</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <sectionAutolabel>true</sectionAutolabel>
+          <paperType>A4</paperType>
+          <fop1Extensions>true</fop1Extensions>
+          <hyphenate>true</hyphenate>
+          <hyphenateVerbatim>true</hyphenateVerbatim>
+        </configuration>
       </plugin>
     </plugins>
   </build>

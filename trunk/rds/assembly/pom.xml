@@ -97,9 +97,9 @@
                 <artifactItem>
                   <groupId>net.sf.dstools</groupId>
                   <artifactId>sqlite</artifactId>
-                  <version>0.52</version>
+                  <version>${sqlite.version}</version>
                   <outputDirectory>${tmp.dir}</outputDirectory>
-                  <destFileName>net.sf.dstools.sqlite_0.52.jar</destFileName>
+                  <destFileName>net.sf.dstools.sqlite_${sqlite.version}.jar</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>

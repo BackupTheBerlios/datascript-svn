@@ -12,6 +12,7 @@
     <cli.version>1.1</cli.version>
     <freemarker.version>2.3.12</freemarker.version>
     <rds.version>${project.version}</rds.version>
+    <sqlite.version>0.53</sqlite.version>
   </properties>
   
   <modules>
@@ -118,16 +119,6 @@
           </configuration>
         </plugin>
         <plugin>
-          <!-- 
-              NOTE: We use a hacked version of this plugin working with
-              Ant 1.7.0 instead of Ant 1.6.5. (The POM was edited manually
-              in the repository.
-           -->
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.2.HB</version>
-        </plugin>
-        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>javancss-maven-plugin</artifactId>
           <version>2.0-beta-2</version>
@@ -151,12 +142,6 @@
         </plugin>
       </plugins>
     </pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>javancss-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
   </build>
 
   <reporting>
