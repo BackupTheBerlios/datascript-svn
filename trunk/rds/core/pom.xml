@@ -48,10 +48,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>6</source>
-          <target>6</target>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -75,7 +71,12 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Export-Package>datascript.*</Export-Package>
+            <Export-Package>
+              datascript.antlr.*,
+              datascript.ast,
+              datascript.emit.*,
+              datascript.tools
+            </Export-Package>
             <Main-Class>datascript.tools.DataScriptTool</Main-Class>
             <Class-Path>
               ${groupId}.cpp_${rds.version}.jar 
