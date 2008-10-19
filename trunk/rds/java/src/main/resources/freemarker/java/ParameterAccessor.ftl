@@ -45,7 +45,7 @@
 <#if equalsCanThrowExceptions && isSimple>
         // check range
         if ((#{maxVal}L < ${name}) || (${name} < #{minVal}L))
-            throw new DataScriptError("Value " + ${name} + " of parameter '${name}' exceeds the range of type ${typeName}!");
+            throw new DataScriptError("Value " + ${name} + " of parameter '${name}' exceeds the range of ${minVal}..${maxVal}");
 
 <#else>
         // do not check range

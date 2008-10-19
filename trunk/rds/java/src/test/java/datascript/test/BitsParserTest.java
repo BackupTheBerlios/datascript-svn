@@ -163,48 +163,58 @@ public class BitsParserTest extends TestCase
 
     public void testRangeCheck()
     {
-    	try
-    	{
-    		@SuppressWarnings("unused")
-			BitStruct bs = new BitStruct((byte)16, (short)1234, (byte)-1);
-    	}
-	    catch (DataScriptError exc)
-	    {
-	    	assertEquals("Value 16 of field 'a' exceeds the range of type bit<4>!", exc.getMessage());
-	    }
-
-	    BitStruct bs = new BitStruct();
         try
         {
-	        bs.setA((byte)16);
-	    }
-	    catch (DataScriptError exc)
-	    {
-	        assertEquals("Value 16 of field 'a' exceeds the range of type bit<4>!", exc.getMessage());            
-	    }
-	    try
-	    {
-	        bs.setB((short)1234);
-	    }
-	    catch (DataScriptError exc)
-	    {
-	        assertEquals("Value 1234 of field 'b' exceeds the range of type uint8!", exc.getMessage());            
-	    }
-        try
-        {
-	        bs.setB((short)-1);
-	    }
-	    catch (DataScriptError exc)
-	    {
-	        assertEquals("Value -1 of field 'b' exceeds the range of type uint8!", exc.getMessage());            
-	    }
-        try
-        {
-        	bs.setC((byte)-1);
+            @SuppressWarnings("unused")
+            BitStruct bs = new BitStruct((byte) 16, (short) 1234, (byte) -1);
         }
         catch (DataScriptError exc)
         {
-            assertEquals("Value -1 of field 'c' exceeds the range of type bit<4>!", exc.getMessage());            
+            assertEquals(
+                    "Value 16 of field 'a' exceeds the range of 0..15",
+                    exc.getMessage());
+        }
+
+        BitStruct bs = new BitStruct();
+        try
+        {
+            bs.setA((byte) 16);
+        }
+        catch (DataScriptError exc)
+        {
+            assertEquals(
+                    "Value 16 of field 'a' exceeds the range of 0..15",
+                    exc.getMessage());
+        }
+        try
+        {
+            bs.setB((short) 1234);
+        }
+        catch (DataScriptError exc)
+        {
+            assertEquals(
+                    "Value 1234 of field 'b' exceeds the range of 0..255",
+                    exc.getMessage());
+        }
+        try
+        {
+            bs.setB((short) -1);
+        }
+        catch (DataScriptError exc)
+        {
+            assertEquals(
+                    "Value -1 of field 'b' exceeds the range of 0..255",
+                    exc.getMessage());
+        }
+        try
+        {
+            bs.setC((byte) -1);
+        }
+        catch (DataScriptError exc)
+        {
+            assertEquals(
+                    "Value -1 of field 'c' exceeds the range of 0..15",
+                    exc.getMessage());
         }
     }
 }

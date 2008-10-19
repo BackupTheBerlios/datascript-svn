@@ -44,8 +44,6 @@ import antlr.Token;
 import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.TokenAST;
-import datascript.emit.html.Comment;
-import datascript.emit.html.LinkedType;
 
 
 
@@ -66,12 +64,10 @@ public class ChoiceMember extends TokenAST
     }
 
 
-    public Comment getDocumentation()
+    public String getDocumentation()
     {
-        Comment comment = new Comment();
         String doc = (documentation == null) ? "" : documentation.getText();
-        if (doc != null && doc.length() > 0) comment.parse(doc);
-        return comment;
+        return doc;
     }
 
 
@@ -94,26 +90,26 @@ public class ChoiceMember extends TokenAST
     }
 
 
-    public Comment getFieldDocumentation()
-    {
-        Comment comment = new Comment();
-        String doc = getField().getDocumentation();
-        if (doc != null && doc.length() > 0) comment.parse(doc);
-        return comment;
-    }
+//    public Comment getFieldDocumentation()
+//    {
+//        Comment comment = new Comment();
+//        String doc = getField().getDocumentation();
+//        if (doc != null && doc.length() > 0) comment.parse(doc);
+//        return comment;
+//    }
 
 
-    /**
-     * This method is for the html emitter and detects the type of a field in a 
-     * choice.
-     * 
-     * @return type of field
-     */
-    public LinkedType getFieldType()
-    {
-        TypeInterface type = getField().getFieldType();
-        type = TypeReference.resolveType(type);
-        LinkedType linkedType = new LinkedType(type);
-        return linkedType;
-    }
+//    /**
+//     * This method is for the html emitter and detects the type of a field in a 
+//     * choice.
+//     * 
+//     * @return type of field
+//     */
+//    public LinkedType getFieldType()
+//    {
+//        TypeInterface type = getField().getFieldType();
+//        type = TypeReference.resolveType(type);
+//        LinkedType linkedType = new LinkedType(type);
+//        return linkedType;
+//    }
 }

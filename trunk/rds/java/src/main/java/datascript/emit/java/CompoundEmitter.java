@@ -175,7 +175,7 @@ abstract public class CompoundEmitter
 
         public String getTypeName()
         {
-            String typeName = datascript.emit.html.TypeNameEmitter.getTypeName(type);
+            String typeName = TypeNameEmitter.getTypeName(type);
             typeName = typeName.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
             return typeName;
         }

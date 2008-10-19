@@ -135,8 +135,7 @@ public abstract class FieldEmitter
 
     public String getTypeName()
     {
-        String typeName = datascript.emit.html.TypeNameEmitter.getTypeName(type);
-        typeName = typeName.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+        String typeName = TypeNameEmitter.getTypeName(type);
         return typeName;
     }
 
@@ -237,8 +236,8 @@ public abstract class FieldEmitter
     	}
         if (type instanceof StdIntegerType)
         {
-        	StdIntegerType integerType = (StdIntegerType) type;
-        	return integerType.getUpperBound().longValue();
+            StdIntegerType integerType = (StdIntegerType) type;
+            return integerType.getUpperBound().longValue();
         }
     	throw new RuntimeException("type of field '" + field.getName() + "' is not a simple type");
     }

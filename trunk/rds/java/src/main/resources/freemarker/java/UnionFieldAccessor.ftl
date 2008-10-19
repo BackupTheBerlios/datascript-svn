@@ -60,7 +60,7 @@
 <#if equalsCanThrowExceptions && isSimple>
         // check range
         if ((#{maxVal}L < ${name}) || (${name} < #{minVal}L))
-            throw new DataScriptError("Value " + ${name} + " of field '${name}' exceeds the range of type ${typeName}!");
+            throw new DataScriptError("Value " + ${name} + " of field '${name}' exceeds the range of ${minVal}..${maxVal}");
 
 </#if>
         __objectChoice = ${text};

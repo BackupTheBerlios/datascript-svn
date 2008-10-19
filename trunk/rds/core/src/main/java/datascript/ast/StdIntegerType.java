@@ -165,13 +165,13 @@ public class StdIntegerType extends IntegerType
          * lowerbounds[DataScriptParserTokenTypes.LEUINT64] = BigInteger.ZERO;
          */
         upperbounds[DataScriptParserTokenTypes.UINT8] = BigInteger.ONE
-                .shiftLeft(8);
+                .shiftLeft(8).subtract(BigInteger.ONE);
         upperbounds[DataScriptParserTokenTypes.UINT16] = BigInteger.ONE
-                .shiftLeft(16);
+                .shiftLeft(16).subtract(BigInteger.ONE);
         upperbounds[DataScriptParserTokenTypes.UINT32] = BigInteger.ONE
-                .shiftLeft(32);
+                .shiftLeft(32).subtract(BigInteger.ONE);
         upperbounds[DataScriptParserTokenTypes.UINT64] = BigInteger.ONE
-                .shiftLeft(64);
+                .shiftLeft(64).subtract(BigInteger.ONE);
         /*
          * upperbounds[DataScriptParserTokenTypes.LEUINT16] =
          * BigInteger.ONE.shiftLeft(16);

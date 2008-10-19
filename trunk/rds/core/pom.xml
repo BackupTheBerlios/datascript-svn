@@ -74,7 +74,7 @@
             <Export-Package>
               datascript.antlr.*,
               datascript.ast,
-              datascript.emit.*,
+              datascript.emit,
               datascript.tools
             </Export-Package>
             <Main-Class>datascript.tools.DataScriptTool</Main-Class>

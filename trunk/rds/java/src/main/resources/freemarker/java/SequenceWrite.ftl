@@ -53,7 +53,7 @@
 <#list fields as field>
 	<#if equalsCanThrowExceptions && field.isSimple>
         if ((#{field.maxVal}L < ${field.name}) || (${field.name} < #{field.minVal}L))
-            throw new DataScriptError("Value " + ${field.name} + " of field '${field.name}' exceeds the range of type ${field.typeName}!");
+            throw new DataScriptError("Value " + ${field.name} + " of field '${field.name}' exceeds the range of ${field.minVal}..${field.maxVal}");
 	</#if>
         this.${field.name} = ${field.name};
 </#list>
