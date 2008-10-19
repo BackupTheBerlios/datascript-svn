@@ -166,6 +166,7 @@ public class DataScriptTool implements Parameters
     {
         Token token = new FileNameToken(DataScriptParserTokenTypes.ROOT, "ROOT");
         rootNode = new TokenAST(token);
+        Package.reset();
     }
 
 

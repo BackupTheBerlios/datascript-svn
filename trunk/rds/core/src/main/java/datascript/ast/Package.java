@@ -201,6 +201,13 @@ public class Package extends Scope
     {
         return root;
     }
+    
+    public static void reset()
+    {
+    	root = null;
+    	nameToPackage.clear();
+        nodeToPackage.clear();
+    }
 
 
     /**
