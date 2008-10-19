@@ -7,6 +7,18 @@
   <name>SQLite JDBC driver</name>
   <version>0.53</version>
   <description />
+  <distributionManagement>
+  	<repository>
+  		<id>sf.dstools.releases</id>
+  		<name>Sourceforge dstools Releases</name>
+  		<url>sftp://web.sourceforge.net/home/groups/d/ds/dstools/htdocs/m2/releases</url>
+  	</repository>
+  	<snapshotRepository>
+  		<id>sf.dstools.snapshots</id>
+  		<name>Sourceforge dstools Releases</name>
+  		<url>sftp://web.sourceforge.net/home/groups/d/ds/dstools/htdocs/m2/snapshots</url>
+  	</snapshotRepository>
+  </distributionManagement>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
