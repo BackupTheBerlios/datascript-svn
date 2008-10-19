@@ -49,17 +49,6 @@ public abstract class AbstractRdsMojo extends AbstractMojo {
 	// ----------------------------------------------------------------------
 
 	/**
-	 * Specifies the destination directory where Antlr should generate files. <br/>
-	 * See <a
-	 * href="http://www.antlr2.org/doc/options.html#Command%20Line%20Options"
-	 * >Command Line Options</a>
-	 * 
-	 * @parameter expression="${project.build.directory}/generated-sources/rds"
-	 * @required
-	 */
-	protected File outputDirectory;
-
-	/**
 	 * Path to source file of the top package, relative to sourceDirectory.
 	 * 
 	 * @parameter expression="${root}"
@@ -76,14 +65,14 @@ public abstract class AbstractRdsMojo extends AbstractMojo {
 
 	public void execute() throws MojoExecutionException 
 	{
-		File f = outputDirectory;
+		File f = getOutputDirectory();
 
 		if (!f.exists()) {
 			f.mkdirs();
 		}
 		List<String> arguments = new ArrayList<String>();
 		arguments.add("-out");
-		arguments.add(outputDirectory.getPath());
+		arguments.add(getOutputDirectory().getPath());
 		arguments.add("-src");
 		arguments.add(getSourceDirectory().getPath());
 		if (debug)
@@ -99,4 +88,6 @@ public abstract class AbstractRdsMojo extends AbstractMojo {
 	protected abstract void registerSourceRoot();
 	
 	protected abstract File getSourceDirectory();
+
+	protected abstract File getOutputDirectory();
 }

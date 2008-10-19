@@ -35,6 +35,17 @@ public class RdsJavaMojo extends AbstractRdsMojo
 	 */
 	private File sourceDirectory;
 
+	/**
+	 * Specifies the destination directory where Antlr should generate files. <br/>
+	 * See <a
+	 * href="http://www.antlr2.org/doc/options.html#Command%20Line%20Options"
+	 * >Command Line Options</a>
+	 * 
+	 * @parameter expression="${project.build.directory}/generated-sources/rds"
+	 * @required
+	 */
+	private File outputDirectory;
+
 	protected void registerSourceRoot()
 	{
 		project.addCompileSourceRoot(outputDirectory.toString());
@@ -44,5 +55,11 @@ public class RdsJavaMojo extends AbstractRdsMojo
 	{
 		return sourceDirectory;
 	}
+
+	protected File getOutputDirectory()
+	{
+		return outputDirectory;
+	}
+	
 	
 }

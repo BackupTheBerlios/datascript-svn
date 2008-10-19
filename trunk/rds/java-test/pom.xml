@@ -46,12 +46,75 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>choices</id>
+						<goals>
+							<goal>java-for-test</goal>
+						</goals>
+						<configuration>
+							<modelRoot>choices.ds</modelRoot>
+						</configuration>
+					</execution>
+					<execution>
 						<id>label</id>
 						<goals>
 							<goal>java-for-test</goal>
 						</goals>
 						<configuration>
 							<modelRoot>label.ds</modelRoot>
+						</configuration>
+					</execution>
+					<execution>
+						<id>sqltest</id>
+						<goals>
+							<goal>java-for-test</goal>
+						</goals>
+						<configuration>
+							<modelRoot>sqltest.ds</modelRoot>
+						</configuration>
+					</execution>
+					<execution>
+						<id>sqlParameter</id>
+						<goals>
+							<goal>java-for-test</goal>
+						</goals>
+						<configuration>
+							<modelRoot>sqlParameter.ds</modelRoot>
+						</configuration>
+					</execution>
+					<execution>
+						<id>func</id>
+						<goals>
+							<goal>java-for-test</goal>
+						</goals>
+						<configuration>
+							<modelRoot>func.ds</modelRoot>
+						</configuration>
+					</execution>
+					<execution>
+						<id>gif</id>
+						<goals>
+							<goal>java-for-test</goal>
+						</goals>
+						<configuration>
+							<modelRoot>gif.ds</modelRoot>
+						</configuration>
+					</execution>
+					<execution>
+						<id>alignment</id>
+						<goals>
+							<goal>java-for-test</goal>
+						</goals>
+						<configuration>
+							<modelRoot>alignment.ds</modelRoot>
+						</configuration>
+					</execution>
+					<execution>
+						<id>lines</id>
+						<goals>
+							<goal>java-for-test</goal>
+						</goals>
+						<configuration>
+							<modelRoot>lines.ds</modelRoot>
 						</configuration>
 					</execution>
 				</executions>
@@ -68,6 +131,18 @@
 			<groupId>net.sf.dstools.rds</groupId>
 			<artifactId>runtime</artifactId>
 			<version>0.27.SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.dstools.rds</groupId>
+			<artifactId>core</artifactId>
+			<version>0.27.SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.dstools</groupId>
+			<artifactId>sqlite</artifactId>
+			<version>0.53</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
