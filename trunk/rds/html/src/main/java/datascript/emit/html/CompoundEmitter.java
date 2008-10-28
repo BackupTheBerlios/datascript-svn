@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import antlr.collections.AST;
+import datascript.ast.ArrayType;
 import datascript.ast.ChoiceType;
 import datascript.ast.CompoundType;
 import datascript.ast.Container;
@@ -162,6 +163,8 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         {
             TypeInterface type = field.getFieldType();
             type = TypeReference.resolveType(type);
+            if (type instanceof ArrayType)
+                type = TypeReference.resolveType(((ArrayType)type).getElementType());
             LinkedType linkedType = new LinkedType(type);
             return linkedType;
         }
@@ -185,6 +188,12 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         }
 
 
+        public String getOffsetLabel()
+        {
+            return tne.getLabel(field);
+        }
+
+
         public Comment getDocumentation()
         {
             Comment comment = new Comment();
@@ -198,6 +207,8 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         {
             TypeInterface type = field.getFieldType();
             type = TypeReference.resolveType(type);
+            while (type instanceof ArrayType)
+                type = TypeReference.resolveType(((ArrayType)type).getElementType());
             if (type instanceof TypeInstantiation)
             {
                 TypeInstantiation inst = (TypeInstantiation) type;
@@ -402,7 +413,8 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     {
         Comment comment = new Comment();
         String doc = compound.getDocumentation();
-        if (doc.length() > 0) comment.parse(doc);
+        if (doc != null && doc.length() > 0)
+            comment.parse(doc);
         return comment;
     }
 
@@ -424,6 +436,16 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         TypeInterface type2 = TypeReference.resolveType(type1);
         LinkedType linkedType = new LinkedType(type2);
         return linkedType;
+    }
+
+
+    public Comment parseDocumentation(Field f)
+    {
+        Comment comment = new Comment();
+        String doc = f.getDocumentation();
+        if (doc != null && doc.length() > 0)
+            comment.parse(doc);
+        return comment;
     }
 
 

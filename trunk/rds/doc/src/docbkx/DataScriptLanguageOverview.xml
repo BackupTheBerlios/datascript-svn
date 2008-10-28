@@ -91,6 +91,17 @@
           encoding.</para>
         </revdescription>
       </revision>
+
+      <revision>
+        <revnumber>0.7.1</revnumber>
+
+        <date>22 October 2008</date>
+
+        <revdescription>
+          <para>Move is operator into right paragraph (Binary Operators) and 
+          correct typing errors.</para>
+        </revdescription>
+      </revision>
     </revhistory>
   </articleinfo>
 
@@ -651,74 +662,6 @@ align(32):
     <literal>++, --, &gt;&gt;&gt;, instanceof</literal>.</para>
 
     <section>
-      <title>Binary Operators</title>
-
-      <section>
-        <title>Arithmetic Operators</title>
-
-        <para>The integer arithmetic operations include <literal>+</literal>
-        (addition), <literal>-</literal> (subtraction), <literal>*</literal>
-        (multiplication), <literal>/</literal> (division),
-        <literal>%</literal> (modulo). In addition, there are the shift
-        operators <literal>&lt;&lt;</literal> and
-        <literal>&gt;&gt;</literal>.</para>
-      </section>
-
-      <section>
-        <title>Relational Operators</title>
-
-        <para>There are the following relational operators for integer
-        expressions: <literal>==</literal> (equal to), <literal>!=</literal>
-        (not equal to), <literal>&lt;</literal> (less than),
-        <literal>&lt;</literal> (less than or equal), <literal>&gt;</literal>
-        (greater than), <literal>&gt;=</literal> (greater than or
-        equal).</para>
-
-        <para>The equality operators <literal>==</literal> and
-        <literal>!=</literal> may be applied to any type</para>
-      </section>
-
-      <section>
-        <title>Boolean operators</title>
-
-        <para>The boolean operators <literal>&amp;&amp;</literal> (and) and
-        <literal>||</literal> (or) may be applied to boolean
-        expressions.</para>
-      </section>
-
-      <section>
-        <title>Bit operators</title>
-
-        <para>The bit operators <literal>&amp;</literal> (bitwise and),
-        <literal>|</literal> (bitwise or), <literal>^</literal> (bitwise
-        exclusive or) may be applied to integer types.</para>
-      </section>
-
-      <section>
-        <title>Assignment operators</title>
-
-        <para>The assignment operator <literal>=</literal> and the combined
-        assignment operators <literal>*=, /=, %=, +=, -=, &lt;&lt;=,
-        &gt;&gt;=, &amp;=, ^=, |=</literal> have the usual semantics.</para>
-      </section>
-
-      <section>
-        <title>Comma operator</title>
-
-        <para>The comma operator <literal>,</literal> evaluates to the
-        expression on the right hand side.</para>
-      </section>
-
-      <section>
-        <title>Postfix operators</title>
-
-        <para>The postfix operators include <literal>[]</literal> (array
-        index), <literal>()</literal> (instantiation with argument list or
-        function call), and <literal>.</literal> (member access).</para>
-      </section>
-    </section>
-
-    <section>
       <title>Unary Operators</title>
 
       <section>
@@ -771,6 +714,83 @@ align(32):
       </section>
 
       <section>
+        <title>sum Operator</title>
+
+        <para>The <literal>sum</literal> operator is defined for arrays with
+        integer element type (this includes bit fields).
+        <literal>sum(a)</literal> evaluates to the sum of all elements of the
+        array <literal>a</literal>.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Binary Operators</title>
+
+      <section>
+        <title>Arithmetic Operators</title>
+
+        <para>The integer arithmetic operations include <literal>+</literal>
+        (addition), <literal>-</literal> (subtraction), <literal>*</literal>
+        (multiplication), <literal>/</literal> (division),
+        <literal>%</literal> (modulo). In addition, there are the shift
+        operators <literal>&lt;&lt;</literal> and
+        <literal>&gt;&gt;</literal>.</para>
+      </section>
+
+      <section>
+        <title>Relational Operators</title>
+
+        <para>There are the following relational operators for integer
+        expressions: <literal>==</literal> (equal to), <literal>!=</literal>
+        (not equal to), <literal>&lt;</literal> (less than),
+        <literal>&lt;=</literal> (less than or equal), <literal>&gt;</literal>
+        (greater than), <literal>&gt;=</literal> (greater than or
+        equal).</para>
+
+        <para>The equality operators <literal>==</literal> and
+        <literal>!=</literal> may be applied to any type</para>
+      </section>
+
+      <section>
+        <title>Boolean operators</title>
+
+        <para>The boolean operators <literal>&amp;&amp;</literal> (and) and
+        <literal>||</literal> (or) may be applied to boolean
+        expressions.</para>
+      </section>
+
+      <section>
+        <title>Bit operators</title>
+
+        <para>The bit operators <literal>&amp;</literal> (bitwise and),
+        <literal>|</literal> (bitwise or), <literal>^</literal> (bitwise
+        exclusive or) may be applied to integer types.</para>
+      </section>
+
+      <section>
+        <title>Assignment operators</title>
+
+        <para>The assignment operator <literal>=</literal> and the combined
+        assignment operators <literal>*=, /=, %=, +=, -=, &lt;&lt;=,
+        &gt;&gt;=, &amp;=, ^=, |=</literal> have the usual semantics.</para>
+      </section>
+
+      <section>
+        <title>Comma operator</title>
+
+        <para>The comma operator <literal>,</literal> evaluates to the
+        expression on the right hand side.</para>
+      </section>
+
+      <section>
+        <title>Postfix operators</title>
+
+        <para>The postfix operators include <literal>[]</literal> (array
+        index), <literal>()</literal> (instantiation with argument list or
+        function call), and <literal>.</literal> (member access).</para>
+      </section>
+
+      <section>
         <title>is Operator</title>
 
         <para>The <literal>is</literal> operator can be applied to two field
@@ -778,15 +798,6 @@ align(32):
         member of union type, and <literal>y</literal> must be one of the
         branch names of that union. The expression is true if and only if the
         decoder has selected branch y for the union.</para>
-      </section>
-
-      <section>
-        <title>sum Operator</title>
-
-        <para>The <literal>sum</literal> operator is defined for arrays with
-        integer element type (this includes bit fields).
-        <literal>sum(a)</literal> evaluates to the sum of all elements of the
-        array <literal>a</literal>.</para>
       </section>
     </section>
 

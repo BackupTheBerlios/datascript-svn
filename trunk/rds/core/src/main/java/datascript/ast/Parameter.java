@@ -91,9 +91,13 @@ public class Parameter
         {
             type = TypeReference.resolveType(type);
         }
+        if (type instanceof ArrayType)
+        {
+            type = TypeReference.resolveType(((ArrayType)type).getElementType());
+        }
         if (type instanceof Subtype)
         {
-            type = ((Subtype)type).getBaseType();
+            type = TypeReference.getBaseType(type);
         }
         if (type instanceof StdIntegerType)
         {

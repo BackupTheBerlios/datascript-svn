@@ -44,7 +44,7 @@
       <#assign array = member.field.arrayRange!"">
       <#assign opt = member.field.optionalClause!"">
       <#assign c = member.field.constraint!"">
-            <@linkedtype member.fieldType/><@arglist member.field/>
+            <@linkedtype toLinkedType(member.field.fieldType)/><@arglist member.field/>
           </td>
           <td valign="bottom">
             <a href="#${fname}" class="fieldLink">${fname}</a>${array}${opt}${c};
@@ -87,7 +87,7 @@
         <a name="${member.field.name}">${member.field.name}:</a>
       </dt>  
       <dd class="memberDetail">
-      <@comment member.fieldDocumentation/>
+      <@comment parseDocumentation(member.field)/>
       </dd>
   </#if>
 </#list>

@@ -43,6 +43,9 @@
 						</goals>
 						<configuration>
 							<modelRoot>bits.ds</modelRoot>
+                            <debug>true</debug>
+							<sourceDirectory>src/test/ds</sourceDirectory>
+							<outputDirectory>target/generated-test-sources/rds</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
@@ -52,6 +55,9 @@
 						</goals>
 						<configuration>
 							<modelRoot>choices.ds</modelRoot>
+                            <debug>true</debug>
+                            <sourceDirectory>src/test/ds</sourceDirectory>
+                            <outputDirectory>target/generated-test-sources/rds</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
@@ -61,6 +67,9 @@
 						</goals>
 						<configuration>
 							<modelRoot>label.ds</modelRoot>
+                            <debug>true</debug>
+                            <sourceDirectory>src/test/ds</sourceDirectory>
+                            <outputDirectory>target/generated-test-sources/rds</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
@@ -70,6 +79,9 @@
 						</goals>
 						<configuration>
 							<modelRoot>sqltest.ds</modelRoot>
+                            <debug>true</debug>
+                            <sourceDirectory>src/test/ds</sourceDirectory>
+                            <outputDirectory>target/generated-test-sources/rds</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
@@ -79,6 +91,9 @@
 						</goals>
 						<configuration>
 							<modelRoot>sqlParameter.ds</modelRoot>
+                            <debug>true</debug>
+                            <sourceDirectory>src/test/ds</sourceDirectory>
+                            <outputDirectory>target/generated-test-sources/rds</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
@@ -88,6 +103,9 @@
 						</goals>
 						<configuration>
 							<modelRoot>func.ds</modelRoot>
+                            <debug>true</debug>
+                            <sourceDirectory>src/test/ds</sourceDirectory>
+                            <outputDirectory>target/generated-test-sources/rds</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
@@ -97,6 +115,9 @@
 						</goals>
 						<configuration>
 							<modelRoot>gif.ds</modelRoot>
+                            <debug>true</debug>
+                            <sourceDirectory>src/test/ds</sourceDirectory>
+                            <outputDirectory>target/generated-test-sources/rds</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
@@ -106,6 +127,9 @@
 						</goals>
 						<configuration>
 							<modelRoot>alignment.ds</modelRoot>
+                            <debug>true</debug>
+                            <sourceDirectory>src/test/ds</sourceDirectory>
+                            <outputDirectory>target/generated-test-sources/rds</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
@@ -115,6 +139,9 @@
 						</goals>
 						<configuration>
 							<modelRoot>lines.ds</modelRoot>
+                            <debug>true</debug>
+                            <sourceDirectory>src/test/ds</sourceDirectory>
+                            <outputDirectory>target/generated-test-sources/rds</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>

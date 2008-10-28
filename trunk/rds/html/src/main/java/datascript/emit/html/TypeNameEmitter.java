@@ -51,7 +51,20 @@ public class TypeNameEmitter
     
     public TypeNameEmitter()
     {
-    }    
+    }
+
+
+    public String getLabel(Field f)
+    {
+        String result = "";
+        Expression label = f.getLabel();
+        if (label != null)
+        {
+            result = exprEmitter.emit(label) + ":";
+        }
+        return result;
+    }
+
 
     public String getArrayRange(Field f)
     {
@@ -97,7 +110,7 @@ public class TypeNameEmitter
             expr = field.getInitializer();
             if (expr != null)
             {
-                result = field.getName() + " == " + exprEmitter.emit(expr);
+                result = " : " + field.getName() + " == " + exprEmitter.emit(expr);
             }
         }
 

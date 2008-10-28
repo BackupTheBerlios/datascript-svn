@@ -88,28 +88,4 @@ public class ChoiceMember extends TokenAST
         }
         return field;
     }
-
-
-//    public Comment getFieldDocumentation()
-//    {
-//        Comment comment = new Comment();
-//        String doc = getField().getDocumentation();
-//        if (doc != null && doc.length() > 0) comment.parse(doc);
-//        return comment;
-//    }
-
-
-//    /**
-//     * This method is for the html emitter and detects the type of a field in a 
-//     * choice.
-//     * 
-//     * @return type of field
-//     */
-//    public LinkedType getFieldType()
-//    {
-//        TypeInterface type = getField().getFieldType();
-//        type = TypeReference.resolveType(type);
-//        LinkedType linkedType = new LinkedType(type);
-//        return linkedType;
-//    }
 }

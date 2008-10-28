@@ -143,19 +143,20 @@ public class ExpressionEmitter
                 paren = true;
                 break;
             case DataScriptParserTokenTypes.INDEX:
-            	buffer.append("__index");
+                append(expr.op1());
+            	buffer.append("$index");
             	return;
             case DataScriptParserTokenTypes.LENGTHOF:
+                buffer.append("lengthof ");
                 append(expr.op1());
-                buffer.append(".length()");
                 return;
             case DataScriptParserTokenTypes.SIZEOF:
+                buffer.append("sizeof ");
                 append(expr.op1());
-                buffer.append(".sizeof()");
                 return;
             case DataScriptParserTokenTypes.BITSIZEOF:
+                buffer.append("bitsizeof ");
                 append(expr.op1());
-                buffer.append(".bitsizeof()");
                 return;
             case DataScriptParserTokenTypes.SUM:
                 buffer.append("sum(");
@@ -298,9 +299,9 @@ public class ExpressionEmitter
     private void appendArrayExpression(Expression expr)
     {
         append(expr.op1());
-        buffer.append(".elementAt(");
+        buffer.append("[");
         append(expr.op2());
-        buffer.append(')');        
+        buffer.append(']');        
     }
 
     private void appendDotExpression(Expression expr)

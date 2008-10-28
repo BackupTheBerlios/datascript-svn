@@ -20,13 +20,21 @@
       <table>
       <tbody id="tabIdent">
         <tr><td colspan=3>${categoryKeyword} ${type.name}<@parameterlist type/></td></tr>
-        <tr><td>{</td><td rowspan="${fields?size+1}">&nbsp;</td><td></td></tr>
+        <tr><td colspan=3>{</td></tr>
 <#list fields as field>
+  <#assign lname = field.offsetLabel>
+  <#if lname?has_content>
+        <tr class="codeMember">
+          <td></td><td colspan=2>${lname}</td>
+        </tr>
+  </#if>
+
   <#assign fname = field.name>
   <#assign array = field.arrayRange!"">
   <#assign opt = field.optionalClause>
   <#assign c = field.constraint>
         <tr class="codeMember">
+          <td></td>
           <td valign="top" id="tabIdent"><@linkedtype field.type/><@arglist field/></td>
           <td valign="bottom">
             <a href="#${fname}" class="fieldLink">${fname}</a>${array}${opt}${c};</td>
@@ -35,18 +43,20 @@
 <#if functions?has_content>
       </tbody>
       </table>
+
       <table>
       <tbody id="tabIdent">
   <#list functions as function>
-	<tr><td colspan=2 id="tabIdent">&nbsp;</td></tr>
+        <tr><td colspan=3 id="tabIdent">&nbsp;</td></tr>
         <tr>
-          <td colspan=2 valign="top" id="tabIdent">function ${function.returnTypeName} ${function.funtionType.name}()</td>
+          <td colspan=3 valign="top" id="tabIdent">function ${function.returnTypeName} ${function.funtionType.name}()</td>
         </tr>
-        <tr><td colspan=2 id="tabIdent">{</td></tr>
+        <tr><td colspan=3 id="tabIdent">{</td></tr>
         <tr>
+          <td></td>
           <td valign="top" id="tabIdent2">return</td>
           <td>${function.result};</td></tr>
-        <tr><td colspan=2 id="tabIdent">}</td></tr>
+        <tr><td colspan=3 id="tabIdent">}</td></tr>
   </#list>
 </#if>
         <tr><td colspan=3>};</td></tr>
