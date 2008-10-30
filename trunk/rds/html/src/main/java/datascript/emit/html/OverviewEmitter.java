@@ -63,8 +63,9 @@ public class OverviewEmitter extends DefaultHTMLEmitter
     private String packageName;
 
 
-    public OverviewEmitter()
+    public OverviewEmitter(String outputPath)
     {
+        super(outputPath);
     }
 
 

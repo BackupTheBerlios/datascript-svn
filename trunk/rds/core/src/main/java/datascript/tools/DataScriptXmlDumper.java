@@ -261,6 +261,13 @@ public class DataScriptXmlDumper implements Parameters
     }
 
 
+    @Override
+    public String getDocPathName()
+    {
+        return ".";
+    }
+
+
     public String getFileName()
     {
         return ToolContext.getFileName();

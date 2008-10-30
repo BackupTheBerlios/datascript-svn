@@ -76,10 +76,10 @@ public class CompoundEmitter extends DefaultHTMLEmitter
     private final List<FunctionEmitter> functions = new ArrayList<FunctionEmitter>();
 
 
-    public CompoundEmitter()
+    public CompoundEmitter(String outputPath)
     {
-        super();
-        directory = new File(directory, contentFolder);
+        super(outputPath);
+        directory = new File(directory, CONTENT_FOLDER);
     }
 
 
@@ -252,7 +252,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         {
             Template tpl = cfg.getTemplate("html/choice.html.ftl");
 
-            setCurrentFolder(contentFolder);
+            setCurrentFolder(CONTENT_FOLDER);
 
             File outputDir = new File(directory, compound.getPackage().getPackageName());
             openOutputFile(outputDir, compound.getName() + HTML_EXT);
@@ -280,7 +280,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         {
             Template tpl = cfg.getTemplate("html/compound.html.ftl");
 
-            setCurrentFolder(contentFolder);
+            setCurrentFolder(CONTENT_FOLDER);
 
             File outputDir = new File(directory, compound.getPackage().getPackageName());
             openOutputFile(outputDir, compound.getName() + HTML_EXT);

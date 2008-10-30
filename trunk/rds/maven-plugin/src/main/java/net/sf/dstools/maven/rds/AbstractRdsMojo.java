@@ -102,37 +102,31 @@ public abstract class AbstractRdsMojo extends AbstractMojo
      */
     private File htmlDirectory;
 
+
     public void execute() throws MojoExecutionException
     {
-        File f = getOutputDirectory();
-
-        if (!f.exists())
-        {
-            f.mkdirs();
-        }
-        
-        String genFileName = new File(getOutputDirectory(), modelRoot).getPath();
-        if (!genFileName.endsWith(".ds"))
+        if (!modelRoot.endsWith(".ds"))
         {
             throw new MojoExecutionException("model root file name must have extension '.ds'");
         }
 
-        String dir = genFileName.substring(0, genFileName.length()-3);
-        File visitorFile = new File(dir, "__DepthFirstVisitor.java");
-        
-        File sourceFile = new File(getSourceDirectory(), modelRoot);
-        if (visitorFile.lastModified() > sourceFile.lastModified())
+        File f = getOutputDirectory();
+        if (!f.exists())
         {
-            // TODO: compare timestamps with _all_ *.ds files in the source tree.
+            f.mkdirs();
+        }
+
+        if (checkUpToDate())
+        {
             getLog().info("Nothing to do, output is up-to-date");
             return;
         }
-        
+
         List<String> arguments = new ArrayList<String>();
         if (generateHtml)
         {
             arguments.add("-doc");
-            // TODO: make rds accept a user-defined path for HTML output
+            arguments.add(getHtmlOutDirectory().getPath());
         }
         arguments.add("-out");
         arguments.add(getOutputDirectory().getPath());
@@ -149,10 +143,27 @@ public abstract class AbstractRdsMojo extends AbstractMojo
         registerSourceRoot();
     }
 
+
+    private boolean checkUpToDate()
+    {
+        String genFileName = new File(getOutputDirectory(), modelRoot).getPath();
+        String dir = genFileName.substring(0, genFileName.length()-3);
+        File visitorFile = new File(dir, "__DepthFirstVisitor.java");
+
+        File sourceFile = new File(getSourceDirectory(), modelRoot);
+        // TODO: compare timestamps with _all_ *.ds files in the source tree.
+        return visitorFile.lastModified() > sourceFile.lastModified();
+    }
+
+
     protected abstract void registerSourceRoot();
 
     protected abstract File getSourceDirectory();
 
     protected abstract File getOutputDirectory();
 
+    protected File getHtmlOutDirectory()
+    {
+        return htmlDirectory;
+    }
 }

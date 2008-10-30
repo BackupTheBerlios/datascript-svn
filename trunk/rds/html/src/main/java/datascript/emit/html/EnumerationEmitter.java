@@ -61,10 +61,10 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
     private final List<EnumItem> items = new ArrayList<EnumItem>();
 
 
-    public EnumerationEmitter()
+    public EnumerationEmitter(String outputPath)
     {
-        super();
-        directory = new File(directory, contentFolder);
+        super(outputPath);
+        directory = new File(directory, CONTENT_FOLDER);
     }
 
 
@@ -87,7 +87,7 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
         {
             Template tpl = cfg.getTemplate("html/enumeration.html.ftl");
 
-            setCurrentFolder(contentFolder);
+            setCurrentFolder(CONTENT_FOLDER);
 
             File outputDir = new File(directory, e.getPackage().getPackageName());
             openOutputFile(outputDir, e.getName() + HTML_EXT);

@@ -59,21 +59,21 @@ public class ContentEmitter extends DefaultHTMLEmitter
     private final ConstTypeEmitter cte;
 
 
-    public ContentEmitter()
+    public ContentEmitter(String outputPath)
     {
-        super();
+        super(outputPath);
 
-        ce = new CompoundEmitter();
-        ee = new EnumerationEmitter();
-        se = new SubtypeEmitter();
-        cte = new ConstTypeEmitter();
+        ce = new CompoundEmitter(outputPath);
+        ee = new EnumerationEmitter(outputPath);
+        se = new SubtypeEmitter(outputPath);
+        cte = new ConstTypeEmitter(outputPath);
     }
 
 
     @Override
     public void beginRoot(AST root)
     {
-        setCurrentFolder(contentFolder);
+        setCurrentFolder(CONTENT_FOLDER);
     }
 
 

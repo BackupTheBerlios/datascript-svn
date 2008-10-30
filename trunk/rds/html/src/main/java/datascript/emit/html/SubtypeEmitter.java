@@ -56,10 +56,10 @@ public class SubtypeEmitter extends DefaultHTMLEmitter
     private Subtype subtype;
 
 
-    public SubtypeEmitter()
+    public SubtypeEmitter(String outputPath)
     {
-        super();
-        directory = new File(directory, contentFolder);
+        super(outputPath);
+        directory = new File(directory, CONTENT_FOLDER);
     }
 
 
@@ -77,7 +77,7 @@ public class SubtypeEmitter extends DefaultHTMLEmitter
         {
             Template tpl = cfg.getTemplate("html/subtype.html.ftl");
 
-            setCurrentFolder(contentFolder);
+            setCurrentFolder(CONTENT_FOLDER);
 
             File outputDir = new File(directory, s.getPackage().getPackageName());
             openOutputFile(outputDir, s.getName() + HTML_EXT);

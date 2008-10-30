@@ -68,25 +68,25 @@ public class HtmlExtension implements Extension
 
         System.out.println("emitting html documentation");
 
-        ContentEmitter htmlEmitter = new ContentEmitter();
-        
+        ContentEmitter htmlEmitter = new ContentEmitter(params.getDocPathName());
+
         // emit frameset
         htmlEmitter.emitFrameset();
 
         // emit stylesheets
         htmlEmitter.emitStylesheet();
-        
+
         // emit HTML documentation
         emitter.setEmitter(htmlEmitter);
         emitter.root(rootNode);
 
         // emit list of packages
-        PackageEmitter packageEmitter = new PackageEmitter();
+        PackageEmitter packageEmitter = new PackageEmitter(params.getDocPathName());
         emitter.setEmitter(packageEmitter);
         emitter.root(rootNode);
 
         // emit list of classes
-        OverviewEmitter overviewEmitter = new OverviewEmitter();
+        OverviewEmitter overviewEmitter = new OverviewEmitter(params.getDocPathName());
         emitter.setEmitter(overviewEmitter);
         emitter.root(rootNode);
     }
@@ -96,8 +96,10 @@ public class HtmlExtension implements Extension
     {
         Option rdsOption;
 
-        rdsOption = new Option("doc", false, 
-                "enables generation of Javadoc-style documentation");
+        rdsOption = new Option("doc", true, 
+                "enables generation of Javadoc-style documentation. " +
+                "Optionaly you can specify a path to a output directory." +
+                "Default directory name is 'html'.");
         rdsOption.setRequired(false);
         rdsOptions.addOption(rdsOption);
     }

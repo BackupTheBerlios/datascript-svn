@@ -54,8 +54,9 @@ public class PackageEmitter extends DefaultHTMLEmitter
     private final Set<String> packages = new TreeSet<String>();
 
 
-    public PackageEmitter()
+    public PackageEmitter(String outputPath)
     {
+        super(outputPath);
     }
 
 

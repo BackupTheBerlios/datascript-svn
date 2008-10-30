@@ -84,7 +84,7 @@ import datascript.ast.Scope;
  */
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.27.3 (28 Oct. 2008)";
+    private static final String VERSION = "rds 0.27.4 (31 Oct. 2008)";
 
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -109,7 +109,9 @@ public class DataScriptTool implements Parameters
     private String fileName = null;
     private String srcPathName = null;
     private String outPathName = null;
+    private String docPathName = null;
     private boolean checkSyntax = false;
+
 
 
     class CmdLineParser extends org.apache.commons.cli.Parser
@@ -209,6 +211,7 @@ public class DataScriptTool implements Parameters
         checkSyntax = cli.hasOption('c');
         srcPathName = cli.getOptionValue("src");
         outPathName = cli.getOptionValue("out");
+        docPathName = cli.getOptionValue("doc");
         
         if (fileName == null)
             return false;
@@ -222,14 +225,30 @@ public class DataScriptTool implements Parameters
         }
         else
         {
-            int i = outPathName.length();
-            while (outPathName.charAt(i - 1) == File.separatorChar)
-                --i;
-            if (i < outPathName.length())
-                outPathName = outPathName.substring(0, i);
+            outPathName = cutLastSeparatorChar(outPathName);
+        }
+
+        if (docPathName != null && docPathName.length() == 0)
+        {
+            docPathName = null;
+        }
+        else
+        {
+            docPathName = cutLastSeparatorChar(docPathName);
         }
 
         return true;
+    }
+
+
+    private static String cutLastSeparatorChar(String pathName)
+    {
+        int i = pathName.length();
+        while (pathName.charAt(i - 1) == File.separatorChar)
+            --i;
+        if (i < pathName.length())
+            pathName = pathName.substring(0, i);
+        return pathName;
     }
 
 
@@ -455,6 +474,13 @@ public class DataScriptTool implements Parameters
     public String getOutPathName()
     {
         return outPathName;
+    }
+
+
+    @Override
+    public String getDocPathName()
+    {
+        return docPathName ;
     }
 
 

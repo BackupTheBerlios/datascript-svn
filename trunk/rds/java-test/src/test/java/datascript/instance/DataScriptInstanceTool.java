@@ -103,6 +103,7 @@ public class DataScriptInstanceTool implements Parameters
     private String fileName;
     private String srcPathName;
     private String outPathName;
+    private String docPathName;
 
     @SuppressWarnings("unused")
     private String instanceFileName;
@@ -185,6 +186,12 @@ public class DataScriptInstanceTool implements Parameters
         rdsOption.setRequired(false);
         rdsOptions.addOption(rdsOption);
 
+        rdsOption = new Option("doc", true,
+                "path to the directory in which the generated documentation is stored." +
+                "currently not used in this tool");
+        rdsOption.setRequired(false);
+        rdsOptions.addOption(rdsOption);
+
         rdsOption = new Option("out", true,
                 "path to the directory in which the generated code is stored");
         rdsOption.setRequired(false);
@@ -227,6 +234,7 @@ public class DataScriptInstanceTool implements Parameters
         checkSyntax = cli.hasOption('c');
         srcPathName = cli.getOptionValue("src");
         outPathName = cli.getOptionValue("out");
+        docPathName = cli.getOptionValue("doc");
         typeName = cli.getOptionValue("type");
         instanceFileName = cli.getOptionValue("inst");
         
@@ -238,16 +246,32 @@ public class DataScriptInstanceTool implements Parameters
         }
         else
         {
-            int i = outPathName.length();
-            while (outPathName.charAt(i - 1) == File.separatorChar)
-                --i;
-            if (i < outPathName.length())
-                outPathName = outPathName.substring(0, i);
+            outPathName = cutLastSeparatorChar(outPathName);
+        }
+
+        if (docPathName != null && docPathName.length() == 0)
+        {
+            docPathName = null;
+        }
+        else
+        {
+            docPathName = cutLastSeparatorChar(docPathName);
         }
 
         if (fileName == null)
             return false;
         return true;
+    }
+
+
+    private static String cutLastSeparatorChar(String pathName)
+    {
+        int i = pathName.length();
+        while (pathName.charAt(i - 1) == File.separatorChar)
+            --i;
+        if (i < pathName.length())
+            pathName = pathName.substring(0, i);
+        return pathName;
     }
 
 
@@ -521,6 +545,13 @@ public class DataScriptInstanceTool implements Parameters
     public String getOutPathName()
     {
         return outPathName;
+    }
+
+
+    @Override
+    public String getDocPathName()
+    {
+        return docPathName;
     }
 
 

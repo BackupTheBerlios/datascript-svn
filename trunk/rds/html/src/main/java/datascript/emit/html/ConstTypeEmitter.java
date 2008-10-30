@@ -57,10 +57,10 @@ public class ConstTypeEmitter extends DefaultHTMLEmitter
 {
     ConstType consttype;
 
-    public ConstTypeEmitter()
+    public ConstTypeEmitter(String outputPath)
     {
-        super();
-        directory = new File(directory, contentFolder);
+        super(outputPath);
+        directory = new File(directory, CONTENT_FOLDER);
     }
 
 
@@ -78,7 +78,7 @@ public class ConstTypeEmitter extends DefaultHTMLEmitter
         {
             Template tpl = cfg.getTemplate("html/const.html.ftl");
 
-            setCurrentFolder(contentFolder);
+            setCurrentFolder(CONTENT_FOLDER);
 
             File outputDir = new File(directory, consttype.getPackage().getPackageName());
             openOutputFile(outputDir, consttype.getName() + HTML_EXT);

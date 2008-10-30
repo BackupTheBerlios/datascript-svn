@@ -57,20 +57,41 @@ import freemarker.template.Template;
 
 abstract public class DefaultHTMLEmitter extends DefaultEmitter
 {
+    protected static final String CONTENT_FOLDER = "content";
+    protected static final String HTML_EXT = ".html";
+
     protected static Configuration cfg = null;
 
     protected final List<CompoundEmitter> containers = new ArrayList<CompoundEmitter>();
 
-    protected static final String contentFolder = "content";
-    protected static final String HTML_EXT = ".html";
-
-    protected File directory = new File("html");
+    protected File directory;
     protected TypeInterface currentType;
     private String currentFolder = "/";
     protected Package currentPackage;
 
 
     public DefaultHTMLEmitter()
+    {
+        initConfig();
+    }
+
+
+    public DefaultHTMLEmitter(String outputPath)
+    {
+        if (outputPath != null && outputPath.length() > 0)
+        {
+            directory = new File(outputPath);
+        }
+        else
+        {
+            directory = new File("html");
+        }
+
+        initConfig();
+    }
+
+
+    private void initConfig()
     {
         if (cfg != null) 
             return;

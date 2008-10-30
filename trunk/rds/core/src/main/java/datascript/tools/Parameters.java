@@ -75,6 +75,14 @@ public interface Parameters
 
     /**
      * 
+     * @return returns the (relative) pathname to the directory in witch the 
+     * documentation is stored
+     */
+    public String getDocPathName();
+
+
+    /**
+     * 
      * @return returns the name of the initial DataScript file
      */
     public String getFileName();
