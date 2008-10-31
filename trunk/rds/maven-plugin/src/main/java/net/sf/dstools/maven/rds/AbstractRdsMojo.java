@@ -40,6 +40,7 @@
 package net.sf.dstools.maven.rds;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +103,8 @@ public abstract class AbstractRdsMojo extends AbstractMojo
      */
     private File htmlDirectory;
 
+    private File visitorFile;
+
 
     public void execute() throws MojoExecutionException
     {
@@ -115,8 +118,7 @@ public abstract class AbstractRdsMojo extends AbstractMojo
         {
             f.mkdirs();
         }
-
-        if (checkUpToDate())
+        else if (checkUpToDate())
         {
             getLog().info("Nothing to do, output is up-to-date");
             return;
@@ -148,11 +150,45 @@ public abstract class AbstractRdsMojo extends AbstractMojo
     {
         String genFileName = new File(getOutputDirectory(), modelRoot).getPath();
         String dir = genFileName.substring(0, genFileName.length()-3);
-        File visitorFile = new File(dir, "__DepthFirstVisitor.java");
+        visitorFile = new File(dir, "__DepthFirstVisitor.java");
+        return checkUpToDate(getSourceDirectory());
+    }
 
-        File sourceFile = new File(getSourceDirectory(), modelRoot);
-        // TODO: compare timestamps with _all_ *.ds files in the source tree.
-        return visitorFile.lastModified() > sourceFile.lastModified();
+
+    private boolean checkUpToDate(File srcDir)
+    {
+        File[] files = srcDir.listFiles(new FileFilter()
+        {
+            @Override
+            public boolean accept(File pathname)
+            {
+                return pathname.isDirectory() || pathname.getName().endsWith(".ds");
+            }
+        });
+
+        for (int i = 0; i < files.length-1; i++)
+        {
+            File curFile = files[i];
+
+            if (curFile.isDirectory())
+            {
+                if (!checkUpToDate(curFile))
+                    return false;
+            }
+            else
+            {
+                if (!checkUpToDate(srcDir, curFile.getName()))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+
+    private boolean checkUpToDate(File srcDir, String fileName)
+    {
+        File sourceFile = new File(srcDir, fileName);
+        return visitorFile.lastModified() >= sourceFile.lastModified();
     }
 
 
