@@ -37,7 +37,7 @@
     <module>java-test</module>
     <module>doc</module>
     <module>assembly</module>
-  </modules>
+ </modules>
   
   <url>http://dstools.sf.net</url>
   <inceptionYear>2006</inceptionYear>
@@ -154,6 +154,18 @@
             <manifestLocation>META-INF</manifestLocation>
           </configuration>
         </plugin>
+      <plugin>
+        <groupId>net.sf.dstools</groupId>
+        <artifactId>maven-sourcebundle-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>sourcebundle</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+        
       </plugins>
     </pluginManagement>
   </build>

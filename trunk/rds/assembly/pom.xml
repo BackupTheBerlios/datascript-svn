@@ -16,6 +16,8 @@
     <prefix>net.sf.dstools.rds</prefix>
     <dist.name>rds-bin-${rds.version}</dist.name>
     <tmp.dir>${project.build.directory}/${dist.name}</tmp.dir>
+    <rds.version.osgi>0.27.0.SNAPSHOT</rds.version.osgi>
+    <sqlite.version.osgi>0.53.0</sqlite.version.osgi>
   </properties>
   
   <dependencies>
@@ -58,48 +60,78 @@
               <goal>copy</goal>
             </goals>
             <configuration>
+              <outputDirectory>${tmp.dir}</outputDirectory>
               <artifactItems>
                 <artifactItem>
                   <groupId>net.sf.dstools.rds</groupId>
                   <artifactId>runtime</artifactId>
                   <version>${rds.version}</version>
-                  <outputDirectory>${tmp.dir}</outputDirectory>
-                  <destFileName>${prefix}.runtime_${rds.version}.jar</destFileName>
+                  <destFileName>${prefix}.runtime_${rds.version.osgi}.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>net.sf.dstools.rds</groupId>
+                  <artifactId>runtime</artifactId>
+                  <version>${rds.version}</version>
+                  <classifier>sources</classifier>
+                  <destFileName>${prefix}.runtime.source_${rds.version.osgi}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>net.sf.dstools.rds</groupId>
                   <artifactId>core</artifactId>
                   <version>${rds.version}</version>
-                  <outputDirectory>${tmp.dir}</outputDirectory>
-                  <destFileName>${prefix}.core_${rds.version}.jar</destFileName>
+                  <destFileName>${prefix}.core_${rds.version.osgi}.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>net.sf.dstools.rds</groupId>
+                  <artifactId>core</artifactId>
+                  <version>${rds.version}</version>
+                  <classifier>sources</classifier>
+                  <destFileName>${prefix}.core.source_${rds.version.osgi}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>net.sf.dstools.rds</groupId>
                   <artifactId>java</artifactId>
                   <version>${rds.version}</version>
-                  <outputDirectory>${tmp.dir}</outputDirectory>
-                  <destFileName>${prefix}.java_${rds.version}.jar</destFileName>
+                  <destFileName>${prefix}.java_${rds.version.osgi}.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>net.sf.dstools.rds</groupId>
+                  <artifactId>java</artifactId>
+                  <version>${rds.version}</version>
+                  <classifier>sources</classifier>
+                  <destFileName>${prefix}.java.source_${rds.version.osgi}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>net.sf.dstools.rds</groupId>
                   <artifactId>html</artifactId>
                   <version>${rds.version}</version>
-                  <outputDirectory>${tmp.dir}</outputDirectory>
-                  <destFileName>${prefix}.html_${rds.version}.jar</destFileName>
+                  <destFileName>${prefix}.html_${rds.version.osgi}.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>net.sf.dstools.rds</groupId>
+                  <artifactId>html</artifactId>
+                  <version>${rds.version}</version>
+                  <classifier>sources</classifier>
+                  <destFileName>${prefix}.html.source_${rds.version.osgi}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>net.sf.dstools.rds</groupId>
                   <artifactId>xml</artifactId>
                   <version>${rds.version}</version>
-                  <outputDirectory>${tmp.dir}</outputDirectory>
-                  <destFileName>${prefix}.xml_${rds.version}.jar</destFileName>
+                  <destFileName>${prefix}.xml_${rds.version.osgi}.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>net.sf.dstools.rds</groupId>
+                  <artifactId>xml</artifactId>
+                  <version>${rds.version}</version>
+                  <classifier>sources</classifier>
+                  <destFileName>${prefix}.xml.source_${rds.version.osgi}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>net.sf.dstools</groupId>
                   <artifactId>sqlite</artifactId>
                   <version>${sqlite.version}</version>
-                  <outputDirectory>${tmp.dir}</outputDirectory>
-                  <destFileName>net.sf.dstools.sqlite_${sqlite.version}.jar</destFileName>
+                  <destFileName>net.sf.dstools.sqlite_${sqlite.version.osgi}.jar</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>

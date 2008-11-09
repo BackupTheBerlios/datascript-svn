@@ -27,6 +27,14 @@
           </instructions>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>net.sf.dstools</groupId>
+        <artifactId>maven-sourcebundle-plugin</artifactId>
+        <configuration>
+          <bundleName>net.sf.dstools.rds.runtime</bundleName>
+          <sourceBundleName>net.sf.dstools.rds.runtime.source</sourceBundleName>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>

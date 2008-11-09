@@ -37,6 +37,14 @@
           </instructions>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>net.sf.dstools</groupId>
+        <artifactId>maven-sourcebundle-plugin</artifactId>
+        <configuration>
+          <bundleName>net.sf.dstools.html</bundleName>
+          <sourceBundleName>net.sf.dstools.html.source</sourceBundleName>
+        </configuration>
+      </plugin>      
     </plugins>
   </build>
 </project>
