@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.harmanbecker.maven.plugin.sourcebundle;
+package net.sf.dstools.maven.plugin.sourcebundle;
 
 import java.io.File;
 import java.util.List;
