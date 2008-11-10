@@ -24,6 +24,7 @@
         <configuration>
           <instructions>
             <Export-Package>datascript.runtime.*</Export-Package>
+            <Import-Package>org.sqlite;resolution:=optional,*</Import-Package>
           </instructions>
         </configuration>
       </plugin>
