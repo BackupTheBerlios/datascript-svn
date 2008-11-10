@@ -49,19 +49,11 @@ options
 }
 
 {
-    private ToolContext context;
-    
-    public void setContext(ToolContext context)
-    {
-        this.context = context;
-    }
-
     public void reportError(RecognitionException ex) 
     {
-        context.logError((TokenAST)getAST(), ex.getMessage());
+        ToolContext.logError((TokenAST)getAST(), ex.getMessage());
         //throw new RuntimeException(ex);
     }
-
 }
 
 root : #(ROOT (translationUnit)+ );

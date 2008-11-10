@@ -84,7 +84,7 @@ import datascript.ast.Scope;
  */
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.27.4 (31 Oct. 2008)";
+    private static final String VERSION = "rds 0.27.5 (10 Nov. 2008)";
 
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -309,7 +309,6 @@ public class DataScriptTool implements Parameters
         if (checkSyntax)
         {
             DataScriptWalker walker = new DataScriptWalker();
-            walker.setContext(context);
             walker.root(rootNode);
             if (context.getErrorCount() != 0)
                 throw new ParserException("Walker: Parser errors.");

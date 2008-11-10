@@ -85,7 +85,7 @@ import datascript.tools.Parameters;
 
 public class DataScriptInstanceTool implements Parameters
 {
-    private static final String VERSION = "edsi 0.17.1 (1 Nov 2007)";
+    private static final String VERSION = "edsi 0.17.2 (10 Nov 2008)";
 
     private ToolContext context;
     private TokenAST rootNode;
@@ -333,7 +333,6 @@ public class DataScriptInstanceTool implements Parameters
         if (checkSyntax)
         {
             DataScriptWalker walker = new DataScriptWalker();
-            walker.setContext(context);
             walker.root(rootNode);
             if (context.getErrorCount() != 0)
                 throw new ParserException("Walker: Parser errors.");
