@@ -228,9 +228,9 @@ public class DataScriptTool implements Parameters
             outPathName = cutLastSeparatorChar(outPathName);
         }
 
-        if (docPathName != null && docPathName.length() == 0)
+        if (docPathName == null || docPathName.length() == 0)
         {
-            docPathName = null;
+            docPathName = "html";
         }
         else
         {

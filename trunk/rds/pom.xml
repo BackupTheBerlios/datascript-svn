@@ -6,18 +6,6 @@
   <name>Relational DataScript</name>
   <packaging>pom</packaging>
   <version>0.27.SNAPSHOT</version>
-  <distributionManagement>
-  	<repository>
-  		<id>sf.dstools.releases</id>
-  		<name>Sourceforge dstools Releases</name>
-  		<url>sftp://web.sourceforge.net/home/groups/d/ds/dstools/htdocs/m2/releases</url>
-  	</repository>
-  	<snapshotRepository>
-  		<id>sf.dstools.snapshots</id>
-  		<name>Sourceforge dstools Releases</name>
-  		<url>sftp://web.sourceforge.net/home/groups/d/ds/dstools/htdocs/m2/snapshots</url>
-  	</snapshotRepository>
-  </distributionManagement>
 
   <properties>
     <antlr.version>2.7.7</antlr.version>
@@ -26,6 +14,28 @@
     <rds.version>${project.version}</rds.version>
     <sqlite.version>0.53</sqlite.version>
   </properties>
+  <profiles>
+    <profile>
+      <id>staging</id>
+      <distributionManagement>
+        <repository>
+          <id>anaconda.releases</id>
+          <name>Anaconda Releases</name>
+          <url>
+            http://k332.hbi.ad.harman.com/nexus/content/repositories/releases 
+          </url>
+        </repository>
+        <snapshotRepository>
+          <id>anaconda.snapshots</id>
+          <name>Anaconda Snapshots</name>
+          <url>
+            http://k332.hbi.ad.harman.com/nexus/content/repositories/snapshots 
+          </url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+  </profiles>
+  
   
   <modules>
     <module>core</module>
@@ -107,7 +117,7 @@
     </dependencies>
   </dependencyManagement>
 
-  <repositories>
+  <!--repositories>
     <repository>
       <id>com.springsource.repository.bundles.external</id>
       <name>
@@ -117,7 +127,7 @@
         http://repository.springsource.com/maven/bundles/external
       </url>
     </repository>
-  </repositories>
+  </repositories-->
 
 
 
@@ -181,4 +191,7 @@
       </plugin>
     </plugins>
   </reporting>
+  
+  
+  
 </project>
