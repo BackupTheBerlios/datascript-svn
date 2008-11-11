@@ -8,6 +8,28 @@
   <version>1.0.0</version>
   <name>Eclipse Source Bundle Maven Plugin</name>
   <url>http://www.harmanbecker.com</url>
+  <profiles>
+    <profile>
+      <id>staging</id>
+      <distributionManagement>
+        <repository>
+          <id>anaconda.releases</id>
+          <name>Anaconda Releases</name>
+          <url>
+            http://k332.hbi.ad.harman.com/nexus/content/repositories/releases 
+          </url>
+        </repository>
+        <snapshotRepository>
+          <id>anaconda.snapshots</id>
+          <name>Anaconda Snapshots</name>
+          <url>
+            http://k332.hbi.ad.harman.com/nexus/content/repositories/snapshots 
+          </url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+  </profiles>
+  
   <build>
     <plugins>
       <plugin>
