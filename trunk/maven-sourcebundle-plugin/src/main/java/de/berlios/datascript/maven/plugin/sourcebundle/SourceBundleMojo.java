@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package net.sf.dstools.maven.plugin.sourcebundle;
+package de.berlios.datascript.maven.plugin.sourcebundle;
 
 import java.io.File;
 import java.util.List;
