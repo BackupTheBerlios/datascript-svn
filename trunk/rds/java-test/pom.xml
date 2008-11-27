@@ -3,14 +3,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>rds</artifactId>
-    <groupId>net.sf.dstools</groupId>
-    <version>0.27.SNAPSHOT</version>
+    <groupId>de.berlios.datascript</groupId>
+    <version>0.28</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.sf.dstools</groupId>
+  <groupId>de.berlios.datascript</groupId>
   <artifactId>java-test</artifactId>
   <name>Relational DataScript Java Backend Tests</name>
-  <version>0.27.SNAPSHOT</version>
+  <version>0.28</version>
   <build>
     <pluginManagement>
       <plugins>
@@ -26,9 +26,9 @@
 
 
         <plugin>
-          <groupId>net.sf.dstools.rds</groupId>
+          <groupId>de.berlios.datascript.rds</groupId>
           <artifactId>maven-rds-plugin</artifactId>
-          <version>0.27.SNAPSHOT</version>
+          <version>0.28</version>
           <configuration>
             <debug>true</debug>
           </configuration>
@@ -37,7 +37,7 @@
     </pluginManagement>
     <plugins>
       <plugin>
-        <groupId>net.sf.dstools.rds</groupId>
+        <groupId>de.berlios.datascript.rds</groupId>
         <artifactId>maven-rds-plugin</artifactId>
         <executions>
           <execution>
@@ -132,19 +132,19 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>net.sf.dstools.rds</groupId>
+      <groupId>de.berlios.datascript.rds</groupId>
       <artifactId>runtime</artifactId>
-      <version>0.27.SNAPSHOT</version>
+      <version>0.28</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>net.sf.dstools.rds</groupId>
+      <groupId>de.berlios.datascript.rds</groupId>
       <artifactId>core</artifactId>
-      <version>0.27.SNAPSHOT</version>
+      <version>0.28</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>net.sf.dstools</groupId>
+      <groupId>de.berlios.datascript</groupId>
       <artifactId>sqlite</artifactId>
       <version>0.53</version>
       <scope>test</scope>

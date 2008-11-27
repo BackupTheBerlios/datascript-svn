@@ -3,15 +3,15 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>rds</artifactId>
-    <groupId>net.sf.dstools</groupId>
-    <version>0.27.SNAPSHOT</version>
+    <groupId>de.berlios.datascript</groupId>
+    <version>0.28</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.sf.dstools</groupId>
+  <groupId>de.berlios.datascript</groupId>
   <artifactId>doc</artifactId>
   <packaging>pom</packaging>
   <name>Relational DataScript Documentation</name>
-  <version>0.27.SNAPSHOT</version>
+  <version>0.28</version>
   <description />
 
   <build>

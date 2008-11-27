@@ -1,20 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.sf.dstools.rds</groupId>
+  <groupId>de.berlios.datascript.rds</groupId>
   <artifactId>core</artifactId>
   <packaging>bundle</packaging>
-  <version>0.27.SNAPSHOT</version>
+  <version>0.28</version>
   <name>Relational DataScript Core Library</name>
   <parent>
-    <groupId>net.sf.dstools</groupId>
+    <groupId>de.berlios.datascript</groupId>
     <artifactId>rds</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.27.SNAPSHOT</version>
+    <version>0.28</version>
   </parent>
   <dependencies>
     <dependency>
-      <groupId>net.sf.dstools.rds</groupId>
+      <groupId>de.berlios.datascript.rds</groupId>
       <artifactId>runtime</artifactId>
       <version>${rds.version}</version>
     </dependency>
@@ -91,11 +91,11 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>net.sf.dstools</groupId>
+        <groupId>de.berlios.datascript</groupId>
         <artifactId>maven-sourcebundle-plugin</artifactId>
         <configuration>
-          <bundleName>net.sf.dstools.core</bundleName>
-          <sourceBundleName>net.sf.dstools.core.source</sourceBundleName>
+          <bundleName>de.berlios.datascript.core</bundleName>
+          <sourceBundleName>de.berlios.datascript.core.source</sourceBundleName>
         </configuration>
       </plugin>      
     </plugins>

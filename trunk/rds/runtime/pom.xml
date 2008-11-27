@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.sf.dstools.rds</groupId>
+  <groupId>de.berlios.datascript.rds</groupId>
   <artifactId>runtime</artifactId>
   <packaging>bundle</packaging>
-  <version>0.27.SNAPSHOT</version>
+  <version>0.28</version>
   <name>Relational DataScript Runtime Library</name>
   <parent>
-    <groupId>net.sf.dstools</groupId>
+    <groupId>de.berlios.datascript</groupId>
     <artifactId>rds</artifactId>
-    <version>0.27.SNAPSHOT</version>
+    <version>0.28</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <build>
@@ -29,11 +29,11 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>net.sf.dstools</groupId>
+        <groupId>de.berlios.datascript</groupId>
         <artifactId>maven-sourcebundle-plugin</artifactId>
         <configuration>
-          <bundleName>net.sf.dstools.rds.runtime</bundleName>
-          <sourceBundleName>net.sf.dstools.rds.runtime.source</sourceBundleName>
+          <bundleName>de.berlios.datascript.rds.runtime</bundleName>
+          <sourceBundleName>de.berlios.datascript.rds.runtime.source</sourceBundleName>
         </configuration>
       </plugin>
     </plugins>

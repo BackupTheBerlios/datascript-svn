@@ -1,26 +1,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.sf.dstools.rds</groupId>
+  <groupId>de.berlios.datascript.rds</groupId>
   <artifactId>java</artifactId>
   <packaging>bundle</packaging>
-  <version>0.27.SNAPSHOT</version>
+  <version>0.28</version>
   <name>Relational DataScript Java Code Generator</name>
   <parent>
-    <groupId>net.sf.dstools</groupId>
+    <groupId>de.berlios.datascript</groupId>
     <artifactId>rds</artifactId>
-    <version>0.27.SNAPSHOT</version>
+    <version>0.28</version>
   </parent>
   <dependencies>
 
     <dependency>
-      <groupId>net.sf.dstools.rds</groupId>
+      <groupId>de.berlios.datascript.rds</groupId>
       <artifactId>core</artifactId>
       <version>${rds.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>net.sf.dstools.rds</groupId>
+      <groupId>de.berlios.datascript.rds</groupId>
       <artifactId>runtime</artifactId>
       <version>${rds.version}</version>
       <scope>test</scope>
@@ -45,7 +45,7 @@
     </dependency>
 
     <dependency>
-      <groupId>net.sf.dstools</groupId>
+      <groupId>de.berlios.datascript</groupId>
       <artifactId>sqlite</artifactId>
     </dependency>
 
@@ -77,12 +77,12 @@
       </plugin>
 
       <plugin>
-        <groupId>net.sf.dstools</groupId>
+        <groupId>de.berlios.datascript</groupId>
         <artifactId>maven-sourcebundle-plugin
         </artifactId>
         <configuration>
-          <bundleName>net.sf.dstools.java</bundleName>
-          <sourceBundleName>net.sf.dstools.java.source</sourceBundleName>
+          <bundleName>de.berlios.datascript.java</bundleName>
+          <sourceBundleName>de.berlios.datascript.java.source</sourceBundleName>
         </configuration>
       </plugin>
 

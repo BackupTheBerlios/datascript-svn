@@ -37,7 +37,7 @@
  */
 
 
-package net.sf.dstools.maven.rds;
+package de.berlios.datascript.maven.rds;
 
 import java.io.File;
 
