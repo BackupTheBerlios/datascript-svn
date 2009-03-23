@@ -4,13 +4,13 @@
   <groupId>de.berlios.datascript.rds</groupId>
   <artifactId>maven-rds-plugin</artifactId>
   <packaging>maven-plugin</packaging>
-  <version>0.28</version>
+  <version>0.30</version>
   <name>Relational DataScript Maven Plugin</name>
   <url>http://dstools.sf.net</url>
   <parent>
   	<artifactId>rds</artifactId>
   	<groupId>de.berlios.datascript</groupId>
-  	<version>0.28</version>
+  	<version>0.30</version>
   </parent>
   <dependencies>
     <dependency>
@@ -26,17 +26,17 @@
     <dependency>
       <groupId>de.berlios.datascript.rds</groupId>
       <artifactId>core</artifactId>
-      <version>0.28</version>
+      <version>0.30</version>
     </dependency>
     <dependency>
       <groupId>de.berlios.datascript.rds</groupId>
       <artifactId>java</artifactId>
-      <version>0.28</version>
+      <version>0.30</version>
     </dependency>
     <dependency>
       <groupId>de.berlios.datascript.rds</groupId>
       <artifactId>html</artifactId>
-      <version>0.28</version>
+      <version>0.30</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

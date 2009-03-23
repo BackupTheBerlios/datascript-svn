@@ -84,7 +84,7 @@ import datascript.ast.Scope;
  */
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.28 (27 Nov 2008)";
+    private static final String VERSION = "rds 0.30 (24 Mar 2009)";
 
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -537,19 +537,26 @@ public class DataScriptTool implements Parameters
         {
             HelpFormatter hf = new HelpFormatter();
             hf.printHelp(pe.getMessage(), rdsOptionsToAccept);
+            abort(pe);
         }
         catch (DataScriptException exc)
         {
-            System.err.println(exc);
+            abort(exc);
         }
         catch (TokenStreamRecognitionException exc)
         {
-            System.err.println(exc);
+            abort(exc);
         }
-        catch (Exception exc)
+        catch (Throwable exc)
         {
-            exc.printStackTrace();
+            abort(exc);
         }
+    }
+    
+    private void abort(Throwable throwable)
+    {
+        throwable.printStackTrace();
+        System.exit(1);
     }
 
     public static void main(String[] args)

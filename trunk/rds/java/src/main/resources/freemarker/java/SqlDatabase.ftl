@@ -42,6 +42,7 @@
 ${packageImports}
 
 import java.sql.*;
+import java.net.URISyntaxException;
 
 
 @Generated(
@@ -57,7 +58,7 @@ public class ${name} extends SqlDatabase
 </#list>
 
 
-    public ${name}(String fileName, Mode mode) throws SQLException, ClassNotFoundException
+    public ${name}(String fileName, Mode mode) throws SQLException, URISyntaxException
     {
         super(fileName, mode);
         if (mode == Mode.CREATE)

@@ -4,12 +4,12 @@
   <groupId>de.berlios.datascript.rds</groupId>
   <artifactId>java</artifactId>
   <packaging>bundle</packaging>
-  <version>0.28</version>
+  <version>0.30</version>
   <name>Relational DataScript Java Code Generator</name>
   <parent>
     <groupId>de.berlios.datascript</groupId>
     <artifactId>rds</artifactId>
-    <version>0.28</version>
+    <version>0.30</version>
   </parent>
   <dependencies>
 

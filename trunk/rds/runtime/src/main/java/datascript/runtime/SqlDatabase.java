@@ -37,6 +37,9 @@
  */
 package datascript.runtime;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -52,10 +55,16 @@ public abstract class SqlDatabase
         CREATE
     }
 
-    public SqlDatabase(String fileName, Mode mode) throws SQLException, ClassNotFoundException
+    public SqlDatabase(String fileName, Mode mode) throws SQLException, URISyntaxException
     {
-        Class.forName("org.sqlite.JDBC");
-        dbc = DriverManager.getConnection("jdbc:sqlite:" + fileName);
+        String path = new File(fileName).toURI().getPath();
+        URI uri = new URI("jdbc:sqlite", null, path, null);
+        this.dbc = DriverManager.getConnection(uri.toString());
+    }
+    
+    public SqlDatabase(Connection dbc)
+    {
+        this.dbc = dbc;
     }
     
     public void close() throws SQLException
