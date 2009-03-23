@@ -341,7 +341,7 @@ public class SourceBundleMojo
     	{
     		if (isNumber(parts[2]))
     		{
-    			minor = parts[2];
+    			micro = parts[2];
     		}
     		else
     		{
