@@ -146,7 +146,6 @@
     <dependency>
       <groupId>de.berlios.datascript</groupId>
       <artifactId>sqlite</artifactId>
-      <version>0.53</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
