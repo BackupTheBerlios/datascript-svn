@@ -52,7 +52,16 @@ sql_database SqlTestDb
     sql "CREATE INDEX tilesIndex (tileid) ON tiles;";
 };
 
+sql_table ImageTable
+{
+    int32         id;
+    Image         image;
+};
 
+Image
+{
+    int8         blob[];
+};
 
 Tile(TileId tileid)
 {
