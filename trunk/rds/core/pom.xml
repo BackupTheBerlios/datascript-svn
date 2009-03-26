@@ -79,11 +79,11 @@
             </Export-Package>
             <Main-Class>datascript.tools.DataScriptTool</Main-Class>
             <Class-Path>
-              ${groupId}.cpp_${rds.version}.jar 
-              ${groupId}.html_${rds.version}.jar 
-              ${groupId}.java_${rds.version}.jar 
-              ${groupId}.runtime_${rds.version}.jar 
-              ${groupId}.xml_${rds.version}.jar 
+              ${groupId}.cpp_${rds.version.osgi}.jar 
+              ${groupId}.html_${rds.version.osgi}.jar 
+              ${groupId}.java_${rds.version.osgi}.jar 
+              ${groupId}.runtime_${rds.version.osgi}.jar 
+              ${groupId}.xml_${rds.version.osgi}.jar 
               com.springsource.antlr-${antlr.version}.jar 
               com.springsource.org.apache.commons.cli-1.1.0.jar 
               com.springsource.freemarker-${freemarker.version}.jar</Class-Path>

@@ -16,7 +16,6 @@
     <prefix>de.berlios.datascript.rds</prefix>
     <dist.name>rds-bin-${rds.version}</dist.name>
     <tmp.dir>${project.build.directory}/${dist.name}</tmp.dir>
-    <rds.version.osgi>0.30.0</rds.version.osgi>
     <sqlite.version.osgi>0.53.1</sqlite.version.osgi>
   </properties>
   
