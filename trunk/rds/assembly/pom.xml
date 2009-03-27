@@ -65,66 +65,66 @@
                   <groupId>de.berlios.datascript.rds</groupId>
                   <artifactId>runtime</artifactId>
                   <version>${rds.version}</version>
-                  <destFileName>${prefix}.runtime_${rds.version.osgi}.jar</destFileName>
+                  <destFileName>${prefix}.runtime_${rds.osgiversion}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>de.berlios.datascript.rds</groupId>
                   <artifactId>runtime</artifactId>
                   <version>${rds.version}</version>
                   <classifier>sources</classifier>
-                  <destFileName>${prefix}.runtime.source_${rds.version.osgi}.jar</destFileName>
+                  <destFileName>${prefix}.runtime.source_${rds.osgiversion}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>de.berlios.datascript.rds</groupId>
                   <artifactId>core</artifactId>
                   <version>${rds.version}</version>
-                  <destFileName>${prefix}.core_${rds.version.osgi}.jar</destFileName>
+                  <destFileName>${prefix}.core_${rds.osgiversion}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>de.berlios.datascript.rds</groupId>
                   <artifactId>core</artifactId>
                   <version>${rds.version}</version>
                   <classifier>sources</classifier>
-                  <destFileName>${prefix}.core.source_${rds.version.osgi}.jar</destFileName>
+                  <destFileName>${prefix}.core.source_${rds.osgiversion}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>de.berlios.datascript.rds</groupId>
                   <artifactId>java</artifactId>
                   <version>${rds.version}</version>
-                  <destFileName>${prefix}.java_${rds.version.osgi}.jar</destFileName>
+                  <destFileName>${prefix}.java_${rds.osgiversion}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>de.berlios.datascript.rds</groupId>
                   <artifactId>java</artifactId>
                   <version>${rds.version}</version>
                   <classifier>sources</classifier>
-                  <destFileName>${prefix}.java.source_${rds.version.osgi}.jar</destFileName>
+                  <destFileName>${prefix}.java.source_${rds.osgiversion}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>de.berlios.datascript.rds</groupId>
                   <artifactId>html</artifactId>
                   <version>${rds.version}</version>
-                  <destFileName>${prefix}.html_${rds.version.osgi}.jar</destFileName>
+                  <destFileName>${prefix}.html_${rds.osgiversion}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>de.berlios.datascript.rds</groupId>
                   <artifactId>html</artifactId>
                   <version>${rds.version}</version>
                   <classifier>sources</classifier>
-                  <destFileName>${prefix}.html.source_${rds.version.osgi}.jar</destFileName>
+                  <destFileName>${prefix}.html.source_${rds.osgiversion}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>de.berlios.datascript.rds</groupId>
                   <artifactId>xml</artifactId>
                   <version>${rds.version}</version>
-                  <destFileName>${prefix}.xml_${rds.version.osgi}.jar</destFileName>
+                  <destFileName>${prefix}.xml_${rds.osgiversion}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>de.berlios.datascript.rds</groupId>
                   <artifactId>xml</artifactId>
                   <version>${rds.version}</version>
                   <classifier>sources</classifier>
-                  <destFileName>${prefix}.xml.source_${rds.version.osgi}.jar</destFileName>
+                  <destFileName>${prefix}.xml.source_${rds.osgiversion}.jar</destFileName>
                 </artifactItem>
                 <artifactItem>
                   <groupId>de.berlios.datascript</groupId>

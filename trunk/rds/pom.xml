@@ -12,8 +12,8 @@
     <cli.version>1.1</cli.version>
     <freemarker.version>2.3.12</freemarker.version>
     <rds.version>${project.version}</rds.version>
-    <rds.version.osgi>${project.version}.0</rds.version.osgi>
-    <sqlite.version>0.53</sqlite.version>
+    <rds.osgiversion>${project.version}.0</rds.osgiversion>
+    <sqlite.version>0.53.1</sqlite.version>
   </properties>
   <profiles>
     <profile>
@@ -112,7 +112,7 @@
       <dependency>
         <groupId>de.berlios.datascript</groupId>
         <artifactId>sqlite</artifactId>
-        <version>0.53.1</version>
+        <version>${sqlite.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
@@ -178,6 +178,11 @@
         </executions>
       </plugin>
         
+      <plugin>
+        <groupId>com.agilejava.docbkx</groupId>
+        <artifactId>docbkx-maven-plugin</artifactId>
+        <version>2.0.8</version>
+      </plugin>
       </plugins>
     </pluginManagement>
   </build>
