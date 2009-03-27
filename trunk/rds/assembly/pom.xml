@@ -162,6 +162,14 @@
               <descriptors>
                 <descriptor>src/assembly/bin.xml</descriptor>
               </descriptors>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <archive>
+                <manifest>
+                  <mainClass>datascript.tools.DataScriptTool</mainClass>
+                </manifest>
+              </archive>
             </configuration>
           </execution>
         </executions>
