@@ -1,0 +1,204 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.berlios.datascript</groupId>
+  <artifactId>rds</artifactId>
+  <name>Relational DataScript</name>
+  <packaging>pom</packaging>
+  <version>0.30</version>
+
+  <properties>
+    <antlr.version>2.7.7</antlr.version>
+    <cli.version>1.1</cli.version>
+    <freemarker.version>2.3.12</freemarker.version>
+    <rds.version>${project.version}</rds.version>
+    <rds.osgiversion>${project.version}.0</rds.osgiversion>
+    <sqlite.version>0.53.1</sqlite.version>
+  </properties>
+  <profiles>
+    <profile>
+      <id>staging</id>
+      <distributionManagement>
+        <repository>
+          <id>anaconda.releases</id>
+          <name>Anaconda Releases</name>
+          <url>
+            http://k332.hbi.ad.harman.com/nexus/content/repositories/releases 
+          </url>
+        </repository>
+        <snapshotRepository>
+          <id>anaconda.snapshots</id>
+          <name>Anaconda Snapshots</name>
+          <url>
+            http://k332.hbi.ad.harman.com/nexus/content/repositories/snapshots 
+          </url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+  </profiles>
+  
+  
+  <modules>
+    <module>core</module>
+    <module>runtime</module>
+    <module>java</module>
+    <module>html</module>
+    <module>xml</module>
+    <module>maven-plugin</module>
+    <module>java-test</module>
+    <module>doc</module>
+    <module>assembly</module>
+ </modules>
+  
+  <url>http://datascript.berlios.de</url>
+  <inceptionYear>2006</inceptionYear>
+  <developers>
+  	<developer>
+  		<id>HWellmann</id>
+  		<name>Harald Wellmann</name>
+  		<email>hwellmann@harmanbecker.com</email>
+  		<roles>
+ 			<role>Project Manager</role>
+            <role>Developer</role>
+  		</roles>
+  	</developer>
+  	<developer>
+  		<id>HWedekind</id>
+  		<name>Henrik Wedekind</name>
+  		<email>hwedekind@harmanbecker.com</email>
+  		<roles>
+  			<role>Developer</role>
+  		</roles>
+  	</developer>
+  </developers>
+  <organization>
+    <name>Harman/Becker Automotive Systems</name>
+    <url>http://www.harmanbecker.com</url>
+  </organization>
+  <dependencyManagement>
+    <!-- 
+        We try to use OSGi-compliant jars whereever we can. Unfortunately,
+        we get duplicate dependencies, since some of the Maven plugins
+        depend on non-OSGi versions of the same bundle.
+     -->
+    <dependencies>
+      <dependency>
+        <groupId>org.antlr</groupId>
+        <artifactId>com.springsource.antlr</artifactId>
+        <version>2.7.7</version>
+      </dependency>
+      <dependency>
+        <groupId>antlr</groupId>
+        <artifactId>antlr</artifactId>
+        <version>2.7.7</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>com.springsource.org.apache.commons.cli</artifactId>
+        <version>1.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.freemarker</groupId>
+        <artifactId>com.springsource.freemarker</artifactId>
+        <version>2.3.12</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>3.8.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>de.berlios.datascript</groupId>
+        <artifactId>sqlite</artifactId>
+        <version>${sqlite.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <!--repositories>
+    <repository>
+      <id>com.springsource.repository.bundles.external</id>
+      <name>
+        SpringSource Enterprise Bundle Repository
+      </name>
+      <url>
+        http://repository.springsource.com/maven/bundles/external
+      </url>
+    </repository>
+  </repositories-->
+
+
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>javancss-maven-plugin</artifactId>
+          <version>2.0-beta-2</version>
+          <executions>
+            <execution>
+              <phase>process-sources</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>1.4.3</version>
+          <extensions>true</extensions>
+          <configuration>
+            <manifestLocation>META-INF</manifestLocation>
+          </configuration>
+        </plugin>
+      <plugin>
+        <groupId>de.berlios.datascript</groupId>
+        <artifactId>maven-sourcebundle-plugin</artifactId>
+        <version>1.0.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>sourcebundle</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+        
+      <plugin>
+        <groupId>com.agilejava.docbkx</groupId>
+        <artifactId>docbkx-maven-plugin</artifactId>
+        <version>2.0.8</version>
+      </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <configLocation>rds-checkstyle.xml</configLocation>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+  
+  
+  
+</project>

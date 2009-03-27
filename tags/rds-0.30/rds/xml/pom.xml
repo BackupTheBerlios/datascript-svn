@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.berlios.datascript.rds</groupId>
+  <artifactId>xml</artifactId>
+  <packaging>bundle</packaging>
+  <version>0.30</version>
+  <name>Relational DataScript XML Generator</name>
+  <organization>
+    <name>Harman/Becker</name>
+  </organization>
+  <parent>
+    <groupId>de.berlios.datascript</groupId>
+    <artifactId>rds</artifactId>
+    <version>0.30</version>
+    <relativePath>../pom.xml</relativePath>    
+  </parent>
+  <dependencies>
+    <dependency>
+      <groupId>de.berlios.datascript.rds</groupId>
+      <artifactId>core</artifactId>
+      <version>${rds.version}</version>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+       <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+       </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Export-Package>datascript.emit.xml</Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>de.berlios.datascript</groupId>
+        <artifactId>maven-sourcebundle-plugin</artifactId>
+        <configuration>
+          <bundleName>de.berlios.datascript.xml</bundleName>
+          <sourceBundleName>de.berlios.datascript.xml.source</sourceBundleName>
+        </configuration>
+      </plugin>
+      
+    </plugins>
+  </build>
+  
+
+</project>

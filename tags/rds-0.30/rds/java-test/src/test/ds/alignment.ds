@@ -1,0 +1,31 @@
+package alignment;
+
+
+Foo
+{
+    uint8    f;
+};
+
+Alignseq
+{
+    bit<4>    a;
+
+align(8):
+    uint8    label1;
+    bit:1    flag;
+
+align(8):
+    Foo      f[2];
+
+align(8):
+    uint16   c;
+        
+label1:
+    bit:4    b;
+};
+
+Sizetest
+{
+    Alignseq a;
+    int16    b = bitsizeof a;
+};
