@@ -39,7 +39,8 @@ public class ServiceTest
         testdb.delete();
     }
 
-    @Test public void openAbsFile() throws SQLException {
+    //@Test 
+    public void openAbsFile() throws SQLException {
         File testdb = new File("D:/temp/test.db");
         if (testdb.exists()) testdb.delete();
 
