@@ -5,7 +5,7 @@
   <artifactId>sqlite</artifactId>
   <packaging>bundle</packaging>
   <name>SQLite JDBC driver</name>
-  <version>0.53.1</version>
+  <version>0.53.2</version>
   <description />
   <profiles>
     <profile>
@@ -35,6 +35,11 @@
       <version>4.3.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.eclipse</groupId>
+    	<artifactId>osgi</artifactId>
+    	<version>3.3.0-v20070530</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -53,7 +58,8 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Export-Package>org.sqlite</Export-Package>
+            <Bundle-Activator>org.sqlite.Activator</Bundle-Activator>
+            <Export-Package>org.sqlite;version="${project.version}"</Export-Package>
           </instructions>
         </configuration>
       </plugin>
