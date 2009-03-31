@@ -13,7 +13,7 @@
     <freemarker.version>2.3.12</freemarker.version>
     <rds.version>${project.version}</rds.version>
     <rds.osgiversion>${project.version}.0</rds.osgiversion>
-    <sqlite.version>0.53.1</sqlite.version>
+    <sqlite.version>0.53.2</sqlite.version>
   </properties>
   <profiles>
     <profile>
