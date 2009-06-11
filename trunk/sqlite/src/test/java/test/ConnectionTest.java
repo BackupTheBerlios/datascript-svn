@@ -51,4 +51,23 @@ public class ConnectionTest
         conn.close();
         prep.clearParameters();
     }
+
+    @Test public void openFileWithSpaces() throws SQLException {
+        File testdb = new File("name with spaces.db");
+        if (testdb.exists()) testdb.delete();
+
+        assertFalse(testdb.exists());
+        Connection conn = DriverManager.getConnection("jdbc:sqlite:name%20with%20spaces.db");
+        assertFalse(conn.isReadOnly());
+        conn.close();
+
+        assertTrue(testdb.exists());
+        conn = DriverManager.getConnection("jdbc:sqlite:name%20with%20spaces.db");
+        assertFalse(conn.isReadOnly());
+        conn.close();
+
+        assertTrue(testdb.exists());
+        testdb.delete();
+    }
+
 }

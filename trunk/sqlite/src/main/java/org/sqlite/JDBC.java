@@ -16,8 +16,14 @@
 
 package org.sqlite;
 
-import java.sql.*;
-import java.util.*;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
+import java.util.Properties;
 
 public class JDBC implements Driver
 {
@@ -59,6 +65,17 @@ public class JDBC implements Driver
         // if no file name is given use a memory database
         String file = PREFIX.equalsIgnoreCase(url) ?
             ":memory:" : url.substring(PREFIX.length());
+        
+        if (PREFIX.equalsIgnoreCase(url)) {
+        	file = ":memory:";
+        }
+        else {
+        	try {
+				file = URLDecoder.decode(url.substring(PREFIX.length()), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new SQLException(e);
+			}
+        }
 
         if (info.getProperty("shared_cache") == null)
             return new Conn(url, file);
