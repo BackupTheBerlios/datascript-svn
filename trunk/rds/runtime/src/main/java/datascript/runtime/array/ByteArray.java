@@ -95,8 +95,14 @@ public class ByteArray implements Array<Byte>, SizeOf
         if (obj instanceof ByteArray)
         {
             ByteArray that = (ByteArray) obj;
-            return (this.offset == offset) && (this.length == length)
-                    && java.util.Arrays.equals(this.data, that.data);
+	        if (that.length != this.length)
+	        	return false;
+	        for (int i = 0; i < this.length; i++)
+	        {
+	            if (this.elementAt(i) != that.elementAt(i))
+	            	return false;
+	        }
+	        return true;
         }
         return super.equals(obj);
     }
@@ -107,17 +113,13 @@ public class ByteArray implements Array<Byte>, SizeOf
         if (obj instanceof ByteArray)
         {
             ByteArray that = (ByteArray) obj;
-            // not necessary to loop the array two times
-//	        if (that.sizeof() != this.sizeof())
-//	            throw new RuntimeException("size of arrays are different.");
-	        if (that.data.length != this.data.length)
-	            throw new DataScriptError(
-	                    "count of elements in arrays are different.");
+	        if (that.length != this.length)
+	            throw new DataScriptError("mismatched array length");
 	
-	        for (int i = 0; i < this.data.length; i++)
+	        for (int i = 0; i < this.length; i++)
 	        {
-	            if (this.data[i] != that.data[i])
-	                throw new DataScriptError("index " + i + " do not match.");
+	            if (this.elementAt(i) != that.elementAt(i))
+	                throw new DataScriptError("value mismatch at index " + i);
 	        }
 	        return true;
         }
@@ -255,20 +257,19 @@ public class ByteArray implements Array<Byte>, SizeOf
         @Override
         public boolean hasNext()
         {
-            return index < data.length;
+            return index < length;
         }
 
         @Override
         public Byte next()
         {
-            return data[index++];
+            return data[offset+index++];
         }
 
         @Override
         public void remove()
         {
             throw new UnsupportedOperationException();
-        }
-        
+        }        
     }
 }

@@ -42,7 +42,6 @@ package datascript.runtime.array;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Iterator;
 
 import datascript.runtime.CallChain;
@@ -109,9 +108,15 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         if (obj instanceof BitFieldArray)
         {
             BitFieldArray that = (BitFieldArray) obj;
-            return (this.offset == offset) && (this.length == length)
-                    && (this.numBits == numBits)
-                    && java.util.Arrays.equals(this.data, that.data);
+	        if (that.length != this.length)
+	            return false;
+	
+	        for (int i = 0; i < this.length; i++)
+	        {
+	            if (this.elementAt(i).compareTo(that.elementAt(i)) != 0)
+	                return false;
+	        }
+            return true;
         }
         return super.equals(obj);
     }
@@ -122,17 +127,13 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         if (obj instanceof BitFieldArray)
         {
             BitFieldArray that = (BitFieldArray) obj;
-            // not necessary to loop the array two times
-//	        if (that.sizeof() != this.sizeof())
-//	            throw new RuntimeException("size of arrays are different.");
-	        if (that.data.length != this.data.length)
-	            throw new DataScriptError(
-	            		"count of elements in arrays are different.");
+	        if (that.length != this.length)
+	            throw new DataScriptError("mismatched array length");
 	
 	        for (int i = 0; i < this.length; i++)
 	        {
-	            if (this.data[i].compareTo(that.data[i]) != 0)
-	                throw new DataScriptError("index " + i + " do not match.");
+	            if (this.elementAt(i).compareTo(that.elementAt(i)) != 0)
+	                throw new DataScriptError("value mismatch at index " + i);
 	        }
 	        return true;
         }
@@ -227,6 +228,30 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
     @Override
     public Iterator<BigInteger> iterator()
     {
-        return Arrays.asList(data).iterator();
+        return new BitFieldArrayIterator();
+    }
+    
+    class BitFieldArrayIterator implements Iterator<BigInteger>
+    {
+        private int index;
+
+        @Override
+        public boolean hasNext()
+        {
+            return index < length;
+        }
+
+        @Override
+        public BigInteger next()
+        {
+            return data[offset+index++];
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+        
     }
 }

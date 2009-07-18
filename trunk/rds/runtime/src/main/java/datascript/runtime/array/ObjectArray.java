@@ -86,7 +86,7 @@ public class ObjectArray<E> implements Array<E>, SizeOf
     @Override
     public boolean equals(Object obj)
     {
-        if (obj instanceof ObjectArray)
+        if (obj instanceof ObjectArray<?>)
         {
             ObjectArray<?> that = (ObjectArray<?>) obj;
             return (this.data.equals(that.data));
@@ -97,24 +97,24 @@ public class ObjectArray<E> implements Array<E>, SizeOf
 
     public boolean equalsWithException(Object obj)
     {
-        if (obj instanceof ObjectArray)
+        if (obj instanceof ObjectArray<?>)
         {
             ObjectArray<?> that = (ObjectArray<?>) obj;
             int thatLength = that.data.size();
             int thisLength = this.data.size();
             if (thatLength != thisLength)
-                throw new DataScriptError("arrays do not have same length");
+                throw new DataScriptError("mismatched array length");
 
             for (int i = 0; i < this.data.size(); i++)
             {
                 try
                 {
                     if (!this.data.get(i).equals(that.data.get(i)))
-                        throw new DataScriptError("mismatch at array index " + i);
+                        throw new DataScriptError("value mismatch at index " + i);
                 }
                 catch (Exception e)
                 {
-                    throw new DataScriptError("exception at array index " + i, e);
+                    throw new DataScriptError("exception at index " + i, e);
                 }
             }
             return true;

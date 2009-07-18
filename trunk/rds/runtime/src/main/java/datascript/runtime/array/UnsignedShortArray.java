@@ -65,9 +65,6 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
     {
         if (length == -1)
         {
-            // throw new RuntimeException("variable length " + getClass() + "
-            // not implemented");
-
             List<Integer> v = new ArrayList<Integer>();
             long __afpos = 0;
             try
@@ -121,8 +118,15 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
         if (obj instanceof UnsignedShortArray)
         {
             UnsignedShortArray that = (UnsignedShortArray) obj;
-            return (this.offset == offset) && (this.length == length)
-                    && java.util.Arrays.equals(this.data, that.data);
+	        if (that.length != this.length)
+	            return false;
+	
+	        for (int i = 0; i < this.length; i++)
+	        {
+	            if (this.elementAt(i) != that.elementAt(i))
+	                return false;
+	        }
+	        return true;
         }
         return super.equals(obj);
     }
@@ -133,16 +137,13 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
         if (obj instanceof UnsignedShortArray)
         {
             UnsignedShortArray that = (UnsignedShortArray) obj;
-            // not necessary to loop the array two times
-//	        if (that.sizeof() != this.sizeof())
-//	            throw new RuntimeException("size of arrays are different.");
-	        if (that.data.length != this.data.length)
-	            throw new DataScriptError("count of elements in arrays are different.");
+	        if (that.length != this.length)
+	            throw new DataScriptError("mismatched array length");
 	
-	        for (int i = 0; i < this.data.length; i++)
+	        for (int i = 0; i < this.length; i++)
 	        {
-	            if (this.data[i] != that.data[i])
-	                throw new DataScriptError("index " + i + " do not match.");
+	            if (this.elementAt(i) != that.elementAt(i))
+	                throw new DataScriptError("value mismatch at index " + i);
 	        }
 	        return true;
         }

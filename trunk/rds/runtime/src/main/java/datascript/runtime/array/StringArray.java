@@ -41,7 +41,6 @@ package datascript.runtime.array;
 
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Iterator;
 
 import datascript.runtime.CallChain;
@@ -99,8 +98,15 @@ public class StringArray implements Array<String>, SizeOf
         if (obj instanceof StringArray)
         {
             StringArray that = (StringArray) obj;
-            return (this.offset == offset) && (this.length == length)
-                    && java.util.Arrays.equals(this.data, that.data);
+	        if (that.length != this.length)
+	            return false;
+	
+	        for (int i = 0; i < this.length; i++)
+	        {
+	            if (!this.elementAt(i).equals(that.elementAt(i)))
+	                return false;
+	        }
+	        return true;
         }
         return super.equals(obj);
     }
@@ -111,16 +117,13 @@ public class StringArray implements Array<String>, SizeOf
         if (obj instanceof StringArray)
         {
             StringArray that = (StringArray) obj;
-            // not necessary to loop the array two times
-//	        if (that.sizeof() != this.sizeof())
-//	            throw new RuntimeException("size of arrays are different.");
-	        if (that.data.length != this.data.length)
-	            throw new DataScriptError("count of elements in arrays are different.");
+	        if (that.length != this.length)
+	            throw new DataScriptError("mismatched array length");
 	
-	        for (int i = 0; i < this.data.length; i++)
+	        for (int i = 0; i < this.length; i++)
 	        {
-	            if (!this.data[i].equals(that.data[i]))
-	                throw new DataScriptError("index " + i + " do not match.");
+	            if (!this.elementAt(i).equals(that.elementAt(i)))
+	                throw new DataScriptError("value mismatch at index " + i);
 	        }
 	        return true;
         }
@@ -192,7 +195,29 @@ public class StringArray implements Array<String>, SizeOf
     @Override
     public Iterator<String> iterator()
     {
-        return Arrays.asList(data).iterator();
+        return new StringArrayIterator();
     }
+    
+    class StringArrayIterator implements Iterator<String>
+    {
+        private int index;
 
+        @Override
+        public boolean hasNext()
+        {
+            return index < length;
+        }
+
+        @Override
+        public String next()
+        {
+            return data[offset+index++];
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }        
+    }
 }
