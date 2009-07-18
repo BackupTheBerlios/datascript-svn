@@ -47,7 +47,14 @@
     }
 
 
-    <#if elementType??>@Deprecated</#if>
+<#if elementType??>
+
+    public void ${setterName}(List<${elementType}> ${name})
+    {
+        this.${name} = new ObjectArray<${elementType}>(${name});
+    }
+<#else>    
+
     public void ${setterName}(${javaTypeName} ${name})
     {
 <#if equalsCanThrowExceptions && isSimple>
@@ -57,13 +64,6 @@
 
 </#if>
         this.${name} = ${name};
-    }
-
-<#if elementType??>
-
-    public void ${setterName}(List<${elementType}> ${name})
-    {
-        this.${name} = new ObjectArray<${elementType}>(${name});
     }
 </#if>
 

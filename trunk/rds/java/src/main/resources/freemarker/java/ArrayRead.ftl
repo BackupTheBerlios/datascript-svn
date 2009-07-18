@@ -53,7 +53,7 @@
                     {
                         __in.setBitPosition(__afpos);
                     }
-                    ${setterName}(new ObjectArray<${elType}>(v));
+                    ${setterName}(v);
                 }
 <#else>
                 <#lt>{
