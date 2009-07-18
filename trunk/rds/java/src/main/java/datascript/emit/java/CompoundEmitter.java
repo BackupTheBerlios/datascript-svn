@@ -63,7 +63,6 @@ import datascript.ast.StringType;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
-import datascript.ast.Value;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 

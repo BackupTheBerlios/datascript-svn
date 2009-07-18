@@ -53,7 +53,9 @@ abstract public class CompoundType
     extends Container 
     implements TypeInterface, Comparable<CompoundType>
 {
-    protected int id;
+	private static final long serialVersionUID = -3176164167667658185L;
+
+	protected int id;
 
     protected final List<Field> fields = new ArrayList<Field>();
     private final List<FunctionType> functions = new ArrayList<FunctionType>();
