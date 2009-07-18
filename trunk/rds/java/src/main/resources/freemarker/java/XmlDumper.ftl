@@ -283,6 +283,51 @@ public class __XmlDumper extends XMLFilterImpl implements ${rootPackageName}.__V
     }
 
 
+    public void visitSignedBitField(byte n, int length, Object arg)
+    {
+        visitInt64(n, arg);
+    }
+
+
+    public void visitSignedBitField(short n, int length, Object arg)
+    {
+        visitInt64(n, arg);
+    }
+
+
+    public void visitSignedBitField(int n, int length, Object arg)
+    {
+        visitInt64(n, arg);
+    }
+
+
+    public void visitSignedBitField(long n, int length, Object arg)
+    {
+        visitInt64(n, arg);
+    }
+
+
+    public void visitSignedBitField(java.math.BigInteger n, int length, Object arg)
+    {
+        visitSignedBitField(n, arg);
+    }
+
+
+    public void visitSignedBitField(java.math.BigInteger n, Object arg)
+    {
+        try
+        {
+            startElement(arg);
+            text(n.toString());
+            endElement(arg);
+        }
+        catch(SAXException exc)
+        {
+            exc.printStackTrace();
+        }    
+    }
+
+
     public void visitString(String n, Object arg)
     {
         try

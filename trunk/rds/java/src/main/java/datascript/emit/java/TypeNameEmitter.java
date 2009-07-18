@@ -44,6 +44,7 @@ import datascript.ast.CompoundType;
 import datascript.ast.EnumType;
 import datascript.ast.Field;
 import datascript.ast.IntegerType;
+import datascript.ast.SignedBitFieldType;
 import datascript.ast.StdIntegerType;
 import datascript.ast.StringType;
 import datascript.ast.Subtype;
@@ -212,16 +213,30 @@ public class TypeNameEmitter
         int length = t.getLength();
         if (length == 0)
             return "BigInteger";
-        else if (length < 8)
-            return "byte";
-        else if (length < 16)
-            return "short";
-        else if (length < 32)
-            return "int";
-        else if (length < 64)
-            return "long";
-        else
-            return "BigInteger";
+        
+		if (t.isSigned()) 
+		{
+			if (length <= 8)
+				return "byte";
+			if (length <= 16)
+				return "short";
+			if (length <= 32)
+				return "int";
+			if (length <= 64)
+				return "long";
+		} 
+		else 
+		{
+			if (length < 8)
+				return "byte";
+			if (length < 16)
+				return "short";
+			if (length < 32)
+				return "int";
+			if (length < 64)
+				return "long";
+		}
+		return "BigInteger";
     }
 
 
@@ -230,16 +245,30 @@ public class TypeNameEmitter
         int length = t.getLength();
         if (length == 0)
             return "BigInteger";
-        else if (length < 8)
-            return "Byte";
-        else if (length < 16)
-            return "Short";
-        else if (length < 32)
-            return "Integer";
-        else if (length < 64)
-            return "Long";
+        
+        if (t.isSigned())
+        {
+            if (length <= 8)
+            	return "Byte";
+            if (length <= 16)
+            	return "Short";
+            if (length <= 32)
+            	return "Integer";
+            if (length <= 64)
+            	return "Long";        	
+        }
         else
-            return "BigInteger";
+        {
+            if (length < 8)
+            	return "Byte";
+            if (length < 16)
+            	return "Short";
+            if (length < 32)
+            	return "Integer";
+            if (length < 64)
+            	return "Long";
+        }
+        return "BigInteger";
     }
 
 
@@ -310,6 +339,10 @@ public class TypeNameEmitter
         {
             result = getClassName((StdIntegerType) baseType);
         }
+        else if (baseType instanceof SignedBitFieldType)
+        {
+            result = getClassName((SignedBitFieldType) baseType);
+        }
         else if (baseType instanceof BitFieldType)
         {
             result = getClassName((BitFieldType) baseType);
@@ -362,6 +395,23 @@ public class TypeNameEmitter
         else if (length < 32)
             return "Integer";
         else if (length < 64)
+            return "Long";
+        else
+            return "BigInteger";
+    }
+
+    private static String getClassName(SignedBitFieldType t)
+    {
+        int length = t.getLength();
+        if (length == 0)
+            return "BigInteger";
+        else if (length <= 8)
+            return "Byte";
+        else if (length <= 16)
+            return "Short";
+        else if (length <= 32)
+            return "Integer";
+        else if (length <= 64)
             return "Long";
         else
             return "BigInteger";

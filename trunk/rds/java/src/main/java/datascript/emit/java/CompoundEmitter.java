@@ -57,6 +57,7 @@ import datascript.ast.Field;
 import datascript.ast.FunctionType;
 import datascript.ast.IntegerType;
 import datascript.ast.Parameter;
+import datascript.ast.SignedBitFieldType;
 import datascript.ast.StdIntegerType;
 import datascript.ast.StringType;
 import datascript.ast.TypeInstantiation;
@@ -194,6 +195,11 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
 
         public long getMinVal()
         {
+        	if (type instanceof SignedBitFieldType)
+        	{
+                BitFieldType bitField = (BitFieldType) type;
+        		return -(1 << bitField.getLength()-1);
+        	}
         	if (type instanceof BitFieldType)
         	{
                 return 0;
@@ -209,10 +215,15 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
 
         public long getMaxVal()
         {
+        	if (type instanceof SignedBitFieldType)
+        	{
+                BitFieldType bitField = (BitFieldType) type;
+        		return (1 << bitField.getLength()-1) - 1;
+        	}
         	if (type instanceof BitFieldType)
         	{
                 BitFieldType bitField = (BitFieldType) type;
-                return (1 << bitField.getLength()) -1;
+                return (1 << bitField.getLength()) - 1;
         	}
             if (type instanceof StdIntegerType)
             {
@@ -689,94 +700,7 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
 
     private void writeIntegerField(Field field, IntegerType type)
     {
-        writeIntegerValue(AccessorNameEmitter.getGetterName(field) + "()", type);
-    }
-
-
-    private void writeIntegerValue(String value, IntegerType type)
-    {
-        String methodSuffix;
-        String castPrefix = "";
-        String castSuffix = "";
-        String arg = "";
-        switch (type.getType())
-        {
-            case DataScriptParserTokenTypes.INT8:
-                methodSuffix = "Byte";
-                break;
-
-            case DataScriptParserTokenTypes.INT16:
-                methodSuffix = "Short";
-                break;
-
-            case DataScriptParserTokenTypes.INT32:
-                methodSuffix = "Int";
-                break;
-
-            case DataScriptParserTokenTypes.INT64:
-                methodSuffix = "Long";
-                break;
-
-            case DataScriptParserTokenTypes.UINT8:
-                methodSuffix = "Byte";
-                castPrefix = "new Long(";
-                castSuffix = ").shortValue()";
-                break;
-
-            case DataScriptParserTokenTypes.UINT16:
-                methodSuffix = "Short";
-                break;
-
-            case DataScriptParserTokenTypes.UINT32:
-                methodSuffix = "UnsignedInt";
-                castPrefix = "new Long(";
-                castSuffix = ").intValue()";
-                break;
-
-            case DataScriptParserTokenTypes.UINT64:
-                methodSuffix = "BigInteger";
-                arg = "64";
-                break;
-
-            case DataScriptParserTokenTypes.BIT:
-                Expression lengthExpr = ((BitFieldType) type)
-                        .getLengthExpression();
-                Value lengthValue = lengthExpr.getValue();
-                if (lengthValue == null)
-                {
-                    methodSuffix = "BigInteger";
-                }
-                else
-                {
-                    int length = lengthValue.integerValue().intValue();
-                    if (length < 64)
-                    {
-                        methodSuffix = "Bits";
-                        castPrefix = "(" + TypeNameEmitter.getTypeName(type) + ") ";
-                    }
-                    else
-                    {
-                        methodSuffix = "BigInteger";
-                    }
-                }
-                arg = exprEmitter.emit(lengthExpr);
-                break;
-
-            default:
-                throw new InternalError("unhandled type = " + type.getType());
-        }
-        buffer.append("__out.write");
-        buffer.append(methodSuffix);
-        buffer.append("(");
-        buffer.append(castPrefix);
-        buffer.append(value);
-        buffer.append(castSuffix);
-        if (arg.length() != 0)
-        {
-            buffer.append(", ");
-            buffer.append(arg);
-        }
-        buffer.append(");");
+        writeIntegerValue(buffer, AccessorNameEmitter.getGetterName(field) + "()", type);
     }
 
 
@@ -862,7 +786,7 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
     private void writeEnumField(Field field, EnumType type)
     {
         IntegerType baseType = (IntegerType) type.getBaseType();
-        writeIntegerValue(AccessorNameEmitter.getGetterName(field)
+        writeIntegerValue(buffer, AccessorNameEmitter.getGetterName(field)
                 + "().getValue()", baseType);
     }
 

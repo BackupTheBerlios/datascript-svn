@@ -465,6 +465,11 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
                     length = bftype.getLengthExpression();
                     buffer.append("BitField");
                     break;
+                case DataScriptParserTokenTypes.INT:
+                    bftype = (BitFieldType) itype;
+                    length = bftype.getLengthExpression();
+                    buffer.append("SignedBitField");
+                    break;
             }
             buffer.append("(");
             buffer.append(nodeName);

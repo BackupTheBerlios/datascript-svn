@@ -40,103 +40,20 @@
 package datascript.ast;
 
 
-import java.math.BigInteger;
 
 
 @SuppressWarnings("serial")
-public class BitFieldType extends IntegerType
+public class SignedBitFieldType extends BitFieldType
 {
-    /**
-     * Number of bits of this bitfield. When length is known at compile time,
-     * this attribute is set to a value > 0. Otherwise, length is set to -1, and
-     * the runtime length is indicated by the expression stored in lengthExpr.
-     */
-    int length;
-
-    /**
-     * Expression indicating the run-time length of this bitfield. If this is
-     * null, length must be set to a value > 0. Otherwise, length == -1.
-     */
-    Expression lengthExpr;
-
-    BigInteger lowerBound, upperBound;
-
-
-    @Override
-    public int getLength()
-    {
-        Value value = getLengthExpression().getValue();
-        length = (value == null) ? 0 : value.integerValue().intValue();
-        return length;
-    }
-
-
-    @Override
-    public Expression getLengthExpression()
-    {
-        if (lengthExpr == null)
-        {
-            lengthExpr = (Expression) getFirstChild();
-        }
-        return lengthExpr;
-    }
-
-
-    public boolean isVariable()
-    {
-        return getLength() == 0;
-    }
-
     public boolean isSigned()
     {
-    	return false;
+    	return true;
     }
-
-    public BitFieldType()
-    {
-    }
-
-
-    @Override
-    public IntegerValue sizeof(Scope ctxt)
-    {
-        IntegerValue eight = new IntegerValue(8);
-        IntegerValue size = bitsizeof(ctxt);
-        if (size.remainder(eight).compareTo(new IntegerValue(0)) != 0) 
-        {
-            throw new RuntimeException("sizeof not integer: " + size);
-        }
-        return size.divide(eight);
-    }
-
-
-    @Override
-    public IntegerValue bitsizeof(Scope ctxt)
-    {
-        return new IntegerValue(getLength());
-    }
-
-
-    @Override
-    public boolean isMember(Scope ctxt, Value val)
-    {
-        /** @TODO handle variable length! */
-        try
-        {
-            return (lowerBound.compareTo(val.integerValue()) != 1 && 
-                    val.integerValue().compareTo(upperBound) == -1);
-        }
-        catch (ComputeError _)
-        {
-            return (false);
-        }
-    }
-
 
     @Override
     public String toString()
     {
-        return "BitField";
+        return "SignedBitField";
         // We no longer append "/* :" + length + " */", since this causes
         // a nested comment with an array of bitfield.
     }

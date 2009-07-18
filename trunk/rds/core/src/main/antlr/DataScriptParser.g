@@ -83,6 +83,7 @@ tokens
     IMPORT="import";
     INDEX<AST=datascript.ast.Expression>;
     INST<AST=datascript.ast.TypeInstantiation>;
+    INT="int"<AST=datascript.ast.SignedBitFieldType>;
     INT16="int16"<AST=datascript.ast.StdIntegerType>;
     INT32="int32"<AST=datascript.ast.StdIntegerType>;
     INT64="int64"<AST=datascript.ast.StdIntegerType>;
@@ -527,15 +528,21 @@ stringType
 builtinTypeDefaultOrder
     :   integerType
     |   stringType
-    |   bitField
+    |   unsignedBitField
+    |   signedBitField
     ;
 
-bitField
-    : BIT^ (COLON! INTEGER_LITERAL | LT! e:shiftExpression GT!)
+unsignedBitField
+    :   BIT^ (COLON! INTEGER_LITERAL | LT! e:shiftExpression GT!)
     ;
+    
+    
+signedBitField
+    :   INT^ (COLON! INTEGER_LITERAL | LT! e:shiftExpression GT!)    
+    ;    
 
 modifier
-    :    byteOrderModifier
+    :   byteOrderModifier
     ;
 
 byteOrderModifier

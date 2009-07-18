@@ -9,6 +9,8 @@ import java.io.IOException;
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
+import datascript.runtime.io.ByteArrayBitStreamReader;
+import datascript.runtime.io.ByteArrayBitStreamWriter;
 import datascript.runtime.io.FileBitStreamReader;
 
 /**
@@ -240,5 +242,66 @@ public class BitStreamReaderTest extends TestCase
         assertTrue(in.getStreamPosition() == 1);
         assertTrue(in.getBitPosition() == 12);
     }
+    
+    public void testSignedBitfield1() throws IOException
+    {
+    	ByteArrayBitStreamWriter writer = new ByteArrayBitStreamWriter();
+    	writer.writeByte(-1);
+    	writer.close();
+    	byte[] blob = writer.toByteArray();
+    	assertEquals(1, blob.length);
+    	assertEquals(-1, blob[0]);
+    	
+    	ByteArrayBitStreamReader reader = new ByteArrayBitStreamReader(blob);
+    	long a = reader.readSignedBits(3);
+    	long b = reader.readSignedBits(2);
+    	long c = reader.readSignedBits(3);
+    	assertEquals(-1L, a);
+    	assertEquals(-1L, b);
+    	assertEquals(-1L, c);
+    }
 
+    public void testSignedBitfield2() throws IOException
+    {
+    	ByteArrayBitStreamWriter writer = new ByteArrayBitStreamWriter();
+    	writer.writeShort(-10000);
+    	writer.close();
+    	byte[] blob = writer.toByteArray();
+    	assertEquals(2, blob.length);
+    	
+    	ByteArrayBitStreamReader sReader = new ByteArrayBitStreamReader(blob);
+    	long s = sReader.readSignedBits(16);
+    	assertEquals(-10000L, s);
+    	
+    	ByteArrayBitStreamReader uReader = new ByteArrayBitStreamReader(blob);
+    	long u = uReader.readBits(16);
+    	assertEquals(55536L, u);
+    }
+
+    public void testSignedBitfield3() throws IOException
+    {
+    	ByteArrayBitStreamWriter writer = new ByteArrayBitStreamWriter();
+    	writer.writeBits(-5, 10);
+    	writer.writeBits(-6, 10);
+    	writer.writeBits(-7, 10);
+    	writer.close();
+    	byte[] blob = writer.toByteArray();
+    	assertEquals(4, blob.length);
+    	
+    	ByteArrayBitStreamReader sReader = new ByteArrayBitStreamReader(blob);
+    	long s1 = sReader.readSignedBits(10);
+    	long s2 = sReader.readSignedBits(10);
+    	long s3 = sReader.readSignedBits(10);
+    	assertEquals(-5L, s1);
+    	assertEquals(-6L, s2);
+    	assertEquals(-7L, s3);
+    	
+    	ByteArrayBitStreamReader uReader = new ByteArrayBitStreamReader(blob);
+    	long u1 = uReader.readBits(10);
+    	long u2 = uReader.readBits(10);
+    	long u3 = uReader.readBits(10);
+    	assertEquals(1019, u1);
+    	assertEquals(1018, u2);
+    	assertEquals(1017, u3);
+    }
 }

@@ -341,6 +341,7 @@ stringType
 
 bitField
     : #(BIT expression)
+    | #(INT expression)
     ;
 
 

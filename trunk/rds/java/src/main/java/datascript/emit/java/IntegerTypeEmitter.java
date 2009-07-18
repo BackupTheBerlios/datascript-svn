@@ -47,6 +47,7 @@ import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.BitFieldType;
 import datascript.ast.Expression;
 import datascript.ast.IntegerType;
+import datascript.ast.SignedBitFieldType;
 import datascript.ast.Value;
 
 
@@ -138,8 +139,31 @@ abstract public class IntegerTypeEmitter
                         methodSuffix = "BigInteger";
                     }
                 }
-                ExpressionEmitter ee = new ExpressionEmitter();
-                arg = ee.emit(lengthExpr);
+                arg = exprEmitter.emit(lengthExpr);
+                break;
+
+            case DataScriptParserTokenTypes.INT:
+                lengthExpr = ((SignedBitFieldType) type)
+                        .getLengthExpression();
+                lengthValue = lengthExpr.getValue();
+                if (lengthValue == null)
+                {
+                    methodSuffix = "SignedBigInteger";
+                }
+                else
+                {
+                    int length = lengthValue.integerValue().intValue();
+                    if (length <= 64)
+                    {
+                        methodSuffix = "SignedBits";
+                        cast = "(" + TypeNameEmitter.getTypeName(type) + ") ";
+                    }
+                    else
+                    {
+                        methodSuffix = "SignedBigInteger";
+                    }
+                }
+                arg = exprEmitter.emit(lengthExpr);
                 break;
 
             default:
@@ -213,6 +237,30 @@ abstract public class IntegerTypeEmitter
                 {
                     int length = lengthValue.integerValue().intValue();
                     if (length < 64)
+                    {
+                        methodSuffix = "Bits";
+                        castPrefix = "(" + TypeNameEmitter.getTypeName(type) + ") ";
+                    }
+                    else
+                    {
+                        methodSuffix = "BigInteger";
+                    }
+                }
+                arg = exprEmitter.emit(lengthExpr);
+                break;
+
+            case DataScriptParserTokenTypes.INT:
+                lengthExpr = ((BitFieldType) type)
+                        .getLengthExpression();
+                lengthValue = lengthExpr.getValue();
+                if (lengthValue == null)
+                {
+                    methodSuffix = "BigInteger";
+                }
+                else
+                {
+                    int length = lengthValue.integerValue().intValue();
+                    if (length <= 64)
                     {
                         methodSuffix = "Bits";
                         castPrefix = "(" + TypeNameEmitter.getTypeName(type) + ") ";

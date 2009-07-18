@@ -69,6 +69,12 @@ public class __DepthFirstVisitor implements ${rootPackageName}.__Visitor
     public void visitBitField(long n, int length, Object arg) {};
     public void visitBitField(BigInteger n, int length, Object arg) {};
     
+    public void visitSignedBitField(byte n, int length, Object arg) {};
+    public void visitSignedBitField(short n, int length, Object arg) {};
+    public void visitSignedBitField(int n, int length, Object arg) {};
+    public void visitSignedBitField(long n, int length, Object arg) {};
+    public void visitSignedBitField(BigInteger n, int length, Object arg) {};
+    
     public void visitString(String n, Object arg) {};
 
 

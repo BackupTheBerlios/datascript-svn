@@ -283,6 +283,7 @@ integerType
 
 bitField
     :   #(BIT expression)
+    |   #(INT expression)
     ;
 
 

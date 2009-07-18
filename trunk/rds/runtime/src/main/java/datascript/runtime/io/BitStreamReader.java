@@ -222,6 +222,17 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
     }
 
 
+    public BigInteger readSignedBigInteger(int numBits) throws IOException
+    {
+        BigInteger result = readBigInteger(numBits);
+        if (result.testBit(numBits-1))
+        {
+        	result.subtract(BigInteger.ONE.shiftLeft(numBits));
+        }
+        return result;
+    }
+
+
     public String readString() throws IOException
     {
         buffer.rewind();
@@ -253,5 +264,15 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
             newPosition = ((bitPosition / alignVal) + 1) * alignVal;
             setBitPosition(newPosition);
         }
+    }
+    
+    public long readSignedBits(int numBits) throws IOException
+    {
+    	long result = readBits(numBits);
+    	if (result >= (1L << (numBits-1)))
+		{
+			result -= 1L << numBits;
+		}
+    	return result;
     }
 }

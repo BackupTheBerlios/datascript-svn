@@ -226,18 +226,19 @@ public class TypeNameEmitter
 
     private static String getTypeName(BitFieldType t)
     {
+    	String tag = t.isSigned() ? "int" : "bit";
         Expression e = t.getLengthExpression();
         if (e != null)
         {
             ExpressionEmitter emitter = new ExpressionEmitter();
-            return "bit&lt;" + emitter.emit(e) + "&gt;";
+            return tag + "&lt;" + emitter.emit(e) + "&gt;";
         }
         
         int length = t.getLength();        
         if (length == 0)
-            return "bit&lt;?&gt;";
+            return tag + "&lt;?&gt;";
         else
-            return "bit&lt;" + length + "&gt;";
+            return tag + "&lt;" + length + "&gt;";
     }
 
 }

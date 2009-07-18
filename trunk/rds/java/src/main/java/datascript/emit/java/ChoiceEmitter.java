@@ -346,8 +346,6 @@ public class ChoiceEmitter extends CompoundEmitter
             selector = ee.emit((Expression) node);
         }
 
-//        if (selector == null)
-//            throw new ComputeError("missing selector");
         return selector;
     }
 

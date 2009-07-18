@@ -47,11 +47,11 @@ import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
 import datascript.ast.EnumType;
 import datascript.ast.Field;
+import datascript.ast.SignedBitFieldType;
 import datascript.ast.StdIntegerType;
 import datascript.ast.TypeInstantiation;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
-import datascript.emit.java.TypeNameEmitter;
 import freemarker.template.Configuration;
 
 
@@ -214,6 +214,11 @@ public abstract class FieldEmitter
 
     public long getMinVal()
     {
+    	if (type instanceof SignedBitFieldType)
+    	{
+            BitFieldType bitField = (BitFieldType) type;
+            return -(1 << bitField.getLength()-1);
+    	}
     	if (type instanceof BitFieldType)
     	{
             return 0;
@@ -229,6 +234,11 @@ public abstract class FieldEmitter
 
     public long getMaxVal()
     {
+    	if (type instanceof SignedBitFieldType)
+    	{
+            BitFieldType bitField = (BitFieldType) type;
+            return (1 << bitField.getLength()-1) - 1;
+    	}
     	if (type instanceof BitFieldType)
     	{
             BitFieldType bitField = (BitFieldType) type;

@@ -12,7 +12,7 @@ Cluster
 
 subtype uint8 MagicCode;
 
-// TODO: keine Used By für Konstante im HTML-Emitter möglich
+// TODO: keine Used By fï¿½r Konstante im HTML-Emitter mï¿½glich
 const MagicCode UNDEFINED_MAGIC_CODE = 0;
 
 UseOfConst(MagicCode defaultMagicCode)
@@ -286,7 +286,7 @@ Coord(bit:5 n)
 BaseTypes
 {
     uint8     tag;
-    // TODO: hier ist noch ein Fehler. Used By für BaseTypeUnion beinhaltet nicht BaseTypes
+    // TODO: hier ist noch ein Fehler. Used By fï¿½r BaseTypeUnion beinhaltet nicht BaseTypes
     union BaseTypeUnion
     {
         int8  v8  : tag == 8;
@@ -316,5 +316,17 @@ Tile
 {
     TileId    tileId;
     TileData  tileData;
+};
+
+SignedBitField
+{
+    int:4   a;
+    int<4>  b;
+};
+
+SignedBitFieldArray
+{
+    uint8 numItems;
+    SignedBitField   items[numItems];
 };
 
