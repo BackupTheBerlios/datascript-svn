@@ -42,7 +42,6 @@ package datascript.emit.java;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import antlr.collections.AST;
@@ -69,14 +68,10 @@ import freemarker.template.Template;
 
 
 
-abstract public class CompoundEmitter
+abstract public class CompoundEmitter extends IntegerTypeEmitter
 {
     protected final List<CompoundParameterEmitter> params = 
         new ArrayList<CompoundParameterEmitter>();
-
-    private JavaDefaultEmitter global;
-    private static final ExpressionEmitter exprEmitter = new ExpressionEmitter();
-    protected PrintWriter writer;
 
     private StringBuilder buffer;
     private String formalParams;
@@ -236,9 +231,9 @@ abstract public class CompoundEmitter
 
 
 
-    public static class ArrayEmitter
+    public class ArrayEmitter
     {
-        private static final ExpressionEmitter ee = new ExpressionEmitter();
+        private final ExpressionEmitter ee = new ExpressionEmitter();
 
         private final Field field;
         private final ArrayType array;
@@ -305,7 +300,7 @@ abstract public class CompoundEmitter
                 IntegerType baseType = (IntegerType) enumType.getBaseType();
                 buffer.append(elType.getName());
                 buffer.append(".toEnum(");
-                readIntegerValue(buffer, field, baseType);
+                readIntegerValue(buffer, baseType);
                 buffer.append(")");
             }
             else
@@ -330,29 +325,17 @@ abstract public class CompoundEmitter
 
     public CompoundEmitter(JavaDefaultEmitter j)
     {
-        global = j;
+    	super(j);
     }
 
 
     abstract public CompoundType getCompoundType();
 
 
-    public JavaDefaultEmitter getGlobal()
-    {
-        return global;
-    }
-
-
     protected void reset()
     {
         formalParams = null;
         actualParams = null;
-    }
-
-
-    public void setWriter(PrintWriter writer)
-    {
-        this.writer = writer;
     }
 
 
@@ -401,86 +384,8 @@ abstract public class CompoundEmitter
     {
         buffer.append(AccessorNameEmitter.getSetterName(field));
         buffer.append("(");
-        readIntegerValue(buffer, field, type);
+        readIntegerValue(buffer, type);
         buffer.append(");");
-    }
-
-
-    static void readIntegerValue(StringBuilder buffer, Field field, IntegerType type)
-    {
-        String methodSuffix;
-        String cast = "";
-        String arg = "";
-        switch (type.getType())
-        {
-            case DataScriptParserTokenTypes.INT8:
-                methodSuffix = "Byte";
-                break;
-
-            case DataScriptParserTokenTypes.INT16:
-                methodSuffix = "Short";
-                break;
-
-            case DataScriptParserTokenTypes.INT32:
-                methodSuffix = "Int";
-                break;
-
-            case DataScriptParserTokenTypes.INT64:
-                methodSuffix = "Long";
-                break;
-
-            case DataScriptParserTokenTypes.UINT8:
-                methodSuffix = "UnsignedByte";
-                cast = "(short) ";
-                break;
-
-            case DataScriptParserTokenTypes.UINT16:
-                methodSuffix = "UnsignedShort";
-                break;
-
-            case DataScriptParserTokenTypes.UINT32:
-                methodSuffix = "UnsignedInt";
-                break;
-
-            case DataScriptParserTokenTypes.UINT64:
-                methodSuffix = "BigInteger";
-                arg = "64";
-                break;
-
-            case DataScriptParserTokenTypes.BIT:
-                Expression lengthExpr = ((BitFieldType) type)
-                        .getLengthExpression();
-                Value lengthValue = lengthExpr.getValue();
-                if (lengthValue == null)
-                {
-                    methodSuffix = "BigInteger";
-                }
-                else
-                {
-                    int length = lengthValue.integerValue().intValue();
-                    if (length < 64)
-                    {
-                        methodSuffix = "Bits";
-                        cast = "(" + TypeNameEmitter.getTypeName(type) + ") ";
-                    }
-                    else
-                    {
-                        methodSuffix = "BigInteger";
-                    }
-                }
-                ExpressionEmitter ee = new ExpressionEmitter();
-                arg = ee.emit(lengthExpr);
-                break;
-
-            default:
-                throw new InternalError("unhandled type = " + type.getType());
-        }
-        buffer.append(cast);
-        buffer.append("__in.read");
-        buffer.append(methodSuffix);
-        buffer.append("(");
-        buffer.append(arg);
-        buffer.append(")");
     }
 
 
@@ -625,7 +530,7 @@ abstract public class CompoundEmitter
         buffer.append("(");
         buffer.append(type.getName());
         buffer.append(".toEnum(");
-        readIntegerValue(buffer, field, baseType);
+        readIntegerValue(buffer, baseType);
         buffer.append("));");
     }
 
@@ -959,49 +864,6 @@ abstract public class CompoundEmitter
         IntegerType baseType = (IntegerType) type.getBaseType();
         writeIntegerValue(AccessorNameEmitter.getGetterName(field)
                 + "().getValue()", baseType);
-    }
-
-
-    /**** interface to freemarker FileHeader.inc template ****/
-
-    public String getRdsVersion()
-    {
-        return global.getRdsVersion();
-    }
-
-
-    /**
-     * Calculates the actual time and returns a formattet string that follow the 
-     * ISO 8601 standard (i.e. "2007-13-11T12:08:56.235-0700")
-     * @return      actual time as a ISO 8601 formattet string
-     */
-    public String getTimeStamp()
-    {
-        return String.format("%1$tFT%1$tT.%1$tL%1$tz", Calendar.getInstance());
-    }
-
-
-    public String getPackageName()
-    {
-        return global.getPackageName();
-    }
-
-
-    public String getRootPackageName()
-    {
-        return datascript.ast.Package.getRoot().getPackageName();
-    }
-
-
-    public boolean getEqualsCanThrowExceptions()
-    {
-        return global.getThrowsException();
-    }
-
-
-    public String getPackageImports()
-    {
-        return global.getPackageImports();
     }
 
 

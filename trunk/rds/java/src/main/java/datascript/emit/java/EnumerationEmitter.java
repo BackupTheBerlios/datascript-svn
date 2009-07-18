@@ -45,16 +45,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.ToolContext;
-import datascript.ast.BitFieldType;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
-import datascript.ast.Expression;
 import datascript.ast.IntegerType;
 import datascript.ast.IntegerValue;
-import datascript.ast.Value;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -64,13 +60,10 @@ import freemarker.template.Template;
  * @author HWellmann
  * 
  */
-public class EnumerationEmitter
+public class EnumerationEmitter extends IntegerTypeEmitter
 {
-    private JavaEmitter global;
     private EnumType enumType;
     private String javaType;
-    private PrintWriter writer;
-    private static final ExpressionEmitter exprEmitter = new ExpressionEmitter();
     
     private final List<EnumerationItemEmitter> items = 
         new ArrayList<EnumerationItemEmitter>();
@@ -116,14 +109,8 @@ public class EnumerationEmitter
 
     public EnumerationEmitter(JavaEmitter j, EnumType e)
     {
-        this.global = j;
+    	super(j);
         this.enumType = e;
-    }
-
-
-    public JavaEmitter getGlobal()
-    {
-        return global;
     }
 
 
@@ -235,97 +222,9 @@ public class EnumerationEmitter
     public String getWriteStmt()
     {
     	IntegerType baseType = (IntegerType) enumType.getBaseType();
-    	return writeIntegerValue("getValue()", baseType);
-    }
-
-    private String writeIntegerValue(String value, IntegerType type)
-    {
     	StringBuilder buffer = new StringBuilder();
-        String methodSuffix;
-        String castPrefix = "";
-        String castSuffix = "";
-        String arg = "";
-        switch (type.getType())
-        {
-            case DataScriptParserTokenTypes.INT8:
-                methodSuffix = "Byte";
-                break;
-
-            case DataScriptParserTokenTypes.INT16:
-                methodSuffix = "Short";
-                break;
-
-            case DataScriptParserTokenTypes.INT32:
-                methodSuffix = "Int";
-                break;
-
-            case DataScriptParserTokenTypes.INT64:
-                methodSuffix = "Long";
-                break;
-
-            case DataScriptParserTokenTypes.UINT8:
-                methodSuffix = "Byte";
-                castPrefix = "new Long(";
-                castSuffix = ").shortValue()";
-                break;
-
-            case DataScriptParserTokenTypes.UINT16:
-                methodSuffix = "Short";
-                break;
-
-            case DataScriptParserTokenTypes.UINT32:
-                methodSuffix = "UnsignedInt";
-                castPrefix = "new Long(";
-                castSuffix = ").intValue()";
-                break;
-
-            case DataScriptParserTokenTypes.UINT64:
-                methodSuffix = "BigInteger";
-                arg = "64";
-                break;
-
-            case DataScriptParserTokenTypes.BIT:
-                Expression lengthExpr = ((BitFieldType) type)
-                        .getLengthExpression();
-                Value lengthValue = lengthExpr.getValue();
-                if (lengthValue == null)
-                {
-                    methodSuffix = "BigInteger";
-                }
-                else
-                {
-                    int length = lengthValue.integerValue().intValue();
-                    if (length < 64)
-                    {
-                        methodSuffix = "Bits";
-                        castPrefix = "(" + TypeNameEmitter.getTypeName(type) + ") ";
-                    }
-                    else
-                    {
-                        methodSuffix = "BigInteger";
-                    }
-                }
-                arg = exprEmitter.emit(lengthExpr);
-                break;
-
-            default:
-                throw new InternalError("unhandled type = " + type.getType());
-        }
-        buffer.append("__out.write");
-        buffer.append(methodSuffix);
-        buffer.append("(");
-        buffer.append(castPrefix);
-        buffer.append(value);
-        buffer.append(castSuffix);
-        if (arg.length() != 0)
-        {
-            buffer.append(", ");
-            buffer.append(arg);
-        }
-        buffer.append(");");
-        return buffer.toString();
+    	writeIntegerValue(buffer, "getValue()", baseType);
+    	return buffer.toString();
     }
 
-
-    
 }
