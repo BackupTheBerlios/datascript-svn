@@ -45,11 +45,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.antlr.util.ToolContext;
+import datascript.ast.BitFieldType;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
+import datascript.ast.Expression;
+import datascript.ast.IntegerType;
 import datascript.ast.IntegerValue;
+import datascript.ast.Value;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -65,6 +70,8 @@ public class EnumerationEmitter
     private EnumType enumType;
     private String javaType;
     private PrintWriter writer;
+    private static final ExpressionEmitter exprEmitter = new ExpressionEmitter();
+    
     private final List<EnumerationItemEmitter> items = 
         new ArrayList<EnumerationItemEmitter>();
 
@@ -165,7 +172,7 @@ public class EnumerationEmitter
 
 
 
-    /**** interface to freemarker FileHeader.inc template ****/
+    /**** interface to Freemarker FileHeader.inc template ****/
 
     public String getRdsVersion()
     {
@@ -174,9 +181,9 @@ public class EnumerationEmitter
 
 
     /**
-     * Calculates the actual time and returns a formattet string that follow the 
+     * Calculates the actual time and returns a formatted string that follows the 
      * ISO 8601 standard (i.e. "2007-13-11T12:08:56.235-0700")
-     * @return      actual time as a ISO 8601 formattet string
+     * @return      actual time as a ISO 8601 formatted string
      */
     public String getTimeStamp()
     {
@@ -224,4 +231,101 @@ public class EnumerationEmitter
     {
         return enumType.bitsizeof(null).integerValue().intValue();
     }
+    
+    public String getWriteStmt()
+    {
+    	IntegerType baseType = (IntegerType) enumType.getBaseType();
+    	return writeIntegerValue("getValue()", baseType);
+    }
+
+    private String writeIntegerValue(String value, IntegerType type)
+    {
+    	StringBuilder buffer = new StringBuilder();
+        String methodSuffix;
+        String castPrefix = "";
+        String castSuffix = "";
+        String arg = "";
+        switch (type.getType())
+        {
+            case DataScriptParserTokenTypes.INT8:
+                methodSuffix = "Byte";
+                break;
+
+            case DataScriptParserTokenTypes.INT16:
+                methodSuffix = "Short";
+                break;
+
+            case DataScriptParserTokenTypes.INT32:
+                methodSuffix = "Int";
+                break;
+
+            case DataScriptParserTokenTypes.INT64:
+                methodSuffix = "Long";
+                break;
+
+            case DataScriptParserTokenTypes.UINT8:
+                methodSuffix = "Byte";
+                castPrefix = "new Long(";
+                castSuffix = ").shortValue()";
+                break;
+
+            case DataScriptParserTokenTypes.UINT16:
+                methodSuffix = "Short";
+                break;
+
+            case DataScriptParserTokenTypes.UINT32:
+                methodSuffix = "UnsignedInt";
+                castPrefix = "new Long(";
+                castSuffix = ").intValue()";
+                break;
+
+            case DataScriptParserTokenTypes.UINT64:
+                methodSuffix = "BigInteger";
+                arg = "64";
+                break;
+
+            case DataScriptParserTokenTypes.BIT:
+                Expression lengthExpr = ((BitFieldType) type)
+                        .getLengthExpression();
+                Value lengthValue = lengthExpr.getValue();
+                if (lengthValue == null)
+                {
+                    methodSuffix = "BigInteger";
+                }
+                else
+                {
+                    int length = lengthValue.integerValue().intValue();
+                    if (length < 64)
+                    {
+                        methodSuffix = "Bits";
+                        castPrefix = "(" + TypeNameEmitter.getTypeName(type) + ") ";
+                    }
+                    else
+                    {
+                        methodSuffix = "BigInteger";
+                    }
+                }
+                arg = exprEmitter.emit(lengthExpr);
+                break;
+
+            default:
+                throw new InternalError("unhandled type = " + type.getType());
+        }
+        buffer.append("__out.write");
+        buffer.append(methodSuffix);
+        buffer.append("(");
+        buffer.append(castPrefix);
+        buffer.append(value);
+        buffer.append(castSuffix);
+        if (arg.length() != 0)
+        {
+            buffer.append(", ");
+            buffer.append(arg);
+        }
+        buffer.append(");");
+        return buffer.toString();
+    }
+
+
+    
 }
