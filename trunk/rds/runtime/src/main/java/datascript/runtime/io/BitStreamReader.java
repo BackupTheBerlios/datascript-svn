@@ -268,11 +268,11 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
     
     public long readSignedBits(int numBits) throws IOException
     {
-    	long result = readBits(numBits);
-    	if (result >= (1L << (numBits-1)))
-		{
-			result -= 1L << numBits;
-		}
-    	return result;
+        long result = readBits(numBits);
+        if (result >= (1L << (numBits - 1)))
+        {
+            result -= 1L << numBits;
+        }
+        return result;
     }
 }
