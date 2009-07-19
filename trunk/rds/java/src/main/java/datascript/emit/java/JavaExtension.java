@@ -87,50 +87,37 @@ public class JavaExtension implements Extension
             // emit Java code for decoders
             JavaEmitter javaEmitter = new JavaEmitter(params.getOutPathName(),
                     defaultPackageName);
-            javaEmitter.setRdsVersion(params.getVersion());
-            javaEmitter.setThrowsException(generateExceptions);
-            emitter.setEmitter(javaEmitter);
-            emitter.root(rootNode);
+            runEmitter(emitter, rootNode, generateExceptions, javaEmitter);
 
             // emit Java __Visitor interface
             VisitorEmitter visitorEmitter = new VisitorEmitter(params
                     .getOutPathName(), defaultPackageName);
-            visitorEmitter.setRdsVersion(params.getVersion());
-            javaEmitter.setThrowsException(generateExceptions);
-            emitter.setEmitter(visitorEmitter);
-            emitter.root(rootNode);
+            runEmitter(emitter, rootNode, generateExceptions, visitorEmitter);
 
             // emit Java __DepthFirstVisitor class
             DepthFirstVisitorEmitter dfVisitorEmitter = new DepthFirstVisitorEmitter(
                     params.getOutPathName(), defaultPackageName);
-            dfVisitorEmitter.setRdsVersion(params.getVersion());
-            javaEmitter.setThrowsException(generateExceptions);
-            emitter.setEmitter(dfVisitorEmitter);
-            emitter.root(rootNode);
+            runEmitter(emitter, rootNode, generateExceptions, dfVisitorEmitter);
 
             // emit Java __SizeOf class
             SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(params
                     .getOutPathName(), defaultPackageName);
-            sizeOfEmitter.setRdsVersion(params.getVersion());
-            javaEmitter.setThrowsException(generateExceptions);
-            emitter.setEmitter(sizeOfEmitter);
-            emitter.root(rootNode);
+            runEmitter(emitter, rootNode, generateExceptions, sizeOfEmitter);
 
             // emit Java __Const class
             ConstEmitter constEmitter = new ConstEmitter(params
                     .getOutPathName(), defaultPackageName);
-            constEmitter.setRdsVersion(params.getVersion());
-            javaEmitter.setThrowsException(generateExceptions);
-            emitter.setEmitter(constEmitter);
-            emitter.root(rootNode);
+            runEmitter(emitter, rootNode, generateExceptions, constEmitter);
 
             // emit Java __XmlDumper class
             XmlDumperEmitter xmlDumper = new XmlDumperEmitter(params
                     .getOutPathName(), defaultPackageName);
-            xmlDumper.setRdsVersion(params.getVersion());
-            javaEmitter.setThrowsException(generateExceptions);
-            emitter.setEmitter(xmlDumper);
-            emitter.root(rootNode);
+            runEmitter(emitter, rootNode, generateExceptions, xmlDumper);
+
+            // emit Java __LabelSetter class
+            LabelSetterEmitter labelSetter = new LabelSetterEmitter(params
+                    .getOutPathName(), defaultPackageName);
+            runEmitter(emitter, rootNode, generateExceptions, labelSetter);
         }
         catch (RuntimeException e)
         {
@@ -145,6 +132,16 @@ public class JavaExtension implements Extension
         }
     }
 
+
+    private void runEmitter(DataScriptEmitter emitter, TokenAST rootNode,
+            boolean generateExceptions, JavaDefaultEmitter javaEmitter)
+            throws RecognitionException
+    {
+        javaEmitter.setRdsVersion(params.getVersion());
+        javaEmitter.setThrowsException(generateExceptions);
+        emitter.setEmitter(javaEmitter);
+        emitter.root(rootNode);
+    }
 
     public void getOptions(org.apache.commons.cli.Options rdsOptions)
     {

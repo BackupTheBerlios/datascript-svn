@@ -50,7 +50,7 @@ ${packageImports}
 @SuppressWarnings("all")
 public class __SizeOf extends ${rootPackageName}.__DepthFirstVisitor
 {
-    private int __bitsize = 0;
+    protected int __bitsize = 0;
 
 
     @Override

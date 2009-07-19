@@ -53,9 +53,9 @@ abstract public class CompoundType
     extends Container 
     implements TypeInterface, Comparable<CompoundType>
 {
-	private static final long serialVersionUID = -3176164167667658185L;
+    private static final long serialVersionUID = -3176164167667658185L;
 
-	protected int id;
+    protected int id;
 
     protected final List<Field> fields = new ArrayList<Field>();
     private final List<FunctionType> functions = new ArrayList<FunctionType>();
@@ -280,5 +280,17 @@ abstract public class CompoundType
     public int compareTo(CompoundType o)
     {
         return getName().compareTo(o.getName());
+    }
+    
+    public boolean hasLabels()
+    {
+        for (Field field : getFields())
+        {
+            if (field.getLabel() != null)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

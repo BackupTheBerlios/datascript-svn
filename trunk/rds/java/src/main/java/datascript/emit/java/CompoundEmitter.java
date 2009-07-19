@@ -44,7 +44,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import antlr.collections.AST;
 import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.ArrayType;
 import datascript.ast.BitFieldType;
@@ -630,31 +629,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
             buildParameterLists();
         }
         return actualParams;
-    }
-
-
-    public String getLabelExpression(Field field)
-    {
-        Expression label = field.getLabel();
-        if (label == null)
-            return null;
-
-        StringBuilder builder = new StringBuilder();
-        AST labelBase = label.getNextSibling();
-        if (labelBase != null)
-        {
-            String name = labelBase.getText();
-            builder.append("((");
-            builder.append(name);
-            builder.append(")__cc.find(\"");
-            builder.append(name);
-            builder.append("\")).");
-        }
-        builder.append("__fpos + 8*");
-        String labelExpr = exprEmitter.emit(label);
-        builder.append(labelExpr);
-
-        return builder.toString();
     }
 
 

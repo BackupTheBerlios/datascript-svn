@@ -37,6 +37,8 @@
  */
 package datascript.antlr.util;
 
+import java.io.File;
+
 
 /**
  * @author HWellmann
@@ -90,9 +92,14 @@ public class ToolContext
 
     public static String getFullName()
     {
-        return ((getPathName() != null)? 
-                (getPathName() + System.getProperties().getProperty("file.separator")) : "") + 
-                getFileName();
+    	if (getPathName() == null)
+    	{
+    		return getFileName();
+    	}
+    	else
+    	{
+    		return new File(getPathName(), getFileName()).toString();
+    	}
     }
 
 
@@ -143,13 +150,6 @@ public class ToolContext
 
     private void appendLocation(StringBuffer message, TokenAST token)
     {
-/*        
-        if (fileName != null)
-        {
-            message.append(fileName);
-            message.append(":");
-        }
-*/        
         if (token != null)
         {
             message.append(token.getFileName());

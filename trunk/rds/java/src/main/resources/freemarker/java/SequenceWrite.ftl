@@ -80,7 +80,8 @@
     {
         this.__cc = __cc;
 <#if LabeledFieldCnt!=0>
-        computeLabelValues();
+        __LabelSetter labelSetter = new __LabelSetter();
+        labelSetter.visit(this, null);
 
 </#if>
         try 
@@ -144,43 +145,3 @@
         }
     }
 
-<#if LabeledFieldCnt!=0>
-
-    private void computeLabelValues()
-    {
-        int bitoffset = 0;
-    <#list fields as field>
-        <#assign indent="">
-        <#if field.optionalClause??>
-        <#assign indent="    ">
-        if (${field.optionalClause})
-        {
-        </#if><#t>
-        <#if field.hasAlignment>
-        ${indent}if (bitoffset % #{field.alignmentValue} != 0)
-            ${indent}bitoffset = ((bitoffset / #{field.alignmentValue}) + 1) * #{field.alignmentValue};
-        </#if>
-        <#if field.labelExpression??><#t>
-        ${indent}${field.labelSetter}((${field.labelTypeName})Util.bitsToBytes(bitoffset));
-            <#assign LabeledFieldCnt=LabeledFieldCnt-1>
-            <#if LabeledFieldCnt == 0>
-              <#if field.optionalClause??>
-        }
-              </#if>
-                <#break>
-            </#if>
-        </#if>
-        <#if !field.isSimple>
-            <#assign bitsizeof>${field.getterName}().bitsizeof()</#assign>
-        <#elseif (field.canonicalTypeName == "datascript.ast.BitFieldType" && field.bitFieldLength == 0)>
-            <#assign bitsizeof>${field.getterName}().bitLength()</#assign>
-        <#else>
-            <#assign bitsizeof=field.bitsizeof>
-        </#if>
-        ${indent}bitoffset += ${bitsizeof};	// ${field.name}
-        <#if field.optionalClause??>
-        }
-        </#if>
-    </#list>
-    }
-</#if>

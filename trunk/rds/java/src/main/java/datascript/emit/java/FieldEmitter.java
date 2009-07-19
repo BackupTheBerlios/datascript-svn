@@ -65,7 +65,6 @@ public abstract class FieldEmitter
     private TypeInterface type;
     private String optional = null;
     private String constraint = null;
-    private String label = null;
 
 
     public FieldEmitter(Field f, CompoundEmitter j)
@@ -108,16 +107,6 @@ public abstract class FieldEmitter
             constraint = getCompoundEmitter().getConstraint(field);
         }
         return constraint;
-    }
-
-
-    public String getLabelExpression()
-    {
-        if (label == null)
-        {
-            label = getCompoundEmitter().getLabelExpression(field);
-        }
-        return label;
     }
 
 

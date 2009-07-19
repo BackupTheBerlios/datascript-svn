@@ -44,10 +44,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import datascript.antlr.DataScriptParserTokenTypes;
 import datascript.ast.CompoundType;
 import datascript.ast.DataScriptException;
-import datascript.ast.Expression;
 import datascript.ast.Field;
 import datascript.ast.FunctionType;
 import datascript.ast.Parameter;
@@ -104,56 +102,6 @@ public class SequenceEmitter extends CompoundEmitter
         {
             int bitSize = field.bitsizeof(null).integerValue().intValue();
             return bitSize;
-        }
-
-
-        /**
-         * Returns a label setter for the current field. If the field
-         * has a composite label <tt>header.offsets.offset1</tt>, the
-         * result is <tt>getHeader().getOffsets().setOffset1</tt>.
-         * 
-         * @return setter without argument list
-         */
-        public String getLabelSetter()
-        {
-            Expression expr = field.getLabel();
-            StringBuilder buffer = new StringBuilder();
-            appendLabelSetter(buffer, expr);
-            return buffer.toString();
-        }
-
-        /**
-         * Recursively traverses a label expression to construct the setter
-         * name for the label. We rely on the results of the ExpressionEvaluator
-         * in assuming that the expression type is either DOT or ID, and that
-         * an ID always resolved to a Field in the expression scope.
-         * 
-         * @param buffer string buffer used for appending the partial result
-         * @param expr   subexpression of current label expression
-         */
-        private void appendLabelSetter(StringBuilder buffer, Expression expr)
-        {
-            if (expr.getType() == DataScriptParserTokenTypes.DOT)
-            {
-                Expression op1 = expr.op1();
-                String symbol = op1.getText();
-                Field f = (Field) op1.getScope().getTypeOrSymbol(symbol);
-                String getter = AccessorNameEmitter.getGetterName(f);
-                buffer.append(getter);
-                buffer.append("().");
-                appendLabelSetter(buffer, expr.op2());
-            }
-            else
-            {                
-                Field f = (Field) expr.getScope().getTypeOrSymbol(expr.getText());
-                buffer.append(AccessorNameEmitter.getSetterName(f));
-            }            
-        }
-
-
-        public String getLabelTypeName()
-        {
-            return TypeNameEmitter.getTypeName(field.getLabel().getExprType());
         }
     }
 

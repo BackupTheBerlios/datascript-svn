@@ -50,7 +50,7 @@ ${packageImports}
 @SuppressWarnings("all")
 public class __DepthFirstVisitor implements ${rootPackageName}.__Visitor
 {
-    private CallChain __cc = new CallChain();       
+    protected CallChain __cc = new CallChain();       
 
     public void alignto(int n) {};
     public void visitInt8(byte n, Object arg) {};
