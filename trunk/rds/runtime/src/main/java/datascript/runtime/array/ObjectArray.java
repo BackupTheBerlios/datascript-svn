@@ -53,7 +53,7 @@ import datascript.runtime.io.Writer;
 
 
 
-public class ObjectArray<E> implements Array<E>, SizeOf
+public class ObjectArray<E extends Writer> implements Array<E>, SizeOf
 {
     // using a Vector for now means we're subject to the limitations
     // Vectors are (i.e., max 2^31-1 elements
@@ -150,7 +150,7 @@ public class ObjectArray<E> implements Array<E>, SizeOf
     {
         for (int i = 0; i < data.size(); i++)
         {
-            ((Writer) data.get(i)).write(out, cc);
+            data.get(i).write(out, cc);
         }
     }
 
