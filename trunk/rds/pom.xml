@@ -5,7 +5,7 @@
   <artifactId>rds</artifactId>
   <name>Relational DataScript</name>
   <packaging>pom</packaging>
-  <version>0.30</version>
+  <version>0.32</version>
 
   <properties>
     <antlr.version>2.7.7</antlr.version>
@@ -13,7 +13,7 @@
     <freemarker.version>2.3.12</freemarker.version>
     <rds.version>${project.version}</rds.version>
     <rds.osgiversion>${project.version}.0</rds.osgiversion>
-    <sqlite.version>0.53.2</sqlite.version>
+    <sqlite.version>0.53.3</sqlite.version>
   </properties>
   <profiles>
     <profile>

@@ -37,15 +37,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 -->
-<#assign LabeledFieldCnt=0>
-
 
     // Constructor for ${className} 
     public ${className}(
 <#list fields as field>
-    <#if field.labelExpression??>
-        <#assign LabeledFieldCnt=LabeledFieldCnt+1>
-    </#if>
         ${field.javaTypeName} ${field.name}<#if field_has_next>, </#if>
 </#list>
         )
@@ -79,8 +74,8 @@
     public void write(BitStreamWriter __out, CallChain __cc) throws IOException
     {
         this.__cc = __cc;
-<#if LabeledFieldCnt!=0>
-        __LabelSetter labelSetter = new __LabelSetter();
+<#if hasLabels>
+        ${rootPackageName}.__LabelSetter labelSetter = new ${rootPackageName}.__LabelSetter();
         labelSetter.visit(this, null);
 
 </#if>

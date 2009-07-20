@@ -125,6 +125,11 @@ public class SequenceEmitter extends CompoundEmitter
     {
         return seq;
     }
+    
+    public boolean getHasLabels()
+    {
+    	return seq.hasLabels();
+    }
 
 
 
