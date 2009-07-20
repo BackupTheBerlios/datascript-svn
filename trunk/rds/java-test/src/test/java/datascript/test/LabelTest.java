@@ -5,12 +5,14 @@ package datascript.test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.stream.FileImageOutputStream;
 
 import junit.framework.TestCase;
 import label.Attributes;
 import label.DataBlock;
+import label.ExtraAttr;
 import label.Link;
 import label.LinkBlock;
 import label.Tile;
@@ -180,6 +182,7 @@ public class LabelTest extends TestCase
         Link link = new Link();
         link.setLinkId(99);
         link.setAttrIndex(1);
+        link.setExtra(new ExtraAttr());
         links.add(link);
         b1.setLinks(links);
         
@@ -192,7 +195,7 @@ public class LabelTest extends TestCase
         byte[] blob = DataScriptIO.write(tile);
         
         assertEquals(5, tile.getHeader().getOffset1().intValue());
-        assertEquals(23, tile.getHeader().getOffset3().intValue());
+        assertEquals(27, tile.getHeader().getOffset3().intValue());
         
         TileWithOptionalBlocks tile2 = DataScriptIO.read(TileWithOptionalBlocks.class, blob);
         assertEquals(tile2, tile);
@@ -214,7 +217,7 @@ public class LabelTest extends TestCase
         b1.setNumAttrs(2);
         ArrayList<Attributes> attrs = new ArrayList<Attributes>(2);
         attrs.add(new Attributes((short)11, (short)12));
-        attrs.add(new Attributes((short)1, (short)0));
+        attrs.add(new Attributes((short)1, (short)17));
         b1.setAttrs(attrs);
         
         b1.setNumLinks(1);
@@ -222,7 +225,50 @@ public class LabelTest extends TestCase
         Link link = new Link();
         link.setLinkId(99);
         link.setAttrIndex(1);
-        link.setExtra(88);
+        link.setExtra(new ExtraAttr(50));
+        links.add(link);
+        b1.setLinks(links);
+        
+        tile.setB1(b1);
+
+        DataBlock b3 = new DataBlock();
+        b3.setA(30);
+        b3.setB((short)31);
+        tile.setB3(b3);
+        byte[] blob = DataScriptIO.write(tile);
+        
+        assertEquals(5, tile.getHeader().getOffset1().intValue());
+        assertEquals(31, tile.getHeader().getOffset3().intValue());
+        
+        TileWithOptionalBlocks tile2 = DataScriptIO.read(TileWithOptionalBlocks.class, blob);
+        assertEquals(tile2, tile);
+    }
+    
+    public void testTileWithOptionalBlocks3()
+    {
+        TileWithOptionalBlocks tile = new TileWithOptionalBlocks();
+        TileHeader2 header = new TileHeader2();
+        tile.setHeader(header);
+        header.setHasBlock1((byte)1);
+        header.setHasBlock2((byte)0);
+        header.setHasBlock3((byte)1);
+        header.setOffset1(0);
+        header.setOffset3(0);
+
+        // offset: 5
+        LinkBlock b1 = new LinkBlock();
+        b1.setNumAttrs(2);
+        ArrayList<Attributes> attrs = new ArrayList<Attributes>(2);
+        attrs.add(new Attributes((short)11, (short)12));
+        attrs.add(new Attributes((short)1, (short)18));
+        b1.setAttrs(attrs);
+        
+        b1.setNumLinks(1);
+        ArrayList<Link> links = new ArrayList<Link>(1);
+        Link link = new Link();
+        link.setLinkId(99);
+        link.setAttrIndex(1);
+        link.setExtra(new ExtraAttr());
         links.add(link);
         b1.setLinks(links);
         
@@ -239,5 +285,32 @@ public class LabelTest extends TestCase
         
         TileWithOptionalBlocks tile2 = DataScriptIO.read(TileWithOptionalBlocks.class, blob);
         assertEquals(tile2, tile);
+    }
+    
+    public void testLinkBlock()
+    {
+        LinkBlock lb = new LinkBlock();
+        lb.setNumAttrs(2);
+        List<Attributes> attrs = new ArrayList<Attributes>();
+        Attributes attr0 = new Attributes();
+        attr0.setFoo((short)1);
+        attr0.setBla((short)2);
+        Attributes attr1 = new Attributes();
+        attr1.setFoo((short)3);
+        attr1.setBla((short)17);
+        attrs.add(attr0);
+        attrs.add(attr1);
+        lb.setAttrs(attrs);
+        lb.setNumLinks(1);
+        Link link = new Link();
+        link.setLinkId(4711);
+        link.setAttrIndex(1);
+        link.setExtra(new ExtraAttr(18));
+        ArrayList<Link> links = new ArrayList<Link>();
+        links.add(link);
+        lb.setLinks(links);
+        byte[] blob = DataScriptIO.write(lb);
+        LinkBlock verify = DataScriptIO.read(LinkBlock.class, blob);
+        assertEquals(lb, verify);
     }
 }

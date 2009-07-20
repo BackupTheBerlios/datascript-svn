@@ -78,9 +78,11 @@ align(8):
 
 LinkBlock
 {
+    uint32         linkOffset;
     uint16         numAttrs;
     Attributes     attrs[numAttrs];
     
+linkOffset:    
     uint16 	   numLinks;
     Link           links[numLinks];
 };
@@ -89,7 +91,7 @@ Link
 {
     int32          linkId;
     uint16         attrIndex;
-    int32          extra    if attr().foo == 1;
+    ExtraAttr      extra;
     
     function Attributes attr()
     {
@@ -98,11 +100,24 @@ Link
 };
 
 
+ExtraAttr
+{
+    int32          extra    if Link.attr().bla == 17;
+};
+
+PrefixBlock
+{
+    int32         p;
+    int16         q;
+};
 
 Attributes
 {
     int16          foo;
     int16          bla;
 };
+
+  
+
 
 
