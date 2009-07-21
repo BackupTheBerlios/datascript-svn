@@ -103,7 +103,7 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
     </#list>
             if (this.__objectChoice == null && that.__objectChoice == null)
                 return true;
-            if ((this.objectChoice == null && that.__objectChoice != null) ||    
+            if ((this.__objectChoice == null && that.__objectChoice != null) ||    
                 !this.__objectChoice.equals(that.__objectChoice))
                 throw new DataScriptError("Field '__objectChoice' is not equal!");
             return true;
