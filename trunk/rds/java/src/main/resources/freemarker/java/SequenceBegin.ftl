@@ -56,6 +56,7 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
 
     public void accept(${rootPackageName}.__Visitor visitor, Object arg)
     {
+        __cc = visitor.getCallChain();
         visitor.visit(this, arg);
     }
 

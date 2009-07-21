@@ -66,7 +66,11 @@ public class __XmlDumper extends XMLFilterImpl implements ${rootPackageName}.__V
     {
         this.acceptor = acceptor;
     }
-
+    
+    public CallChain getCallChain()
+    {
+        return __cc;
+    }
 
     private void startElement(Object arg)
     {

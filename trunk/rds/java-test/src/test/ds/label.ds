@@ -100,9 +100,16 @@ Link
 };
 
 
-ExtraAttr
+choice ExtraAttr on Link.attr().bla
 {
-    int32          extra    if Link.attr().bla == 17;
+    case 17:
+        int32          extra;
+        
+    case 43:
+        int16          extraShort;
+    
+    default:
+        int8           extraByte;        
 };
 
 PrefixBlock

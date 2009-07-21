@@ -50,6 +50,8 @@ ${packageImports}
 @SuppressWarnings("all")
 public interface __Visitor
 {
+    public CallChain getCallChain();
+    
     public void visitInt8(byte n, Object arg);
     public void visitInt16(short n, Object arg);
     public void visitInt32(int n, Object arg);

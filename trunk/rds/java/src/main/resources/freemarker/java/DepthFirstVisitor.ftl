@@ -52,6 +52,11 @@ public class __DepthFirstVisitor implements ${rootPackageName}.__Visitor
 {
     protected CallChain __cc = new CallChain();       
 
+    public CallChain getCallChain()
+    {
+        return __cc;
+    }
+    
     public void alignto(int n) {};
     public void visitInt8(byte n, Object arg) {};
     public void visitInt16(short n, Object arg) {};

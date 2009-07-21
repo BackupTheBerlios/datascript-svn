@@ -182,7 +182,9 @@ public class LabelTest extends TestCase
         Link link = new Link();
         link.setLinkId(99);
         link.setAttrIndex(1);
-        link.setExtra(new ExtraAttr());
+        ExtraAttr extraAttr = new ExtraAttr();
+        extraAttr.setExtraByte((byte)77);
+		link.setExtra(extraAttr);
         links.add(link);
         b1.setLinks(links);
         
@@ -195,7 +197,7 @@ public class LabelTest extends TestCase
         byte[] blob = DataScriptIO.write(tile);
         
         assertEquals(5, tile.getHeader().getOffset1().intValue());
-        assertEquals(27, tile.getHeader().getOffset3().intValue());
+        assertEquals(28, tile.getHeader().getOffset3().intValue());
         
         TileWithOptionalBlocks tile2 = DataScriptIO.read(TileWithOptionalBlocks.class, blob);
         assertEquals(tile2, tile);
@@ -225,7 +227,9 @@ public class LabelTest extends TestCase
         Link link = new Link();
         link.setLinkId(99);
         link.setAttrIndex(1);
-        link.setExtra(new ExtraAttr(50));
+        ExtraAttr extraAttr = new ExtraAttr();
+        extraAttr.setExtra(1234567);
+        link.setExtra(extraAttr);
         links.add(link);
         b1.setLinks(links);
         
@@ -268,7 +272,9 @@ public class LabelTest extends TestCase
         Link link = new Link();
         link.setLinkId(99);
         link.setAttrIndex(1);
-        link.setExtra(new ExtraAttr());
+        ExtraAttr extraAttr = new ExtraAttr();
+        extraAttr.setExtraByte((byte)59);
+		link.setExtra(extraAttr);
         links.add(link);
         b1.setLinks(links);
         
@@ -281,7 +287,7 @@ public class LabelTest extends TestCase
         byte[] blob = DataScriptIO.write(tile);
         
         assertEquals(5, tile.getHeader().getOffset1().intValue());
-        assertEquals(27, tile.getHeader().getOffset3().intValue());
+        assertEquals(28, tile.getHeader().getOffset3().intValue());
         
         TileWithOptionalBlocks tile2 = DataScriptIO.read(TileWithOptionalBlocks.class, blob);
         assertEquals(tile2, tile);
@@ -305,7 +311,9 @@ public class LabelTest extends TestCase
         Link link = new Link();
         link.setLinkId(4711);
         link.setAttrIndex(1);
-        link.setExtra(new ExtraAttr(18));
+        ExtraAttr extraAttr = new ExtraAttr();
+        extraAttr.setExtra(100000);
+		link.setExtra(extraAttr);
         ArrayList<Link> links = new ArrayList<Link>();
         links.add(link);
         lb.setLinks(links);

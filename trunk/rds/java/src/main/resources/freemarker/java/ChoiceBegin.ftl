@@ -57,6 +57,7 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
 
     public void accept(${rootPackageName}.__Visitor visitor, Object arg)
     {
+        __cc = visitor.getCallChain();
         visitor.visit(this, arg);
     }
 
@@ -100,7 +101,10 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
         <#t></#if>)  /* ${param.canonicalTypeName} */
                 throw new DataScriptError("Selector '${param.name}' is not equal!");
     </#list>
-            if (!this.__objectChoice.equals(that.__objectChoice))
+            if (this.__objectChoice == null && that.__objectChoice == null)
+                return true;
+            if ((this.objectChoice == null && that.__objectChoice != null) ||    
+                !this.__objectChoice.equals(that.__objectChoice))
                 throw new DataScriptError("Field '__objectChoice' is not equal!");
             return true;
 <#else>
@@ -120,7 +124,9 @@ public class ${className} implements ${rootPackageName}.__Visitor.Acceptor, Writ
             this.${param.name} == that.${param.name}
         <#t></#if>) &&   /* ${param.canonicalTypeName} */
     </#list>
-                this.__objectChoice.equals(that.__objectChoice);
+                (this.__objectChoice == null && that.__objectChoice == null) ||
+                (this.__objectChoice != null &&
+                this.__objectChoice.equals(that.__objectChoice));
 </#if>
         }
         return super.equals(obj);
