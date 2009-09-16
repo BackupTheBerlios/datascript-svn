@@ -70,4 +70,22 @@ public class ConnectionTest
         testdb.delete();
     }
 
+    @Test public void openUriWithSpaces() throws SQLException {
+        File testdb = new File("name with spaces.db");
+        if (testdb.exists()) testdb.delete();
+
+        assertFalse(testdb.exists());
+        Connection conn = DriverManager.getConnection("jdbc:sqlite:name with spaces.db");
+        assertFalse(conn.isReadOnly());
+        conn.close();
+
+        assertTrue(testdb.exists());
+        conn = DriverManager.getConnection("jdbc:sqlite:name with spaces.db");
+        assertFalse(conn.isReadOnly());
+        conn.close();
+
+        assertTrue(testdb.exists());
+        testdb.delete();
+    }
+
 }
