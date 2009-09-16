@@ -51,12 +51,12 @@ import freemarker.template.DefaultObjectWrapper;
 
 public class JavaDefaultEmitter extends DefaultEmitter
 {
-    protected static Configuration cfg = null;
+    protected static Configuration cfg;
     protected static final String JAVA_EXT = ".java";
     
     protected String packageName;
     protected String packagePath;
-    protected File dir = null;
+    protected File dir;
     protected final HashSet<String> allPackageNames = new HashSet<String>();
     private boolean generateExceptionsOnEquals;
     private boolean ignorePragma;

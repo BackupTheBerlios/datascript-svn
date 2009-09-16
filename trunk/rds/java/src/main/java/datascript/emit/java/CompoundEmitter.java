@@ -80,7 +80,7 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
     public static class CompoundFunctionEmitter
     {
         private final FunctionType func;
-        private static Template tpl = null;
+        private static Template tpl;
 
         public CompoundFunctionEmitter(FunctionType func)
         {
@@ -123,7 +123,7 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         private final CompoundEmitter global;
         private TypeInterface type;
         private final Parameter param;
-        private static Template tpl = null;
+        private static Template tpl;
 
 
         public CompoundParameterEmitter(Parameter param, CompoundEmitter j)
@@ -479,6 +479,8 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
                     buffer.append("(short)(");
                     cast = true;
                     break;
+                default:
+                    // nothing
             }
         }
         return cast;

@@ -68,7 +68,7 @@ public class SequenceEmitter extends CompoundEmitter
 
     public static class SequenceFieldEmitter extends FieldEmitter
     {
-        private static Template tpl = null;
+        private static Template tpl;
 
 
         public SequenceFieldEmitter(Field f, CompoundEmitter j)

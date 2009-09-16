@@ -70,7 +70,7 @@ public class UnionEmitter extends CompoundEmitter
 
     public static class UnionFieldEmitter extends FieldEmitter
     {
-        private static Template tpl = null;
+        private static Template tpl;
 
 
         public UnionFieldEmitter(Field f, CompoundEmitter j)

@@ -55,7 +55,7 @@ import datascript.tools.Parameters;
 
 public class JavaExtension implements Extension
 {
-    private Parameters params = null;
+    private Parameters params;
     private String defaultPackageName;
     private boolean generateExceptions;
     private boolean ignorePragma;

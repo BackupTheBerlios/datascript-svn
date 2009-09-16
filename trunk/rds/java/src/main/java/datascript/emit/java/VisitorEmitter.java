@@ -40,6 +40,7 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
 import java.util.Set;
 
 import antlr.collections.AST;
@@ -47,9 +48,10 @@ import datascript.ast.ChoiceType;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import datascript.ast.SequenceType;
-import datascript.ast.UnionType;
 import datascript.ast.SqlIntegerType;
+import datascript.ast.UnionType;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
@@ -72,7 +74,11 @@ public class VisitorEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/Visitor.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException e)
+        {
+            throw new DataScriptException(e);
+        }
+        catch (TemplateException e)
         {
             throw new DataScriptException(e);
         }

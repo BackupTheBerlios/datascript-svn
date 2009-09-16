@@ -73,7 +73,7 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
     protected EnumType enumeration;
     protected SqlIntegerType sqlinteger;
     protected ChoiceType choice;
-    protected static final ExpressionEmitter exprEmitter = new ExpressionEmitter();
+    protected static ExpressionEmitter exprEmitter = new ExpressionEmitter();
 
 
     public static class SequenceFieldEmitter
@@ -134,10 +134,10 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 
     public static class ChoiceMemberEmitter
     {
-        private final DepthFirstVisitorEmitter global;
-        protected final ChoiceMember member;
+        private DepthFirstVisitorEmitter global;
+        protected ChoiceMember member;
 
-        private Field field = null;
+        private Field field;
 
 
         public ChoiceMemberEmitter(ChoiceMember choiceMember, DepthFirstVisitorEmitter choiceEmitter)
@@ -470,6 +470,8 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
                     length = bftype.getLengthExpression();
                     buffer.append("SignedBitField");
                     break;
+                default:
+                    throw new IllegalStateException();
             }
             buffer.append("(");
             buffer.append(nodeName);

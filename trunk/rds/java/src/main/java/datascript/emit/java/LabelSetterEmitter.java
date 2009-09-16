@@ -63,7 +63,7 @@ public class LabelSetterEmitter extends JavaDefaultEmitter
 {
     private final List<SequenceFieldEmitter> fields = new ArrayList<SequenceFieldEmitter>();
     protected SequenceType sequence;
-    protected static final ExpressionEmitter exprEmitter = new ExpressionEmitter();
+    protected static ExpressionEmitter exprEmitter = new ExpressionEmitter();
 
 
     public static class SequenceFieldEmitter

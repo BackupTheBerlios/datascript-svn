@@ -84,7 +84,7 @@ public class ChoiceEmitter extends CompoundEmitter
         private final ChoiceEmitter global;
         protected final ChoiceMember member;
 
-        private static Template tpl = null;
+        private static Template tpl;
 
 
         public ChoiceMemberEmitter(ChoiceMember choiceMember, ChoiceEmitter choiceEmitter)

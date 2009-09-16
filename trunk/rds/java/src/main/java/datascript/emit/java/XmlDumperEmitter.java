@@ -40,12 +40,15 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
+
 import antlr.collections.AST;
 import datascript.ast.ArrayType;
 import datascript.ast.DataScriptException;
 import datascript.ast.Field;
 import datascript.ast.TypeInterface;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
@@ -68,7 +71,11 @@ public class XmlDumperEmitter extends DepthFirstVisitorEmitter
             Template tpl = cfg.getTemplate("java/XmlDumper.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException e)
+        {
+            throw new DataScriptException(e);
+        }
+        catch (TemplateException e)
         {
             throw new DataScriptException(e);
         }

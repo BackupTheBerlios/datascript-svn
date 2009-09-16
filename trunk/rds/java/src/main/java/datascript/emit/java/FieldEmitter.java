@@ -63,8 +63,8 @@ public abstract class FieldEmitter
 
     private final CompoundEmitter global;
     private TypeInterface type;
-    private String optional = null;
-    private String constraint = null;
+    private String optional;
+    private String constraint;
 
 
     public FieldEmitter(Field f, CompoundEmitter j)
