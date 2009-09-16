@@ -58,6 +58,11 @@ public class ${name} extends SqlDatabase
 </#list>
 
 
+    public ${name}(Connection dbc)
+    {
+        super(dbc);
+    }
+
     public ${name}(String fileName, Mode mode) throws SQLException, URISyntaxException
     {
         super(fileName, mode);
@@ -73,7 +78,7 @@ public class ${name} extends SqlDatabase
     {
         Connection dbc = getConnection();
         Statement st = dbc.createStatement();
-<#if pragmaFields?size != 0>
+<#if pragmaFields?size != 0 && !global.ignorePragma>
 
         // create pragmata
     <#list pragmaFields as pragmaField>

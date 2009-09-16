@@ -4,13 +4,13 @@
   <parent>
     <artifactId>rds</artifactId>
     <groupId>de.berlios.datascript</groupId>
-    <version>0.32</version>
+    <version>0.34</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.berlios.datascript</groupId>
   <artifactId>java-test</artifactId>
   <name>Relational DataScript Java Backend Tests</name>
-  <version>0.32</version>
+  <version>0.34</version>
   <build>
     <pluginManagement>
       <plugins>
@@ -28,7 +28,7 @@
         <plugin>
           <groupId>de.berlios.datascript.rds</groupId>
           <artifactId>maven-rds-plugin</artifactId>
-          <version>0.32</version>
+          <version>0.34</version>
           <configuration>
             <debug>true</debug>
           </configuration>
@@ -74,6 +74,7 @@
             </goals>
             <configuration>
               <modelRoot>sqltest.ds</modelRoot>
+              <ignorePragma>true</ignorePragma>
             </configuration>
           </execution>
           <execution>
@@ -83,6 +84,7 @@
             </goals>
             <configuration>
               <modelRoot>sqlParameter.ds</modelRoot>
+              <ignorePragma>true</ignorePragma>
             </configuration>
           </execution>
           <execution>
@@ -134,13 +136,13 @@
     <dependency>
       <groupId>de.berlios.datascript.rds</groupId>
       <artifactId>runtime</artifactId>
-      <version>0.32</version>
+      <version>0.34</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>de.berlios.datascript.rds</groupId>
       <artifactId>core</artifactId>
-      <version>0.32</version>
+      <version>0.34</version>
       <scope>test</scope>
     </dependency>
     <dependency>

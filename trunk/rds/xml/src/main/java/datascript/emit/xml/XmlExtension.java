@@ -98,7 +98,7 @@ public class XmlExtension extends XMLFilterImpl implements Extension
 
         System.out.println("emitting xml");
         
-        String fileName = params.getCommandlineArg("-xml");
+        String fileName = params.getCommandLineArg("-xml");
         if (fileName == null)
         {
             fileName = "datascript.xml";

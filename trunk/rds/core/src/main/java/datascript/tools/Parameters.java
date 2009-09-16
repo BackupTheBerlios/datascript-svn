@@ -98,7 +98,7 @@ public interface Parameters
 
 
     /**
-     * This method tests if a argument exists
+     * Checks if an argument exists.
      * 
      * @param key
      *            name of the key to test if it exists
@@ -108,12 +108,12 @@ public interface Parameters
 
 
     /**
-     * This method returns the value of a specific commandlineargument
+     * This method returns the value of a specific command line argument.
      * 
      * @param key
      *            name of the key to get his value from
      * @return returns the value of the argument to a given key
      * @throws Exception
      */
-    public String getCommandlineArg(String key) throws Exception;
+    public String getCommandLineArg(String key);
 }

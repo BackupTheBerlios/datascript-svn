@@ -84,7 +84,7 @@ import datascript.ast.Scope;
  */
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.32 (18 Jul 2009)";
+    private static final String VERSION = "rds 0.34 (16 Sep 2009)";
 
     private ToolContext context;
     private TokenAST rootNode = null;
@@ -501,10 +501,10 @@ public class DataScriptTool implements Parameters
     }
 
 
-    public String getCommandlineArg(String key) throws Exception
+    public String getCommandLineArg(String key)
     {
         if (!cli.hasOption(key))
-            throw new Exception(key + " is non of the commandline arguments.");
+            throw new IllegalArgumentException("illegal command line option");
         return cli.getOptionValue(key);
     }
 

@@ -56,14 +56,11 @@ import datascript.tools.Parameters;
 public class JavaExtension implements Extension
 {
     private Parameters params = null;
+    private String defaultPackageName;
+    private boolean generateExceptions;
+    private boolean ignorePragma;
 
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see datascript.tools.Extension#generate(datascript.antlr.DataScriptEmitter,
-     *      datascript.ast.TokenAST)
-     */
     public void generate(DataScriptEmitter emitter, TokenAST rootNode)
             throws DataScriptException, RecognitionException
     {
@@ -73,16 +70,12 @@ public class JavaExtension implements Extension
         System.out.println("emitting java code");
         try
         {
-            boolean generateExceptions = params.argumentExists("-java_e");
-            generateExceptions |= params.argumentExists("-debug");
-            String defaultPackageName = "";
-            try
+            generateExceptions = params.argumentExists("-debug");
+            if (params.argumentExists("-pkg"))
             {
-                defaultPackageName = params.getCommandlineArg("-pkg");
+                defaultPackageName = params.getCommandLineArg("-pkg");
             }
-            catch (Exception e)
-            {
-            }
+            ignorePragma = params.argumentExists("-ignorePragma");
 
             // emit Java code for decoders
             JavaEmitter javaEmitter = new JavaEmitter(params.getOutPathName(),
@@ -139,6 +132,7 @@ public class JavaExtension implements Extension
     {
         javaEmitter.setRdsVersion(params.getVersion());
         javaEmitter.setThrowsException(generateExceptions);
+        javaEmitter.setIgnorePragma(ignorePragma);
         emitter.setEmitter(javaEmitter);
         emitter.root(rootNode);
     }
@@ -157,18 +151,13 @@ public class JavaExtension implements Extension
         rdsOption.setRequired(false);
         rdsOptions.addOption(rdsOption);
 
-        rdsOption = new Option("java_e", false, 
-                "obsolete! Enables throwing exceptions in equals() function, when objects are not equal");
+        rdsOption = new Option("ignorePragma", false, 
+                "do not pass sql_pragma into generated code");
         rdsOption.setRequired(false);
         rdsOptions.addOption(rdsOption);
     }
 
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see datascript.tools.Extension#setParameter(datascript.tools.Parameters)
-     */
     public void setParameter(Parameters params)
     {
         this.params = params;

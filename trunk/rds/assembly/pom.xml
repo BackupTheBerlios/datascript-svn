@@ -2,14 +2,14 @@
   <parent>
     <artifactId>rds</artifactId>
     <groupId>de.berlios.datascript</groupId>
-    <version>0.32</version>
+    <version>0.34</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.berlios.datascript</groupId>
   <artifactId>assembly</artifactId>
   <packaging>pom</packaging>
   <name>Relational DataScript Assembly</name>
-  <version>0.32</version>
+  <version>0.34</version>
   <description/>
   
   <properties>

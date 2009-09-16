@@ -572,10 +572,10 @@ public class DataScriptInstanceTool implements Parameters
     }
 
 
-    public String getCommandlineArg(String key) throws Exception
+    public String getCommandLineArg(String key)
     {
         if (!cli.hasOption(key))
-            throw new Exception(key + " is non of the commandline arguments.");
+            throw new IllegalArgumentException("illegal command line argument " + key);
         return cli.getOptionValue(key);
     }
 

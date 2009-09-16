@@ -5,7 +5,7 @@
   <artifactId>rds</artifactId>
   <name>Relational DataScript</name>
   <packaging>pom</packaging>
-  <version>0.32</version>
+  <version>0.34</version>
 
   <properties>
     <antlr.version>2.7.7</antlr.version>
@@ -118,7 +118,7 @@
     </dependencies>
   </dependencyManagement>
 
-  <!--repositories>
+  <repositories>
     <repository>
       <id>com.springsource.repository.bundles.external</id>
       <name>
@@ -128,7 +128,7 @@
         http://repository.springsource.com/maven/bundles/external
       </url>
     </repository>
-  </repositories-->
+  </repositories>
 
 
 

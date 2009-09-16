@@ -96,6 +96,13 @@ public abstract class AbstractRdsMojo extends AbstractMojo
     private boolean generateHtml;
 
     /**
+     * Activates debugging features in the generated code.
+     * 
+     * @parameter expression="${ignorePragma}" default-value="false"
+     */
+    private boolean ignorePragma;
+
+    /**
      * Destination directory for generated HTML documentation files.
      * 
      * @parameter expression="${htmlDirectory}"
@@ -137,6 +144,10 @@ public abstract class AbstractRdsMojo extends AbstractMojo
         if (debug)
         {
             arguments.add("-debug");
+        }
+        if (ignorePragma)
+        {
+            arguments.add("-ignorePragma");
         }
         arguments.add(modelRoot);
         getLog().info("arguments = " + arguments.toString());

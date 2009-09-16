@@ -55,10 +55,9 @@ public class ${name}
     private SqlDatabase db;
     @SuppressWarnings("unused")
     private String tableName;
-<#--    private PreparedStatement insertRow;-->
 
 
-    public ${name}(SqlDatabase db) throws SQLException
+    public ${name}(SqlDatabase db)
     {
         this.db = db;
     }

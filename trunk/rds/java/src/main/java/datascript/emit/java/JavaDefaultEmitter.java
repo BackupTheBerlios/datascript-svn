@@ -59,6 +59,7 @@ public class JavaDefaultEmitter extends DefaultEmitter
     protected File dir = null;
     protected final HashSet<String> allPackageNames = new HashSet<String>();
     private boolean generateExceptionsOnEquals;
+    private boolean ignorePragma;
 
 
 
@@ -183,5 +184,19 @@ public class JavaDefaultEmitter extends DefaultEmitter
     {
         return generateExceptionsOnEquals;
     }
+
+
+    public boolean isIgnorePragma()
+    {
+        return ignorePragma;
+    }
+
+
+    public void setIgnorePragma(boolean ignorePragma)
+    {
+        this.ignorePragma = ignorePragma;
+    }
+    
+    
 
 }
