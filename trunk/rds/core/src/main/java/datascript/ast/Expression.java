@@ -507,6 +507,8 @@ public class Expression extends TokenAST
                 case DataScriptParserTokenTypes.LOGICALOR:
                     value = new BooleanValue(val1 || val2);
                     break;
+                default:
+                    throw new IllegalStateException();
             }
         }
     }
@@ -596,7 +598,8 @@ public class Expression extends TokenAST
     public static boolean checkCompatibility(TypeInterface type1,
             TypeInterface type2)
     {
-        TypeInterface t1, t2;
+        TypeInterface t1;
+        TypeInterface t2;
 
         if (type1 instanceof ConstType)
         {

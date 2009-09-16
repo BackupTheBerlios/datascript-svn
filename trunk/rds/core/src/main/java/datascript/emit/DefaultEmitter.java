@@ -61,9 +61,9 @@ import antlr.collections.AST;
  */
 public class DefaultEmitter implements Emitter
 {
-    protected PrintWriter writer = null;
-    protected AST curUnitNode = null;
-    private String RDS_VERSION = null;
+    protected PrintWriter writer;
+    protected AST curUnitNode;
+    private String rdsVersion;
 
 
     /**** implementation of interface methods ****/
@@ -130,13 +130,13 @@ public class DefaultEmitter implements Emitter
 
     public void setRdsVersion(String version)
     {
-        RDS_VERSION = version;
+        rdsVersion = version;
     }
 
 
     public String getRdsVersion()
     {
-        return RDS_VERSION;
+        return rdsVersion;
     }
 
 

@@ -6,7 +6,7 @@ import java.util.Map;
 public class TypeRegistry
 {
     private static Map<Integer,TypeInterface> idToTypeMap = new HashMap<Integer, TypeInterface>();
-    private static int numTypes = 0;
+    private static int numTypes;
     
     public static int registerType(TypeInterface type)
     {

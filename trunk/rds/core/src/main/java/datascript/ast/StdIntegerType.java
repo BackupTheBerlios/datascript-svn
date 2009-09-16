@@ -56,6 +56,10 @@ import datascript.antlr.DataScriptParserTokenTypes;
 @SuppressWarnings("serial")
 public class StdIntegerType extends IntegerType
 {
+    private static BigInteger lowerbounds[];
+
+    private static BigInteger upperbounds[];
+
     public boolean isSigned()
     {
         switch (getType())
@@ -84,11 +88,6 @@ public class StdIntegerType extends IntegerType
     }
 
 
-    /*
-     * public String toString() { // remove double quotes from "uint8" return
-     * DataScriptParser._tokenNames[getType()]; }
-     */
-
     @Override
     public boolean equals(Object obj)
     {
@@ -98,6 +97,12 @@ public class StdIntegerType extends IntegerType
             return other.getType() == getType();
         }
         return super.equals(obj);
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return super.hashCode();
     }
 
 
@@ -141,12 +146,6 @@ public class StdIntegerType extends IntegerType
                 throw new ComputeError("unknown type in bitsizeof");
         }
     }
-
-    private static BigInteger lowerbounds[];
-
-    private static BigInteger upperbounds[];
-
-    // private static StdIntegerType builtinTypes[];
 
     static
     {
@@ -231,7 +230,7 @@ public class StdIntegerType extends IntegerType
             return (lowerbounds[getType()].compareTo(val.integerValue()) != 1 && val
                     .integerValue().compareTo(upperbounds[getType()]) == -1);
         }
-        catch (ComputeError _)
+        catch (ComputeError exc)
         {
             return (false);
         }

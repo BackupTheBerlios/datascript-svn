@@ -180,4 +180,10 @@ public class TokenAST extends CommonASTWithHiddenTokens
         }
         return null;
     }
+    
+    @Override
+    public int hashCode()
+    {
+        return getType();
+    }
 }

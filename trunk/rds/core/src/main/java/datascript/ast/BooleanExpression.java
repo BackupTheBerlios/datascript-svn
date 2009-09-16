@@ -113,13 +113,15 @@ public class BooleanExpression extends Expression
         
         boolean b = (op1.value.compareTo(op2.value) == 0);
         
-        switch(getType())
+        switch (getType())
         {
             case DataScriptParserTokenTypes.EQ:
                 break;
             case DataScriptParserTokenTypes.NE:
                 b = !b;
                 break;
+            default:
+                throw new IllegalStateException();
                 
         }
         value = new BooleanValue(b);
@@ -134,7 +136,7 @@ public class BooleanExpression extends Expression
         IntegerValue val2 = (IntegerValue)op2.value;
         int cmp = val1.compareTo(val2);
         boolean b = false;
-        switch(getType())
+        switch (getType())
         {
             case DataScriptParserTokenTypes.LT:
                 b = (cmp < 0);
@@ -150,7 +152,9 @@ public class BooleanExpression extends Expression
                 
             case DataScriptParserTokenTypes.GT:   
                 b = (cmp > 0);
-                break;                
+                break;
+            default:
+                throw new IllegalStateException();
         }
         value = new BooleanValue(b);
     }
@@ -163,7 +167,7 @@ public class BooleanExpression extends Expression
         boolean val1 = ((BooleanValue)op1.value).booleanValue();
         boolean val2 = ((BooleanValue)op2.value).booleanValue();
         boolean b = false;
-        switch(getType())
+        switch (getType())
         {
             case DataScriptParserTokenTypes.LOGICALAND:
                 b = val1 || val2;
@@ -172,6 +176,8 @@ public class BooleanExpression extends Expression
             case DataScriptParserTokenTypes.LOGICALOR:
                 b = val1 && val2;
                 break;
+            default:
+                throw new IllegalStateException();
         }
         value = new BooleanValue(b);
     }

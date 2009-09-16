@@ -277,7 +277,7 @@ public class Scope implements LinkAction
      * @pre The name is not yet defined in the current scope.
      * @pre The object is a TypeInterface.
      * @param node    name to be added
-     * @param obj       object with this name
+     * @param object       object with this name
      */
     public void setTypeSymbol(AST node, Object type)
     {

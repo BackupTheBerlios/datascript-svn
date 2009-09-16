@@ -120,12 +120,12 @@ public class IntegerType extends TokenAST implements TypeInterface
 
     public Package getPackage()
     {
-        return Package.BUILTIN;
+        return Package.builtInPackage;
     }
 
 
     public int getId()
     {
         return id;
-    }
+    }    
 }

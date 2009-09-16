@@ -55,7 +55,7 @@ import datascript.antlr.util.TokenAST;
 public class ChoiceMember extends TokenAST
 {
     private Token documentation;
-    private Field field = null;
+    private Field field;
 
 
     public void setDocumentation(Token doc)

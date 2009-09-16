@@ -99,7 +99,7 @@ public class SqlDatabaseEmitter
 
     public static class PragmaFieldEmitter
     {
-        private static final ExpressionEmitter exprEm = new ExpressionEmitter();
+        private static ExpressionEmitter exprEm = new ExpressionEmitter();
 
         private final Field field;
 

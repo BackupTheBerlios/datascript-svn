@@ -56,12 +56,13 @@ import datascript.antlr.util.FileNameToken;
 import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
 import datascript.ast.ParserException;
+import datascript.runtime.DataScriptError;
 
 
 
 public class DataScriptXmlDumper implements Parameters
 {
-    private TokenAST rootNode = null;
+    private TokenAST rootNode;
     private DataScriptParser parser;
     private ToolContext context;
     private HashSet<String> allPackageFiles = new HashSet<String>();
@@ -204,7 +205,7 @@ public class DataScriptXmlDumper implements Parameters
     }
 
 
-    public void emitDatascript() throws Exception
+    public void emitDatascript()
     {
         /* if the XML extension is present, generate xml dump */
         try
@@ -216,8 +217,16 @@ public class DataScriptXmlDumper implements Parameters
         }
         catch (ClassNotFoundException e)
         {
-            System.err
-                    .println("Extension datascript.backend.xml.XmlExtension not found, nothing emitted.");
+            System.err.println("Extension datascript.backend.xml.XmlExtension "
+                    + "not found, nothing emitted.");
+        }
+        catch (InstantiationException exc)
+        {
+            throw new DataScriptError(exc);
+        }
+        catch (IllegalAccessException exc)
+        {
+            throw new DataScriptError(exc);
         }
     }
 

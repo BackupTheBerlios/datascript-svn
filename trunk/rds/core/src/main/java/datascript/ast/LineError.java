@@ -47,11 +47,12 @@ import datascript.antlr.util.TokenAST;
 @SuppressWarnings("serial")
 public class LineError extends Error
 {
+    private static String currentFile;
+
     private TokenAST n;
 
     private String filename;
 
-    static String currentFile;
 
 
     public LineError()

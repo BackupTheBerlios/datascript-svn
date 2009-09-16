@@ -51,16 +51,21 @@ public class BitFieldType extends IntegerType
      * this attribute is set to a value > 0. Otherwise, length is set to -1, and
      * the runtime length is indicated by the expression stored in lengthExpr.
      */
-    int length;
+    private int length;
 
     /**
      * Expression indicating the run-time length of this bitfield. If this is
      * null, length must be set to a value > 0. Otherwise, length == -1.
      */
-    Expression lengthExpr;
+    private Expression lengthExpr;
 
-    BigInteger lowerBound, upperBound;
+    private BigInteger lowerBound;
+    private BigInteger upperBound;
 
+
+    public BitFieldType()
+    {
+    }
 
     @Override
     public int getLength()
@@ -92,11 +97,6 @@ public class BitFieldType extends IntegerType
     	return false;
     }
 
-    public BitFieldType()
-    {
-    }
-
-
     @Override
     public IntegerValue sizeof(Scope ctxt)
     {
@@ -126,7 +126,7 @@ public class BitFieldType extends IntegerType
             return (lowerBound.compareTo(val.integerValue()) != 1 && 
                     val.integerValue().compareTo(upperBound) == -1);
         }
-        catch (ComputeError _)
+        catch (ComputeError exc)
         {
             return (false);
         }

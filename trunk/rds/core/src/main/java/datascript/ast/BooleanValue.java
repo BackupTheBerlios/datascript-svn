@@ -45,16 +45,16 @@ public class BooleanValue extends Value implements Comparable<Object>
     private boolean bval;
 
 
+    public BooleanValue(boolean bval)
+    {
+        this.bval = bval;
+    }
+
+
     @Override
     public boolean booleanValue()
     {
         return bval;
-    }
-
-
-    public BooleanValue(boolean bval)
-    {
-        this.bval = bval;
     }
 
 

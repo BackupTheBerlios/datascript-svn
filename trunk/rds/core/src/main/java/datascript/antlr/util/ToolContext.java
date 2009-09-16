@@ -46,11 +46,11 @@ import java.io.File;
  */
 public class ToolContext
 {
+    private static ToolContext singleton;
     private String fileName;
     private String pathName;
     private int numWarnings;
     private int numErrors;
-    private static ToolContext singleton;
     
     private ToolContext()
     {       

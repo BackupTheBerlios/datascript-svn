@@ -49,8 +49,8 @@ import datascript.antlr.DataScriptParserTokenTypes;
 @SuppressWarnings("serial")
 public class ChoiceType extends CompoundType
 {
-    List<ChoiceMember> choiceMembers = null;
-    ChoiceDefault choiceDefault = null;
+    List<ChoiceMember> choiceMembers;
+    ChoiceDefault choiceDefault;
 
 
     @Override
@@ -126,16 +126,18 @@ public class ChoiceType extends CompoundType
             return choiceMembers;
 
         node = node.getFirstChild();
-        while(node != null)
+        while (node != null)
         {
             switch (node.getType())
             {
-            case DataScriptParserTokenTypes.CASE:
-                choiceMembers.add((ChoiceCase)node);
-                break;
-            case DataScriptParserTokenTypes.DEFAULT:
-                choiceMembers.add((ChoiceDefault)node);
-                break;
+                case DataScriptParserTokenTypes.CASE:
+                    choiceMembers.add((ChoiceCase) node);
+                    break;
+                case DataScriptParserTokenTypes.DEFAULT:
+                    choiceMembers.add((ChoiceDefault) node);
+                    break;
+                default:
+                    // nothing
             }
             node = node.getNextSibling();
         }

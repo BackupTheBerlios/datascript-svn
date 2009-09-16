@@ -40,6 +40,8 @@ package datascript.emit.html;
 
 import org.apache.commons.cli.Option;
 
+import antlr.RecognitionException;
+
 import datascript.antlr.DataScriptEmitter;
 import datascript.antlr.util.TokenAST;
 import datascript.ast.DataScriptException;
@@ -55,7 +57,6 @@ public class HtmlExtension implements Extension
      * @see datascript.tools.Extension#generate(datascript.antlr.DataScriptEmitter, datascript.ast.TokenAST)
      */
     public void generate(DataScriptEmitter emitter, TokenAST rootNode)
-            throws Exception
     {
         if (params == null)
             throw new DataScriptException("No parameters set for HtmlBackend!");
@@ -76,19 +77,25 @@ public class HtmlExtension implements Extension
         // emit stylesheets
         htmlEmitter.emitStylesheet();
 
-        // emit HTML documentation
-        emitter.setEmitter(htmlEmitter);
-        emitter.root(rootNode);
+        try
+        {
+            // emit HTML documentation
+            emitter.setEmitter(htmlEmitter);
+            emitter.root(rootNode);
+            // emit list of packages
+            PackageEmitter packageEmitter = new PackageEmitter(params.getDocPathName());
+            emitter.setEmitter(packageEmitter);
+            emitter.root(rootNode);
 
-        // emit list of packages
-        PackageEmitter packageEmitter = new PackageEmitter(params.getDocPathName());
-        emitter.setEmitter(packageEmitter);
-        emitter.root(rootNode);
-
-        // emit list of classes
-        OverviewEmitter overviewEmitter = new OverviewEmitter(params.getDocPathName());
-        emitter.setEmitter(overviewEmitter);
-        emitter.root(rootNode);
+            // emit list of classes
+            OverviewEmitter overviewEmitter = new OverviewEmitter(params.getDocPathName());
+            emitter.setEmitter(overviewEmitter);
+            emitter.root(rootNode);
+        }
+        catch (RecognitionException exc)
+        {
+            throw new DataScriptException(exc);
+        }
     }
 
 

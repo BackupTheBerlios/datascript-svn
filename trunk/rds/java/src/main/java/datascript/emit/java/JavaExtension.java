@@ -62,7 +62,6 @@ public class JavaExtension implements Extension
 
 
     public void generate(DataScriptEmitter emitter, TokenAST rootNode)
-            throws DataScriptException, RecognitionException
     {
         if (params == null)
             throw new DataScriptException("No parameters set for JavaBackend!");
@@ -128,13 +127,19 @@ public class JavaExtension implements Extension
 
     private void runEmitter(DataScriptEmitter emitter, TokenAST rootNode,
             boolean generateExceptions, JavaDefaultEmitter javaEmitter)
-            throws RecognitionException
     {
         javaEmitter.setRdsVersion(params.getVersion());
         javaEmitter.setThrowsException(generateExceptions);
         javaEmitter.setIgnorePragma(ignorePragma);
         emitter.setEmitter(javaEmitter);
-        emitter.root(rootNode);
+        try
+        {
+            emitter.root(rootNode);
+        }
+        catch (RecognitionException exc)
+        {
+            throw new DataScriptException();
+        }
     }
 
     public void getOptions(org.apache.commons.cli.Options rdsOptions)

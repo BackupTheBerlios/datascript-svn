@@ -74,8 +74,7 @@ public interface Extension
      *            the already parsed input file, should be given to
      *            translateUnit
      */
-    public abstract void generate(DataScriptEmitter emitter, TokenAST rootNode)
-            throws Exception;
+    public abstract void generate(DataScriptEmitter emitter, TokenAST rootNode);
 
 
     /**

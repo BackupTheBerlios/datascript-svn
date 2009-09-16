@@ -14,6 +14,7 @@
     <rds.version>${project.version}</rds.version>
     <rds.osgiversion>${project.version}.0</rds.osgiversion>
     <sqlite.version>0.53.3</sqlite.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <profiles>
     <profile>

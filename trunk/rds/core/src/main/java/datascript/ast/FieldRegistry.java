@@ -6,7 +6,7 @@ import java.util.Map;
 public class FieldRegistry
 {
     private static Map<Integer, Field> idToFieldMap = new HashMap<Integer, Field>();
-    private static int numFields = 0;
+    private static int numFields;
     
     public static int registerField(Field field)
     {

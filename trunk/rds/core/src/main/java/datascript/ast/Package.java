@@ -88,7 +88,7 @@ import datascript.emit.StringUtil;
 public class Package extends Scope
 {
     /** System package for built-in types. */
-    public static Package BUILTIN;
+    public static Package builtInPackage;
 
     /** 
      * Default package for types without an explicit package declaration.
@@ -96,16 +96,16 @@ public class Package extends Scope
      * is probably not complete, since all existing DataScript modules now have
      * a package declaration.  
      */
-    public static Package DEFAULT;
+    public static Package defaultPackage;
 
     static
     {
-        BUILTIN = new Package();
-        BUILTIN.packagePath = new ArrayList<String>();
-        BUILTIN.packagePath.add("__builtin__");
-        DEFAULT = new Package();
-        DEFAULT.packagePath = new ArrayList<String>();
-        DEFAULT.packagePath.add("__default__");
+        builtInPackage = new Package();
+        builtInPackage.packagePath = new ArrayList<String>();
+        builtInPackage.packagePath.add("__builtin__");
+        defaultPackage = new Package();
+        defaultPackage.packagePath = new ArrayList<String>();
+        defaultPackage.packagePath.add("__default__");
     }
 
     /** Map of all packages in the project. */
@@ -115,7 +115,7 @@ public class Package extends Scope
     private static Map<TokenAST, Package> nodeToPackage = new HashMap<TokenAST, Package>();
 
     /** The root package, i.e. the one first parsed. */
-    private static Package root = null;
+    private static Package root;
 
     /** The PACKAGE node of the AST defining this package. */
     private TokenAST node;
@@ -527,6 +527,6 @@ public class Package extends Scope
 
     public boolean isUserDefined()
     {
-        return (this != BUILTIN) && (this != DEFAULT);
+        return (this != builtInPackage) && (this != defaultPackage);
     }
 }

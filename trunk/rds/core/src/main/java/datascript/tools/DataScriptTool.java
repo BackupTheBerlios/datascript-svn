@@ -42,7 +42,6 @@ package datascript.tools;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -54,7 +53,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.Parser;
 
 import antlr.Token;
 import antlr.TokenStreamHiddenTokenFilter;
@@ -87,8 +85,8 @@ public class DataScriptTool implements Parameters
     private static final String VERSION = "rds 0.34 (16 Sep 2009)";
 
     private ToolContext context;
-    private TokenAST rootNode = null;
-    private DataScriptParser parser = null;
+    private TokenAST rootNode;
+    private DataScriptParser parser;
     private final Scope globals = new Scope();
     private final HashSet<String> allPackageFiles = new HashSet<String>();
 
@@ -103,14 +101,14 @@ public class DataScriptTool implements Parameters
      * All commandline options (some of these are handled by rds extensions,
      * not by the main tool. 
      */
-    private CommandLine cli = null;
+    private CommandLine cli;
 
     /* Different Properties for holding values from the commandline */
-    private String fileName = null;
-    private String srcPathName = null;
-    private String outPathName = null;
-    private String docPathName = null;
-    private boolean checkSyntax = false;
+    private String fileName;
+    private String srcPathName;
+    private String outPathName;
+    private String docPathName;
+    private boolean checkSyntax;
 
 
 

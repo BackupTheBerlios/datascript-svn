@@ -38,6 +38,7 @@
 package datascript.emit.xml;
  
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
@@ -46,6 +47,8 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
@@ -85,7 +88,6 @@ public class XmlExtension extends XMLFilterImpl implements Extension
      * @see datascript.tools.Extension#generate(datascript.antlr.DataScriptEmitter, datascript.ast.TokenAST)
      */
     public void generate(DataScriptEmitter emitter, TokenAST root)
-            throws Exception
     {
         if (params == null)
             throw new DataScriptException("No parameters set for XmlBackend!");
@@ -105,16 +107,31 @@ public class XmlExtension extends XMLFilterImpl implements Extension
         }
         File outputFile = new File(params.getOutPathName(), fileName);
         this.rootNode = root;
-        FileOutputStream os = new FileOutputStream(outputFile);
-
-        TransformerFactory tf = TransformerFactory.newInstance();
-        tf.setAttribute("indent-number", new Integer(2));
-        Transformer t = tf.newTransformer();
-        t.setOutputProperty(OutputKeys.INDENT, "yes");
-        t.setOutputProperty(OutputKeys.METHOD, "xml");
-        Source source = new SAXSource(this, new InputSource());
-        Result result = new StreamResult(new OutputStreamWriter(os));
-        t.transform(source, result);
+        FileOutputStream os;
+        try
+        {
+            os = new FileOutputStream(outputFile);
+            TransformerFactory tf = TransformerFactory.newInstance();
+            tf.setAttribute("indent-number", new Integer(2));
+            Transformer t = tf.newTransformer();
+            t.setOutputProperty(OutputKeys.INDENT, "yes");
+            t.setOutputProperty(OutputKeys.METHOD, "xml");
+            Source source = new SAXSource(this, new InputSource());
+            Result result = new StreamResult(new OutputStreamWriter(os));
+            t.transform(source, result);
+        }
+        catch (FileNotFoundException exc)
+        {
+            throw new DataScriptException(exc);
+        }
+        catch (TransformerConfigurationException exc)
+        {
+            throw new DataScriptException(exc);
+        }
+        catch (TransformerException exc)
+        {
+            throw new DataScriptException(exc);
+        }
     }
 
 

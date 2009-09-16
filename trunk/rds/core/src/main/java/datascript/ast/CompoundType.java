@@ -58,30 +58,27 @@ abstract public class CompoundType
     protected int id;
 
     protected final List<Field> fields = new ArrayList<Field>();
+    protected boolean bfoComputed;
     private final List<FunctionType> functions = new ArrayList<FunctionType>();
     private final List<Parameter> parameters = new ArrayList<Parameter>();
 
-    // / one of TypeInterface.NOBYTEORDER, BIGENDIAN, LITTLEENDIAN
-    int byteOrder;
-
     private Scope scope;
-    private Package pkg;
+    private Package pakkage;
     private String name;
     private CompoundType parent;
     private Token doc;
-    protected boolean bfoComputed = false;
-
-
-    abstract public IntegerValue sizeof(Scope ctxt);
-
-
-    abstract public boolean isMember(Scope ctxt, Value val);
 
 
     protected CompoundType()
     {
         id = TypeRegistry.registerType(this);
     }
+
+
+    abstract public IntegerValue sizeof(Scope ctxt);
+
+
+    abstract public boolean isMember(Scope ctxt, Value val);
 
 
     public CompoundType getParent()
@@ -193,7 +190,7 @@ abstract public class CompoundType
     public void setScope(Scope scope, Package pkg)
     {
         this.scope = scope;
-        this.pkg = pkg;
+        this.pakkage = pkg;
         scope.setOwner(this);
     }
 
@@ -254,7 +251,7 @@ abstract public class CompoundType
 
     public Package getPackage()
     {
-        return pkg;
+        return pakkage;
     }
 
 
