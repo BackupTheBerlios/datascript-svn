@@ -1,0 +1,92 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.berlios.datascript.rds</groupId>
+  <artifactId>java</artifactId>
+  <packaging>bundle</packaging>
+  <version>0.32</version>
+  <name>Relational DataScript Java Code Generator</name>
+  <parent>
+    <groupId>de.berlios.datascript</groupId>
+    <artifactId>rds</artifactId>
+    <version>0.32</version>
+  </parent>
+  <dependencies>
+
+    <dependency>
+      <groupId>de.berlios.datascript.rds</groupId>
+      <artifactId>core</artifactId>
+      <version>${rds.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.berlios.datascript.rds</groupId>
+      <artifactId>runtime</artifactId>
+      <version>${rds.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>com.springsource.antlr
+      </artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.freemarker</groupId>
+      <artifactId>com.springsource.freemarker
+      </artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>de.berlios.datascript</groupId>
+      <artifactId>sqlite</artifactId>
+    </dependency>
+
+
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins
+        </groupId>
+        <artifactId>maven-compiler-plugin
+        </artifactId>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Export-Package>datascript.emit.java
+            </Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>de.berlios.datascript</groupId>
+        <artifactId>maven-sourcebundle-plugin
+        </artifactId>
+        <configuration>
+          <bundleName>de.berlios.datascript.java</bundleName>
+          <sourceBundleName>de.berlios.datascript.java.source</sourceBundleName>
+        </configuration>
+      </plugin>
+
+
+    </plugins>
+  </build>
+</project>

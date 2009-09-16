@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>rds</artifactId>
+    <groupId>de.berlios.datascript</groupId>
+    <version>0.32</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.berlios.datascript</groupId>
+  <artifactId>doc</artifactId>
+  <packaging>pom</packaging>
+  <name>Relational DataScript Documentation</name>
+  <version>0.32</version>
+  <description />
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.agilejava.docbkx</groupId>
+        <artifactId>docbkx-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate-html</goal>
+              <goal>generate-pdf</goal>
+            </goals>
+            <phase>pre-site</phase>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.docbook</groupId>
+            <artifactId>docbook-xml</artifactId>
+            <version>4.4</version>
+            <scope>runtime</scope>
+          </dependency>
+          <dependency>
+            <groupId>net.sf.offo</groupId>
+            <artifactId>hyphenation</artifactId>
+            <version>1.0</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <sectionAutolabel>true</sectionAutolabel>
+          <paperType>A4</paperType>
+          <fop1Extensions>true</fop1Extensions>
+          <hyphenate>true</hyphenate>
+          <hyphenateVerbatim>true</hyphenateVerbatim>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
