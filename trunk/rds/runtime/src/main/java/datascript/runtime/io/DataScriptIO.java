@@ -1,6 +1,8 @@
 package datascript.runtime.io;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class DataScriptIO
             writer.close();
             return writer.toByteArray();
         }
-        catch (Exception exc)
+        catch (IOException exc)
         {
             throw new DataScriptError(exc);
         }
@@ -66,7 +68,27 @@ public class DataScriptIO
             E e = constructor.newInstance(reader);
             return e;
         }
-        catch (Exception exc)
+        catch (SecurityException exc)
+        {
+            throw new DataScriptError(exc);
+        }
+        catch (NoSuchMethodException exc)
+        {
+            throw new DataScriptError(exc);
+        }
+        catch (IllegalArgumentException exc)
+        {
+            throw new DataScriptError(exc);
+        }
+        catch (InstantiationException exc)
+        {
+            throw new DataScriptError(exc);
+        }
+        catch (IllegalAccessException exc)
+        {
+            throw new DataScriptError(exc);
+        }
+        catch (InvocationTargetException exc)
         {
             throw new DataScriptError(exc);
         }
@@ -111,7 +133,19 @@ public class DataScriptIO
             E e = constructor.newInstance(argArray);
             return e;
         }
-        catch (Exception exc)
+        catch (IllegalArgumentException exc)
+        {
+            throw new DataScriptError(exc);
+        }
+        catch (InstantiationException exc)
+        {
+            throw new DataScriptError(exc);
+        }
+        catch (IllegalAccessException exc)
+        {
+            throw new DataScriptError(exc);
+        }
+        catch (InvocationTargetException exc)
         {
             throw new DataScriptError(exc);
         }

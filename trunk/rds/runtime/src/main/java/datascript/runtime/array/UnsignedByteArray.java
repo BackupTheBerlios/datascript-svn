@@ -214,7 +214,7 @@ public class UnsignedByteArray implements Array<Short>, SizeOf
      * 
      * For small strings only.
      */
-    public boolean compare_to_string(String str)
+    public boolean compareToString(String str)
     {
         byte[] sbytes = str.getBytes();
         if (sbytes.length > length)

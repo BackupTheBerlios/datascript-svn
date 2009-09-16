@@ -108,19 +108,18 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         if (obj instanceof BitFieldArray)
         {
             BitFieldArray that = (BitFieldArray) obj;
-	        if (that.length != this.length)
-	            return false;
-	
-	        for (int i = 0; i < this.length; i++)
-	        {
-	            if (this.elementAt(i).compareTo(that.elementAt(i)) != 0)
-	                return false;
-	        }
+            if (that.length != this.length)
+                return false;
+
+            for (int i = 0; i < this.length; i++)
+            {
+                if (this.elementAt(i).compareTo(that.elementAt(i)) != 0)
+                    return false;
+            }
             return true;
         }
         return super.equals(obj);
     }
-
 
     public boolean equalsWithException(Object obj)
     {

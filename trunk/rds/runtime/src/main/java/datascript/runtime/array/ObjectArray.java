@@ -107,14 +107,18 @@ public class ObjectArray<E extends Writer> implements Array<E>, SizeOf
 
             for (int i = 0; i < this.data.size(); i++)
             {
+                boolean equals;
                 try
                 {
-                    if (!this.data.get(i).equals(that.data.get(i)))
-                        throw new DataScriptError("value mismatch at index " + i);
+                    equals = this.data.get(i).equals(that.data.get(i));
                 }
-                catch (Exception e)
+                catch (DataScriptError exc)
                 {
-                    throw new DataScriptError("exception at index " + i, e);
+                    throw new DataScriptError("exception at index " + i, exc);
+                }
+                if (!equals)
+                {
+                    throw new DataScriptError("mismatch at index " + i);                    
                 }
             }
             return true;

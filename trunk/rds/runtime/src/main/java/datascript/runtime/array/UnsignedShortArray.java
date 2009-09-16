@@ -66,18 +66,18 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
         if (length == -1)
         {
             List<Integer> v = new ArrayList<Integer>();
-            long __afpos = 0;
+            long pos = 0;
             try
             {
                 while (true)
                 {
-                    __afpos = in.getBitPosition();
+                    pos = in.getBitPosition();
                     v.add(in.readUnsignedShort());
                 }
             }
-            catch (IOException __e)
+            catch (IOException exc)
             {
-                in.setBitPosition(__afpos);
+                in.setBitPosition(pos);
             }
             data = new int[v.size()];
             for (int i = 0; i < data.length; ++i)
@@ -118,38 +118,36 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
         if (obj instanceof UnsignedShortArray)
         {
             UnsignedShortArray that = (UnsignedShortArray) obj;
-	        if (that.length != this.length)
-	            return false;
-	
-	        for (int i = 0; i < this.length; i++)
-	        {
-	            if (this.elementAt(i) != that.elementAt(i))
-	                return false;
-	        }
-	        return true;
+            if (that.length != this.length)
+                return false;
+
+            for (int i = 0; i < this.length; i++)
+            {
+                if (this.elementAt(i) != that.elementAt(i))
+                    return false;
+            }
+            return true;
         }
         return super.equals(obj);
     }
-
 
     public boolean equalsWithException(Object obj)
     {
         if (obj instanceof UnsignedShortArray)
         {
             UnsignedShortArray that = (UnsignedShortArray) obj;
-	        if (that.length != this.length)
-	            throw new DataScriptError("mismatched array length");
-	
-	        for (int i = 0; i < this.length; i++)
-	        {
-	            if (this.elementAt(i) != that.elementAt(i))
-	                throw new DataScriptError("value mismatch at index " + i);
-	        }
-	        return true;
+            if (that.length != this.length)
+                throw new DataScriptError("mismatched array length");
+
+            for (int i = 0; i < this.length; i++)
+            {
+                if (this.elementAt(i) != that.elementAt(i))
+                    throw new DataScriptError("value mismatch at index " + i);
+            }
+            return true;
         }
         return super.equals(obj);
     }
-
 
     public int elementAt(int i)
     {
@@ -255,6 +253,5 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
             throw new UnsupportedOperationException();
         }
         
-    }
-    
+    }    
 }

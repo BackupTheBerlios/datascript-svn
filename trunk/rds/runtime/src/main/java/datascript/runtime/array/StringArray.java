@@ -54,8 +54,8 @@ import datascript.runtime.io.BitStreamWriter;
 public class StringArray implements Array<String>, SizeOf
 {
     private String[] data; // data is between [offset... offset+length-1]
-    int offset;
-    int length;
+    private int offset;
+    private int length;
 
 
     public StringArray(int length)
