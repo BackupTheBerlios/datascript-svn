@@ -8,7 +8,6 @@
   <metadata name="com.atlas-sw.eclipse" value="I like Sydney"/>
 
   <!-- property name="severity" value="error"/-->
-  <module name="FileLength" />
 
   <!--module name="SuppressionFilter">
     <property name="file" value="${checkstyle.suppressions.file}"/>
@@ -101,6 +100,7 @@
 
 
     <module name="IllegalThrows"/>
+    <module name="FileLength" />
 
 
  </module>
