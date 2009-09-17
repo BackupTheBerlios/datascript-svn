@@ -98,8 +98,18 @@
         <date>22 October 2008</date>
 
         <revdescription>
-          <para>Move is operator into right paragraph (Binary Operators) and 
+          <para>Move is operator into right paragraph (Binary Operators) and
           correct typing errors.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>1.0</revnumber>
+
+        <date>31 August 2009</date>
+
+        <revdescription>
+          <para>Added signed bitfields.</para>
         </revdescription>
       </revision>
     </revhistory>
@@ -253,19 +263,42 @@
     <section>
       <title>Bit Field Types</title>
 
-      <para>A bit field type is denoted by <literal>bit:1, bit:2</literal>,
-      ... The colon must be followed by a positive integer literal, which
-      indicates the length of the type in bits. The length is not limited. A
-      bit field type corresponds to an unsigned integer of the given length.
-      Thus, <literal>bit:16</literal> and <literal>uint16</literal> are
-      equivalent.</para>
+      <section>
+        <title>Unsigned Bitfield Types</title>
 
-      <para>Signed bit field types are not supported.</para>
+        <para>An unsigned bit field type is denoted by <literal>bit:1,
+        bit:2</literal>, ... The colon must be followed by a positive integer
+        literal, which indicates the length of the type in bits. The length is
+        not limited. An unsigned bit field type corresponds to an unsigned
+        integer of the given length. Thus, <literal>bit:16</literal> and
+        <literal>uint16</literal> are equivalent. The value range of
+        <literal>bit:n</literal> is 0..2<superscript>n</superscript>-1.</para>
 
-      <para>Variable length bit field types can be specified as
-      <literal>bit&lt;</literal><emphasis>expr</emphasis><literal>&gt;</literal>,
-      where <emphasis>expr</emphasis> is an expression of integer type to be
-      evaluated at run-time.</para>
+        <para>Unsigned bitfield types of variable length can be specified as
+        <literal>bit&lt;</literal><emphasis>expr</emphasis><literal>&gt;</literal>,
+        where <emphasis>expr</emphasis> is an expression of integer type to be
+        evaluated at run-time.</para>
+      </section>
+
+      <section>
+        <title>Signed Bitfield Types</title>
+
+        <para>A signed bit field type is denoted by <literal>int:1,
+        int:2</literal>, ... The colon must be followed by a positive integer
+        literal, which indicates the length of the type in bits. The length is
+        not limited. A signed bit field type corresponds to a signed integer
+        of the given length. Thus, <literal>int:16</literal> and
+        <literal>int16</literal> are equivalent. The value range of
+        <literal>int:n</literal> is
+        -2<superscript>n-1</superscript>..2<superscript>n-1</superscript>-1
+        </para>
+
+        <para>Signed bitfield types of variable length bit field types can be
+        specified as
+        <literal>int&lt;</literal><emphasis>expr</emphasis><literal>&gt;</literal>,
+        where <emphasis>expr</emphasis> is an expression of integer type to be
+        evaluated at run-time.</para>
+      </section>
     </section>
 
     <section>
@@ -1498,14 +1531,211 @@ sql_database TheWorld
 
       <para><programlisting>sql_integer TileId
 {
-  uint8  levelNr;
-  int32  tileNr;
+  uint8  levelNum;
+  int32  tileNum;
 };</programlisting></para>
 
-      <para>In this example, the value used as SQL key is <literal>(levelNr
-      &lt;&lt; 32 + (uint32) tileNr)</literal>.</para>
+      <para>In this example, the value used as SQL key is <literal>(levelNum
+      &lt;&lt; 32 + tileNum)</literal>.</para>
     </section>
   </section>
+
+  <appendix>
+    <title>Quick Reference</title>
+
+    <para></para>
+
+    <informaltable>
+      <tgroup cols="2">
+        <tbody>
+          <row>
+            <entry morerows="5">Signed Integers and Bitfields</entry>
+
+            <entry><programlisting>int8</programlisting></entry>
+          </row>
+
+          <row>
+            <entry><programlisting>int16</programlisting></entry>
+          </row>
+
+          <row>
+            <entry>int32</entry>
+          </row>
+
+          <row>
+            <entry>int64</entry>
+          </row>
+
+          <row>
+            <entry>int:n</entry>
+          </row>
+
+          <row>
+            <entry>int&lt;expr&gt;</entry>
+          </row>
+
+          <row>
+            <entry morerows="5">Unsigned Integers and Bitfields</entry>
+
+            <entry>uint8</entry>
+          </row>
+
+          <row>
+            <entry>uint16</entry>
+          </row>
+
+          <row>
+            <entry>uint32</entry>
+          </row>
+
+          <row>
+            <entry>uint64</entry>
+          </row>
+
+          <row>
+            <entry>uint:n</entry>
+          </row>
+
+          <row>
+            <entry>uint&lt;expr&gt;</entry>
+          </row>
+
+          <row>
+            <entry>Enumeration</entry>
+
+            <entry><programlisting>enum bit:3 Color
+{
+    NONE  = 000b,
+    RED   = 010b,
+    BLUE,
+    BLACK = 111b
+};</programlisting></entry>
+          </row>
+
+          <row>
+            <entry>Sequence</entry>
+
+            <entry><programlisting>MySequence
+{
+    bit:4    a;
+    uint8    b;
+    bit:4    c;
+};</programlisting></entry>
+          </row>
+
+          <row>
+            <entry>Union</entry>
+
+            <entry><programlisting>union VarCoordXY
+{
+    CoordXY8    coord8  : width == 8;
+    CoordXY16   coord16 : width == 16;
+    CoordXY24   coord24 : width == 24;
+    CoordXY16   coord32 : width == 32;
+}; </programlisting></entry>
+          </row>
+
+          <row>
+            <entry>Choice</entry>
+
+            <entry><programlisting>choice VarCoordXY on Coord.width
+{
+    case  8: CoordXY8  coord8;
+    case 16: CoordXY16 coord16;
+    case 24: CoordXY24 coord24;
+    case 32: CoordXY32 coord32;
+};</programlisting></entry>
+          </row>
+
+          <row>
+            <entry>Optional Member</entry>
+
+            <entry><programlisting>ItemCount
+{
+    uint8    count8;
+    uint16   count16  if count8 == 0xFF;
+};</programlisting></entry>
+          </row>
+
+          <row>
+            <entry>Function</entry>
+
+            <entry><programlisting>ItemCount
+{
+    uint8    count8;
+    uint16   count16  if count8 == 0xFF;
+
+    function uint16 getValue()
+    {
+        return (count8 == 0xFF) ? count16 : count8;
+    }
+};</programlisting></entry>
+          </row>
+
+          <row>
+            <entry>Array</entry>
+
+            <entry><programlisting>ArrayExample
+{
+    uint8    header[256];
+    int16    numItems;
+    Element  list[numItems];
+};</programlisting></entry>
+          </row>
+
+          <row>
+            <entry>Label</entry>
+
+            <entry><programlisting>Tile
+{
+    TileHeader    header;
+    uint32        stringOffset;
+    uint16        numFeatures;
+
+stringOffset:
+    StringTable   stringTable;
+};</programlisting></entry>
+          </row>
+
+          <row>
+            <entry>Parameterized Type</entry>
+
+            <entry><programlisting>Header
+{
+    uint32    version;
+    uint16    numItems;
+};
+
+
+Message
+{
+    Header    h;
+    Item(h)   items[h.numItems];
+};
+
+Item(Header header)
+{
+    uint16    p;
+    uint32    q if header.version &gt;= 10;
+};</programlisting></entry>
+          </row>
+
+          <row>
+            <entry>Subtype</entry>
+
+            <entry><programlisting>subtype uint16  BlockIndex;
+
+
+Block
+{
+    BlockIndex    index;
+    BlockData     data;
+};</programlisting></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+  </appendix>
 
   <bibliography>
     <title>References</title>

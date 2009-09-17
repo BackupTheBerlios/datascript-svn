@@ -44,13 +44,16 @@ public class SqlTableTest extends TestCase
     }
 
 
-    /*
-     * @see TestCase#setUp()
+    /**
+     * TODO: file.delete() does not always work under Windows.
+     * No problem under Linux, though.
      */
     @Override
     protected void setUp() throws Exception
     {
         file.delete();
+        SqlTestDb db = new SqlTestDb(fileName, Mode.CREATE);
+        db.close();
     }
 
 
@@ -67,9 +70,36 @@ public class SqlTableTest extends TestCase
     }
 
 
+    public void atestPragma() throws SQLException
+    {
+    	System.out.println(file.exists());
+        Connection dbc = DriverManager.getConnection("jdbc:sqlite:" + fileName);
+        SqlTestDb db = new SqlTestDb(dbc);
+        Statement st = dbc.createStatement();
+        st.executeUpdate("pragma page_size = 4096");
+        st.close();
+        
+        db.createSchema();
+        
+        ResultSet rs = st.executeQuery("pragma page_size");
+        if (rs.next())
+        {
+            int pageSize = rs.getInt(1);
+            assertEquals(4096, pageSize);
+        }
+        else
+        {
+            fail("cannot read pragma page_size");
+        }
+        st.close();
+        rs.close();
+        
+        db.close();
+    }
+
+
     public void testCreationReadOnly() throws Exception
     {
-        createDb();
         SqlTestDb db = new SqlTestDb(fileName, Mode.READONLY);
         assertTrue(file.exists());
         Connection dbc = db.getConnection();
@@ -106,33 +136,6 @@ public class SqlTableTest extends TestCase
         db.close();
     }
     
-    public void testPragma() throws SQLException
-    {
-        Connection dbc = DriverManager.getConnection("jdbc:sqlite:" + fileName);
-        SqlTestDb db = new SqlTestDb(dbc);
-        Statement st = dbc.createStatement();
-        st.executeUpdate("pragma page_size = 4096");
-        st.close();
-        
-        db.createSchema();
-        
-        ResultSet rs = st.executeQuery("pragma page_size");
-        if (rs.next())
-        {
-            int pageSize = rs.getInt(1);
-            assertEquals(4096, pageSize);
-        }
-        else
-        {
-            fail("cannot read pragma page_size");
-        }
-        st.close();
-        rs.close();
-        
-        db.close();
-    }
-
-
     private void createDb() throws SQLException, URISyntaxException
     {
         new SqlTestDb(fileName, Mode.CREATE);
@@ -141,7 +144,7 @@ public class SqlTableTest extends TestCase
 
     public void testCreationReadWrite() throws Exception
     {
-        SqlTestDb db = new SqlTestDb(fileName, Mode.CREATE);
+        SqlTestDb db = new SqlTestDb(fileName, Mode.WRITE);
         Connection dbc = db.getConnection();
         Statement st = dbc.createStatement();
 
@@ -203,7 +206,7 @@ public class SqlTableTest extends TestCase
 
     public void testInsertion() throws Exception
     {
-        SqlTestDb db = new SqlTestDb(fileName, Mode.CREATE);
+        SqlTestDb db = new SqlTestDb(fileName, Mode.WRITE);
         Connection dbc = db.getConnection();
         Statement st = dbc.createStatement();
 
@@ -232,7 +235,7 @@ public class SqlTableTest extends TestCase
 
     public void testTypes() throws Exception
     {
-        SqlTestDb db = new SqlTestDb(fileName, Mode.CREATE);
+        SqlTestDb db = new SqlTestDb(fileName, Mode.WRITE);
         DatabaseMetaData metaData = db.getConnection().getMetaData();
 
         ResultSet columns = metaData.getColumns(null, null, "levels", "testName");
@@ -276,7 +279,7 @@ public class SqlTableTest extends TestCase
 
     public void testInsertionTableReference() throws Exception
     {
-        SqlTestDb db = new SqlTestDb(fileName, Mode.CREATE);
+        SqlTestDb db = new SqlTestDb(fileName, Mode.WRITE);
         Statement st = db.getConnection().createStatement();
 
         int rows = st.executeUpdate("insert into moreLevels values ('test2', 1, 'blob1', 12345, 1234567, 3, x'0505050505')");
