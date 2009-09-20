@@ -374,7 +374,7 @@ paramTypeInstantiation
     :   d:definedType typeArgumentList
         { 
             #paramTypeInstantiation = #([INST], paramTypeInstantiation);
-            ((TypeReference)#d).setArgumentsPresent(true); 
+            ((TypeReference)#d).setHasArguments(true); 
         }
     ;
 
