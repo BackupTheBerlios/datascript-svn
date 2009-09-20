@@ -36,18 +36,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.ast;
-
-
-
 
 @SuppressWarnings("serial")
 public class SignedBitFieldType extends BitFieldType
 {
     public boolean isSigned()
     {
-    	return true;
+        return true;
     }
 
     @Override

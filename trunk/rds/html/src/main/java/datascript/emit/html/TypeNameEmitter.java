@@ -48,11 +48,10 @@ import datascript.emit.html.ExpressionEmitter;
 public class TypeNameEmitter
 {
     ExpressionEmitter exprEmitter = new ExpressionEmitter();
-    
+
     public TypeNameEmitter()
     {
     }
-
 
     public String getLabel(Field f)
     {
@@ -65,7 +64,6 @@ public class TypeNameEmitter
         return result;
     }
 
-
     public String getArrayRange(Field f)
     {
         String result = null;
@@ -75,14 +73,14 @@ public class TypeNameEmitter
         if (type instanceof ArrayType)
         {
             result = "[";
-            Expression expr = ((ArrayType)type).getLengthExpression();
+            Expression expr = ((ArrayType) type).getLengthExpression();
             if (expr != null)
             {
                 result += exprEmitter.emit(expr);
             }
             result += "]";
         }
-        
+
         return result;
     }
 
@@ -110,36 +108,34 @@ public class TypeNameEmitter
             expr = field.getInitializer();
             if (expr != null)
             {
-                result = " : " + field.getName() + " == " + exprEmitter.emit(expr);
+                result = " : " + field.getName() + " == "
+                        + exprEmitter.emit(expr);
             }
         }
 
         return result;
     }
 
-
     public static boolean isBuiltinType(TypeInterface t)
     {
-        if (t instanceof StdIntegerType ||
-            t instanceof BitFieldType ||
-            t instanceof StringType)
+        if (t instanceof StdIntegerType || t instanceof BitFieldType
+                || t instanceof StringType)
         {
             return true;
         }
         else if (t instanceof ArrayType)
         {
-            return isBuiltinType(((ArrayType)t).getElementType());
+            return isBuiltinType(((ArrayType) t).getElementType());
         }
-        
+
         return false;
     }
-
 
     public static String getTypeName(TypeInterface t)
     {
         String result = null;
 
-        //t = TypeReference.resolveType(t);
+        // t = TypeReference.resolveType(t);
         if (t instanceof StdIntegerType)
         {
             result = getTypeName((StdIntegerType) t);
@@ -170,13 +166,13 @@ public class TypeNameEmitter
         }
         else if (t instanceof TypeInstantiation)
         {
-            TypeInstantiation inst = (TypeInstantiation)t;
+            TypeInstantiation inst = (TypeInstantiation) t;
             CompoundType compound = inst.getBaseType();
             result = compound.getName();
         }
         else if (t instanceof ArrayType)
         {
-            result = getTypeName(((ArrayType)t).getElementType());
+            result = getTypeName(((ArrayType) t).getElementType());
         }
         else if (t instanceof TypeReference)
         {
@@ -191,7 +187,6 @@ public class TypeNameEmitter
 
         return result;
     }
-
 
     private static String getTypeName(StdIntegerType t)
     {
@@ -223,18 +218,17 @@ public class TypeNameEmitter
         }
     }
 
-
     private static String getTypeName(BitFieldType t)
     {
-    	String tag = t.isSigned() ? "int" : "bit";
+        String tag = t.isSigned() ? "int" : "bit";
         Expression e = t.getLengthExpression();
         if (e != null)
         {
             ExpressionEmitter emitter = new ExpressionEmitter();
             return tag + "&lt;" + emitter.emit(e) + "&gt;";
         }
-        
-        int length = t.getLength();        
+
+        int length = t.getLength();
         if (length == 0)
             return tag + "&lt;?&gt;";
         else

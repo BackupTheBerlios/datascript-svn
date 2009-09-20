@@ -36,9 +36,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.runtime.array;
-
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -49,22 +47,21 @@ import datascript.runtime.DataScriptError;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamWriter;
 
-
-
 public class IntArray implements Array<Integer>, SizeOf
 {
     int[] data; // data is between [offset... offset+length-1]
-    int offset;
-    int length;
 
+    int offset;
+
+    int length;
 
     public IntArray(DataInput in, int length) throws IOException
     {
         // TODO handle variable length
         if (length == -1)
         {
-            throw new UnsupportedOperationException("variable length " + getClass()
-                    + " not implemented");
+            throw new UnsupportedOperationException("variable length "
+                    + getClass() + " not implemented");
         }
         else
         {
@@ -78,12 +75,10 @@ public class IntArray implements Array<Integer>, SizeOf
         }
     }
 
-
     public IntArray(int length)
     {
         this(new int[length], 0, length);
     }
-
 
     public IntArray(int[] data, int offset, int length)
     {
@@ -92,80 +87,72 @@ public class IntArray implements Array<Integer>, SizeOf
         this.length = length;
     }
 
-
     @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof IntArray)
         {
             IntArray that = (IntArray) obj;
-	        if (that.length != this.length)
-	        	return false;
-	
-	        for (int i = 0; i < this.length; i++)
-	        {
-	            if (this.elementAt(i) != that.elementAt(i))
-	                return false;
-	        }
-	        return true;
+            if (that.length != this.length)
+                return false;
+
+            for (int i = 0; i < this.length; i++)
+            {
+                if (this.elementAt(i) != that.elementAt(i))
+                    return false;
+            }
+            return true;
         }
         return super.equals(obj);
     }
-
 
     public boolean equalsWithException(Object obj)
     {
         if (obj instanceof IntArray)
         {
             IntArray that = (IntArray) obj;
-	        if (that.length != this.length)
-	            throw new DataScriptError("mismatched array length");
-	
-	        for (int i = 0; i < this.length; i++)
-	        {
-	            if (this.elementAt(i) != that.elementAt(i))
-	                throw new DataScriptError("value mismatch at index " + i);
-	        }
-	        return true;
+            if (that.length != this.length)
+                throw new DataScriptError("mismatched array length");
+
+            for (int i = 0; i < this.length; i++)
+            {
+                if (this.elementAt(i) != that.elementAt(i))
+                    throw new DataScriptError("value mismatch at index " + i);
+            }
+            return true;
         }
         return super.equals(obj);
     }
-
 
     public int elementAt(int i)
     {
         return data[offset + i];
     }
 
-
     public void setElementAt(int value, int i)
     {
         data[offset + i] = value;
     }
-
 
     public int length()
     {
         return length;
     }
 
-
     public int sizeof()
     {
         return 4 * length;
     }
-
 
     public int bitsizeof()
     {
         return 4 * 8 * length;
     }
 
-
     /**
      * This function sums up all values of an array and returns the value
      * 
-     * @return	sum of all array values
+     * @return sum of all array values
      * @throws Exception
      */
     public int sum() throws Exception
@@ -180,7 +167,6 @@ public class IntArray implements Array<Integer>, SizeOf
         return (int) retVal;
     }
 
-
     public Array<Integer> map(Mapping<Integer> m)
     {
         IntArray result = new IntArray(length);
@@ -191,14 +177,12 @@ public class IntArray implements Array<Integer>, SizeOf
         return result;
     }
 
-
     public Array<Integer> subRange(int begin, int len)
     {
         if (begin < 0 || begin >= this.length || begin + len > this.length)
             throw new ArrayIndexOutOfBoundsException();
         return new IntArray(data, offset + begin, len);
     }
-
 
     public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
@@ -213,7 +197,7 @@ public class IntArray implements Array<Integer>, SizeOf
     {
         return new IntArrayIterator();
     }
-    
+
     class IntArrayIterator implements Iterator<Integer>
     {
         private int index;
@@ -227,7 +211,7 @@ public class IntArray implements Array<Integer>, SizeOf
         @Override
         public Integer next()
         {
-            return data[offset+index++];
+            return data[offset + index++];
         }
 
         @Override
@@ -235,6 +219,6 @@ public class IntArray implements Array<Integer>, SizeOf
         {
             throw new UnsupportedOperationException();
         }
-        
+
     }
 }

@@ -36,9 +36,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.emit.java;
-
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -67,21 +65,20 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-
-
 abstract public class CompoundEmitter extends IntegerTypeEmitter
 {
-    protected final List<CompoundParameterEmitter> params = 
-        new ArrayList<CompoundParameterEmitter>();
+    protected final List<CompoundParameterEmitter> params = new ArrayList<CompoundParameterEmitter>();
 
     private StringBuilder buffer;
-    private String formalParams;
-    private String actualParams;
 
+    private String formalParams;
+
+    private String actualParams;
 
     public static class CompoundFunctionEmitter
     {
         private static Template tpl;
+
         private FunctionType func;
 
         public CompoundFunctionEmitter(FunctionType func)
@@ -89,28 +86,24 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
             this.func = func;
         }
 
-
         public void emit(PrintWriter writer, Configuration cfg)
-            throws IOException, TemplateException
+                throws IOException, TemplateException
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/FunctionTmpl.ftl");
             tpl.process(this, writer);
         }
 
-
         public String getName()
         {
             return func.getName();
         }
-
 
         public String getResult()
         {
             ExpressionEmitter ee = new ExpressionEmitter();
             return ee.emit(func.getResult());
         }
-
 
         public String getReturnType()
         {
@@ -119,16 +112,15 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         }
     }
 
-
-
     public static class CompoundParameterEmitter
     {
         private static Template tpl;
 
         private CompoundEmitter global;
-        private TypeInterface type;
-        private Parameter param;
 
+        private TypeInterface type;
+
+        private Parameter param;
 
         public CompoundParameterEmitter(Parameter param, CompoundEmitter j)
         {
@@ -137,39 +129,33 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
             type = TypeReference.getBaseType(param.getType());
         }
 
-
-        public void emit(PrintWriter writer, Configuration cfg) 
-            throws IOException, TemplateException
+        public void emit(PrintWriter writer, Configuration cfg)
+                throws IOException, TemplateException
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/ParameterAccessor.ftl");
             tpl.process(this, writer);
         }
 
-
         public String getName()
         {
             return param.getName();
         }
-
 
         public String getJavaTypeName()
         {
             return TypeNameEmitter.getTypeName(param.getType());
         }
 
-
         public String getGetterName()
         {
             return AccessorNameEmitter.getGetterName(param);
         }
 
-
         public String getSetterName()
         {
             return AccessorNameEmitter.getSetterName(param);
         }
-
 
         public String getTypeName()
         {
@@ -178,13 +164,12 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
             return typeName;
         }
 
-
         public boolean getIsSimple()
         {
             boolean result = false;
             if (type instanceof StdIntegerType)
             {
-                result = (((StdIntegerType)type).getType() != datascript.antlr.DataScriptParserTokenTypes.UINT64);
+                result = (((StdIntegerType) type).getType() != datascript.antlr.DataScriptParserTokenTypes.UINT64);
             }
             else if (type instanceof BitFieldType)
             {
@@ -193,7 +178,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
             }
             return result;
         }
-
 
         public long getMinVal()
         {
@@ -242,16 +226,15 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         }
     }
 
-
-
     public class ArrayEmitter
     {
         private final ExpressionEmitter ee = new ExpressionEmitter();
 
         private final Field field;
-        private final ArrayType array;
-        private final CompoundEmitter global;
 
+        private final ArrayType array;
+
+        private final CompoundEmitter global;
 
         public ArrayEmitter(Field field, ArrayType array, CompoundEmitter j)
         {
@@ -260,30 +243,25 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
             this.global = j;
         }
 
-
         public String getElType()
         {
             return TypeNameEmitter.getTypeName(array.getElementType());
         }
-
 
         public boolean getIsVariable()
         {
             return array.isVariable();
         }
 
-
         public String getGetterName()
         {
             return AccessorNameEmitter.getGetterName(field);
         }
 
-
         public String getSetterName()
         {
             return AccessorNameEmitter.getSetterName(field);
         }
-
 
         public String getActualParameterList()
         {
@@ -291,18 +269,17 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
             TypeInterface elType = array.getElementType();
             if (elType instanceof TypeInstantiation)
             {
-                TypeInstantiation inst = (TypeInstantiation)elType;
+                TypeInstantiation inst = (TypeInstantiation) elType;
                 appendArguments(buffer, inst);
             }
             return buffer.toString();
         }
 
-
         public String getLengthExpr()
         {
             return ee.emit(array.getLengthExpression());
         }
-        
+
         public String getCurrentElement()
         {
             StringBuilder buffer = new StringBuilder();
@@ -327,30 +304,24 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
             return buffer.toString();
         }
 
-
         public boolean getEqualsCanThrowExceptions()
         {
             return global.getEqualsCanThrowExceptions();
         }
     }
 
-
-
     public CompoundEmitter(JavaDefaultEmitter j)
     {
-    	super(j);
+        super(j);
     }
 
-
     abstract public CompoundType getCompoundType();
-
 
     protected void reset()
     {
         formalParams = null;
         actualParams = null;
     }
-
 
     public String readField(Field field)
     {
@@ -392,7 +363,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         return buffer.toString();
     }
 
-
     private void readIntegerField(Field field, IntegerType type)
     {
         buffer.append(AccessorNameEmitter.getSetterName(field));
@@ -401,13 +371,11 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         buffer.append(");");
     }
 
-
     private void readStringField(Field field, StringType type)
     {
         buffer.append(AccessorNameEmitter.getSetterName(field));
         buffer.append("(__in.readString());");
     }
-
 
     private void readCompoundField(Field field, CompoundType type)
     {
@@ -416,7 +384,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         buffer.append(type.getName());
         buffer.append("(__in, __cc));");
     }
-
 
     private void readInstantiatedField(Field field, TypeInstantiation inst)
     {
@@ -429,7 +396,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         appendArguments(buffer, inst);
         buffer.append("));");
     }
-
 
     static void appendArguments(StringBuilder buffer, TypeInstantiation inst)
     {
@@ -454,15 +420,18 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         }
     }
 
-
     /**
      * Emits a type cast for passing an argument to a parameterized type.
-     * @param type              compound type with parameters
-     * @param expr              argument expression in type instantiation
-     * @param paramIndex        index of argument in argument list
+     * 
+     * @param type
+     *            compound type with parameters
+     * @param expr
+     *            argument expression in type instantiation
+     * @param paramIndex
+     *            index of argument in argument list
      */
-    private static boolean emitTypeCast(StringBuilder buffer, CompoundType type, Expression expr,
-            int paramIndex)
+    private static boolean emitTypeCast(StringBuilder buffer,
+            CompoundType type, Expression expr, int paramIndex)
     {
         boolean cast = false;
         Parameter param = type.getParameterAt(paramIndex);
@@ -489,7 +458,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         }
         return cast;
     }
-
 
     private void readArrayField(Field field, ArrayType array)
     {
@@ -541,7 +509,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         }
     }
 
-
     private void readEnumField(Field field, EnumType type)
     {
         IntegerType baseType = (IntegerType) type.getBaseType();
@@ -553,18 +520,17 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         buffer.append("));");
     }
 
-
     private String getLengthExpression(Expression expr)
     {
         if (expr == null)
         {
             // TODO handle variable length
-            //throw new InternalError("Variable length arrays are not implemented now!");
+            // throw new
+            // InternalError("Variable length arrays are not implemented now!");
             return "-1";
         }
         return exprEmitter.emit(expr);
     }
-
 
     public String getConstraint(Field field)
     {
@@ -585,7 +551,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         return result;
     }
 
-
     public String getOptionalClause(Field field)
     {
         String result = null;
@@ -597,7 +562,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         return result;
     }
 
-
     public void buildParameterLists()
     {
         StringBuilder formal = new StringBuilder();
@@ -606,7 +570,8 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         for (Parameter param : compound.getParameters())
         {
             String paramName = param.getName();
-            TypeInterface paramType = TypeReference.getBaseType(param.getType());
+            TypeInterface paramType = TypeReference
+                    .getBaseType(param.getType());
 
             String typeName = TypeNameEmitter.getTypeName(paramType);
             formal.append(", ");
@@ -621,7 +586,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         actualParams = actual.toString();
     }
 
-
     public String getFormalParameterList()
     {
         if (formalParams == null)
@@ -631,7 +595,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         return formalParams;
     }
 
-
     public String getActualParameterList()
     {
         if (actualParams == null)
@@ -640,7 +603,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         }
         return actualParams;
     }
-
 
     public String writeField(Field field)
     {
@@ -680,12 +642,11 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         return buffer.toString();
     }
 
-
     private void writeIntegerField(Field field, IntegerType type)
     {
-        writeIntegerValue(buffer, AccessorNameEmitter.getGetterName(field) + "()", type);
+        writeIntegerValue(buffer, AccessorNameEmitter.getGetterName(field)
+                + "()", type);
     }
-
 
     private void writeStringType(Field field, StringType type)
     {
@@ -694,13 +655,11 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         buffer.append("());");
     }
 
-
     private void writeCompoundField(Field field, Container type)
     {
         buffer.append(AccessorNameEmitter.getGetterName(field));
         buffer.append("().write(__out, __cc);");
     }
-
 
     private void writeInstantiatedField(Field field, TypeInstantiation inst)
     {
@@ -709,7 +668,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         buffer.append(getter);
         buffer.append("().write(__out, __cc);");
     }
-
 
     private void setParameters(String lhs, TypeInstantiation inst)
     {
@@ -738,7 +696,6 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
             }
         }
     }
-
 
     private void writeArrayField(Field field, ArrayType array)
     {
@@ -769,14 +726,12 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
 
     }
 
-
     private void writeEnumField(Field field, EnumType type)
     {
         IntegerType baseType = (IntegerType) type.getBaseType();
         writeIntegerValue(buffer, AccessorNameEmitter.getGetterName(field)
                 + "().getValue()", baseType);
     }
-
 
     public String getClassName()
     {

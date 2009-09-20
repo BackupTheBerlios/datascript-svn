@@ -36,9 +36,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.runtime.array;
-
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -49,8 +47,6 @@ import datascript.runtime.DataScriptError;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamReader;
 import datascript.runtime.io.BitStreamWriter;
-
-
 
 public class BitFieldArray implements Array<BigInteger>, SizeOf
 {
@@ -64,14 +60,13 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
     /** Number of bits per element. */
     int numBits;
 
-
     public BitFieldArray(BitStreamReader in, int length, int numBits)
             throws IOException
     {
         if (length == -1)
         {
-            throw new UnsupportedOperationException("variable length " + getClass()
-                    + " not implemented");
+            throw new UnsupportedOperationException("variable length "
+                    + getClass() + " not implemented");
         }
         else
         {
@@ -86,12 +81,10 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         }
     }
 
-
     public BitFieldArray(int length, int numBits)
     {
         this(new BigInteger[length], 0, length, numBits);
     }
-
 
     public BitFieldArray(BigInteger[] data, int offset, int length, int numBits)
     {
@@ -100,7 +93,6 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         this.length = length;
         this.numBits = numBits;
     }
-
 
     @Override
     public boolean equals(Object obj)
@@ -126,31 +118,28 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         if (obj instanceof BitFieldArray)
         {
             BitFieldArray that = (BitFieldArray) obj;
-	        if (that.length != this.length)
-	            throw new DataScriptError("mismatched array length");
-	
-	        for (int i = 0; i < this.length; i++)
-	        {
-	            if (this.elementAt(i).compareTo(that.elementAt(i)) != 0)
-	                throw new DataScriptError("value mismatch at index " + i);
-	        }
-	        return true;
+            if (that.length != this.length)
+                throw new DataScriptError("mismatched array length");
+
+            for (int i = 0; i < this.length; i++)
+            {
+                if (this.elementAt(i).compareTo(that.elementAt(i)) != 0)
+                    throw new DataScriptError("value mismatch at index " + i);
+            }
+            return true;
         }
         return super.equals(obj);
     }
-
 
     public BigInteger elementAt(int i)
     {
         return data[offset + i];
     }
 
-
     public void setElementAt(BigInteger value, int i)
     {
         data[offset + i] = value;
     }
-
 
     public int length()
     {
@@ -161,26 +150,24 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
     {
         return numBits;
     }
-    
+
     public int sizeof()
     {
-        if ((numBits * length) % 8 != 0) 
+        if ((numBits * length) % 8 != 0)
             return ((numBits * length) / 8) + 1;
 
         return (numBits * length) / 8;
     }
-
 
     public int bitsizeof()
     {
         return numBits * length;
     }
 
-
     /**
      * This function sums up all values of an array and returns the value
      * 
-     * @return	sum of all array values
+     * @return sum of all array values
      * @throws Exception
      */
     public int sum()
@@ -195,7 +182,6 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         return (int) retVal;
     }
 
-
     public Array<BigInteger> map(Mapping<BigInteger> m)
     {
         BitFieldArray result = new BitFieldArray(length, numBits);
@@ -206,14 +192,12 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         return result;
     }
 
-
     public Array<BigInteger> subRange(int begin, int len)
     {
         if (begin < 0 || begin >= this.length || begin + len > this.length)
             throw new ArrayIndexOutOfBoundsException();
         return new BitFieldArray(data, offset + begin, len, numBits);
     }
-
 
     public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
@@ -223,13 +207,12 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         }
     }
 
-
     @Override
     public Iterator<BigInteger> iterator()
     {
         return new BitFieldArrayIterator();
     }
-    
+
     class BitFieldArrayIterator implements Iterator<BigInteger>
     {
         private int index;
@@ -243,7 +226,7 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         @Override
         public BigInteger next()
         {
-            return data[offset+index++];
+            return data[offset + index++];
         }
 
         @Override
@@ -251,6 +234,6 @@ public class BitFieldArray implements Array<BigInteger>, SizeOf
         {
             throw new UnsupportedOperationException();
         }
-        
+
     }
 }

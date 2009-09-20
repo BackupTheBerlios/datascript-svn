@@ -36,9 +36,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.runtime.array;
-
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -49,21 +47,20 @@ import datascript.runtime.DataScriptError;
 import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamWriter;
 
-
-
 public class ByteArray implements Array<Byte>, SizeOf
 {
     byte[] data; // data is between [offset... offset+length-1]
-    int offset;
-    int length;
 
+    int offset;
+
+    int length;
 
     public ByteArray(DataInput in, int length) throws IOException
     {
         if (length < 0)
         {
-            throw new UnsupportedOperationException("variable length " + getClass()
-                    + " not implemented");
+            throw new UnsupportedOperationException("variable length "
+                    + getClass() + " not implemented");
         }
         else
         {
@@ -74,12 +71,10 @@ public class ByteArray implements Array<Byte>, SizeOf
         }
     }
 
-
     public ByteArray(int length)
     {
         this(new byte[length], 0, length);
     }
-
 
     public ByteArray(byte[] data, int offset, int length)
     {
@@ -88,44 +83,41 @@ public class ByteArray implements Array<Byte>, SizeOf
         this.length = length;
     }
 
-
     @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof ByteArray)
         {
             ByteArray that = (ByteArray) obj;
-	        if (that.length != this.length)
-	        	return false;
-	        for (int i = 0; i < this.length; i++)
-	        {
-	            if (this.elementAt(i) != that.elementAt(i))
-	            	return false;
-	        }
-	        return true;
+            if (that.length != this.length)
+                return false;
+            for (int i = 0; i < this.length; i++)
+            {
+                if (this.elementAt(i) != that.elementAt(i))
+                    return false;
+            }
+            return true;
         }
         return super.equals(obj);
     }
-
 
     public boolean equalsWithException(Object obj)
     {
         if (obj instanceof ByteArray)
         {
             ByteArray that = (ByteArray) obj;
-	        if (that.length != this.length)
-	            throw new DataScriptError("mismatched array length");
-	
-	        for (int i = 0; i < this.length; i++)
-	        {
-	            if (this.elementAt(i) != that.elementAt(i))
-	                throw new DataScriptError("value mismatch at index " + i);
-	        }
-	        return true;
+            if (that.length != this.length)
+                throw new DataScriptError("mismatched array length");
+
+            for (int i = 0; i < this.length; i++)
+            {
+                if (this.elementAt(i) != that.elementAt(i))
+                    throw new DataScriptError("value mismatch at index " + i);
+            }
+            return true;
         }
         return super.equals(obj);
     }
-
 
     public Array<Byte> map(Mapping<Byte> m)
     {
@@ -137,14 +129,12 @@ public class ByteArray implements Array<Byte>, SizeOf
         return result;
     }
 
-
     public Array<Byte> subRange(int begin, int len)
     {
         if (begin < 0 || begin >= this.length || begin + len > this.length)
             throw new ArrayIndexOutOfBoundsException();
         return new ByteArray(data, offset + begin, len);
     }
-
 
     public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
@@ -154,41 +144,35 @@ public class ByteArray implements Array<Byte>, SizeOf
         }
     }
 
-
     public byte elementAt(int i)
     {
         return data[offset + i];
     }
-
 
     public void setElementAt(byte value, int i)
     {
         data[offset + i] = value;
     }
 
-
     public int length()
     {
         return length;
     }
-
 
     public int sizeof()
     {
         return length;
     }
 
-
     public int bitsizeof()
     {
-        return length*8;
+        return length * 8;
     }
-
 
     /**
      * This function sums up all values of an array and returns the value
      * 
-     * @return	sum of all array values
+     * @return sum of all array values
      * @throws Exception
      */
     public int sum() throws Exception
@@ -202,7 +186,6 @@ public class ByteArray implements Array<Byte>, SizeOf
             throw new DataScriptError("result is too big for an integer");
         return (int) retVal;
     }
-
 
     /**
      * Compares this byte array to a given string, assuming all characters are
@@ -229,7 +212,6 @@ public class ByteArray implements Array<Byte>, SizeOf
         return true;
     }
 
-
     /** *********************************************************************** */
 
     @Override
@@ -243,13 +225,12 @@ public class ByteArray implements Array<Byte>, SizeOf
         return new String(data, offset, length);
     }
 
-
     @Override
     public Iterator<Byte> iterator()
     {
         return new ByteArrayIterator();
     }
-    
+
     class ByteArrayIterator implements Iterator<Byte>
     {
         private int index;
@@ -263,13 +244,13 @@ public class ByteArray implements Array<Byte>, SizeOf
         @Override
         public Byte next()
         {
-            return data[offset+index++];
+            return data[offset + index++];
         }
 
         @Override
         public void remove()
         {
             throw new UnsupportedOperationException();
-        }        
+        }
     }
 }

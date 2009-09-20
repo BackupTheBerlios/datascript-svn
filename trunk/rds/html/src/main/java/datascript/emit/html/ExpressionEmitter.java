@@ -50,18 +50,18 @@ import datascript.ast.Value;
 
 /**
  * @author HWellmann
- *
+ * 
  */
 public class ExpressionEmitter
 {
     private StringBuilder buffer;
+
     private String compoundName;
 
-
     public ExpressionEmitter()
-    {        
+    {
     }
-    
+
     public String emit(Expression expr)
     {
         this.compoundName = null;
@@ -69,7 +69,7 @@ public class ExpressionEmitter
         append(expr);
         return buffer.toString();
     }
-    
+
     public String emit(Expression expr, String compndName)
     {
         this.compoundName = compndName;
@@ -77,7 +77,7 @@ public class ExpressionEmitter
         append(expr);
         return buffer.toString();
     }
-    
+
     private void append(Expression expr)
     {
         switch (expr.getNumberOfChildren())
@@ -96,10 +96,10 @@ public class ExpressionEmitter
                 break;
             default:
                 throw new UnsupportedOperationException();
-                
-        }       
+
+        }
     }
-    
+
     private void emitAtom(Expression expr)
     {
         switch (expr.getType())
@@ -111,12 +111,13 @@ public class ExpressionEmitter
                 break;
 
             case DataScriptParserTokenTypes.ID:
-                //buffer.append(expr.getText());
+                // buffer.append(expr.getText());
                 appendIdentifier(expr);
                 break;
 
             default:
-                throw new UnsupportedOperationException("type = " + expr.getType());
+                throw new UnsupportedOperationException("type = "
+                        + expr.getType());
         }
     }
 
@@ -144,8 +145,8 @@ public class ExpressionEmitter
                 break;
             case DataScriptParserTokenTypes.INDEX:
                 append(expr.op1());
-            	buffer.append("$index");
-            	return;
+                buffer.append("$index");
+                return;
             case DataScriptParserTokenTypes.LENGTHOF:
                 buffer.append("lengthof ");
                 append(expr.op1());
@@ -190,87 +191,87 @@ public class ExpressionEmitter
             case DataScriptParserTokenTypes.COMMA:
                 op = ", ";
                 break;
-        
+
             case DataScriptParserTokenTypes.LOGICALOR:
                 op = " || ";
                 break;
-        
+
             case DataScriptParserTokenTypes.LOGICALAND:
                 op = " && ";
                 break;
-        
+
             case DataScriptParserTokenTypes.OR:
                 op = " | ";
                 break;
-        
+
             case DataScriptParserTokenTypes.XOR:
                 op = " ^ ";
                 break;
-        
+
             case DataScriptParserTokenTypes.AND:
                 op = " & ";
                 break;
-        
+
             case DataScriptParserTokenTypes.EQ:
                 op = " == ";
                 break;
-        
+
             case DataScriptParserTokenTypes.NE:
                 op = " != ";
                 break;
-        
+
             case DataScriptParserTokenTypes.LT:
                 op = " < ";
                 break;
-        
+
             case DataScriptParserTokenTypes.LE:
                 op = " <= ";
                 break;
-        
+
             case DataScriptParserTokenTypes.GE:
                 op = " >= ";
                 break;
-        
+
             case DataScriptParserTokenTypes.GT:
                 op = " > ";
                 break;
-        
+
             case DataScriptParserTokenTypes.LSHIFT:
                 op = " << ";
                 break;
-        
+
             case DataScriptParserTokenTypes.RSHIFT:
                 op = " >> ";
                 break;
-        
+
             case DataScriptParserTokenTypes.PLUS:
                 op = " + ";
                 break;
-        
+
             case DataScriptParserTokenTypes.MINUS:
                 op = " - ";
                 break;
-        
+
             case DataScriptParserTokenTypes.MULTIPLY:
                 op = " * ";
                 break;
-        
+
             case DataScriptParserTokenTypes.DIVIDE:
                 op = " / ";
                 break;
-        
+
             case DataScriptParserTokenTypes.MODULO:
                 op = " % ";
                 break;
-        
+
             case DataScriptParserTokenTypes.ARRAYELEM:
                 appendArrayExpression(expr);
                 return;
-        
+
             case DataScriptParserTokenTypes.DOT:
                 appendDotExpression(expr);
                 return;
-        
+
             default:
                 throw new UnsupportedOperationException();
         }
@@ -293,24 +294,24 @@ public class ExpressionEmitter
                 break;
             default:
                 throw new UnsupportedOperationException();
-        }        
+        }
     }
-    
+
     private void appendArrayExpression(Expression expr)
     {
         append(expr.op1());
         buffer.append("[");
         append(expr.op2());
-        buffer.append(']');        
+        buffer.append(']');
     }
 
     private void appendDotExpression(Expression expr)
     {
         append(expr.op1());
-        buffer.append('.');        
-        append(expr.op2());        
+        buffer.append('.');
+        append(expr.op2());
     }
-    
+
     private void appendIdentifier(Expression expr)
     {
         String symbol = expr.getText();
@@ -319,7 +320,7 @@ public class ExpressionEmitter
         if (obj instanceof EnumType)
         {
             EnumType enumeration = (EnumType) obj;
-            buffer.append(enumeration.getName());                
+            buffer.append(enumeration.getName());
         }
         else if (obj instanceof TypeInterface)
         {
@@ -337,25 +338,25 @@ public class ExpressionEmitter
         }
         else if (obj instanceof Parameter)
         {
-            Parameter param = (Parameter)obj;
+            Parameter param = (Parameter) obj;
             String pName = param.getName();
             buffer.append(pName);
         }
         else if (obj instanceof Field)
         {
-            Field field = (Field)obj;
+            Field field = (Field) obj;
             buffer.append(field.getName());
         }
         else if (obj instanceof EnumItem)
         {
-            EnumItem item = (EnumItem)obj;
+            EnumItem item = (EnumItem) obj;
             String value = item.getName();
             buffer.append(value);
         }
         else
         {
-            throw new InternalError("unhandled type of identifier: " +
-                    obj.getClass().getName());
+            throw new InternalError("unhandled type of identifier: "
+                    + obj.getClass().getName());
         }
     }
 
@@ -366,5 +367,5 @@ public class ExpressionEmitter
             buffer.append(compoundName);
             buffer.append(".");
         }
-    } 
+    }
 }

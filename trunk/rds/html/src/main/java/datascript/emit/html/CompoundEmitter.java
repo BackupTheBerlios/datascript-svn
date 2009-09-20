@@ -36,9 +36,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.emit.html;
-
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,16 +63,15 @@ import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
 import freemarker.template.Template;
 
-
-
 public class CompoundEmitter extends DefaultHTMLEmitter
 {
     private CompoundType compound;
 
     private final List<FieldEmitter> fields = new ArrayList<FieldEmitter>();
-    private final ExpressionEmitter exprEmitter = new ExpressionEmitter();
-    private final List<FunctionEmitter> functions = new ArrayList<FunctionEmitter>();
 
+    private final ExpressionEmitter exprEmitter = new ExpressionEmitter();
+
+    private final List<FunctionEmitter> functions = new ArrayList<FunctionEmitter>();
 
     public CompoundEmitter(String outputPath)
     {
@@ -82,23 +79,20 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         directory = new File(directory, CONTENT_FOLDER);
     }
 
-
     public CompoundEmitter(CompoundType cc)
     {
         this.compound = cc;
     }
-
 
     public String getName()
     {
         return compound == null ? "" : compound.getName();
     }
 
-
     public LinkedType getLinkedType()
     {
-    	if (compound == null)
-    		return null;
+        if (compound == null)
+            return null;
 
         TypeInterface type = compound;
         type = TypeReference.resolveType(type);
@@ -106,32 +100,28 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         return linkedType;
     }
 
-
-
     public class FunctionEmitter
     {
         private final FunctionType function;
-        private final ExpressionEmitter ee = new ExpressionEmitter();
 
+        private final ExpressionEmitter ee = new ExpressionEmitter();
 
         public FunctionEmitter(FunctionType fctn)
         {
             function = fctn;
         }
 
-
         public FunctionType getFuntionType()
         {
             return function;
         }
 
-
         public String getReturnTypeName()
         {
-            String returnTypeName = TypeNameEmitter.getTypeName(function.getReturnType());
+            String returnTypeName = TypeNameEmitter.getTypeName(function
+                    .getReturnType());
             return returnTypeName;
         }
-
 
         public String getResult()
         {
@@ -139,76 +129,69 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         }
     }
 
-
-
     public static class FieldEmitter
     {
         private final Field field;
-        private static final TypeNameEmitter tne = new TypeNameEmitter();
 
+        private static final TypeNameEmitter tne = new TypeNameEmitter();
 
         public FieldEmitter(Field f)
         {
             this.field = f;
         }
 
-
         public String getName()
         {
             return field.getName();
         }
-
 
         public LinkedType getType()
         {
             TypeInterface type = field.getFieldType();
             type = TypeReference.resolveType(type);
             if (type instanceof ArrayType)
-                type = TypeReference.resolveType(((ArrayType)type).getElementType());
+                type = TypeReference.resolveType(((ArrayType) type)
+                        .getElementType());
             LinkedType linkedType = new LinkedType(type);
             return linkedType;
         }
-
 
         public String getConstraint()
         {
             return tne.getConstraint(field);
         }
 
-
         public String getArrayRange()
         {
             return tne.getArrayRange(field);
         }
-
 
         public String getOptionalClause()
         {
             return tne.getOptionalClause(field);
         }
 
-
         public String getOffsetLabel()
         {
             return tne.getLabel(field);
         }
 
-
         public Comment getDocumentation()
         {
             Comment comment = new Comment();
             String doc = field.getDocumentation();
-            if (doc != null && doc.length() > 0) comment.parse(doc);
+            if (doc != null && doc.length() > 0)
+                comment.parse(doc);
             return comment;
         }
-
 
         public List<Expression> getArguments()
         {
             TypeInterface type = field.getFieldType();
             type = TypeReference.resolveType(type);
             while (type instanceof ArrayType)
-                type = TypeReference.resolveType(((ArrayType)type).getElementType());
+                type = TypeReference.resolveType(((ArrayType) type)
+                        .getElementType());
             if (type instanceof TypeInstantiation)
             {
                 TypeInstantiation inst = (TypeInstantiation) type;
@@ -220,8 +203,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
             }
         }
     }
-
-
 
     public void emit(CompoundType compnd)
     {
@@ -235,7 +216,7 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         containers.clear();
         for (Container compund : compnd.getContainers())
         {
-            CompoundEmitter ce = new CompoundEmitter((CompoundType)compund);
+            CompoundEmitter ce = new CompoundEmitter((CompoundType) compund);
             containers.add(ce);
         }
 
@@ -245,7 +226,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
             emitCompoundType();
     }
 
-
     private void emitChoiceType()
     {
         try
@@ -254,7 +234,8 @@ public class CompoundEmitter extends DefaultHTMLEmitter
 
             setCurrentFolder(CONTENT_FOLDER);
 
-            File outputDir = new File(directory, compound.getPackage().getPackageName());
+            File outputDir = new File(directory, compound.getPackage()
+                    .getPackageName());
             openOutputFile(outputDir, compound.getName() + HTML_EXT);
 
             tpl.process(this, writer);
@@ -265,7 +246,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
             throw new DataScriptException(exc);
         }
     }
-
 
     private void emitCompoundType()
     {
@@ -275,14 +255,15 @@ public class CompoundEmitter extends DefaultHTMLEmitter
             FieldEmitter fe = new FieldEmitter(field);
             fields.add(fe);
         }
-        
+
         try
         {
             Template tpl = cfg.getTemplate("html/compound.html.ftl");
 
             setCurrentFolder(CONTENT_FOLDER);
 
-            File outputDir = new File(directory, compound.getPackage().getPackageName());
+            File outputDir = new File(directory, compound.getPackage()
+                    .getPackageName());
             openOutputFile(outputDir, compound.getName() + HTML_EXT);
 
             tpl.process(this, writer);
@@ -293,7 +274,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
             throw new DataScriptException(exc);
         }
     }
-
 
     public String getCategoryPlainText()
     {
@@ -333,7 +313,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
                 + compound.getClass().getName());
     }
 
-
     public String getCategoryKeyword()
     {
         if (compound instanceof SequenceType)
@@ -372,42 +351,37 @@ public class CompoundEmitter extends DefaultHTMLEmitter
                 + compound.getClass().getName());
     }
 
-
     @Override
     public String getPackageName()
     {
         return compound.getScope().getPackage().getPackageName();
     }
 
-
     public Container getType()
     {
         return compound;
     }
-
 
     public ChoiceType getChoiceType()
     {
         return (ChoiceType) compound;
     }
 
-
     public String getSelector()
     {
         String selector = null;
 
-        AST node = ((ChoiceType)compound).getSelectorAST();
+        AST node = ((ChoiceType) compound).getSelectorAST();
         if (node != null)
         {
             ExpressionEmitter ee = new ExpressionEmitter();
             selector = ee.emit((Expression) node);
         }
 
-//        if (selector == null)
-//            throw new ComputeError("missing selector");
+        // if (selector == null)
+        // throw new ComputeError("missing selector");
         return selector;
     }
-
 
     public Comment getDocumentation()
     {
@@ -418,18 +392,15 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         return comment;
     }
 
-
     public List<FieldEmitter> getFields()
     {
         return fields;
     }
 
-
     public List<FunctionEmitter> getFunctions()
     {
         return functions;
     }
-
 
     public LinkedType toLinkedType(TypeInterface type1)
     {
@@ -437,7 +408,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
         LinkedType linkedType = new LinkedType(type2);
         return linkedType;
     }
-
 
     public Comment parseDocumentation(Field f)
     {
@@ -447,7 +417,6 @@ public class CompoundEmitter extends DefaultHTMLEmitter
             comment.parse(doc);
         return comment;
     }
-
 
     public String emitExpression(Expression expr)
     {

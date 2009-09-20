@@ -227,7 +227,7 @@ public abstract class BitStreamReader extends ImageInputStreamImpl
         BigInteger result = readBigInteger(numBits);
         if (result.testBit(numBits-1))
         {
-        	result.subtract(BigInteger.ONE.shiftLeft(numBits));
+            result.subtract(BigInteger.ONE.shiftLeft(numBits));
         }
         return result;
     }

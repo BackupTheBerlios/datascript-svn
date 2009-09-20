@@ -36,9 +36,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.runtime.array;
-
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,14 +49,13 @@ import datascript.runtime.Mapping;
 import datascript.runtime.io.BitStreamReader;
 import datascript.runtime.io.BitStreamWriter;
 
-
-
 public class UnsignedShortArray implements Array<Integer>, SizeOf
 {
     int[] data; // data is between [offset... offset+length-1]
-    int offset;
-    int length;
 
+    int offset;
+
+    int length;
 
     public UnsignedShortArray(BitStreamReader in, int length)
             throws IOException
@@ -97,12 +94,10 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
         }
     }
 
-
     public UnsignedShortArray(int length)
     {
         this(new int[length], 0, length);
     }
-
 
     public UnsignedShortArray(int[] data, int offset, int length)
     {
@@ -110,7 +105,6 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
         this.offset = offset;
         this.length = length;
     }
-
 
     @Override
     public boolean equals(Object obj)
@@ -154,35 +148,30 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
         return data[offset + i];
     }
 
-
     public void setElementAt(int value, int i)
     {
         data[offset + i] = value;
     }
-
 
     public int length()
     {
         return length;
     }
 
-
     public int sizeof()
     {
         return 2 * length;
     }
-
 
     public int bitsizeof()
     {
         return 2 * 8 * length;
     }
 
-
     /**
      * This function sums up all values of an array and returns the value
      * 
-     * @return	sum of all array values
+     * @return sum of all array values
      * @throws Exception
      */
     public int sum()
@@ -197,7 +186,6 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
         return (int) retVal;
     }
 
-
     public Array<Integer> map(Mapping<Integer> m)
     {
         UnsignedShortArray result = new UnsignedShortArray(length);
@@ -208,14 +196,12 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
         return result;
     }
 
-
     public Array<Integer> subRange(int begin, int len)
     {
         if (begin < 0 || begin >= this.length || begin + len > this.length)
             throw new ArrayIndexOutOfBoundsException();
         return new UnsignedShortArray(data, offset + begin, len);
     }
-
 
     public void write(BitStreamWriter out, CallChain cc) throws IOException
     {
@@ -224,13 +210,13 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
             out.writeShort(data[i]);
         }
     }
-    
+
     @Override
     public Iterator<Integer> iterator()
     {
         return new IntArrayIterator();
     }
-    
+
     class IntArrayIterator implements Iterator<Integer>
     {
         private int index;
@@ -252,6 +238,6 @@ public class UnsignedShortArray implements Array<Integer>, SizeOf
         {
             throw new UnsupportedOperationException();
         }
-        
-    }    
+
+    }
 }

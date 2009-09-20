@@ -36,9 +36,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.emit.java;
-
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -56,8 +54,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-
-
 /**
  * @author HWellmann
  * 
@@ -65,68 +61,59 @@ import freemarker.template.TemplateException;
 public class EnumerationEmitter extends IntegerTypeEmitter
 {
     private EnumType enumType;
+
     private String javaType;
-    
-    private final List<EnumerationItemEmitter> items = 
-        new ArrayList<EnumerationItemEmitter>();
 
-
+    private final List<EnumerationItemEmitter> items = new ArrayList<EnumerationItemEmitter>();
 
     public static class EnumerationItemEmitter
     {
         private EnumItem item;
+
         private final IntegerValue maxVal;
 
-        
         public EnumerationItemEmitter(EnumItem item)
         {
             this.item = item;
-            maxVal = new IntegerValue(1).shiftLeft(item.getEnumType().getBaseType().bitsizeof(null));
+            maxVal = new IntegerValue(1).shiftLeft(item.getEnumType()
+                    .getBaseType().bitsizeof(null));
         }
-
 
         public String getName()
         {
             return item.getName();
         }
 
-
         public int getValue()
         {
             return item.getValue().integerValue().intValue();
         }
 
-
         public boolean getExceedMaxValue()
         {
             if (maxVal.compareTo(item.getValue()) != 1)
-                ToolContext.logError(item, "typeconflict with enum item " + 
-                        item.getName() + ", value " + item.getValue() + 
-                        " will not fit in enumtype");
+                ToolContext.logError(item, "typeconflict with enum item "
+                        + item.getName() + ", value " + item.getValue()
+                        + " will not fit in enumtype");
             return false;
         }
     }
 
-
-
     public EnumerationEmitter(JavaEmitter j, EnumType e)
     {
-    	super(j);
+        super(j);
         this.enumType = e;
     }
-
 
     public EnumType getEnumerationType()
     {
         return enumType;
     }
 
-
     public void setWriter(PrintWriter writer)
     {
         this.writer = writer;
     }
-
 
     public String getBaseType()
     {
@@ -136,7 +123,6 @@ public class EnumerationEmitter extends IntegerTypeEmitter
         }
         return javaType;
     }
-
 
     public void emit(Configuration cfg, EnumType enumType2)
     {
@@ -162,9 +148,6 @@ public class EnumerationEmitter extends IntegerTypeEmitter
         }
     }
 
-
-
-
     /**** interface to Freemarker FileHeader.inc template ****/
 
     public String getRdsVersion()
@@ -172,59 +155,52 @@ public class EnumerationEmitter extends IntegerTypeEmitter
         return global.getRdsVersion();
     }
 
-
     /**
-     * Calculates the actual time and returns a formatted string that follows the 
-     * ISO 8601 standard (i.e. "2007-13-11T12:08:56.235-0700")
-     * @return      actual time as a ISO 8601 formatted string
+     * Calculates the actual time and returns a formatted string that follows
+     * the ISO 8601 standard (i.e. "2007-13-11T12:08:56.235-0700")
+     * 
+     * @return actual time as a ISO 8601 formatted string
      */
     public String getTimeStamp()
     {
         return String.format("%1$tFT%1$tT.%1$tL%1$tz", Calendar.getInstance());
     }
 
-
     public String getPackageName()
     {
         return global.getPackageName();
     }
-
 
     public String getRootPackageName()
     {
         return datascript.ast.Package.getRoot().getPackageName();
     }
 
-
     public String getPackageImports()
     {
         return getGlobal().getPackageImports();
     }
-
 
     public String getName()
     {
         return enumType.getName();
     }
 
-
     public List<EnumerationItemEmitter> getItems()
     {
         return items;
     }
-
 
     public int getEnumSize()
     {
         return enumType.sizeof(null).integerValue().intValue();
     }
 
-
     public int getEnumBitsize()
     {
         return enumType.bitsizeof(null).integerValue().intValue();
     }
-    
+
     public String getWriteStmt()
     {
         IntegerType baseType = (IntegerType) enumType.getBaseType();

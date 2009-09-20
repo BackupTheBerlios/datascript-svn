@@ -36,9 +36,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.ast;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,8 +49,6 @@ import antlr.collections.AST;
 import datascript.antlr.util.TokenAST;
 import datascript.antlr.util.ToolContext;
 import datascript.emit.StringUtil;
-
-
 
 /**
  * This class represents a DataScript package which provides a separate lexical
@@ -70,31 +66,32 @@ import datascript.emit.StringUtil;
  * This design is somewhat awkward and may be changed in the future.
  * 
  * There is an important restriction regarding nested types. The most common
- * examples are sql_table types within an sql_database definition or union
- * types within a sequence definition.
+ * examples are sql_table types within an sql_database definition or union types
+ * within a sequence definition.
  * 
  * At DataScript level, two outer types A and B may each contain a nested type
  * of the same name C, thus there are two distinct types A.C and B.C. To model
- * these adequately in the the code generators, we would have to generate 
- * inner classes or to make the class names unique by prefixing the enclosing
- * type, e.g. A__C and B__C.
+ * these adequately in the the code generators, we would have to generate inner
+ * classes or to make the class names unique by prefixing the enclosing type,
+ * e.g. A__C and B__C.
  * 
  * To keep things simple and backward compatible, we require that the names of
  * nested types SHALL be unique within a package, and we include nested type
  * names in the list of local type names of a package.
+ * 
  * @author HWellmann
- *
+ * 
  */
 public class Package extends Scope
 {
     /** System package for built-in types. */
     public static Package builtInPackage;
 
-    /** 
-     * Default package for types without an explicit package declaration.
-     * TODO: This was intended for backward compatibility. The implementation
-     * is probably not complete, since all existing DataScript modules now have
-     * a package declaration.  
+    /**
+     * Default package for types without an explicit package declaration. TODO:
+     * This was intended for backward compatibility. The implementation is
+     * probably not complete, since all existing DataScript modules now have a
+     * package declaration.
      */
     public static Package defaultPackage;
 
@@ -136,30 +133,30 @@ public class Package extends Scope
     private Map<String, TypeInterface> localTypes;
 
     // TODO: implement single type imports: "import com.acme.foo.bar.MyType;"
-    //private Map<String, TypeInterface> importedTypes;
+    // private Map<String, TypeInterface> importedTypes;
 
-    /** 
-     * Maps the fully qualified name of each imported package to the 
-     * corresponding package. At first, the value of each entry is null, just
-     * to keep track of an imported package name. In the link phase, the null
-     * value is replaced by the corresponding Package object.
+    /**
+     * Maps the fully qualified name of each imported package to the
+     * corresponding package. At first, the value of each entry is null, just to
+     * keep track of an imported package name. In the link phase, the null value
+     * is replaced by the corresponding Package object.
      */
     private Map<String, Package> importedPackages;
-
 
     private Package()
     {
     }
 
-
     /**
      * Constructs a Package object for an AST node of type PACKAGE.
-     * @param packageNode the AST node
+     * 
+     * @param packageNode
+     *            the AST node
      */
     public Package(AST packageNode)
     {
         localTypes = new HashMap<String, TypeInterface>();
-        //importedTypes = new HashMap<String, TypeInterface>();
+        // importedTypes = new HashMap<String, TypeInterface>();
         importedPackages = new HashMap<String, Package>();
         setPackageName(packageNode);
 
@@ -170,10 +167,11 @@ public class Package extends Scope
         }
     }
 
-
     /**
      * Finds a package with a given name.
-     * @param packageName   a fully qualified package name
+     * 
+     * @param packageName
+     *            a fully qualified package name
      * @return the corresponding package, or null.
      */
     public static Package lookup(String packageName)
@@ -181,10 +179,11 @@ public class Package extends Scope
         return nameToPackage.get(packageName);
     }
 
-
     /**
      * Finds a package for a given AST node of type PACKAGE.
-     * @param node AST node
+     * 
+     * @param node
+     *            AST node
      * @return the corresponding package, or null.
      */
     public static Package lookup(AST node)
@@ -192,27 +191,26 @@ public class Package extends Scope
         return nodeToPackage.get(node);
     }
 
-
     /**
      * Returns the root package, i.e. the one first seen by the parser.
+     * 
      * @return root package
      */
     public static Package getRoot()
     {
         return root;
     }
-    
+
     public static void reset()
     {
-    	root = null;
-    	nameToPackage.clear();
+        root = null;
+        nameToPackage.clear();
         nodeToPackage.clear();
     }
 
-
     /**
-     * Executes the link actions for all packages. In each package, the 
-     * package imports must be resolved first.
+     * Executes the link actions for all packages. In each package, the package
+     * imports must be resolved first.
      */
     public static void linkAll()
     {
@@ -221,9 +219,8 @@ public class Package extends Scope
             p.resolveImports();
             p.link(null);
         }
-        //dumpAll();
+        // dumpAll();
     }
-
 
     // only for debugging
     public static void dumpAll()
@@ -238,7 +235,6 @@ public class Package extends Scope
         }
     }
 
-
     public static boolean typeOrSymbolExists(String name)
     {
         for (Package p : nameToPackage.values())
@@ -252,7 +248,6 @@ public class Package extends Scope
         return false;
     }
 
-
     /**
      * Maps each imported package name to the corresponding Package object.
      */
@@ -262,12 +257,12 @@ public class Package extends Scope
         {
             Package importedPackage = nameToPackage.get(importedName);
 
-            // The parser should have complained if there is no package for 
+            // The parser should have complained if there is no package for
             // the given name. Thus this case should never occur, so we throw
             // an exception instead of logging an error.
             if (importedPackage == null)
             {
-                //throw new RuntimeException("no package " + importedPackage);
+                // throw new RuntimeException("no package " + importedPackage);
                 ToolContext
                         .logError(this.node, "no package " + importedPackage);
             }
@@ -275,9 +270,9 @@ public class Package extends Scope
         }
     }
 
-
     /**
      * Returns all names of imported packages of the current package
+     * 
      * @return set of names
      */
     public Set<String> getImportNames()
@@ -285,9 +280,9 @@ public class Package extends Scope
         return importedPackages.keySet();
     }
 
-
     /**
      * Returns all names of all imported packages
+     * 
      * @return set of names
      */
     public Set<String> getAllImportNames()
@@ -300,10 +295,11 @@ public class Package extends Scope
         return retVal;
     }
 
-
     /**
      * Initializes the package name from the PACKAGE AST node.
-     * @param n AST node.
+     * 
+     * @param n
+     *            AST node.
      */
     private void setPackageName(AST n)
     {
@@ -321,12 +317,14 @@ public class Package extends Scope
         }
     }
 
-
     /**
      * Stores a type symbol in the underlying Scope object <em>and</em> in the
      * local types map.
-     * @param name      AST node for type name
-     * @param typeNode  AST node for type definition
+     * 
+     * @param name
+     *            AST node for type name
+     * @param typeNode
+     *            AST node for type definition
      */
     @Override
     public void setTypeSymbol(AST name, Object typeNode)
@@ -336,10 +334,11 @@ public class Package extends Scope
         super.setSymbol(name, type);
     }
 
-
     /**
      * Finds a local type by name.
-     * @param name   local name within the current package
+     * 
+     * @param name
+     *            local name within the current package
      * @return type object
      */
     public TypeInterface getLocalType(String name)
@@ -347,17 +346,17 @@ public class Package extends Scope
         return localTypes.get(name);
     }
 
-
     public Set<String> getLocalTypeNames()
     {
         return localTypes.keySet();
     }
 
-
     /**
-     * Adds a package import to the list of imported packages. A warning is 
+     * Adds a package import to the list of imported packages. A warning is
      * emitted for multiple imports of the same package.
-     * @param n  IMPORT AST node
+     * 
+     * @param n
+     *            IMPORT AST node
      */
     public void addPackageImport(AST n)
     {
@@ -379,8 +378,8 @@ public class Package extends Scope
         String pkgName = buffer.toString();
         if (importedPackages.containsKey(pkgName))
         {
-            ToolContext.logWarning((TokenAST) n,
-                    "duplicate import of package " + pkgName);
+            ToolContext.logWarning((TokenAST) n, "duplicate import of package "
+                    + pkgName);
         }
         else
         {
@@ -388,26 +387,27 @@ public class Package extends Scope
         }
     }
 
-
     /**
-     * Stores import of a single type (import com.acme.foo.MyType;).
-     * TODO: Not yet implemented.
-     * @param node IMPORT AST node
+     * Stores import of a single type (import com.acme.foo.MyType;). TODO: Not
+     * yet implemented.
+     * 
+     * @param node
+     *            IMPORT AST node
      */
     public void addSingleImport(TokenAST n)
     {
 
     }
 
-
     /**
-     * Finds a type with a given name. If the type is not a local type, the
-     * type will be looked up by its local name within each imported package.
+     * Finds a type with a given name. If the type is not a local type, the type
+     * will be looked up by its local name within each imported package.
      * 
      * An error is logged if the type name exists in more than one imported
-     * package, but only if the type name does not exist in the current
-     * package
-     * @param name      local type name
+     * package, but only if the type name does not exist in the current package
+     * 
+     * @param name
+     *            local type name
      */
     @Override
     public TypeInterface getType(String name)
@@ -417,7 +417,8 @@ public class Package extends Scope
         {
             for (Package p : importedPackages.values())
             {
-                if (p == null) continue;
+                if (p == null)
+                    continue;
                 TypeInterface externalType = p.getLocalType(name);
                 if (externalType != null)
                 {
@@ -438,45 +439,43 @@ public class Package extends Scope
         return result;
     }
 
-
     public static Set<String> getPackageNames()
     {
         return nameToPackage.keySet();
     }
 
-
     /**
      * Returns the fully qualified name of this package
+     * 
      * @return e.g. "com.acme.foo.bar"
      */
     public String getPackageName()
     {
         if (packageName == null)
         {
-            packageName = 
-                StringUtil.joinStringList(getPackagePath(), ".");
+            packageName = StringUtil.joinStringList(getPackagePath(), ".");
         }
         return packageName;
     }
 
-
     /**
      * Returns the reverse fully qualified name of this package
+     * 
      * @return e.g. "bar.foo.acme.com"
      */
     public String getReversePackageName()
     {
         if (reversePackageName == null)
         {
-            reversePackageName = 
-                StringUtil.joinStringList(getReversePackagePath(), ".");
+            reversePackageName = StringUtil.joinStringList(
+                    getReversePackagePath(), ".");
         }
         return reversePackageName;
     }
 
-
     /**
      * Returns this list of subpackage names for the current package.
+     * 
      * @return e.g. ["com", "acme", "foo", "bar"]
      */
     public List<String> getPackagePath()
@@ -493,9 +492,9 @@ public class Package extends Scope
         return packagePath;
     }
 
-
     /**
      * Returns this list of reverse subpackage names for the current package.
+     * 
      * @return e.g. ["bar", "foo", "acme", "com"]
      */
     public List<String> getReversePackagePath()
@@ -508,7 +507,6 @@ public class Package extends Scope
         return reversePackagePath;
     }
 
-
     private void generateReversePath(List<String> reversePkgPath, AST child)
     {
         if (child == null)
@@ -517,13 +515,11 @@ public class Package extends Scope
         reversePkgPath.add(child.getText());
     }
 
-
     @Override
     public Package getPackage()
     {
         return this;
     }
-
 
     public boolean isUserDefined()
     {

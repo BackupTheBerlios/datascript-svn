@@ -39,23 +39,26 @@ package datascript.antlr.util;
 
 import java.io.File;
 
-
 /**
  * @author HWellmann
- *
+ * 
  */
 public class ToolContext
 {
     private static ToolContext singleton;
+
     private String fileName;
+
     private String pathName;
+
     private int numWarnings;
+
     private int numErrors;
-    
+
     private ToolContext()
-    {       
+    {
     }
-    
+
     public static ToolContext getInstance()
     {
         if (singleton == null)
@@ -65,55 +68,47 @@ public class ToolContext
         return singleton;
     }
 
-
     public void setFileName(String fileName)
     {
         this.fileName = fileName;
     }
-
 
     public static String getFileName()
     {
         return getInstance().fileName;
     }
 
-
     public void setPathName(String pathName)
     {
         this.pathName = pathName;
     }
-
 
     public static String getPathName()
     {
         return getInstance().pathName;
     }
 
-
     public static String getFullName()
     {
-    	if (getPathName() == null)
-    	{
-    		return getFileName();
-    	}
-    	else
-    	{
-    		return new File(getPathName(), getFileName()).toString();
-    	}
+        if (getPathName() == null)
+        {
+            return getFileName();
+        }
+        else
+        {
+            return new File(getPathName(), getFileName()).toString();
+        }
     }
-
 
     public int getErrorCount()
     {
         return numErrors;
     }
 
-
     public int getWarningCount()
     {
         return numWarnings;
     }
-
 
     public void warning(TokenAST token, String text)
     {
@@ -125,7 +120,6 @@ public class ToolContext
         System.err.println(message);
     }
 
-
     public void error(TokenAST token, String text)
     {
         numErrors++;
@@ -135,18 +129,15 @@ public class ToolContext
         System.err.println(message);
     }
 
-
     public static void logError(TokenAST token, String text)
     {
         getInstance().error(token, text);
     }
 
-
     public static void logWarning(TokenAST token, String text)
     {
         getInstance().warning(token, text);
     }
-
 
     private void appendLocation(StringBuffer message, TokenAST token)
     {

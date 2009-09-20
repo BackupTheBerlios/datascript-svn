@@ -62,27 +62,24 @@ public class TypeNameEmitter
     {
     }
 
-
     public static boolean isBuiltinType(TypeInterface t)
     {
-        if (t instanceof StdIntegerType ||
-            t instanceof BitFieldType ||
-            t instanceof StringType)
+        if (t instanceof StdIntegerType || t instanceof BitFieldType
+                || t instanceof StringType)
         {
             return true;
         }
         else if (t instanceof ArrayType)
         {
-            return isBuiltinType(((ArrayType)t).getElementType());
+            return isBuiltinType(((ArrayType) t).getElementType());
         }
         else if (t instanceof Subtype)
         {
-            return isBuiltinType(((Subtype)t).getBaseType());
+            return isBuiltinType(((Subtype) t).getBaseType());
         }
-        
+
         return false;
     }
-
 
     public static String getTypeName(TypeInterface t)
     {
@@ -108,21 +105,21 @@ public class TypeNameEmitter
         }
         else if (baseType instanceof TypeInstantiation)
         {
-            result = getTypeName((TypeInstantiation)baseType);
+            result = getTypeName((TypeInstantiation) baseType);
         }
         else if (baseType instanceof ArrayType)
         {
-            result = getTypeName((ArrayType) baseType);            
+            result = getTypeName((ArrayType) baseType);
         }
         else if (baseType instanceof Subtype)
         {
-            TypeInterface base = ((Subtype)baseType).getBaseType();
-//            base = TypeReference.getBaseType(base);
-            result = getTypeName(base);            
+            TypeInterface base = ((Subtype) baseType).getBaseType();
+            // base = TypeReference.getBaseType(base);
+            result = getTypeName(base);
         }
         else if (baseType instanceof StringType)
         {
-            result = "String";            
+            result = "String";
         }
         else
         {
@@ -131,14 +128,13 @@ public class TypeNameEmitter
         return result;
     }
 
-
     public static String getTypeName(Field field)
     {
         TypeInterface type = field.getFieldType();
         type = TypeReference.getBaseType(type);
 
         if (field.getOptionalClause() != null)
-        {            
+        {
             if (type instanceof StdIntegerType)
             {
                 return getNullableTypeName((StdIntegerType) type);
@@ -150,7 +146,6 @@ public class TypeNameEmitter
         }
         return getTypeName(type);
     }
-
 
     private static String getTypeName(StdIntegerType t)
     {
@@ -179,7 +174,6 @@ public class TypeNameEmitter
         }
     }
 
-
     private static String getNullableTypeName(StdIntegerType t)
     {
         switch (t.getType())
@@ -206,7 +200,6 @@ public class TypeNameEmitter
                 throw new UnsupportedOperationException();
         }
     }
-
 
     private static String getTypeName(BitFieldType t)
     {
@@ -244,45 +237,42 @@ public class TypeNameEmitter
         int length = t.getLength();
         if (length == 0)
             return "BigInteger";
-        
+
         if (t.isSigned())
         {
             if (length <= 8)
-            	return "Byte";
+                return "Byte";
             if (length <= 16)
-            	return "Short";
+                return "Short";
             if (length <= 32)
-            	return "Integer";
+                return "Integer";
             if (length <= 64)
-            	return "Long";        	
+                return "Long";
         }
         else
         {
             if (length < 8)
-            	return "Byte";
+                return "Byte";
             if (length < 16)
-            	return "Short";
+                return "Short";
             if (length < 32)
-            	return "Integer";
+                return "Integer";
             if (length < 64)
-            	return "Long";
+                return "Long";
         }
         return "BigInteger";
     }
 
-
     private static String getTypeName(CompoundType compound)
     {
-        return compound.getName();                
+        return compound.getName();
     }
-
 
     private static String getTypeName(TypeInstantiation inst)
     {
         CompoundType compound = inst.getBaseType();
-        return compound.getName();        
+        return compound.getName();
     }
-
 
     private static String getTypeName(ArrayType array)
     {
@@ -325,9 +315,8 @@ public class TypeNameEmitter
             return "StringArray";
         }
         String elTypeName = getTypeName(elType);
-        return "ObjectArray<" + elTypeName +  ">";        
+        return "ObjectArray<" + elTypeName + ">";
     }
-
 
     public static String getClassName(TypeInterface t)
     {
@@ -353,7 +342,6 @@ public class TypeNameEmitter
         return result;
     }
 
-
     private static String getClassName(StdIntegerType t)
     {
         switch (t.getType())
@@ -378,9 +366,8 @@ public class TypeNameEmitter
 
             default:
                 throw new UnsupportedOperationException();
-        }        
+        }
     }
-
 
     private static String getClassName(BitFieldType t)
     {

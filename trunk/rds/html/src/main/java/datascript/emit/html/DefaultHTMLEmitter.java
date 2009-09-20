@@ -36,9 +36,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 package datascript.emit.html;
-
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,11 +51,10 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 
-
-
 abstract public class DefaultHTMLEmitter extends DefaultEmitter
 {
     protected static final String CONTENT_FOLDER = "content";
+
     protected static final String HTML_EXT = ".html";
 
     protected static Configuration cfg = null;
@@ -65,16 +62,17 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
     protected final List<CompoundEmitter> containers = new ArrayList<CompoundEmitter>();
 
     protected File directory;
-    protected TypeInterface currentType;
-    private String currentFolder = "/";
-    protected Package currentPackage;
 
+    protected TypeInterface currentType;
+
+    private String currentFolder = "/";
+
+    protected Package currentPackage;
 
     public DefaultHTMLEmitter()
     {
         initConfig();
     }
-
 
     public DefaultHTMLEmitter(String outputPath)
     {
@@ -90,47 +88,42 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
         initConfig();
     }
 
-
     private void initConfig()
     {
-        if (cfg != null) 
+        if (cfg != null)
             return;
 
         cfg = new Configuration();
-        cfg.setClassForTemplateLoading(DefaultHTMLEmitter.class, "/freemarker/");
+        cfg
+                .setClassForTemplateLoading(DefaultHTMLEmitter.class,
+                        "/freemarker/");
         cfg.setObjectWrapper(new DefaultObjectWrapper());
     }
-
 
     public void setCurrentFolder(String currentFolder)
     {
         this.currentFolder = currentFolder;
     }
 
-
     public String getCurrentFolder()
     {
         return currentFolder;
     }
-
 
     public String getPackageName()
     {
         return currentPackage.getPackageName();
     }
 
-
     public String getRootPackageName()
     {
         return Package.getRoot().getPackageName();
     }
 
-
     public List<CompoundEmitter> getContainers()
     {
-    	return containers;
+        return containers;
     }
-
 
     @Override
     public void beginPackage(AST p)
@@ -138,18 +131,15 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
         currentPackage = Package.lookup(p);
     }
 
-
     public void emitStylesheet()
     {
         emit("html/webStyles.css.ftl", "webStyles.css");
     }
 
-
     public void emitFrameset()
     {
         emit("html/index.html.ftl", "index.html");
     }
-
 
     private void emit(String template, String outputName)
     {
