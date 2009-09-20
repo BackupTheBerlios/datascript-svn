@@ -77,7 +77,7 @@ import datascript.tools.Parameters;
 
 public class XmlExtension extends XMLFilterImpl implements Extension
 {
-    private Parameters params = null;
+    private Parameters parameters ;
 
     private TokenAST rootNode;
     private ContentHandler handler;
@@ -89,10 +89,10 @@ public class XmlExtension extends XMLFilterImpl implements Extension
      */
     public void generate(DataScriptEmitter emitter, TokenAST root)
     {
-        if (params == null)
+        if (parameters == null)
             throw new DataScriptException("No parameters set for XmlBackend!");
 
-        if (!params.argumentExists("-xml"))
+        if (!parameters.argumentExists("-xml"))
         {
             System.out.println("emitting XML file is disabled.");
             return;
@@ -100,12 +100,12 @@ public class XmlExtension extends XMLFilterImpl implements Extension
 
         System.out.println("emitting xml");
         
-        String fileName = params.getCommandLineArg("-xml");
+        String fileName = parameters.getCommandLineArg("-xml");
         if (fileName == null)
         {
             fileName = "datascript.xml";
         }
-        File outputFile = new File(params.getOutPathName(), fileName);
+        File outputFile = new File(parameters.getOutPathName(), fileName);
         this.rootNode = root;
         FileOutputStream os;
         try
@@ -151,7 +151,7 @@ public class XmlExtension extends XMLFilterImpl implements Extension
      */
     public void setParameters(Parameters params)
     {
-        this.params = params;
+        this.parameters = params;
     }
 
 
@@ -217,6 +217,8 @@ public class XmlExtension extends XMLFilterImpl implements Extension
                         endElement(tag);
                         break;
                     }
+                    default:
+                        // nothing
                 }
             }
             endElement("DOC");
@@ -231,7 +233,7 @@ public class XmlExtension extends XMLFilterImpl implements Extension
     private void handleDataNode(AST node) throws SAXException
     {
         boolean literal = false;
-        DataScriptParser parser = params.getParser();
+        DataScriptParser parser = parameters.getParser();
         String tokenName = parser.getTokenName(node.getType());
         if (tokenName.charAt(0) == '"')
         {
@@ -271,14 +273,7 @@ public class XmlExtension extends XMLFilterImpl implements Extension
             {
                 case DataScriptParserTokenTypes.DOC:
                 {
-                    try
-                    {
-                        handleDocNode(node);
-                    }
-                    catch (Exception exc)
-                    {
-                        throw new RuntimeException(exc);
-                    }
+                    handleDocNode(node);
                     break;
                 }
 
