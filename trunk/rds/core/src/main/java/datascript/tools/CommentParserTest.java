@@ -37,10 +37,13 @@
  */
 package datascript.tools;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import antlr.CommonAST;
+import antlr.RecognitionException;
 import antlr.Token;
 import antlr.TokenBuffer;
+import antlr.TokenStreamException;
 import antlr.debug.misc.ASTFrame;
 import datascript.antlr.DocCommentLexer;
 import datascript.antlr.DocCommentParser;
@@ -50,7 +53,8 @@ public class CommentParserTest
     private CommonAST rootNode;
     private DocCommentParser parser;
     
-    public void parseComment(String fileName) throws Exception
+    public void parseComment(String fileName)
+        throws FileNotFoundException, RecognitionException, TokenStreamException
     {
         FileInputStream is = new FileInputStream(fileName); 
         DocCommentLexer lexer = new DocCommentLexer(is);
@@ -75,27 +79,20 @@ public class CommentParserTest
         }
     }
     
-    public static void main(String[] args)
+    public static void main(String[] args) throws FileNotFoundException,
+            RecognitionException, TokenStreamException
     {
-        try
-        {
-            String fileName = args[0];
-            CommentParserTest self = new CommentParserTest();
-            self.parseComment(fileName);
-            //self.printTokens(fileName);
-            //OutputStreamWriter os = new OutputStreamWriter(System.out);
-            //root.xmlSerialize(os);
-            //os.flush();
-            //printXml(dsTool.rootNode);
-            //System.out.println(dsTool.rootNode.toStringList());
-            ASTFrame frame = new ASTFrame("AST", self.rootNode);
-            frame.setVisible(true);
-            
-        }
-        catch (Exception exc)
-        {
-            exc.printStackTrace();
-            System.exit(1);
-        }
+        String fileName = args[0];
+        CommentParserTest self = new CommentParserTest();
+        self.parseComment(fileName);
+        // self.printTokens(fileName);
+        // OutputStreamWriter os = new OutputStreamWriter(System.out);
+        // root.xmlSerialize(os);
+        // os.flush();
+        // printXml(dsTool.rootNode);
+        // System.out.println(dsTool.rootNode.toStringList());
+        ASTFrame frame = new ASTFrame("AST", self.rootNode);
+        frame.setVisible(true);
+
     }
 }

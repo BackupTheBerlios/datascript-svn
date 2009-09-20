@@ -52,7 +52,7 @@ implements TypeInterface, Comparable<CompoundType>
 {
     private int id;
     private String name;
-    private Package pkg;
+    private Package pakkage;
     private Scope scope;
 
 
@@ -151,13 +151,13 @@ implements TypeInterface, Comparable<CompoundType>
 
     public Package getPackage()
     {
-        return pkg;
+        return pakkage;
     }
 
 
     public void setPackage(Package pkg)
     {
-        this.pkg = pkg;
+        this.pakkage = pkg;
     }
 
 
@@ -167,11 +167,11 @@ implements TypeInterface, Comparable<CompoundType>
     }
 
 
-    public void setScope(Scope scope, Package pkg)
+    public void setScope(Scope s, Package pkg)
     {
-        this.scope = scope;
-        this.pkg = pkg;
-        scope.setOwner(this);
+        this.scope = s;
+        this.pakkage = pkg;
+        s.setOwner(this);
     }
 
 

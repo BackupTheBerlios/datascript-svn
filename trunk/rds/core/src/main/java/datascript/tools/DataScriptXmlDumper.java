@@ -45,7 +45,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashSet;
 
+import antlr.RecognitionException;
 import antlr.Token;
+import antlr.TokenStreamException;
 import antlr.TokenStreamHiddenTokenFilter;
 import antlr.collections.AST;
 import antlr.debug.misc.ASTFrame;
@@ -75,7 +77,8 @@ public class DataScriptXmlDumper implements Parameters
     }
 
 
-    private void parseImportedPackages(AST unitNode) throws Exception
+    private void parseImportedPackages(AST unitNode)
+        throws RecognitionException, TokenStreamException
     {
         AST node = unitNode.getFirstChild();
         if (node.getType() == DataScriptParserTokenTypes.PACKAGE)
@@ -121,7 +124,7 @@ public class DataScriptXmlDumper implements Parameters
     }
 
 
-    private AST parsePackage() throws Exception
+    private AST parsePackage() throws RecognitionException, TokenStreamException
     {
         String fileName = ToolContext.getFullName();
         System.out.println("Parsing " + fileName);
@@ -301,37 +304,31 @@ public class DataScriptXmlDumper implements Parameters
     }
 
 
-    /** ****** End of Parameters interface ******* */
+    /** ****** End of Parameters interface ******* 
+     * @throws TokenStreamException 
+     * @throws RecognitionException */
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws RecognitionException, TokenStreamException
     {
-        try
-        {
-            DataScriptXmlDumper dsTool = new DataScriptXmlDumper();
-            dsTool.context = ToolContext.getInstance();
-            int i = 0;
-            // dsTool.context.setPathName(args[i++]);
-            dsTool.context.setFileName(args[i++]);
-            AST unitRoot = dsTool.parsePackage();
-            dsTool.rootNode.addChild(unitRoot);
-            dsTool.parseImportedPackages(unitRoot);
+        DataScriptXmlDumper dsTool = new DataScriptXmlDumper();
+        dsTool.context = ToolContext.getInstance();
+        int i = 0;
+        // dsTool.context.setPathName(args[i++]);
+        dsTool.context.setFileName(args[i++]);
+        AST unitRoot = dsTool.parsePackage();
+        dsTool.rootNode.addChild(unitRoot);
+        dsTool.parseImportedPackages(unitRoot);
 
-            /*
-            java.io.OutputStreamWriter osw = new java.io.OutputStreamWriter(System.out);
-            dsTool.rootNode.xmlSerialize(osw);
-            osw.flush();
-            printXml(dsTool.rootNode);
-            //System.out.println(dsTool.rootNode.toStringList());
-            //*/
+        /*
+         * java.io.OutputStreamWriter osw = new
+         * java.io.OutputStreamWriter(System.out);
+         * dsTool.rootNode.xmlSerialize(osw); osw.flush();
+         * printXml(dsTool.rootNode);
+         * //System.out.println(dsTool.rootNode.toStringList()); //
+         */
 
-            ASTFrame frame = new ASTFrame("AST", dsTool.rootNode);
-            frame.setVisible(true);
-            dsTool.emitDatascript();
-        }
-        catch (Exception exc)
-        {
-            exc.printStackTrace();
-            System.exit(1);
-        }
+        ASTFrame frame = new ASTFrame("AST", dsTool.rootNode);
+        frame.setVisible(true);
+        dsTool.emitDatascript();
     }
 }

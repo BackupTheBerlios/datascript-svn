@@ -52,7 +52,7 @@ implements TypeInterface, Comparable<CompoundType>
 {
     private int id;
     private String name;
-    private Package pkg;
+    private Package pakkage;
 
 
     public Subtype()
@@ -148,13 +148,13 @@ implements TypeInterface, Comparable<CompoundType>
 
     public Package getPackage()
     {
-        return pkg;
+        return pakkage;
     }
 
 
     public void setPackage(Package pkg)
     {
-        this.pkg = pkg;
+        this.pakkage = pkg;
     }
 
 

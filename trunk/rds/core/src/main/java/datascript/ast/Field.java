@@ -55,8 +55,8 @@ public class Field extends TokenAST
     private Container compound; // compound type containing this field
 
     private TokenAST alignment;
-    private TokenAST fieldCondition;
-    private TokenAST fieldInitializer;
+    private TokenAST condition;
+    private TokenAST initializer;
     private TokenAST fieldLabel;
     private TokenAST fieldOptionalClause;
     private Token documentation;
@@ -144,9 +144,9 @@ public class Field extends TokenAST
 
     public Expression getCondition()
     {
-        if (fieldCondition != null)
+        if (condition != null)
         {
-            return (Expression) fieldCondition.getFirstChild();
+            return (Expression) condition.getFirstChild();
         }
         else
         {
@@ -157,7 +157,7 @@ public class Field extends TokenAST
 
     public void setCondition(AST fieldCondition)
     {
-        this.fieldCondition = (TokenAST) fieldCondition;
+        this.condition = (TokenAST) fieldCondition;
     }
 
 
@@ -182,9 +182,9 @@ public class Field extends TokenAST
 
     public Expression getInitializer()
     {
-        if (fieldInitializer != null)
+        if (initializer != null)
         {
-            return (Expression) fieldInitializer.getFirstChild();
+            return (Expression) initializer.getFirstChild();
         }
         else
         {
@@ -195,7 +195,7 @@ public class Field extends TokenAST
 
     public void setInitializer(AST fieldInitializer)
     {
-        this.fieldInitializer = (TokenAST) fieldInitializer;
+        this.initializer = (TokenAST) fieldInitializer;
     }
 
 

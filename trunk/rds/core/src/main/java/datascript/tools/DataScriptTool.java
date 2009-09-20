@@ -241,12 +241,13 @@ public class DataScriptTool implements Parameters
 
     private static String cutLastSeparatorChar(String pathName)
     {
+        String result = pathName;
         int i = pathName.length();
         while (pathName.charAt(i - 1) == File.separatorChar)
             --i;
         if (i < pathName.length())
-            pathName = pathName.substring(0, i);
-        return pathName;
+            result = pathName.substring(0, i);
+        return result;
     }
 
 

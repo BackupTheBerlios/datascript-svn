@@ -94,7 +94,7 @@ public class BitFieldType extends IntegerType
 
     public boolean isSigned()
     {
-    	return false;
+        return false;
     }
 
     @Override

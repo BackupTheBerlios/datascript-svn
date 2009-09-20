@@ -187,11 +187,11 @@ abstract public class CompoundType
     }
 
 
-    public void setScope(Scope scope, Package pkg)
+    public void setScope(Scope s, Package pkg)
     {
-        this.scope = scope;
+        this.scope = s;
         this.pakkage = pkg;
-        scope.setOwner(this);
+        s.setOwner(this);
     }
 
 
