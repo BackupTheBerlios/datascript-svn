@@ -203,44 +203,44 @@ public abstract class FieldEmitter
 
     public long getMinVal()
     {
-    	if (type instanceof SignedBitFieldType)
-    	{
+        if (type instanceof SignedBitFieldType)
+        {
             BitFieldType bitField = (BitFieldType) type;
-            return -(1 << bitField.getLength()-1);
-    	}
-    	if (type instanceof BitFieldType)
-    	{
+            return -(1 << bitField.getLength() - 1);
+        }
+        if (type instanceof BitFieldType)
+        {
             return 0;
-    	}
+        }
         if (type instanceof StdIntegerType)
         {
-        	StdIntegerType integerType = (StdIntegerType) type;
-        	return integerType.getLowerBound().longValue();
+            StdIntegerType integerType = (StdIntegerType) type;
+            return integerType.getLowerBound().longValue();
         }
-    	throw new RuntimeException("type of field '" + field.getName() + "' is not a simple type");
+        throw new RuntimeException("type of field '" + field.getName()
+                + "' is not a simple type");
     }
-
 
     public long getMaxVal()
     {
-    	if (type instanceof SignedBitFieldType)
-    	{
+        if (type instanceof SignedBitFieldType)
+        {
             BitFieldType bitField = (BitFieldType) type;
-            return (1 << bitField.getLength()-1) - 1;
-    	}
-    	if (type instanceof BitFieldType)
-    	{
+            return (1 << bitField.getLength() - 1) - 1;
+        }
+        if (type instanceof BitFieldType)
+        {
             BitFieldType bitField = (BitFieldType) type;
-            return (1 << bitField.getLength()) -1;
-    	}
+            return (1 << bitField.getLength()) - 1;
+        }
         if (type instanceof StdIntegerType)
         {
             StdIntegerType integerType = (StdIntegerType) type;
             return integerType.getUpperBound().longValue();
         }
-    	throw new RuntimeException("type of field '" + field.getName() + "' is not a simple type");
+        throw new RuntimeException("type of field '" + field.getName()
+                + "' is not a simple type");
     }
-
 
     public CompoundEmitter getCompoundEmitter()
     {
@@ -252,16 +252,6 @@ public abstract class FieldEmitter
     {
         this.writer = writer;
     }
-
-
-    /*
-     * public String getTypeName()
-     * {
-     *     TypeInterface type = field.getFieldType();
-     *     type = TypeReference.getBaseType(type);
-     *     return global.getTypeName(type);
-     * }
-     */
 
 
     public Field getField()

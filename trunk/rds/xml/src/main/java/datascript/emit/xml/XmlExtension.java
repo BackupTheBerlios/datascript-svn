@@ -149,7 +149,7 @@ public class XmlExtension extends XMLFilterImpl implements Extension
     /* (non-Javadoc)
      * @see datascript.tools.Extension#setParameter(datascript.tools.Parameters)
      */
-    public void setParameter(Parameters params)
+    public void setParameters(Parameters params)
     {
         this.params = params;
     }

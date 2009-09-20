@@ -40,6 +40,7 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +54,7 @@ import datascript.ast.IntegerType;
 import datascript.ast.IntegerValue;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
@@ -150,9 +152,13 @@ public class EnumerationEmitter extends IntegerTypeEmitter
             Template tpl = cfg.getTemplate("java/Enumeration.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -221,10 +227,10 @@ public class EnumerationEmitter extends IntegerTypeEmitter
     
     public String getWriteStmt()
     {
-    	IntegerType baseType = (IntegerType) enumType.getBaseType();
-    	StringBuilder buffer = new StringBuilder();
-    	writeIntegerValue(buffer, "getValue()", baseType);
-    	return buffer.toString();
+        IntegerType baseType = (IntegerType) enumType.getBaseType();
+        StringBuilder buffer = new StringBuilder();
+        writeIntegerValue(buffer, "getValue()", baseType);
+        return buffer.toString();
     }
 
 }

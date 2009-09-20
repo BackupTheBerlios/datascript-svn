@@ -268,7 +268,7 @@ public class DataScriptTool implements Parameters
             Extension extension = it.next();
             extensions.add(extension);
             extension.getOptions(rdsOptionsToAccept);
-            extension.setParameter(this);
+            extension.setParameters(this);
         }
     }
 

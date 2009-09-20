@@ -40,6 +40,7 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,7 @@ import datascript.ast.Parameter;
 import datascript.ast.SequenceType;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
@@ -78,7 +80,8 @@ public class SequenceEmitter extends CompoundEmitter
 
 
         @Override
-        public void emit(PrintWriter pw, Configuration cfg) throws Exception
+        public void emit(PrintWriter pw, Configuration cfg) 
+            throws IOException, TemplateException
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/SequenceFieldAccessor.ftl");
@@ -128,9 +131,8 @@ public class SequenceEmitter extends CompoundEmitter
     
     public boolean getHasLabels()
     {
-    	return seq.hasLabels();
+        return seq.hasLabels();
     }
-
 
 
     public void begin(Configuration cfg)
@@ -180,9 +182,13 @@ public class SequenceEmitter extends CompoundEmitter
             tpl = cfg.getTemplate("java/SequenceWrite.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -195,9 +201,13 @@ public class SequenceEmitter extends CompoundEmitter
 
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 

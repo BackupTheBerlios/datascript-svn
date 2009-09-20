@@ -40,6 +40,7 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,7 @@ import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
@@ -79,8 +81,8 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
 
     public static class CompoundFunctionEmitter
     {
-        private final FunctionType func;
         private static Template tpl;
+        private FunctionType func;
 
         public CompoundFunctionEmitter(FunctionType func)
         {
@@ -88,7 +90,8 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         }
 
 
-        public void emit(PrintWriter writer, Configuration cfg) throws Exception
+        public void emit(PrintWriter writer, Configuration cfg)
+            throws IOException, TemplateException
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/FunctionTmpl.ftl");
@@ -120,10 +123,11 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
 
     public static class CompoundParameterEmitter
     {
-        private final CompoundEmitter global;
-        private TypeInterface type;
-        private final Parameter param;
         private static Template tpl;
+
+        private CompoundEmitter global;
+        private TypeInterface type;
+        private Parameter param;
 
 
         public CompoundParameterEmitter(Parameter param, CompoundEmitter j)
@@ -134,8 +138,8 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
         }
 
 
-        public void emit(PrintWriter writer, Configuration cfg)
-                throws Exception
+        public void emit(PrintWriter writer, Configuration cfg) 
+            throws IOException, TemplateException
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/ParameterAccessor.ftl");
@@ -193,44 +197,44 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
 
         public long getMinVal()
         {
-        	if (type instanceof SignedBitFieldType)
-        	{
+            if (type instanceof SignedBitFieldType)
+            {
                 BitFieldType bitField = (BitFieldType) type;
-        		return -(1 << bitField.getLength()-1);
-        	}
-        	if (type instanceof BitFieldType)
-        	{
+                return -(1 << bitField.getLength() - 1);
+            }
+            if (type instanceof BitFieldType)
+            {
                 return 0;
-        	}
+            }
             if (type instanceof StdIntegerType)
             {
-            	StdIntegerType integerType = (StdIntegerType) type;
-            	return integerType.getLowerBound().longValue();
+                StdIntegerType integerType = (StdIntegerType) type;
+                return integerType.getLowerBound().longValue();
             }
-        	throw new RuntimeException("type of field '" + param.getName() + "' is not a simple type");
+            throw new RuntimeException("type of field '" + param.getName()
+                    + "' is not a simple type");
         }
-
 
         public long getMaxVal()
         {
-        	if (type instanceof SignedBitFieldType)
-        	{
+            if (type instanceof SignedBitFieldType)
+            {
                 BitFieldType bitField = (BitFieldType) type;
-        		return (1 << bitField.getLength()-1) - 1;
-        	}
-        	if (type instanceof BitFieldType)
-        	{
+                return (1 << bitField.getLength() - 1) - 1;
+            }
+            if (type instanceof BitFieldType)
+            {
                 BitFieldType bitField = (BitFieldType) type;
                 return (1 << bitField.getLength()) - 1;
-        	}
+            }
             if (type instanceof StdIntegerType)
             {
-            	StdIntegerType integerType = (StdIntegerType) type;
-            	return integerType.getUpperBound().longValue();
+                StdIntegerType integerType = (StdIntegerType) type;
+                return integerType.getUpperBound().longValue();
             }
-        	throw new RuntimeException("type of field '" + param.getName() + "' is not a simple type");
+            throw new RuntimeException("type of field '" + param.getName()
+                    + "' is not a simple type");
         }
-
 
         public boolean getEqualsCanThrowExceptions()
         {
@@ -499,9 +503,13 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
                         "java/ArrayRead.ftl");
                 tpl.process(ae, writer);
             }
-            catch (Exception e)
+            catch (TemplateException exc)
             {
-                throw new DataScriptException(e);
+                throw new DataScriptException(exc);
+            }
+            catch (IOException exc)
+            {
+                throw new DataScriptException(exc);
             }
         }
         else
@@ -744,9 +752,13 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
                         "java/ArrayWrite.ftl");
                 tpl.process(ae, writer);
             }
-            catch (Exception e)
+            catch (IOException exc)
             {
-                throw new DataScriptException(e);
+                throw new DataScriptException(exc);
+            }
+            catch (TemplateException exc)
+            {
+                throw new DataScriptException(exc);
             }
         }
         else

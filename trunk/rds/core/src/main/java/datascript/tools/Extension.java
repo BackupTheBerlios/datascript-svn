@@ -62,7 +62,7 @@ public interface Extension
      * @param params
      *            the parametervalues to set
      */
-    public abstract void setParameter(Parameters params);
+    public abstract void setParameters(Parameters params);
 
 
     /**

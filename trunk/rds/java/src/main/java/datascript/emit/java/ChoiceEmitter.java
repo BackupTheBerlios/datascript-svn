@@ -40,6 +40,7 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,27 +65,30 @@ import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
 public class ChoiceEmitter extends CompoundEmitter
 {
+    ChoiceType choice;
+
     private final List<CompoundFunctionEmitter> functions = 
         new ArrayList<CompoundFunctionEmitter>();
 
     private final List<ChoiceMemberEmitter> members = 
         new ArrayList<ChoiceMemberEmitter>();
 
-    ChoiceType choice;
 
 
 
     public static class ChoiceMemberEmitter
     {
-        private final ChoiceEmitter global;
-        protected final ChoiceMember member;
-
         private static Template tpl;
+
+        protected ChoiceMember member;
+        private ChoiceEmitter global;
+
 
 
         public ChoiceMemberEmitter(ChoiceMember choiceMember, ChoiceEmitter choiceEmitter)
@@ -94,7 +98,8 @@ public class ChoiceEmitter extends CompoundEmitter
         }
 
 
-        public void emit(PrintWriter writer, Configuration cfg) throws Exception
+        public void emit(PrintWriter writer, Configuration cfg)
+            throws IOException, TemplateException
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/ChoiceFieldAccessor.ftl");
@@ -313,9 +318,13 @@ public class ChoiceEmitter extends CompoundEmitter
             tpl = cfg.getTemplate("java/ChoiceWrite.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (TemplateException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (IOException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -328,9 +337,13 @@ public class ChoiceEmitter extends CompoundEmitter
 
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 

@@ -40,6 +40,7 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,20 +62,23 @@ import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
 public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 {
-    private final List<SequenceFieldEmitter> fields = new ArrayList<SequenceFieldEmitter>();
-    private final List<ChoiceMemberEmitter> members = new ArrayList<ChoiceMemberEmitter>();
+    protected static ExpressionEmitter exprEmitter = new ExpressionEmitter();
+
     protected SequenceType sequence;
     protected UnionType union;
     protected EnumType enumeration;
     protected SqlIntegerType sqlinteger;
     protected ChoiceType choice;
-    protected static ExpressionEmitter exprEmitter = new ExpressionEmitter();
 
+    private final List<SequenceFieldEmitter> fields = new ArrayList<SequenceFieldEmitter>();
+    private final List<ChoiceMemberEmitter> members = new ArrayList<ChoiceMemberEmitter>();
+    
 
     public static class SequenceFieldEmitter
     {
@@ -134,8 +138,8 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
 
     public static class ChoiceMemberEmitter
     {
-        private DepthFirstVisitorEmitter global;
         protected ChoiceMember member;
+        private DepthFirstVisitorEmitter global;
 
         private Field field;
 
@@ -227,9 +231,13 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/DepthFirstVisitor.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -242,9 +250,13 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
         writer.close();
     }
@@ -267,9 +279,13 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/DepthFirstSequence.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -291,9 +307,13 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/DepthFirstUnion.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -315,9 +335,13 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/DepthFirstChoice.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -332,9 +356,13 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/DepthFirstEnumeration.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception ex)
+        catch (IOException exc)
         {
-            throw new DataScriptException(ex);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -356,9 +384,13 @@ public class DepthFirstVisitorEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/DepthFirstSqlInteger.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 

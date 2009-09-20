@@ -40,6 +40,7 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,14 +57,15 @@ import datascript.ast.StringType;
 import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
 public class LabelSetterEmitter extends JavaDefaultEmitter
 {
-    private final List<SequenceFieldEmitter> fields = new ArrayList<SequenceFieldEmitter>();
-    protected SequenceType sequence;
     protected static ExpressionEmitter exprEmitter = new ExpressionEmitter();
+    protected SequenceType sequence;
+    private List<SequenceFieldEmitter> fields = new ArrayList<SequenceFieldEmitter>();
 
 
     public static class SequenceFieldEmitter
@@ -72,7 +74,7 @@ public class LabelSetterEmitter extends JavaDefaultEmitter
 
         private LabelSetterEmitter global;
 
-        private String label;
+        private String labelString;
 
 
         public SequenceFieldEmitter(Field field, LabelSetterEmitter global)
@@ -173,41 +175,31 @@ public class LabelSetterEmitter extends JavaDefaultEmitter
 
         public String getLabelExpression()
         {
-            if (label == null)
+            if (labelString == null)
             {
-                label = getLabelExpression(field);
+                Expression label = field.getLabel();
+                if (label == null)
+                    return null;
+
+                StringBuilder builder = new StringBuilder();
+                AST labelBase = label.getNextSibling();
+                if (labelBase != null)
+                {
+                    String name = labelBase.getText();
+                    builder.append("((");
+                    builder.append(name);
+                    builder.append(")__cc.find(\"");
+                    builder.append(name);
+                    builder.append("\")).");
+                }
+                builder.append("__fpos + 8*");
+                String labelExpr = exprEmitter.emit(label);
+                builder.append(labelExpr);
+
+                return builder.toString();
             }
-            return label;
+            return labelString;
         }
-
-        
-        
-        public String getLabelExpression(Field field)
-        {
-            Expression label = field.getLabel();
-            if (label == null)
-                return null;
-
-            StringBuilder builder = new StringBuilder();
-            AST labelBase = label.getNextSibling();
-            if (labelBase != null)
-            {
-                String name = labelBase.getText();
-                builder.append("((");
-                builder.append(name);
-                builder.append(")__cc.find(\"");
-                builder.append(name);
-                builder.append("\")).");
-            }
-            builder.append("__fpos + 8*");
-            String labelExpr = exprEmitter.emit(label);
-            builder.append(labelExpr);
-
-            return builder.toString();
-        }
-
-        
-        
     }
 
 
@@ -229,9 +221,13 @@ public class LabelSetterEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/LabelSetter.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -244,9 +240,13 @@ public class LabelSetterEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
         writer.close();
     }
@@ -271,9 +271,13 @@ public class LabelSetterEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/LabelSetterSequence.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -340,6 +344,8 @@ public class LabelSetterEmitter extends JavaDefaultEmitter
                     length = bftype.getLengthExpression();
                     buffer.append("SignedBitField");
                     break;
+                default:
+                    throw new IllegalStateException();
             }
             buffer.append("(");
             buffer.append(nodeName);

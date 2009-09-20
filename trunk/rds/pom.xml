@@ -193,6 +193,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.3</version>
         <configuration>
           <configLocation>rds-checkstyle.xml</configLocation>
         </configuration>

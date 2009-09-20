@@ -40,10 +40,13 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
+
+import antlr.collections.AST;
 import datascript.ast.ConstType;
 import datascript.ast.DataScriptException;
 import freemarker.template.Template;
-import antlr.collections.AST;
+import freemarker.template.TemplateException;
 
 
 
@@ -73,9 +76,13 @@ public class ConstEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/ConstType.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -88,9 +95,13 @@ public class ConstEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
         writer.close();
     }
@@ -105,9 +116,13 @@ public class ConstEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/ConstEnumeration.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 

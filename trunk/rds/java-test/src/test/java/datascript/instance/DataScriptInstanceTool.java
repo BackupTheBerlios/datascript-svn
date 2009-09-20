@@ -308,7 +308,7 @@ public class DataScriptInstanceTool implements Parameters
 
         for (Extension extension : extensions)
         {
-            extension.setParameter(this);
+            extension.setParameters(this);
         }
     }
 

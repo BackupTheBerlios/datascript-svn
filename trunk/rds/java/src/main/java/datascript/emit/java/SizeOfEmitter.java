@@ -40,10 +40,13 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
+
 import antlr.collections.AST;
 import datascript.ast.DataScriptException;
 import datascript.ast.EnumType;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
@@ -69,9 +72,13 @@ public class SizeOfEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/SizeOf.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -84,9 +91,13 @@ public class SizeOfEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
         writer.close();
     }
@@ -101,9 +112,13 @@ public class SizeOfEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/SizeOfEnumeration.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception ex)
+        catch (IOException exc)
         {
-            throw new DataScriptException(ex);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 

@@ -40,6 +40,7 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ import datascript.ast.Parameter;
 import datascript.ast.UnionType;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
@@ -80,7 +82,8 @@ public class UnionEmitter extends CompoundEmitter
 
 
         @Override
-        public void emit(PrintWriter pw, Configuration cfg) throws Exception
+        public void emit(PrintWriter pw, Configuration cfg)
+            throws IOException, TemplateException
         {
             if (tpl == null)
                 tpl = cfg.getTemplate("java/UnionFieldAccessor.ftl");
@@ -171,9 +174,13 @@ public class UnionEmitter extends CompoundEmitter
             tpl = cfg.getTemplate("java/UnionWrite.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 
@@ -186,9 +193,13 @@ public class UnionEmitter extends CompoundEmitter
 
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 

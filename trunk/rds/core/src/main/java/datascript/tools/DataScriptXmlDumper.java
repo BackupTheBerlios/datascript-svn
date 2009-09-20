@@ -212,7 +212,7 @@ public class DataScriptXmlDumper implements Parameters
         {
             Class<?> clazz = Class.forName("datascript.emit.xml.XmlExtension");
             Extension extension = (Extension) clazz.newInstance();
-            extension.setParameter(this);
+            extension.setParameters(this);
             extension.generate(null, rootNode);
         }
         catch (ClassNotFoundException e)

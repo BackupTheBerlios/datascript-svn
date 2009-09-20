@@ -213,32 +213,31 @@ public class TypeNameEmitter
         int length = t.getLength();
         if (length == 0)
             return "BigInteger";
-        
-		if (t.isSigned()) 
-		{
-			if (length <= 8)
-				return "byte";
-			if (length <= 16)
-				return "short";
-			if (length <= 32)
-				return "int";
-			if (length <= 64)
-				return "long";
-		} 
-		else 
-		{
-			if (length < 8)
-				return "byte";
-			if (length < 16)
-				return "short";
-			if (length < 32)
-				return "int";
-			if (length < 64)
-				return "long";
-		}
-		return "BigInteger";
-    }
 
+        if (t.isSigned())
+        {
+            if (length <= 8)
+                return "byte";
+            if (length <= 16)
+                return "short";
+            if (length <= 32)
+                return "int";
+            if (length <= 64)
+                return "long";
+        }
+        else
+        {
+            if (length < 8)
+                return "byte";
+            if (length < 16)
+                return "short";
+            if (length < 32)
+                return "int";
+            if (length < 64)
+                return "long";
+        }
+        return "BigInteger";
+    }
 
     private static String getNullableTypeName(BitFieldType t)
     {

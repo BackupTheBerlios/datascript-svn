@@ -40,6 +40,7 @@
 package datascript.emit.java;
 
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,6 +52,7 @@ import datascript.ast.Field;
 import datascript.ast.SqlDatabaseType;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
@@ -131,7 +133,7 @@ public class SqlDatabaseEmitter
 
     public static class MetadataFieldEmitter
     {
-        private static final ExpressionEmitter exprEm = new ExpressionEmitter();
+        private static ExpressionEmitter exprEm = new ExpressionEmitter();
 
         private final Field field;
 
@@ -218,9 +220,13 @@ public class SqlDatabaseEmitter
             Template tpl = cfg.getTemplate("java/SqlDatabase.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
     }
 

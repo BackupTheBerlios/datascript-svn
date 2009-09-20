@@ -93,9 +93,13 @@ public class VisitorEmitter extends JavaDefaultEmitter
             Template tpl = cfg.getTemplate("java/SequenceEnd.ftl");
             tpl.process(this, writer);
         }
-        catch (Exception e)
+        catch (IOException exc)
         {
-            throw new DataScriptException(e);
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
+        {
+            throw new DataScriptException(exc);
         }
         writer.close();
     }

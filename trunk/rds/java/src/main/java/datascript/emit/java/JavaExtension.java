@@ -55,7 +55,7 @@ import datascript.tools.Parameters;
 
 public class JavaExtension implements Extension
 {
-    private Parameters params;
+    private Parameters parameters;
     private String defaultPackageName;
     private boolean generateExceptions;
     private boolean ignorePragma;
@@ -63,72 +63,66 @@ public class JavaExtension implements Extension
 
     public void generate(DataScriptEmitter emitter, TokenAST rootNode)
     {
-        if (params == null)
+        if (parameters == null)
             throw new DataScriptException("No parameters set for JavaBackend!");
 
         System.out.println("emitting java code");
         try
         {
-            generateExceptions = params.argumentExists("-debug");
-            if (params.argumentExists("-pkg"))
+            generateExceptions = parameters.argumentExists("-debug");
+            if (parameters.argumentExists("-pkg"))
             {
-                defaultPackageName = params.getCommandLineArg("-pkg");
+                defaultPackageName = parameters.getCommandLineArg("-pkg");
             }
-            ignorePragma = params.argumentExists("-ignorePragma");
+            ignorePragma = parameters.argumentExists("-ignorePragma");
 
             // emit Java code for decoders
-            JavaEmitter javaEmitter = new JavaEmitter(params.getOutPathName(),
+            JavaEmitter javaEmitter = new JavaEmitter(parameters.getOutPathName(),
                     defaultPackageName);
-            runEmitter(emitter, rootNode, generateExceptions, javaEmitter);
+            runEmitter(emitter, rootNode, javaEmitter);
 
             // emit Java __Visitor interface
-            VisitorEmitter visitorEmitter = new VisitorEmitter(params
+            VisitorEmitter visitorEmitter = new VisitorEmitter(parameters
                     .getOutPathName(), defaultPackageName);
-            runEmitter(emitter, rootNode, generateExceptions, visitorEmitter);
+            runEmitter(emitter, rootNode, visitorEmitter);
 
             // emit Java __DepthFirstVisitor class
             DepthFirstVisitorEmitter dfVisitorEmitter = new DepthFirstVisitorEmitter(
-                    params.getOutPathName(), defaultPackageName);
-            runEmitter(emitter, rootNode, generateExceptions, dfVisitorEmitter);
+                    parameters.getOutPathName(), defaultPackageName);
+            runEmitter(emitter, rootNode, dfVisitorEmitter);
 
             // emit Java __SizeOf class
-            SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(params
+            SizeOfEmitter sizeOfEmitter = new SizeOfEmitter(parameters
                     .getOutPathName(), defaultPackageName);
-            runEmitter(emitter, rootNode, generateExceptions, sizeOfEmitter);
+            runEmitter(emitter, rootNode, sizeOfEmitter);
 
             // emit Java __Const class
-            ConstEmitter constEmitter = new ConstEmitter(params
+            ConstEmitter constEmitter = new ConstEmitter(parameters
                     .getOutPathName(), defaultPackageName);
-            runEmitter(emitter, rootNode, generateExceptions, constEmitter);
+            runEmitter(emitter, rootNode, constEmitter);
 
             // emit Java __XmlDumper class
-            XmlDumperEmitter xmlDumper = new XmlDumperEmitter(params
+            XmlDumperEmitter xmlDumper = new XmlDumperEmitter(parameters
                     .getOutPathName(), defaultPackageName);
-            runEmitter(emitter, rootNode, generateExceptions, xmlDumper);
+            runEmitter(emitter, rootNode, xmlDumper);
 
             // emit Java __LabelSetter class
-            LabelSetterEmitter labelSetter = new LabelSetterEmitter(params
+            LabelSetterEmitter labelSetter = new LabelSetterEmitter(parameters
                     .getOutPathName(), defaultPackageName);
-            runEmitter(emitter, rootNode, generateExceptions, labelSetter);
-        }
-        catch (RuntimeException e)
-        {
-            System.err.println("emitter error in '" + params.getFileName()
-                    + "': " + e.getMessage());
-            e.printStackTrace();
+            runEmitter(emitter, rootNode, labelSetter);
         }
         catch (ComputeError e)
         {
-            System.err.println("emitter error in '" + params.getFileName()
+            System.err.println("emitter error in '" + parameters.getFileName()
                     + "': " + e.getMessage());
         }
     }
 
 
     private void runEmitter(DataScriptEmitter emitter, TokenAST rootNode,
-            boolean generateExceptions, JavaDefaultEmitter javaEmitter)
+            JavaDefaultEmitter javaEmitter)
     {
-        javaEmitter.setRdsVersion(params.getVersion());
+        javaEmitter.setRdsVersion(parameters.getVersion());
         javaEmitter.setThrowsException(generateExceptions);
         javaEmitter.setIgnorePragma(ignorePragma);
         emitter.setEmitter(javaEmitter);
@@ -163,9 +157,9 @@ public class JavaExtension implements Extension
     }
 
 
-    public void setParameter(Parameters params)
+    public void setParameters(Parameters params)
     {
-        this.params = params;
+        this.parameters = params;
     }
 
 }

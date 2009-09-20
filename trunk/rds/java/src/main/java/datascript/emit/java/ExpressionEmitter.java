@@ -143,8 +143,8 @@ public class ExpressionEmitter
                 paren = true;
                 break;
             case DataScriptParserTokenTypes.INDEX:
-            	buffer.append("__index");
-            	return;
+                buffer.append("__index");
+                return;
             case DataScriptParserTokenTypes.LENGTHOF:
                 append(expr.op1());
                 buffer.append(".length()");
