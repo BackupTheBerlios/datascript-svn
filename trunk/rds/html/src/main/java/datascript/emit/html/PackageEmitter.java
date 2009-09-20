@@ -40,12 +40,14 @@
 package datascript.emit.html;
 
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.TreeSet;
 
 import antlr.collections.AST;
 import datascript.ast.DataScriptException;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
@@ -71,7 +73,11 @@ public class PackageEmitter extends DefaultHTMLEmitter
             tpl.process(this, writer);
             writer.close();
         }
-        catch (Exception exc)
+        catch (IOException exc)
+        {
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
         {
             throw new DataScriptException(exc);
         }

@@ -278,7 +278,7 @@ public class TypeReference extends TokenAST implements TypeInterface,
     }
 
 
-    public void setArgumentsPresent(boolean hasArguments)
+    public void setHasArguments(boolean hasArguments)
     {
         this.hasArguments = hasArguments;
     }

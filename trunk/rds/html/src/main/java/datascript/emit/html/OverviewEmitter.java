@@ -40,6 +40,7 @@
 package datascript.emit.html;
 
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,6 +53,7 @@ import datascript.ast.DataScriptException;
 import datascript.ast.Package;
 import datascript.ast.TypeInterface;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
@@ -88,8 +90,8 @@ public class OverviewEmitter extends DefaultHTMLEmitter
                     boolean isDoubleDefinedType = doubleTypeNames.get(typeName);
                     TypeInterface t = pkg.getLocalType(typeName);
                     LinkedType linkedType = new LinkedType(t, isDoubleDefinedType);
-                    typeName = typeName + "." + pkg.getReversePackageName();
-                    typeMap.put(typeName, linkedType);
+                    String fullTypeName = typeName + "." + pkg.getReversePackageName();
+                    typeMap.put(fullTypeName, linkedType);
                 }
             }
 
@@ -99,7 +101,11 @@ public class OverviewEmitter extends DefaultHTMLEmitter
             tpl.process(this, writer);
             writer.close();
         }
-        catch (Exception exc)
+        catch (IOException exc)
+        {
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
         {
             throw new DataScriptException(exc);
         }

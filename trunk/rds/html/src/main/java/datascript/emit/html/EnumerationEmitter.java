@@ -41,6 +41,7 @@ package datascript.emit.html;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,7 @@ import datascript.ast.EnumItem;
 import datascript.ast.EnumType;
 import datascript.ast.TypeInterface;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 
@@ -95,7 +97,11 @@ public class EnumerationEmitter extends DefaultHTMLEmitter
             tpl.process(this, writer);
             writer.close();
         }
-        catch (Exception exc)
+        catch (IOException exc)
+        {
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
         {
             throw new DataScriptException(exc);
         }

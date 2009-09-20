@@ -38,8 +38,19 @@
 package datascript.emit.html;
 
 import datascript.antlr.DataScriptParserTokenTypes;
-import datascript.ast.*;
-import datascript.emit.html.ExpressionEmitter;
+import datascript.ast.ArrayType;
+import datascript.ast.BitFieldType;
+import datascript.ast.CompoundType;
+import datascript.ast.ConstType;
+import datascript.ast.EnumType;
+import datascript.ast.Expression;
+import datascript.ast.Field;
+import datascript.ast.StdIntegerType;
+import datascript.ast.StringType;
+import datascript.ast.Subtype;
+import datascript.ast.TypeInstantiation;
+import datascript.ast.TypeInterface;
+import datascript.ast.TypeReference;
 
 /**
  * @author HWellmann

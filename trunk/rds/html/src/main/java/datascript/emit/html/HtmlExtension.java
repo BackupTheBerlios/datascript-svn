@@ -51,17 +51,17 @@ import datascript.tools.Parameters;
 
 public class HtmlExtension implements Extension
 {
-    private Parameters params = null;
+    private Parameters parameters;
 
     /* (non-Javadoc)
      * @see datascript.tools.Extension#generate(datascript.antlr.DataScriptEmitter, datascript.ast.TokenAST)
      */
     public void generate(DataScriptEmitter emitter, TokenAST rootNode)
     {
-        if (params == null)
+        if (parameters == null)
             throw new DataScriptException("No parameters set for HtmlBackend!");
 
-        if (!params.argumentExists("-doc"))
+        if (!parameters.argumentExists("-doc"))
         {
             System.out.println("emitting html documentation is disabled.");
             return;
@@ -69,7 +69,7 @@ public class HtmlExtension implements Extension
 
         System.out.println("emitting html documentation");
 
-        ContentEmitter htmlEmitter = new ContentEmitter(params.getDocPathName());
+        ContentEmitter htmlEmitter = new ContentEmitter(parameters.getDocPathName());
 
         // emit frameset
         htmlEmitter.emitFrameset();
@@ -83,12 +83,12 @@ public class HtmlExtension implements Extension
             emitter.setEmitter(htmlEmitter);
             emitter.root(rootNode);
             // emit list of packages
-            PackageEmitter packageEmitter = new PackageEmitter(params.getDocPathName());
+            PackageEmitter packageEmitter = new PackageEmitter(parameters.getDocPathName());
             emitter.setEmitter(packageEmitter);
             emitter.root(rootNode);
 
             // emit list of classes
-            OverviewEmitter overviewEmitter = new OverviewEmitter(params.getDocPathName());
+            OverviewEmitter overviewEmitter = new OverviewEmitter(parameters.getDocPathName());
             emitter.setEmitter(overviewEmitter);
             emitter.root(rootNode);
         }
@@ -117,7 +117,7 @@ public class HtmlExtension implements Extension
      */
     public void setParameters(Parameters params)
     {
-        this.params = params;
+        this.parameters = params;
     }
 
 }

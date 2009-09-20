@@ -39,6 +39,7 @@
 package datascript.emit.html;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +51,7 @@ import datascript.emit.DefaultEmitter;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 abstract public class DefaultHTMLEmitter extends DefaultEmitter
 {
@@ -57,17 +59,17 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
 
     protected static final String HTML_EXT = ".html";
 
-    protected static Configuration cfg = null;
+    protected static Configuration cfg;
 
-    protected final List<CompoundEmitter> containers = new ArrayList<CompoundEmitter>();
+    protected List<CompoundEmitter> containers = new ArrayList<CompoundEmitter>();
 
     protected File directory;
 
     protected TypeInterface currentType;
 
-    private String currentFolder = "/";
-
     protected Package currentPackage;
+
+    private String currentFolder = "/";
 
     public DefaultHTMLEmitter()
     {
@@ -151,7 +153,11 @@ abstract public class DefaultHTMLEmitter extends DefaultEmitter
             tpl.process(this, writer);
             writer.close();
         }
-        catch (Exception exc)
+        catch (IOException exc)
+        {
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
         {
             throw new DataScriptException(exc);
         }

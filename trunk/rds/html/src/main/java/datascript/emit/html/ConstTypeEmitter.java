@@ -40,6 +40,7 @@
 package datascript.emit.html;
 
 import java.io.File;
+import java.io.IOException;
 
 import datascript.ast.CompoundType;
 import datascript.ast.ConstType;
@@ -47,6 +48,7 @@ import datascript.ast.Container;
 import datascript.ast.DataScriptException;
 import datascript.ast.TypeInterface;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 
 /**
@@ -86,7 +88,11 @@ public class ConstTypeEmitter extends DefaultHTMLEmitter
             tpl.process(this, writer);
             writer.close();
         }
-        catch (Exception exc)
+        catch (IOException exc)
+        {
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
         {
             throw new DataScriptException(exc);
         }

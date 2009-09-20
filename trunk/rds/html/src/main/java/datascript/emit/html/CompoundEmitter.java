@@ -39,6 +39,7 @@
 package datascript.emit.html;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +63,7 @@ import datascript.ast.TypeInterface;
 import datascript.ast.TypeReference;
 import datascript.ast.UnionType;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 public class CompoundEmitter extends DefaultHTMLEmitter
 {
@@ -131,9 +133,9 @@ public class CompoundEmitter extends DefaultHTMLEmitter
 
     public static class FieldEmitter
     {
+        private static TypeNameEmitter tne = new TypeNameEmitter();
         private final Field field;
 
-        private static final TypeNameEmitter tne = new TypeNameEmitter();
 
         public FieldEmitter(Field f)
         {
@@ -241,7 +243,11 @@ public class CompoundEmitter extends DefaultHTMLEmitter
             tpl.process(this, writer);
             writer.close();
         }
-        catch (Exception exc)
+        catch (IOException exc)
+        {
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
         {
             throw new DataScriptException(exc);
         }
@@ -269,7 +275,11 @@ public class CompoundEmitter extends DefaultHTMLEmitter
             tpl.process(this, writer);
             writer.close();
         }
-        catch (Exception exc)
+        catch (IOException exc)
+        {
+            throw new DataScriptException(exc);
+        }
+        catch (TemplateException exc)
         {
             throw new DataScriptException(exc);
         }

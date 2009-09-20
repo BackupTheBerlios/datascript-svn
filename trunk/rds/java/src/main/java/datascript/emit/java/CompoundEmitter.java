@@ -265,14 +265,14 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
 
         public String getActualParameterList()
         {
-            StringBuilder buffer = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
             TypeInterface elType = array.getElementType();
             if (elType instanceof TypeInstantiation)
             {
                 TypeInstantiation inst = (TypeInstantiation) elType;
-                appendArguments(buffer, inst);
+                appendArguments(builder, inst);
             }
-            return buffer.toString();
+            return builder.toString();
         }
 
         public String getLengthExpr()
@@ -282,26 +282,26 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
 
         public String getCurrentElement()
         {
-            StringBuilder buffer = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
             TypeInterface elType = array.getElementType();
             if (elType instanceof EnumType)
             {
                 EnumType enumType = (EnumType) elType;
                 IntegerType baseType = (IntegerType) enumType.getBaseType();
-                buffer.append(elType.getName());
-                buffer.append(".toEnum(");
-                readIntegerValue(buffer, baseType);
-                buffer.append(")");
+                builder.append(elType.getName());
+                builder.append(".toEnum(");
+                readIntegerValue(builder, baseType);
+                builder.append(")");
             }
             else
             {
-                buffer.append("new ");
-                buffer.append(getElType());
-                buffer.append("(__in, __cc");
-                buffer.append(getActualParameterList());
-                buffer.append(")");
+                builder.append("new ");
+                builder.append(getElType());
+                builder.append("(__in, __cc");
+                builder.append(getActualParameterList());
+                builder.append(")");
             }
-            return buffer.toString();
+            return builder.toString();
         }
 
         public boolean getEqualsCanThrowExceptions()
