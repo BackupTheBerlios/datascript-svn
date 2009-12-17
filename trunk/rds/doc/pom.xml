@@ -50,6 +50,24 @@
           <hyphenateVerbatim>true</hyphenateVerbatim>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>assembly-with-obr</id>
+            <phase>pre-site</phase>
+            <goals>
+              <goal>attached</goal>
+            </goals>
+            <configuration>
+              <finalName>rds-doc-${rds.version}</finalName>
+              <descriptors>
+                <descriptor>src/assembly/doc.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 

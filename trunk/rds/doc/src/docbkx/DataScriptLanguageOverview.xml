@@ -10,7 +10,7 @@
 
       <surname>Wellmann</surname>
 
-      <email>HWellmann@harmanbecker.com</email>
+      <email>harald.wellmann@harman.com</email>
     </author>
 
     <affiliation>
@@ -112,6 +112,17 @@
           <para>Added signed bitfields.</para>
         </revdescription>
       </revision>
+
+      <revision>
+        <revnumber>1.1</revnumber>
+
+        <date>17 December 2009</date>
+
+        <revdescription>
+          <para>Added Quick Reference. Changed references from SourceForge to
+          BerliOS.</para>
+        </revdescription>
+      </revision>
     </revhistory>
   </articleinfo>
 
@@ -139,7 +150,7 @@
 
       <para>The present document describes a DataScript dialect supported by
       our implementation called <literal>rds</literal> (short for Relational
-      DataScript), which is available from SourceForge <xref linkend="rds" />
+      DataScript), which is available from BerliOS <xref linkend="rds" />
       under a BSD License. This Language Overview is more of a User's Manual
       than a formal language specification.</para>
     </section>
@@ -290,8 +301,7 @@
         of the given length. Thus, <literal>int:16</literal> and
         <literal>int16</literal> are equivalent. The value range of
         <literal>int:n</literal> is
-        -2<superscript>n-1</superscript>..2<superscript>n-1</superscript>-1
-        </para>
+        -2<superscript>n-1</superscript>..2<superscript>n-1</superscript>-1</para>
 
         <para>Signed bitfield types of variable length bit field types can be
         specified as
@@ -1773,7 +1783,8 @@ Block
     <biblioentry id="rds">
       <abbrev>rds</abbrev>
 
-      <citetitle><ulink url="http://dstools.sourceforge.net">Relational
+      <citetitle><ulink
+      url="http://developer.berlios.de/projects/datascript">Relational
       DataScript</ulink></citetitle>
     </biblioentry>
 
