@@ -1,0 +1,130 @@
+package label;
+
+Tile
+{
+    uint16         offset1;
+    uint16         offset2;
+    uint16         offset3;
+
+offset1:    
+    DataBlock      block1;
+
+offset2:
+    DataBlock      block2;
+
+offset3:
+    DataBlock      block3;
+};
+
+DataBlock
+{
+    int32         a;
+    int16         b;
+};
+
+
+// ---------------------------------------------------------------------------
+
+TileWithHeader
+{
+    TileHeader     header;
+
+header.offset1:    
+    DataBlock      b1;
+
+header.offset2:
+    DataBlock      b2;
+
+header.offset3:
+    DataBlock      b3;
+};
+
+TileHeader
+{
+    uint16         offset1;
+    uint16         offset2;
+    uint16         offset3;
+};
+
+// ---------------------------------------------------------------------------
+
+TileWithOptionalBlocks
+{
+    TileHeader2    header;
+
+align(8):
+header.offset1:    
+    LinkBlock      b1   if header.hasBlock1 == 1;
+
+header.offset2:
+    DataBlock      b2   if header.hasBlock2 == 1;
+
+header.offset3:
+    DataBlock      b3   if header.hasBlock3 == 1;
+};
+
+TileHeader2
+{
+    bit:1          hasBlock1;
+    bit:1          hasBlock2;
+    bit:1          hasBlock3;
+
+align(8):    
+    uint16         offset1   if hasBlock1 == 1;
+    uint16         offset2   if hasBlock2 == 1;
+    uint16         offset3   if hasBlock3 == 1;
+};
+
+
+LinkBlock
+{
+    uint32         linkOffset;
+    uint16         numAttrs;
+    Attributes     attrs[numAttrs];
+    
+linkOffset:    
+    uint16 	   numLinks;
+    Link           links[numLinks];
+};
+
+Link
+{
+    int32          linkId;
+    uint16         attrIndex;
+    ExtraAttr      extra;
+    
+    function Attributes attr()
+    {
+        return LinkBlock.attrs[attrIndex];
+    }
+};
+
+
+choice ExtraAttr on Link.attr().bla
+{
+    case 17:
+        int32          extra;
+        
+    case 43:
+        int16          extraShort;
+    
+    default:
+        int8           extraByte;        
+};
+
+PrefixBlock
+{
+    int32         p;
+    int16         q;
+};
+
+Attributes
+{
+    int16          foo;
+    int16          bla;
+};
+
+  
+
+
+

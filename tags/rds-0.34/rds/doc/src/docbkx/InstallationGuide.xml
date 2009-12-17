@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<article>
+  <title>Installing and Building Relational DataScript (rds)</title>
+
+  <articleinfo>
+    <author>
+      <firstname>Harald</firstname>
+
+      <surname>Wellmann</surname>
+
+      <email>harald.wellmann@harman.com</email>
+    </author>
+
+    <affiliation>
+      <orgname>Harman/Becker Automotive Systems</orgname>
+    </affiliation>
+
+    <revhistory>
+      <revision>
+        <revnumber>0.1</revnumber>
+
+        <date>28 September 2006</date>
+
+        <revdescription>
+          <para>Initial version describing the build process.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.2</revnumber>
+
+        <date>3 December 2006</date>
+
+        <revdescription>
+          <para>Installation description added. Updated the Building from
+          Source section.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.3</revnumber>
+
+        <date>2 February 2007</date>
+
+        <revdescription>
+          <para>Corrected Jar files for Ant build. Additions for Windows XP.
+          Corrected SVN repository URL.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.4</revnumber>
+
+        <date>8 February 2007</date>
+
+        <revdescription>
+          <para>Changes for Java 1.6.0. Added -doc option.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.5</revnumber>
+
+        <date>23 May 2007</date>
+
+        <revdescription>
+          <para>Java 1.6.0 is now default. Adapted to rds 0.8. New command
+          line options. Renamed dstools-antlr to rds. Hints on Linux support.
+          Remark on Eclipse dependency.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.6</revnumber>
+
+        <date>28 Jun 2007</date>
+
+        <revdescription>
+          <para>Added new options -ext and -xml.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.7</revnumber>
+
+        <date>21 Sep 2007</date>
+
+        <revdescription>
+          <para>Adapted to rds 0.14. JET is no longer used. Support for
+          Eclipse 3.3 and Linux.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.8</revnumber>
+
+        <date>29 November 2007</date>
+
+        <revdescription>
+          <para>Adapted to rds 0.18. -ext option dropped. -java_e option
+          documented. New section on stand-alone Ant build.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>0.9</revnumber>
+
+        <date>27 March 2009</date>
+
+        <revdescription>
+          <para>Adapted to rds 0.30. New repository location at BerliOS. OSGi
+          bundles. Maven builds.</para>
+        </revdescription>
+      </revision>
+
+      <revision>
+        <revnumber>1.0</revnumber>
+
+        <date>17 December 2009</date>
+
+        <revdescription>
+          <para>Adapted to rds 0.34. New option
+          <literal>-ignorePragma</literal>. Maven 2.2.1.</para>
+        </revdescription>
+      </revision>
+    </revhistory>
+  </articleinfo>
+
+  <section>
+    <title>Introduction</title>
+
+    <section>
+      <title>Purpose</title>
+
+      <para>This is a short guide for installing and running Relational
+      DataScript, for getting the source from a release package or from
+      Subversion and for building the tools from source.</para>
+    </section>
+
+    <section>
+      <title>Package Overview</title>
+
+      <para>This guide relates to the packages available from the
+      <literal><ulink
+      url="http://datascript.berlios.de">datascript</ulink></literal> project
+      at BerliOS. There are the following packages:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><literal>rds-bin</literal>: Binary distribution of Relational
+          DataScript, a DataScript parser and Java code generator, including
+          relational extensions and HTML generation.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>rds-src</literal>: The source package corresponding
+          to <literal>rds-bin</literal>.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Platform Support</title>
+
+      <para>The development platform for DataScript is Windows XP, but the
+      packages should run on all platforms supporting a Java SE 1.6.0. To use
+      the relational extensions, you need a JDBC driver for SQLite which
+      depends on a platform-specific native library. <literal>rds</literal>
+      itself, however, does not use native code. For convenience, a JDBC
+      driver and the native libraries for Windows and Linux are included in
+      the <literal>rds-bin</literal> and <literal>rds-source</literal>
+      packages.</para>
+
+      <para>This guide uses Windows syntax for command lines and path names,
+      trusting in the ability of Unix users to silently make the necessary
+      changes.</para>
+
+      <para>Java versions 1.5.x or earlier are not compatible due to the use
+      of generics and of <literal>java.util.ServiceLoader</literal> in the
+      <literal>rds</literal> implementation. The JAR files provided in the
+      <literal>rds-bin</literal> package are compiled with Java SE
+      1.6.0.</para>
+
+      <para><literal>rds</literal> also runs under Linux (tested on kubuntu
+      9.04 and Debian).</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Installing and Running</title>
+
+    <section>
+      <title>Stand-alone Use</title>
+
+      <para>To install Relational DataScript, download the
+      <literal>rds-bin</literal> package and unzip it to an installation
+      directory <literal>%RDS_HOME%</literal>. <literal>rds</literal> is
+      implemented in Java. You need a Java VM 1.6.0 or higher to run
+      it.</para>
+
+      <para><literal>The *.rds.core.* </literal>library is an executable Java
+      Archive which can be run by</para>
+
+      <programlisting>java -jar %RDS_HOME%\de.berlios.datascript.rds.core_0.34.0.jar 
+[-c] [-doc <emphasis>&lt;HTML path&gt;</emphasis>] [-pkg <emphasis>&lt;output package&gt;</emphasis>] [-xml [<emphasis>&lt;file name&gt;</emphasis>]]
+[-debug]
+[-ignorePragma]
+[-out <emphasis>&lt;output path&gt;</emphasis>] [-src <emphasis>&lt;source path&gt;</emphasis>] <emphasis>
+&lt;input file&gt;</emphasis></programlisting>
+
+      <para><emphasis>&lt;input file&gt;</emphasis> is an absolute or relative
+      file name for the top-level DataScript package to be parsed. If this
+      package contains imports, e.g. <literal>import foo.bar.bla.*</literal>,
+      <literal>rds</literal> will convert this package name to a relative path
+      name and try to read the imported package from
+      <literal>foo\bar\bla.ds</literal>.</para>
+
+      <para>The <literal>-src</literal> option defines the root directory for
+      the input file and all imported packages. If this option is missing, the
+      default value is the current working directory. Example: If the source
+      path is <literal>C:\datascript</literal> and the input file is
+      <literal>com\acme\foo.ds</literal>, <literal>rds</literal> will try
+      parsing <literal>C:\datascript\com\acme\foo.ds</literal>. If
+      <literal>foo.ds</literal> contains the declaration <literal>import
+      com.acme.bar.*</literal>, <literal>rds</literal> will try parsing
+      <literal>C:\datascript\com\acme\bar.ds</literal>.</para>
+
+      <para>Currently, only one source directory can be specified. A list of
+      directories as in the Java <literal>CLASSPATH</literal> is
+      <emphasis>not</emphasis> supported.</para>
+
+      <para>Similarly, the <literal>-out</literal> option defines the root
+      directory for the generated Java source files. Specifying <literal>-out
+      C:\java</literal> in our example, we will find the generated code in
+      <literal>C:\java\com\acme\foo</literal> and
+      <literal>C:\java\com\acme\bar</literal>.</para>
+
+      <para>The <literal>-pkg</literal> option specifies the Java package name
+      for types that do not belong to a DataScript package. The files will be
+      created in a subdirectory <emphasis>&lt;output package&gt;</emphasis> of
+      the output path. Any DataScript source file should contain a package
+      declaration, so this option is rather obsolete.</para>
+
+      <para>If the <literal>-doc</literal> option is present, HTML
+      documentation will be generated into the specified path.</para>
+
+      <para>If the <literal>-xml</literal> option is present,
+      <literal>rds</literal> will dump an XML representation of the syntax
+      tree of all input files to <emphasis>&lt;output
+      path&gt;</emphasis><literal>\datascript.xml</literal>. The default name
+      of this output file can be overridden by supplying a file name argument
+      to the <literal>-xml</literal> option.</para>
+
+      <para>If the <literal>-c</literal> option is present,
+      <literal>rds</literal> checks the structure of its internal syntax tree,
+      which may be useful for <literal>rds</literal> devlopers, but certainly
+      not for <literal>rds</literal> users.</para>
+
+      <para>If the <literal>-debug</literal> option is present, the
+      <literal>equals()</literal> methods generated by the Java extension will
+      throw an exception instead of returning false when the argument is not
+      equal. This is mainly intended as a debugging aid for easier detection
+      of a mismatch in a complex type hierarchy.</para>
+
+      <para>If the <literal>-ignorePragma</literal> option is set, any
+      <literal>sql_pragma</literal> definitions from DataScript will not be
+      passed into the generated code. This enables the application to set
+      pragma values at runtime, overriding the <literal>sql_pragma</literal>
+      definitions. The <literal>sql_pragma</literal> feature is likely to be
+      dropped in future rds releases.</para>
+
+      <para>The <literal>-ext</literal> option specifies the path for
+      <literal>rds</literal> extension libraries. <literal>rds</literal> will
+      load and execute all extensions in this directory. The default value of
+      this option is <literal>ext</literal>. If you do not run
+      <literal>rds</literal> from <literal>%RDS_HOME%</literal>, you will have
+      to set <literal>-ext</literal> explicitly. Each code generator (for
+      Java, HTML, XML and optionally C++) is implemented as an extension. If
+      <literal>rds</literal> cannot find any extensions, it will not do
+      anything except parsing the input.</para>
+
+      <para>The Java code generated by <literal>rds</literal> depends on the
+      classes contained in
+      <literal>de.berlios.datascript.rds.runtime_&lt;version&gt;.jar</literal>.
+      To use <literal>rds</literal>-generated code in some other project, you
+      will have to add this library to its class path or to include the
+      classes from this JAR into some other JAR of your project.</para>
+    </section>
+
+    <section>
+      <title>Embedded Use</title>
+
+      <para>Relational DataScript and its dependencies are delivered as OSGi
+      bundles ready to be used in Eclipse or any OSGi framework. The main
+      class is <literal>datascript.tools.DataScriptTool</literal>.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Building from Source</title>
+
+    <para><literal>rds</literal> is built with Maven 2.2.1.</para>
+
+    <para>Using any Subversion client, fetch the <literal>rds</literal>
+    sources from
+    <literal>https://svn.berlios.de/svnroot/repos/datascript/trunk</literal>
+    to your local workspace. From the root of this workspace, invoke Maven as
+    follows:</para>
+
+    <programlisting>set MAVEN_OPTS=-Xmx200M
+cd maven-sourcebundle-plugin
+mvn clean install
+cd ..\sqlite
+mvn clean install
+cd ..\rds
+mvn -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 clean install pre-site</programlisting>
+
+    <para>The <literal>pre-site</literal> target builds the documentation and
+    can be omitted if you are only interested in the binary package, which can
+    be found in <literal>rds/assembly/target</literal> when the build has
+    completed. The proxy options are only required for resolving XML schemas.
+    You can omit them if you do not wish to build the documentation or if you
+    have direct access to the internet.</para>
+
+    <para>The build creates two binary packages:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><literal>assembly/target/rds-bin-0.34.zip:</literal> Binary
+        JARs, including third-party dependencies and source JARs</para>
+      </listitem>
+
+      <listitem>
+        <para><literal>doc/target/rds-doc-0.34.zip:</literal> Documentation in
+        PDF and HTML formats.</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</article>
