@@ -1,0 +1,1202 @@
+//////////////////////////////////////////////////////////////////////////
+// PSF Standardization Initiative
+// WP1.4 Physical Data Model
+// Basic Map Display Building Block
+// 
+// 0.1  20060713        HWellmann       Initial draft
+//
+// 0.2  20060929        HWellmann       Enhanced coordinate compression
+//                                      Explicit feature type values
+//////////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////////
+//
+// Part 1: Tile Access and Overall Data
+//
+// The types in this section are preliminary and depend on the decision
+// regarding the use of an SQL database.
+//
+// We need an access method to locate a tile by its ID, which could simply be
+// an SQL table with an index. If we do not use a table, the structure defined 
+// below is too inefficient and needs to be improved, because it would require 
+// a sequential search by ID.
+//
+//////////////////////////////////////////////////////////////////////////
+
+
+/**
+ * Top level type of the Basic Map Display Building Block.
+ */
+BasicMapDisplay
+{
+    /** 
+     * Number of levels in this building block according to the global
+     * tiling scheme. The default value is 14, for levels 0..13.
+     */
+    uint8                               numLevels;
+    
+    /**
+     * List of level headers. levelHeader[i] is the header for level i.
+     * An empty level i has a header with each value set to 0.
+     */
+    LevelHeader                         levelHeaders[numLevels];
+
+    /**
+     * List of level data. levels[i] is the data for level i. The level
+     * depends on the level header at the corresponding index position.
+     */
+    LevelContent(levelHeaders[levels$index])    levels[numLevels];
+};
+
+/**
+ * The content of each level is a list of tiles.
+ */
+LevelContent(LevelHeader header)
+{
+    /**
+     * List of tiles for a given level. The length of the list is
+     * indicated by the level header.
+     */ 
+    Tile                tile[header.numTiles];
+};
+
+/**
+ * The level header contains information that applies to all tiles of the
+ * given level.
+ */
+LevelHeader
+{
+    /** 
+     * Minimum recommended map scale (1 : scaleMin) for the current level. 
+     */
+    int32               scaleMin;
+
+    /** 
+     * Minimum recommended map scale (1 : scaleMax) for the current level. 
+     */
+    int32               scaleMax;
+
+    /**
+     * Number of subscales for this level.
+     */         
+    uint8               numSubscales : 0 <= numSubscales && numSubscales <= 7;
+
+    /**
+     * Subscale values for this level. The values are between scaleMin
+     * and scaleMax and must be in ascending order.
+     * 
+     * If a feature has the subscale attribute i in the range 0..numSubscales, 
+     * the rendering engine should suppress this feature if the map scale 
+     * is less than subscale[i-1]. Thus, a feature with subscale index 0
+     * will never be suppressed.
+     */
+    uint32              subscale[numSubscales];
+    
+    /**
+     * All coordinate values in this level are to be shifted by coordShift
+     * bits, i.e. to be multiplied by 2^coordShift.
+     */
+    uint8               coordShift;
+    
+    /**
+     * Number of tiles in this level.
+     */
+    uint32              numTiles;
+};
+
+
+/**
+ * A tile is composed of header information and a list of map features.
+ */
+Tile
+{
+    /** Header information, valid for all features. */  
+    TileHeader          header;
+    
+    /** Map features and attributes. */
+    TileContent(header) content;
+};
+
+
+/**
+ * Header for a tile with data relevant to all features in that tile.
+ */
+TileHeader
+{
+    /** Tile id according to the global tiling scheme. */
+    int32               tileId;
+    
+    /** Default coordinate width for this tile. */
+    uint8               coordWidth;
+    
+    /** Compression method to be used in this tile. */
+    CoordCompression    compression;
+    
+    /** Offset of attribute table from start of tile. */
+    uint32              attrOffset;
+    
+    /** Size of attribute table. */
+    uint32              attrSize;
+};
+
+
+//////////////////////////////////////////////////////////////////////////
+// 
+// Part 2: Tile Content
+//
+// The following definitions are independent of the SQL issue. If an SQL
+// database is used, they specify the binary content of a BLOB. (Some of
+// the header attributes may be moved to this type, and the tileId will be
+// used as key.)
+//
+//////////////////////////////////////////////////////////////////////////
+
+/**
+ * Tile content for a given tile, identified by the header.
+ * @param header        header data for the current tile
+ */
+TileContent(TileHeader header)
+{
+    /** Number of area features. */     
+    uint16                              numAreas;       
+    
+    /** List of area features. */
+    AreaFeature(header)                 areas[numAreas];
+
+    /** Number of area features. */     
+    uint16                              numLines;       
+
+    /** List of line features. */
+    LineFeature(header)                 lines[numLines];
+
+    /** Number of point features. */    
+    uint16                              numPoints;      
+
+    /** List of point features. */
+    PointFeature(header)                points[numPoints];
+
+    /**
+     * Attribute table for the current tile.
+     */ 
+header.attrOffset:
+    AttributeTable(header.attrSize)     attrTable;              
+};
+
+/**
+ * Indicates the bit-level compression methods to be applied to coordinates of 
+ * features in the current tile.
+ */
+enum uint8 CoordCompression
+{
+    /** No compression. */      
+    COMPRESSION_NONE      = 0,
+    
+    /** The compression method is indicated per feature. */
+    COMPRESSION_VARIABLE  = 1
+};
+
+/**
+ * Point feature types.  
+ * The value sets for point, line and area feature types
+ * must be disjoint.
+ */
+enum uint8 PointFeatureType
+{
+    POINT_CITY_CENTRE           = 0x00,
+    POINT_CITY_DISTRICT_CENTRE  = 0x01,
+    POINT_HAMLET                = 0x02
+};
+
+/**
+ * Line feature types.  
+ * The value sets for point, line and area feature types
+ * must be disjoint.
+ * To save space for road feature attributes, we encode the 
+ * functional road class in the line feature type.
+ * @see RoadAttributes
+ */
+enum uint8 LineFeatureType
+{
+    LINE_ROAD_FRC_0             = 0x20,
+    LINE_ROAD_FRC_1             = 0x21,
+    LINE_ROAD_FRC_2             = 0x22,
+    LINE_ROAD_FRC_3             = 0x23,
+    LINE_ROAD_FRC_4             = 0x24,
+    LINE_ROAD_FRC_5             = 0x25,
+    LINE_ROAD_FRC_6             = 0x26,
+    LINE_ROAD_FRC_7             = 0x27,
+    LINE_BORDER                 = 0x30,
+    LINE_WATERWAY               = 0x31,
+    LINE_RAILWAY                = 0x32,
+    LINE_CONTOUR                = 0x33,
+    LINE_TIME_ZONE              = 0x34
+};
+
+/**
+ * Area feature types.  
+ * The value sets for point, line and area feature types
+ * must be disjoint.
+ */
+enum uint8 AreaFeatureType
+{
+    AREA_WATER                  = 0x60,
+    AREA_ADMIN                  = 0x61,
+    AREA_POSTAL_DISTRICT        = 0x62,
+    AREA_PARK                   = 0x63,
+    AREA_BUILT_UP               = 0x64,
+    AREA_INDUSTRIAL             = 0x65,
+    AREA_BUILDING               = 0x66,
+    AREA_PEDESTRIAN             = 0x67,
+    AREA_TRAFFIC                = 0x68,
+    AREA_WOODLAND               = 0x69,
+    AREA_AIRPORT                = 0x6A,
+    AREA_RUNWAY                 = 0x6B,
+    AREA_HOSPITAL               = 0x6C,
+    AREA_CEMETARY               = 0x6D
+};
+
+/**
+ * An area feature has a geometry that may be composed of multiple faces.
+ * The total number of vertices is 3 or more. Faces are not modelled explicitly
+ * as datatypes. A face is simply a list of successive vertices. The face
+ * category and the last vertex of each face are indicated by flags.
+ */
+AreaFeature(TileHeader header)
+{
+    /** 
+     * Number of vertices of the area feature. This is the total number 
+     * for all faces. The number of vertices per face is not encoded
+     * explicitly.
+     * For numbers larger than 15, this value is set to 1, and the actual
+     * number of vertices is encoded in the optional field extNumVertices.
+     */
+    bit:4                               numVertices;
+    
+    /**
+     * Scale sublevel for this feature.
+     * @see LevelHeader
+     */
+    bit:4                               scaleSublevel;
+    
+    /**
+     * Administrative level of this area.
+     */
+    bit:4                               adminLevel;         
+    /**
+     * Method for obtaining the name for this feature.
+     */
+    NameSource                          nameSource;
+    
+    /**
+     * Additional data for obtaining the name for this feature.
+     */
+    NameInfo(nameSource)                nameInfo;
+    
+    /**
+     * Extended number of vertices. This field is present only if 
+     * the feature has more than 15 vertices.
+     */
+    NumberOfVertices                    extNumVx if numVertices == 1;
+    
+    /**
+     * Compressed list of vertex coordinates. The default coordinate width
+     * and the actual number of vertices are passed to the child type.
+     */
+    AreaCoordXY(header,
+            (numVertices != 1) 
+                ? numVertices 
+                : (extNumVx.numVx8 == 255) 
+                  ? extNumVx.numVx16
+                  : extNumVx.numVx8)            
+                                        coord;    
+};
+
+/**
+ * Compressed list of vertex coordinates for an area feature.
+ *
+ * Each polygon is specified by an ordered sequence of at least 3 vertices. 
+ * For the last vertex of a polygon, the polygonFlag of this vertex is 1.
+ * The total number of vertices in all polygons is a parameter of this type.
+ * The number of vertices per polygon can be derived from the polygon flag.
+ * 
+ * The polygonFlag of the first two vertices determine the polygon type.
+ * type = 2*v0.polygonFlag + v1.polygonFlag.
+ *
+ * All polygons shall have positive orientation. In the (x,y) plane, 
+ * positive orientation is counter-clockwise, e.g. (0,0), (1,0), (0,1).
+ *
+ * (Orientation is important for surfaces embedded into 3D space to distinguish 
+ * front and back, or inside and outside. Any face of a polyhedron shall have 
+ * positive orientation seen from the outside.)
+ *
+ * Let v0, v1, v2, ..., vk be the sequence of vertices.
+ * 
+ * Convex polygon:
+ *
+ * The edges of the polygon are (v0, v1), (v1, v2), ..., (vk-1, vk), (vk, v0). 
+ *
+ * vi.isPseudoEdge == true indicates that (vi, vi+1) is a pseudo-edge, 
+ * where vk+1 is identified with v0.
+ *
+ *
+ * Triangle strip:
+ *
+ * A triangle strip is composed of k-1 triangles (v0, v1, v2), (v2, v1, v3), 
+ * (v3, v4, v5), (v5, v4, v6) and so on.
+ *
+ * Each of these triangles has positive orientation due to the reversed vertex 
+ * order in every other triangle.
+ *
+ * The edges (v1, v2), (v2, v3), ..., (vk-2, vk-1) are pseudo-edges by 
+ * construction.
+ * 
+ * vi.isPseudoEdge indicates that the following edge is a pseudo-edge:
+ *
+ * (v0, v1)     for i = 0
+ * (vk-1, vk)   for i = k
+ * (vi-1, vi+1) otherwise
+ *
+ *
+ * Triangle fan:
+ *
+ * A triangle fan is composed of k-1 triangles (v0, v1, v2),
+ * (v0, v2, v3), (v0, v3, v4),  and so on.
+ *
+ * Each of these triangles has positive orientation.
+ *
+ * The edges (v0, v2), (v0, v3), ..., (v0, vk-1) are pseudo-edges by 
+ * construction.
+ * 
+ * vi.isPseudoEdge indicates that the following edge is a pseudo-edge:
+ *
+ * (vi, vi+1) for i < k
+ * (vk, v0)   for i = k
+ *
+ * <h2>Relative and absolute coordinates</h2>
+ *
+ * In general, vertex coordinates are relative to the anchor point. 
+ * The anchor point coordinates are relative to the south-west tile corner. 
+ * Within the tile, coordinates are shifted by coordShift as indicated in the 
+ * LevelHeader.
+ * 
+ * All in all, we have
+ * 
+ * abs.x = corner.x + ((anchor.x + v.x) << coordShift)
+ * abx.y = corner.y + ((anchor.y + v.y) << coordShift)
+ * 
+ * If header.coordWidth == 32, the anchor coordinates are
+ * absolute, so that
+ *
+ * abs.x = anchor.x + (v.x << coordShift)
+ * abs.y = anchor.y + (v.y << coordShift)
+ */
+AreaCoordXY(TileHeader header, int32 numPoints)
+{
+    /**
+     * The encoding method for coordinates of this feature.
+     */         
+    CoordinateEncoding                          encoding 
+        if header.compression == COMPRESSION_VARIABLE;
+
+    /**
+     * Number of bits to be used for coordinate encoding.
+     */
+    bit:5                                       numBits;
+
+    /**
+     * Anchor point for the current area feature. In general, this point 
+     * is not a vertex of the polygon. It should be the south-west vertex
+     * of the bounding rectangle.
+     */ 
+    CoordXY(header.coordWidth)                  anchor;
+    
+    /**
+     * List of vertices in a variety of encodings.
+     */
+    union Vertices
+    {
+        /** Uncompressed encoding with tile dependent width. */
+        CoordXY(header.coordWidth)              uncompressed[numPoints] 
+            : header.compression == COMPRESSION_NONE;
+
+        /** Compressed encoding with feature dependent width. */
+        AreaCoordXYRelative(numBits)            relative[numPoints]
+            : encoding == COORD_RELATIVE;
+
+        /** Compressed difference encoding with feature dependent width. */
+        AreaCoordXYDiff(numBits, numPoints)     diff
+            : encoding == COORD_DIFF;
+    } vertices;
+};
+
+/**
+ * The geometry of each area feature is decomposed into multiple polygons.
+ * The type of each polygon is indicated by following values.
+ * 
+ * Note that the value is not encoded in one place; it is derived from the
+ * polygonFlag of the first two vertices of each polygon.
+ */
+enum bit:2 PolygonType
+{       
+    CONVEX_POLYGON = 00b,
+    TRIANGLE_STRIP = 01b,
+    TRIANGLE_FAN   = 10b
+};
+
+/**
+ * Explicit encoding of vertex coordinates. All coordinates are positive offsets
+ * with respect to the anchor point defined in AreaCoordXY.
+ * @param numBits       coordinate width (number of bits)
+ */
+AreaCoordXYRelative(uint8 numBits)
+{
+    /** x coordinate (longitude). */
+    bit<numBits>        x;
+
+    /** y coordinate (latitude). */
+    bit<numBits>        y;
+
+    /** 
+     * If true, the edge associated to this vertex is a pseudo-edge.
+     * The assocication depends on the polygon type.
+     * @see AreaCoordXY
+     */
+    bit:1               isPseudo;
+
+    /** 
+     * Indicates the polygon type and the last vertex of a polygon.
+     * @see AreaCoordXY
+     */
+    bit:1               polygonFlag;
+};
+
+
+/**
+ * Vertex list of an area feature with difference encoding of coordinates.
+ * @param numBits       number of bits for the coordinates of the first vertex
+ * @param numVertices   total number of vertices ( >= 3)
+ */
+AreaCoordXYDiff(uint8 numBits, int32 numVertices)
+{
+    /** Number of bits for x coordinates. */
+    bit:5                       nx;
+    
+    /** Number of bits for y coordinates. */
+    bit:5                       ny;
+    
+    /** x coordinate of first vertex v0. */
+    bit<numBits>                x0;
+
+    /** y coordinate of first vertex v0. */
+    bit<numBits>                y0;
+
+    /** 
+     * If true, the edge associated to this vertex is a pseudo-edge.
+     * The association depends on the polygon type.
+     * @see AreaCoordXY
+     */
+    bit:1                       isPseudo;
+
+    /** 
+     * Indicates the polygon type and the last vertex of a polygon.
+     * @see AreaCoordXY
+     */
+    bit:1                       faceFlag;
+
+    /** Remaining vertices v[1], ..., v[numVertices-1]. */
+    AreaCoordXYDiffTail(nx, ny) tail[numVertices-1];
+};
+
+/**
+ * Remaining vertices of an area feature in difference encoding.
+ *
+ * The vertex coordinates relative to the anchor are defined recursively
+ * by
+ *
+ * v[i].x = v[i-1].x + (1-2*signX) * dx 
+ * v[i].y = v[i-1].y + (1-2*signY) * dy
+ *
+ * @todo When DataScript support signed and unsigned bitfields,
+ * we can replace each pair of sign and absolute value by a single
+ * signed value.
+ */
+AreaCoordXYDiffTail(bit:5 nx, bit:5 ny)
+{
+    /** Sign of x coordinate difference. */
+    bit:1               signX;
+
+    /** Absolute value of x coordinate difference. */
+    bit<nx>             dx;
+
+    /** Sign of y coordinate difference. */
+    bit:1               signY;
+
+    /** Absolute value of y coordinate difference. */
+    bit<ny>             dy;    
+
+    /** 
+     * If true, the edge associated to this vertex is a pseudo-edge.
+     * The assocication depends on the polygon type.
+     * @see AreaCoordXY
+     */
+    bit:1               isPseudo;
+
+    /** 
+     * Indicates the polygon type and the last vertex of a polygon.
+     * @see AreaCoordXY
+     */
+    bit:1               faceFlag;
+};
+
+
+/**
+ * Method for obtaining a name reference for the current feature.
+ */
+enum bit:2 NameSource
+{
+    /** Feature has the same name as the previous one. */
+    SAME_NAME           = 00b,
+    
+    /** Feature has no name at all. */
+    NO_NAME             = 01b,
+    
+    /** 
+     * Name reference for this feature can be obtained by adding the
+     * following value to the name reference of the previous feature.
+     */
+    NAME_REF_OFFSET     = 10b,
+    
+    /**
+     * Name reference follows.
+     */
+    NAME_REF            = 11b
+};
+
+/**
+ * Additional data for obtaining a name reference.
+ * @param source        method for obtaining a name reference.
+ */
+NameInfo(NameSource source)
+{
+    /** Offset with respect to previous name reference. (May be negative!) */   
+    int16   nameRefOffset if source == NAME_REF_OFFSET;
+    
+    /** Explicit name reference. */
+    uint32  nameRef       if source == NAME_REF;
+};
+
+/**
+ * Method for obtaining the attribute values for this feature.
+ */
+enum bit:2 AttributeSource
+{
+    /** Feature has the same attribute values as the previous one. */    
+    ATTR_PREVIOUS       = 00b,
+    
+    /** 
+     * The following uint8 is an index into the attribute table, the
+     * attribute can be read from table[index].
+     */
+    ATTR_INDEX_8        = 01b,
+
+    /** 
+     * The following uint16 is an index into the attribute table, the
+     * attribute can be read from table[index].
+     */
+    ATTR_INDEX_16       = 10b,
+    
+    /**
+     * The following uint32 is the attribute value.
+     */
+    ATTR_VALUE          = 11b
+};
+
+/**
+ * Additional data for obtaining the attribute values for the current
+ * feature.
+ */
+union AttributeInfo(AttributeSource source)
+{
+    /** Index into attribute table. */
+    uint8       index8          : source == ATTR_INDEX_8;
+
+    /** Index into attribute table. */
+    uint16      index16         : source == ATTR_INDEX_16;
+
+    /** Explicit attribute value. */
+    RoadAttributes     attr     : source == ATTR_VALUE;
+};
+
+
+/**
+ * Optional container for storing the number of vertices of a feature, when
+ * this number is too large for 4 bits.
+ */
+NumberOfVertices
+{
+    uint8       numVx8;
+    uint16      numVx16         if numVx8 == 255;
+};
+
+
+/**
+ * A line feature has a geometry that is specified as a sequence of points.
+ * Unlike area features, line features may have z coordinates that indicate
+ * the altitude or at least a relative position of features ("z level").
+ * 
+ * To reduce the data size, the attributes are factored out into a separate
+ * table.
+ */
+LineFeature(TileHeader header)
+{
+    LineFeatureType             type;   
+    /** 
+     * Number of vertices of this feature. If the actual number is larger than
+     * 15, this value is set to 1 and the actual number is stored in extNumVx.
+     */
+    bit:4                       numVertices;
+    
+    /** Method for obtaining the attributes. */
+    AttributeSource             attrSource;
+
+    /** Method for obtaining a name reference. */       
+    NameSource                  nameSource;
+    
+    /** Additional data for obtaining the attributes. */
+    AttributeInfo(attrSource)   attrInfo;
+    
+    /** Additional data for obtaining a name reference. */
+    NameInfo(nameSource)        nameInfo;
+    
+    /** 
+     * Optional field to be used if the number of vertices is larger than 15.
+     * In this case, numVertices is set to 1, and this field must be present.
+     */
+    NumberOfVertices            extNumVx        if numVertices == 1;
+
+    /**
+     * List of vertices for this line feature.
+     */ 
+    LineCoordXYZ(header.coordWidth, 
+            (numVertices > 1) 
+                ? numVertices 
+                : (extNumVx.numVx8 == 255) 
+                  ? extNumVx.numVx16
+                  : extNumVx.numVx8)            
+                                
+                                coord;
+};
+
+/**
+ * Attribute table for features in a tile. The attributes for a feature
+ * are read from a given index in this table. This assumes that the
+ * attributes all fit within 32 bits.
+ */
+AttributeTable(uint32 size)
+{
+    /** Attribute values. */
+    int32   attr[size/4];
+};
+
+/**
+ * Speed category for road features.
+ */
+enum bit:3 SpeedCategory
+{
+    /** No speed limit. */
+    SPEED_CAT_UNLIMITED = 0,
+    
+    /** Speed limit 130 km/h. */
+    SPEED_CAT_130_KMH   = 1,
+
+    /** Speed limit 100 km/h. */
+    SPEED_CAT_100_KMH   = 2,
+
+    /** Speed limit 90 km/h. */
+    SPEED_CAT_90_KMH    = 3,
+
+    /** Speed limit 70 km/h. */
+    SPEED_CAT_70_KMH    = 4,
+
+    /** Speed limit 50 km/h. */
+    SPEED_CAT_50_KMH    = 5,
+
+    /** Speed limit 30 km/h. */
+    SPEED_CAT_30_KMH    = 6,
+
+    /** Speed limit 10 km/h. */
+    SPEED_CAT_10_KMH    = 7    
+};
+
+/**
+ * For properties that depend on the direction of a line feature, this type 
+ * indicates for which of the two directions the property is true.
+ *
+ * The positive direction is starting from vertex 0 toward vertex n-1.
+ */
+enum bit:2 Direction
+{
+    DIRECTION_NONE      = 00b,
+    DIRECTION_POSITIVE  = 01b,
+    DIRECTION_NEGATIVE  = 10b,
+    DIRECTION_BOTH      = 11b
+};
+
+/**
+ * Attributes for road features.
+ */
+RoadAttributes
+{
+    /**
+     * Scale sublevel for this feature.
+     * @see LevelHeader
+     */     
+    bit:3                       scaleSublevel;                  // 3
+
+	/**
+	 * Administrative road class, defined by the local authorities.
+	 * Lower values stand for higher road classes. 0 is always the 
+	 * highest road class (e.g. motorway). The meaning of the 
+	 * individual values 0..7 is country specific.
+	 */
+    bit:3                       adminRoadClass;                 // 6
+    
+    /**
+     * Approximately indicates the allowed maximum speed on this road.
+     */
+    SpeedCategory               speedCat;                       // 9
+    
+    /**
+     * Indicates which direction, if any, of this road is prohibited.
+     * prohibited == POSITIVE means that the road may not be used in 
+     * positive direction, i.e. it is a one-way road in negative direction.
+     * prohibited == BOTH can be used to identify inaccessible roads.
+     */
+    Direction                   prohibited;                     // 11
+    
+    /**
+     * Indicates which direction, if any, of this road is subject to
+     * special charge.
+     * Special charge refers to a flat fee to be paid for an extended
+     * time period, whereas tollRoad refers to a fee per use.
+     */
+    Direction                   specialCharge;                  // 13
+
+    /**
+     * Indicates which direction, if any, of this road is subject to
+     * toll payment.
+     * This attribute refers to a fee per use, whereas the specialCharge
+     * attribute refers to a flat fee to be paid for an extended time period.
+     */
+    Direction                   tollRoad;                       // 15
+    
+    /**
+     * Non-zero iff (part of) the road is a bridge.
+     */
+    bit:1                       isBridge;                       // 16
+
+    /**
+     * Non-zero iff (part of) the road is a bridge.
+     */
+    bit:1                       isTunnel;                       // 17
+
+
+    /**
+     * Non-zero iff the line feature is a ferry connection.
+     */
+    bit:1                       isFerry;                        // 18
+
+    /**
+     * Non-zero iff (part of) the road is for pedestrian use only.
+     */
+    bit:1                       isPedestrian;                   // 19
+
+    /**
+     * Non-zero iff (part of) the road is for pedestrian use only.
+     */
+    bit:1                       isUnpaved;                      // 20
+
+    /**
+     * Non-zero iff (part of) the road is not fully digitised or 
+     * attributed.
+     */
+    bit:1                       isInProcess;                    // 21
+
+    /**
+     * Non-zero iff the road has left-hand traffic (e.g. in UK).
+     */
+    bit:1                       hasLeftHandTraffic;             // 22
+
+    /**
+     * Non-zero iff the slope attribute is set.
+     */
+    bit:1                       hasSlope;                       // 23
+
+	/** Reserved for future use. */
+    bit:1                       unused;                         // 24
+
+	/**
+	 * Maximum slope of the road in percent. Positive and negative
+	 * values indicate ascent and descent, respectively.
+	 */
+    int8                        slope    if hasSlope == 1;      // 32
+};
+
+/**
+ * Method for coordinate encoding.
+ */
+enum bit:3 CoordinateEncoding
+{
+    /** Coordinates are specified as offsets from a given anchor. */
+    COORD_RELATIVE = 0,
+    
+    /** Coordinates are specified as differences to the predecessor. */
+    COORD_DIFF  = 1,
+    
+    /** Special encoding for the 2 vertices of a straight line segment. */
+    COORD_PAIR  = 2
+};
+
+
+/**
+ * Type of z-coordinates for a line feature.
+ */
+enum uint8 ZCoordType
+{
+    /** The feature has no z-coordinates. */    
+    Z_NONE   = 0,
+    
+    /** 
+     * The z-coordinates are z-levels (i.e. very small positive or negative
+     * integers), indicating the relative height of features.
+     */
+    Z_LEVEL  = 1,
+    
+    /**
+     * The z-level indicates the height in meters.
+     * @todo Height above ground or absolute height?
+     */
+    Z_EXACT  = 2
+};
+
+
+/**
+ * Coordinates of a line feature. In contrast to area features, a line feature
+ * may have z-coordinates in addition to x and y-coordinates.
+ */
+LineCoordXYZ(uint8 width, int32 numPoints)
+{
+    /** Encoding method for x and y coordinates. */
+    CoordinateEncoding                          encoding;
+    
+    /** Number of bits for each coordinate. */
+    bit:5                                       numBits;
+    
+    /**
+     * List of vertices in a variety of encodings.
+     */
+    union Vertices
+    {
+        /** Separate encoding of vertices. */
+        LineCoordXYRelative(width, numBits, numPoints)    relative 
+                                                : encoding == COORD_RELATIVE;
+
+        /** Difference encoding of vertices. */
+        LineCoordXYDiff(width, numBits, numPoints)     diff                
+                                                : encoding == COORD_DIFF;
+
+        /** Compact encoding of a line with 2 points */
+        LineCoordXYPair(width)                  pair                
+                                                : encoding == COORD_PAIR &&  numPoints == 2;
+    } vertices;
+
+    /** Type of z coordinates. */       
+    ZCoordType                                  zType;
+
+    /** List of z coordinates. */
+    CoordZ(numPoints)                           zCoords if zType != Z_NONE;
+};
+
+
+/**
+ * Pair of x,y coordinates with a given width.
+ * @param numBits   number of bits for coordinate encoding
+ */
+LineCoordXYRelative(uint8 width, uint8 numBits, int32 numPoints)
+{
+    /**
+     * Anchor point for the current line feature. In general, this point 
+     * is not a vertex of the feature. It should be the south-west vertex
+     * of the bounding rectangle.
+     */ 
+    CoordXY(width)                              anchor;
+    
+    /** Offset of each vertex from the anchor point. */
+    OffsetXY(numBits)                           offsets[numPoints];
+};
+
+
+/**
+ * Coordinates offset with respect to a given anchor point.
+ */
+OffsetXY(uint8 numBits)
+{
+    /** x coordinate offset. */
+    bit<numBits>        x;
+
+    /** y coordinate offset. */
+    bit<numBits>        y;
+};
+
+/**
+ * Vertex list of a line feature with difference encoding of coordinates.
+ * @param width                 coordinate width of the current tile
+ * @param numBits       number of bits for the coordinates of the first vertex
+ * @param numVertices   total number of vertices ( >= 3)
+ */
+LineCoordXYDiff(uint8 width, uint8 numBits, int32 numPoints)
+{
+    /**
+     * Anchor point for the current line feature. In general, this point 
+     * is not a vertex of the feature. It should be the south-west vertex
+     * of the bounding rectangle.
+     */ 
+    CoordXY(width)              anchor;
+
+    /** Number of bits for x coordinates. */
+    bit:5                       nx;
+
+    /** Number of bits for y coordinates. */
+    bit:5                       ny;
+
+    /** x coordinate of first vertex v0. */
+    bit<numBits>                x0;
+
+    /** y coordinate of first vertex v0. */
+    bit<numBits>                y0;
+
+    /** List of coordinates for remaining vertices. */  
+    LineCoordXYDiffTail(nx, ny) tail[numPoints-1];
+};
+
+/**
+ * Remaining vertices of a line feature in difference encoding.
+ *
+ * The vertex coordinates relative to the anchor are defined recursively
+ * by
+ *
+ * v[i].x = v[i-1].x + (1-2*signX) * dx 
+ * v[i].y = v[i-1].y + (1-2*signY) * dy
+ *
+ * @param nx    number of bits for x coordinates
+ * @param ny    number of bits for y coordinates
+ *
+ * @todo When DataScript support signed and unsigned bitfields,
+ * we can replace each pair of sign and absolute value by a single
+ * signed value.
+ *
+ */
+LineCoordXYDiffTail(bit:5 nx, bit:5 ny)
+{
+    /** Sign of x coordinate difference. */
+    bit:1               signX;
+
+    /** Absolute value of x coordinate difference. */
+    bit<nx>             dx;
+
+    /** Sign of y coordinate difference. */
+    bit:1               signY;
+
+    /** Absolute value of y coordinate difference. */
+    bit<ny>             dy;    
+};
+
+/**
+ * Compact encoding of a line feature with 2 vertices with respect to 
+ * the tile anchor.
+ * 
+ * The tile anchor is the south-west corner of the current tile.
+ * The points (minX, minY), (maxX, maxY) define the bounding rectangle
+ * of the line feature in relative coodinates with respect to the tile
+ * anchor.
+ *
+ * The line is then the south-west to north-east diagonal of the rectangle,
+ * or the north-west to south-east diagonal, if flip == 1.
+ *
+ * flip == 0:
+ * v[0].x = minX        v[1].x = maxX
+ * v[0].y = minY        v[1].y = maxY
+ *
+ * flip == 1:
+ * v[0].x = maxX        v[1].x = minX
+ * v[0].y = minY                v[1].y = maxY
+ *
+ * @todo Do we need another flag for the direction?
+ */
+LineCoordXYPair(uint8 numBits)
+{
+    /** minimum x offset */
+    bit<numBits>        minX;
+
+    /** minimum y offset */
+    bit<numBits>        minY;
+
+    /** maximum x offset */
+    bit<numBits>        maxX;
+
+    /** maximum y offset */
+    bit<numBits>        maxY;
+    
+    /** Selects one of the two diagonals. */
+    bit:1               flip;
+};
+
+/**
+ * Point feature with a single vertex, attributes and a name reference.
+ * Since the attributes fit into 8 bits in most cases, we do not use a
+ * reference into the attribute table as with lines and areas.
+ * Since point features rarely share a name, we specify the name reference
+ * directly.
+ */
+PointFeature(TileHeader header)
+{
+    /** Type of point feature. */
+    PointFeatureType            type;
+    
+    /** Attributes of point feature. */
+    PointAttributes             attr;
+    
+    /** Name reference. */
+    NameReference               nameRef;
+    
+    /** (x,y) coordinates. */
+    CoordXY(header.coordWidth)  coords;
+};
+
+
+
+/**
+ * Attributes of point feature.
+ * When adminLevel is not present, a default value of CAPITAL_NO is assumed, 
+ * i.e. the city is not a capital of any administrative region.
+ */
+PointAttributes
+{
+    bit:1                       more;
+    bit:3                       scaleLevel;
+    Population                  population;
+    CapitalAdminLevel           adminLevel    if more == 1;
+};
+
+
+enum bit:4 CapitalAdminLevel
+{
+    /** City is not a capital. */
+    CAPITAL_NO      = 0,
+
+    /** City is a capital or order 1 admin area. */
+    CAPITAL_ORDER_1 = 1,
+
+    /** City is a capital or order 2 admin area. */
+    CAPITAL_ORDER_2 = 2,
+
+    /** City is a capital or order 3 admin area. */
+    CAPITAL_ORDER_3 = 3,
+
+    /** City is a capital or order 4 admin area. */
+    CAPITAL_ORDER_4 = 4,
+
+    /** City is a capital or order 5 admin area. */
+    CAPITAL_ORDER_5 = 5,
+
+    /** City is a capital or order 6 admin area. */
+    CAPITAL_ORDER_6 = 6,
+
+    /** City is a capital or order 7 admin area. */
+    CAPITAL_ORDER_7 = 7,
+
+    /** City is the capital of the current country */
+    CAPITAL_COUNTRY = 15
+
+};
+
+/**
+ * Approximate population of a city.
+ */
+enum bit:4 Population
+{
+    /** Less than 5000. */
+    POPULATION_SMALL    = 0,
+    
+    /** 5000 <= population < 10000 */
+    POPULATION_5K       = 1,
+    
+    /** 10000 <= population < 50000 */
+    POPULATION_10K      = 2,
+    
+    /** 50000 <= population < 100000 */
+    POPULATION_50K      = 3,
+
+    /** 100000 <= population < 500000 */
+    POPULATION_100K     = 4,
+
+    /** 500000 <= population < 1 million */
+    POPULATION_500K     = 5,
+
+    /** 1 million <= population < 5 million */
+    POPULATION_1M       = 6,
+
+    /** Population is 5 million or more */
+    POPULATION_5M       = 7
+};
+
+/**
+ * Pair of coordinates with a given width, i.e. number of bits.
+ * Unless the width is 32, all coordinates are positive, specifying an offset
+ * from an anchor point.
+ * @param width     number of bits per coordinate
+ */
+union CoordXY(uint8 width)
+{
+    CoordXY32        c     : width == 32;
+    OffsetXY(width)  o     : width < 32;
+};
+
+/**
+ * Pair of 32 bit coordinates.
+ */
+CoordXY32
+{
+    int32       x;
+    int32       y;    
+};
+
+/**
+ * Sequence of z coordinates for a line feature.
+ * The coordinates may be negative and are encoded in two's complement.
+ */
+CoordZ(int32 numPoints)
+{
+     /** Number of bits for each coordinate. */
+     bit:5              numBits;
+     
+     /** 
+      * Array for z-coordinates. The z-coordinate at index i belongs
+      * to the i-th vertex of the corresponding line feature.
+      *
+      * @todo This should be int<numBits> as soon as DataScript supports that
+      * syntax.
+      */
+     bit<numBits>       z[numPoints];
+};
+
+
+/**
+ * Reference into a name table.
+ * @todo details t.b.d.
+ */
+NameReference
+{
+    int32               dummy;
+};

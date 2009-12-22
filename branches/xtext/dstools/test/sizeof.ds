@@ -1,0 +1,14 @@
+Level
+{
+     LevelHeader	lheader;
+     uint8		cluster[sizeof (lheader.clusterInfo)];
+};
+
+LevelHeader
+{
+    int32		tileWidth;
+    int32		tileHeight;
+    int32	        clusterInfo[100];
+};
+
+

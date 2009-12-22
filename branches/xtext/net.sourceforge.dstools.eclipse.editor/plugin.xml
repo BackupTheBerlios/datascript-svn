@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="datascript.eclipse.editor"
+         name="DataScript Editor"
+         point="org.eclipse.ui.editors">
+      <editor id="datascript.eclipse.editor"
+            name="DataScript Editor"
+            extensions="ds"
+            icon="icons/ds16.gif"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            class="datascript.eclipse.editor.DataScriptEditor">
+      </editor>
+   </extension>
+
+</plugin>

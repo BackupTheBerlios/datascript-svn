@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.berlios.datascript</groupId>
+  <artifactId>sqlite</artifactId>
+  <packaging>bundle</packaging>
+  <name>SQLite JDBC driver</name>
+  <version>0.53.3</version>
+  <description />
+  <profiles>
+    <profile>
+      <id>staging</id>
+      <distributionManagement>
+        <repository>
+          <id>anaconda.releases</id>
+          <name>Anaconda Releases</name>
+          <url>
+            http://k332.hbi.ad.harman.com/nexus/content/repositories/releases 
+          </url>
+        </repository>
+        <snapshotRepository>
+          <id>anaconda.snapshots</id>
+          <name>Anaconda Snapshots</name>
+          <url>
+            http://k332.hbi.ad.harman.com/nexus/content/repositories/snapshots 
+          </url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+  </profiles>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.3.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.eclipse</groupId>
+    	<artifactId>osgi</artifactId>
+    	<version>3.3.0-v20070530</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>1.4.3</version>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Bundle-Activator>org.sqlite.Activator</Bundle-Activator>
+            <Export-Package>org.sqlite;version="${project.version}"</Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

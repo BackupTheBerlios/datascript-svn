@@ -1,0 +1,19 @@
+<%@ jet package="datascript.templates" 
+        imports="datascript.* java.util.Iterator" 
+        class="StructTemplate" %>
+<% StructType struct = (StructType) argument; %>
+  <struct name="<%= struct.getName() %>">
+  <% String doc = struct.getDocumentation();
+     if (doc != null)
+     { %>
+    <doc><%=doc%></doc> 
+  <% }
+     Iterator it = struct.getFields();
+     while (it.hasNext())
+     {
+         Field field = (Field) it.next(); 
+     %>
+    <field name="<%= field.getName()%>" type="<%=field.getType()%>">
+    </field> 
+  <% } %>
+  </struct>

@@ -1,0 +1,44 @@
+<%@ jet package="datascript.templates" 
+        imports="datascript.*" 
+        class="XmlStructTemplate" %>
+<% 
+    XmlDumperEmitter e = (XmlDumperEmitter) argument;
+    CompoundType t = (CompoundType) e.getType(); 
+%>
+    public void visit(<%=JavaEmitter.printType(t)%> n)
+    {
+        try
+        {
+            startElement();
+<%  for (Field field : t.getFields_()) 
+    { 
+        boolean optional = (field.getOptionalClause() != null);
+        String fieldName = field.getName();
+        String accessor  = JavaEmitter.makeAccessor(fieldName);
+	if (optional)
+	{   
+%>       
+ 	    if (n.has<%=accessor%>())
+ 	    {
+                nameStack.push("<%=fieldName%>");
+                <%= e.emitStructFieldVisitor(field) %>;
+            }
+<%
+	}
+        else
+        {
+%>                        
+            nameStack.push("<%=fieldName%>");
+            <%= e.emitStructFieldVisitor(field) %>;
+<% 
+	} 
+    }	
+%>            
+            endElement();
+        }
+        catch (SAXException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+

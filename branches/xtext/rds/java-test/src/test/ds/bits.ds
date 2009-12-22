@@ -1,0 +1,332 @@
+package bits;
+
+import bits.arrays.*;
+
+Cluster
+{
+    uint8               numberOfClusterInternalNodes;
+    uint8               numberOfLinks;
+    bit<numberOfLinks>  inboundMask;
+};
+
+
+subtype uint8 MagicCode;
+
+// TODO: keine Used By f�r Konstante im HTML-Emitter m�glich
+const MagicCode UNDEFINED_MAGIC_CODE = 0;
+
+UseOfConst(MagicCode defaultMagicCode)
+{
+    MagicCode magicCode if defaultMagicCode == UNDEFINED_MAGIC_CODE;
+};
+
+TestConstParameter
+{
+    UseOfConst(UNDEFINED_MAGIC_CODE) single;
+    UseOfConst(UNDEFINED_MAGIC_CODE) list[2];
+};
+
+TestForBug1732604 
+{
+    ByteAlignedBitField(5) data;
+};
+
+
+ByteAlignedBitField(uint16 numBits)
+{
+      bit<8*((numBits+7)/8)>    mask;
+};
+
+
+/**
+ * test for structures without names
+ *
+{
+    uint8 bla;
+};
+*/
+
+
+/**
+ * Testcase for bugreport 1730746, unions containing bitfields lead to incompilable code
+ */
+union BitField
+{
+    bit:8  value1 : 1 == 2;
+    bit:16 value2 : 2 == 2;
+};
+
+
+/**
+ * Comment for Unsigned.
+ */
+Unsigned
+{
+    /** Comment for u8. */
+    uint8       u8;
+
+    /** Comment for u16. */
+    uint16      u16;
+
+    /** Comment for u32. */
+    uint32      u32;
+
+    /** Comment for u64. */
+    uint64      u64;
+};
+
+BitStruct
+{
+    bit:4       a;
+    uint8       b;
+    bit:4       c;
+};
+
+LongBitField
+{
+    uint8       a;
+    bit:80      b;
+    int16       c;
+};
+
+
+Outer
+{
+    int16       a;
+    Header      header;
+    Inner       inner;
+};
+
+Header
+{
+    int16       len;
+    int16       c;
+};
+
+Inner
+{
+    int8        d;
+    int16       list[Outer.header.len];
+    int32       e;
+};
+
+
+ItemA
+{
+    uint8       tag : tag == 1;
+    uint16      value;
+};
+
+ItemB
+{
+    uint8       tag : tag == 2;
+    uint32      value;
+};
+
+ItemC
+{
+    uint8       tag = 3;
+    int64       value;
+};
+
+union AnyItem
+{
+    ItemA a;        
+    ItemB b;
+    ItemC c;        
+};
+
+/**
+ * This is the first paragraph of a doc comment,
+ * extending over two lines.
+ *
+ * A new paragraph is started after a blank line.
+ *
+ * @todo add some more documentation.
+ * @param none   We have no parameters.
+ * @see Coord
+ */
+enum uint16 Colour
+{
+    /** Red. */
+    RED = 1,
+    /** Green. */
+    GREEN,
+    /** Yellow. */
+    YELLOW,
+    BLUE = 7
+};
+
+enum uint8 Dimension
+{
+    LENGTH = 1,
+    WIDTH = 2,
+    HEIGHT = 3
+};
+
+enum uint8 TrafficLight
+{
+    RED = 10,
+    YELLOW = 12,
+    GREEN = 14
+};
+
+DuplicateEnum
+{
+    Colour colour = Colour.RED;
+    TrafficLight light = TrafficLight.RED;
+}; 
+
+Enums
+{
+    Colour colour1;
+    Colour colour2;
+    Dimension dim1;
+    Dimension dim2;
+};
+
+Blocks
+{
+    uint16              numBlocks;
+    Block               blocks[numBlocks];
+};
+
+Block
+{
+    BlockHeader         header;
+    BlockData(header)   data;
+};
+
+BlockHeader
+{
+    BlockType           type;
+    uint16              size;
+};
+
+BlockData(BlockHeader header)
+{
+    // TODO: emit "L" constant for long values
+    uint32              magic = 0x0EADBEEF;
+    
+    // TODO: emit UnsignedByteArray when element type is uint8
+    int8                bytes[header.size];
+};
+
+enum uint8 BlockType
+{
+    UNSORTED = 3,
+    SORTED   = 9
+};
+
+Optional
+{
+    uint8       tag;
+    uint16      a;
+    uint32      b if tag == 99 : b > a;
+    ItemA       ia if tag == 98;
+    uint16      c;
+};
+
+VarArrayWithSize
+{
+   VarArray     var;
+   uint16       size = sizeof var;
+   uint16       bitsize = bitsizeof var;
+};
+
+ParamBlock(uint16 size)
+{
+    // TODO: emit UnsignedByteArray when element type is uint8
+    int8       data[size];
+};
+
+
+GlobalLabelSeq
+{
+    uint16          magic = 0xFFFF;
+    LabelledType    lt;
+};
+
+LabelledType
+{
+    uint16  numItems;
+    uint16  dataOffset;
+    uint16  globalOffset;
+    Header  headers[numItems];
+dataOffset:    
+    ItemA   a[numItems];
+GlobalLabelSeq::globalOffset:
+    int32   x;
+};
+
+CondExpr
+{
+    uint8        tag;
+    CondBlock(tag % 2 == 0 ? 47 : 11)  block;
+};
+
+CondBlock(uint8 tag)
+{
+    int32        value : value == tag;
+};
+
+VarBitField
+{
+    bit:5           numBits;
+    Coord(numBits)  coord;
+};
+
+Coord(bit:5 n)
+{    
+    bit<n>    x;
+    bit<n>    y;
+    bit<n>    array[2];    
+};
+
+BaseTypes
+{
+    uint8     tag;
+    // TODO: hier ist noch ein Fehler. Used By f�r BaseTypeUnion beinhaltet nicht BaseTypes
+    union BaseTypeUnion
+    {
+        int8  v8  : tag == 8;
+        int16 v16 : tag == 16;
+        int32 v32 : tag == 32;
+    } value;    
+};
+
+RecursiveStructure
+{
+    uint8    count;
+    RecursiveData(count) theElement    if count > 0;
+};
+
+RecursiveData(uint8 byteCount)
+{
+    uint8    dataBytes[byteCount]    : byteCount > 0;
+    uint8    blockTerminator;
+
+    RecursiveData(blockTerminator)    nextData    if blockTerminator > 0;
+};
+
+subtype uint16  TileId;
+subtype uint32  TileData;
+
+Tile
+{
+    TileId    tileId;
+    TileData  tileData;
+};
+
+SignedBitField
+{
+    int:4   a;
+    int<4>  b;
+};
+
+SignedBitFieldArray
+{
+    uint8 numItems;
+    SignedBitField   items[numItems];
+};
+

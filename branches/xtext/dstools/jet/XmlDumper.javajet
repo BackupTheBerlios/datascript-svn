@@ -1,0 +1,325 @@
+<%@ jet package="datascript.templates" 
+        imports="datascript.* java.util.Iterator" 
+        class="XmlDumperTemplate" %>
+<% XmlDumperEmitter c = (XmlDumperEmitter) argument; %>
+package <%=c.getPackage()%>;
+
+
+import datascript.runtime.*;
+
+import java.math.BigInteger;
+import java.util.Stack;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.XMLFilterImpl;
+
+public class __XmlDumper extends XMLFilterImpl implements __Visitor
+{
+    private static String NO_LITTLE_ENDIAN_TYPES = 
+    	"Little endian types not supported";
+
+    private ContentHandler handler;
+    private AttributesImpl noAttr = new AttributesImpl();
+    private Stack<String> nameStack = new Stack<String>();
+    private __Visitor.Acceptor acceptor;
+    
+    public __XmlDumper(__Visitor.Acceptor acceptor)
+    {
+        this.acceptor = acceptor;
+    }
+    
+    private void startElement() throws SAXException
+    {
+        String tag = nameStack.peek();
+        handler.startElement("", tag, tag, noAttr);
+    }
+    
+    private void endElement() throws SAXException
+    {
+        String tag = nameStack.pop();
+        handler.endElement("", tag, tag);
+    }
+    
+    private void text(String s) throws SAXException
+    {
+        handler.characters(s.toCharArray(), 0, s.length());
+    }
+    
+    public void parse(InputSource is) throws SAXException
+    {
+        handler = getContentHandler();
+        handler.startDocument();
+        nameStack.push("<%=c.getRoot()%>");
+        acceptor.accept(this);
+        handler.endDocument();
+    }
+    
+<%=c.emitTypes()%>
+    public void visitArray(ObjectArray n)
+    {
+    	String tag = nameStack.peek();
+    	int last = n.length()-1;
+        for (int i = 0; i < last; i++) 
+        {
+      	    ((__Visitor.Acceptor)(n.elementAt(i))).accept(this);
+      	    nameStack.push(tag);
+      	}
+      	((__Visitor.Acceptor)(n.elementAt(last))).accept(this);
+    }
+	
+    public void visitArray(ByteArray n)
+    {
+    	String tag = nameStack.peek();
+    	int last = n.length()-1;
+        for (int i = 0; i < last; i++) 
+        {
+            visitint8(n.elementAt(i));	
+      	    nameStack.push(tag);
+      	}
+        visitint8(n.elementAt(last));
+    }
+	
+    public void visitArray(ShortArray n)
+    {
+    	String tag = nameStack.peek();
+    	int last = n.length()-1;
+        for (int i = 0; i < last; i++) 
+        {
+            visitint16(n.elementAt(i));	
+      	    nameStack.push(tag);
+      	}
+        visitint16(n.elementAt(last));
+    }
+	
+    public void visitArray(IntArray n)
+    {
+    	String tag = nameStack.peek();
+    	int last = n.length()-1;
+        for (int i = 0; i < last; i++) 
+        {
+            visitint32(n.elementAt(i));	
+      	    nameStack.push(tag);
+      	}
+        visitint32(n.elementAt(last));
+    }
+	
+    public void visitArray(LongArray n)
+    {
+    	String tag = nameStack.peek();
+    	int last = n.length()-1;
+        for (int i = 0; i < last; i++) 
+        {
+            visitint64(n.elementAt(i));	
+      	    nameStack.push(tag);
+      	}
+        visitint64(n.elementAt(last));
+    }
+	
+    public void visitArray(BitFieldArray n)
+    {
+    	String tag = nameStack.peek();
+    	int last = n.length()-1;
+        for (int i = 0; i < last; i++) 
+        {
+            visitint64(n.elementAt(i));	
+      	    nameStack.push(tag);
+      	}
+        visitint64(n.elementAt(last));
+    }
+	
+    public void visitint8(byte n)
+    {
+        try
+        {
+            startElement();
+            text(Short.toString(n));
+            endElement();
+        }
+        catch(SAXException exc)
+        {
+            exc.printStackTrace();
+        }
+    
+    }
+
+    public void visitint16(short n)
+    {
+        try
+        {
+            startElement();
+            text(Short.toString(n));
+            endElement();
+        }
+        catch(SAXException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+
+    public void visitint32(int n)
+    {
+        try
+        {
+            startElement();
+            text(Integer.toString(n));
+            endElement();
+        }
+        catch(SAXException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+
+    public void visitint64(long n)
+    {
+        try
+        {
+            startElement();
+            text(Long.toString(n));
+            endElement();
+        }
+        catch(SAXException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+
+    public void visitleint16(short n)
+    {
+    }
+
+    public void visitleint32(int n)
+    {
+    }
+
+    public void visitleint64(long n)
+    {
+    }
+
+    public void visituint8(short n)
+    {
+        try
+        {
+            startElement();
+            text(Short.toString(n));
+            endElement();
+        }
+        catch(SAXException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+
+    public void visituint16(int n)
+    {
+        try
+        {
+            startElement();
+            text(Integer.toString(n));
+            endElement();
+        }
+        catch(SAXException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+
+    public void visituint32(long n)
+    {
+        try
+        {
+            startElement();
+            text(Long.toString(n));
+            endElement();
+        }
+        catch(SAXException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+
+    public void visituint64(BigInteger n)
+    {
+        try
+        {
+            startElement();
+            text(n.toString());
+            endElement();
+        }
+        catch(SAXException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+
+    public void visitleuint16(int n)
+    {
+        throw new IllegalArgumentException(NO_LITTLE_ENDIAN_TYPES);
+    }
+
+    public void visitleuint32(long n)
+    {
+        throw new IllegalArgumentException(NO_LITTLE_ENDIAN_TYPES);
+    }
+
+    public void visitleuint64(BigInteger n)
+    {
+        throw new IllegalArgumentException(NO_LITTLE_ENDIAN_TYPES);
+    }
+
+    public void visitBitField(byte n, int length)
+    {
+        visitint64(n);
+    }
+
+    public void visitBitField(short n, int length)
+    {
+        visitint64(n);
+    }
+
+    public void visitBitField(int n, int length)
+    {
+        visitint64(n);
+    }
+
+    public void visitBitField(long n, int length)
+    {
+        visitint64(n);
+    }
+
+    public void visitBitField(java.math.BigInteger n, int length)
+    {
+    	visitBitField(n);
+    }
+
+    public void visitBitField(java.math.BigInteger n)
+    {
+        try
+        {
+            startElement();
+            text(n.toString());
+            endElement();
+        }
+        catch(SAXException exc)
+        {
+            exc.printStackTrace();
+        }    
+    }
+
+    public void visitString(String n)
+    {
+        try
+        {
+            startElement();
+            text(n);
+            endElement();
+        }
+        catch(SAXException exc)
+        {
+            exc.printStackTrace();
+        }    
+    }
+}

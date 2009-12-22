@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>DataScript Tools</title>
+    
+     <link rel="stylesheet" type="text/css" href="dstools.css"></head>
+  <body>
+
+  <div>
+    <ul id="Navigation">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="doc.html">Documentation</a></li>
+        <li><a href="http://sourceforge.net/projects/dstools">Download</a></li>
+    </ul>
+  </div>
+
+  <div id="Inhalt" lang="en">
+    <h1>DataScript Tools</h1>
+
+
+    <h2>About DataScript</h2>
+
+
+      <p>There are dozens of languages for modelling abstract datatypes.
+        For some of these, the binary representation of the defined types is
+	implementation dependent and of no concern. Others do provide a binary
+	encoding, but there is usually no way to retrofit an abstract
+	specification to an existing binary format.</p>
+
+      <p><a href="http://datascript.sourceforge.net">DataScript</a> is a formal 
+        language for modelling
+        binary datatypes, bitstreams or file formats. Using a formal language for 
+        defining such binary datatypes resolves all ambiguities typically found 
+        in textual or tabular specifications.
+      </p>
+      
+      <p>In addition, one can automatically generate encoders and decoders for 
+         a given binary format from such a formal specification, so that 
+         application developers do not have to worry about serialization and 
+         can focus on application logic instead.</p>
+
+      
+
+     <p>After evaluating different data modelling languages and toolsets,
+    DataScript was selected by the authors as the most promising approach for
+    formally defining a car navigation database format.</p>
+
+    <h2>About the dstools Project</h2>
+
+
+    <p>This project is a spin-off of the Physical Storage Format 
+    Standardization Initiative (PSI), a joint effort of about 20 partner 
+    companies in the automotive industry to standardize a car navigation 
+    database format.</p> 
+
+    <p>After evaluating different data modelling languages and toolsets, 
+    including ASN.1, CSN.1, UML, XML Schema and others, DataScript was selected 
+    by the PSI as the closest match to our requirements.</p>
+
+    <p>While the initial DataScript <a href="http://sourceforge.net/project/showfiles.php?group_id=81815&amp;release_id=166537">reference implementation</a> 
+    by Godmar Back provided a great 
+    start, we found that some language extensions were desirable to better 
+    support our specific requirements. For this reason, we branched off our 
+    own project from Back's reference implementation.</p> 
+
+    <p>As a major addition to the DataScript language, we introduced relational
+    extensions, which permit the definition of hybrid data models, where the 
+    high-level access structures are implemented by relational tables and 
+    indices, whereas the bulk data are stored in single columns as BLOBs with 
+    a format defined in DataScript, hence the name Relational DataScript or 
+    <a href="http://sourceforge.net/projects/dstools">rds</a>. 
+    rds is currently built on top of the <a href="http://www.sqlite.org">SQLite</a> 
+    embedded database.</p>
+
+
+    <h2>Authors</h2>
+    <h3>Project Manager</h3>
+    <ul>
+      <li>Harald Wellmann, Harman/Becker Automotive Systems</li>
+    </ul>
+    <h3>Contributors</h3>
+    <ul>
+      <li>Lars Girndt, Advanced Driver Information Technology</li>
+      <li>Duk-Su Han, SiemensVDO</li>
+      <li>Martin Pfeifle, SiemensVDO</li>
+      <li>Henrik Wedekind, Harman/Becker Automotive Systems</li>
+    </ul>
+
+    <p>Last updated: 29 Nov 2007</p>
+    </div>
+  </body></html>

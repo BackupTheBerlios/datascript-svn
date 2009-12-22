@@ -1,0 +1,19 @@
+Outer
+{
+    int16 	a;
+    Header	header;
+    Inner 	inner;
+};
+
+Header
+{
+    int16	len;
+    int16	c;
+};
+
+Inner
+{
+    int8	d;
+    int16	list[Outer.header.len];
+    int32	e;
+};

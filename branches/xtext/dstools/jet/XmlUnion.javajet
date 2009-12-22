@@ -1,0 +1,27 @@
+<%@ jet package="datascript.templates" 
+        imports="datascript.* java.util.Iterator" 
+        class="XmlUnionTemplate" %>
+<% XmlDumperEmitter e = (XmlDumperEmitter) argument;
+   UnionType t = (UnionType) e.getType(); %>
+    public void visit(<%= JavaEmitter.printType(t) %> n)
+    {
+        try
+        {
+            startElement();
+            switch (n.__choice)
+            {
+<% for (Field field : t.getFields_()) { %>            
+		case <%=JavaEmitter.printType(t)%>.CHOICE_<%=field.getName()%>:
+                    nameStack.push("<%=field.getName()%>");
+                    <%= e.emitUnionFieldVisitor(field) %>;
+                    break;
+<% } %>
+	    }
+            endElement();
+        }
+        catch (SAXException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+

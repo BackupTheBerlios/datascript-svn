@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.berlios.datascript</groupId>
+  <artifactId>maven-sourcebundle-plugin
+  </artifactId>
+  <packaging>maven-plugin</packaging>
+  <version>1.0.1</version>
+  <name>Eclipse Source Bundle Maven Plugin</name>
+  <url>http://www.harmanbecker.com</url>
+  <profiles>
+    <profile>
+      <id>staging</id>
+      <distributionManagement>
+        <repository>
+          <id>anaconda.releases</id>
+          <name>Anaconda Releases</name>
+          <url>
+            http://k332.hbi.ad.harman.com/nexus/content/repositories/releases 
+          </url>
+        </repository>
+        <snapshotRepository>
+          <id>anaconda.snapshots</id>
+          <name>Anaconda Snapshots</name>
+          <url>
+            http://k332.hbi.ad.harman.com/nexus/content/repositories/snapshots 
+          </url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+  </profiles>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins
+        </groupId>
+        <artifactId>maven-compiler-plugin
+        </artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugins
+      </groupId>
+      <artifactId>maven-jar-plugin</artifactId>
+      <version>2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-archiver</artifactId>
+      <version>2.3</version>
+    </dependency>
+  </dependencies>
+</project>

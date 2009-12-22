@@ -1,0 +1,741 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>DataScript Language Overview</title><meta name="generator" content="DocBook XSL Stylesheets V1.69.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="d0e1"></a>DataScript Language Overview</h2></div><div><div class="author"><h3 class="author"><span class="firstname">Harald</span> <span class="surname">Wellmann</span></h3><code class="email">&lt;<a href="mailto:HWellmann@harmanbecker.com">HWellmann@harmanbecker.com</a>&gt;</code></div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 0.1</td><td align="left">20 July 2006</td></tr><tr><td align="left" colspan="2">
+          <p>Initial version.</p>
+        </td></tr><tr><td align="left">Revision 0.2</td><td align="left">16 November 2006</td></tr><tr><td align="left" colspan="2">
+          <p>Added section on Comments.</p>
+        </td></tr><tr><td align="left">Revision 0.3</td><td align="left">3 December 2006</td></tr><tr><td align="left" colspan="2">
+          <p>Added section on Packages and Imports.</p>
+        </td></tr><tr><td align="left">Revision 0.4</td><td align="left">11 January 2007</td></tr><tr><td align="left" colspan="2">
+          <p>Added section on Subtypes.</p>
+        </td></tr><tr><td align="left">Revision 0.5</td><td align="left">23 May 2007</td></tr><tr><td align="left" colspan="2">
+          <p>More details on packages. Scope of enum items changed from
+          global to local. More background in introduction.</p>
+        </td></tr><tr><td align="left">Revision 0.6</td><td align="left">28 June 2007</td></tr><tr><td align="left" colspan="2">
+          <p>New sum operator. Functions. New section on Relational
+          Extensions.</p>
+        </td></tr><tr><td align="left">Revision 0.7</td><td align="left">29 November 2007</td></tr><tr><td align="left" colspan="2">
+          <p>New choice type. Functions may return compound types. Explicit
+          parameters. bitsizeof operator. align(n) modifier. UTF-8 string
+          encoding.</p>
+        </td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#d0e90">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e93">1.1. Motivation</a></span></dt><dt><span class="section"><a href="#d0e109">1.2. History and Background</a></span></dt></dl></dd><dt><span class="section"><a href="#d0e142">2. Literals</a></span></dt><dt><span class="section"><a href="#d0e191">3. Base Types</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e194">3.1. Integer Base Types</a></span></dt><dt><span class="section"><a href="#d0e240">3.2. Bit Field Types</a></span></dt><dt><span class="section"><a href="#d0e268">3.3. String Types</a></span></dt></dl></dd><dt><span class="section"><a href="#d0e287">4. Enumeration Types</a></span></dt><dt><span class="section"><a href="#d0e315">5. Compound Types</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e318">5.1. Sequence Types</a></span></dt><dt><span class="section"><a href="#d0e342">5.2. Union Types</a></span></dt><dt><span class="section"><a href="#d0e366">5.3. Choice Types</a></span></dt><dt><span class="section"><a href="#d0e405">5.4. Constraints</a></span></dt><dt><span class="section"><a href="#d0e430">5.5. Optional Members</a></span></dt><dt><span class="section"><a href="#d0e444">5.6. Functions</a></span></dt></dl></dd><dt><span class="section"><a href="#d0e455">6. Array Types</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e458">6.1. Fixed and Variable Length Arrays</a></span></dt><dt><span class="section"><a href="#d0e498">6.2. Implicit Length Arrays</a></span></dt></dl></dd><dt><span class="section"><a href="#d0e512">7. Labels, Offsets and Alignment</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e515">7.1. Labels and Byte Offsets</a></span></dt><dt><span class="section"><a href="#d0e537">7.2. Alignment and Padding</a></span></dt></dl></dd><dt><span class="section"><a href="#d0e550">8. Expressions</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e566">8.1. Binary Operators</a></span></dt><dt><span class="section"><a href="#d0e684">8.2. Unary Operators</a></span></dt><dt><span class="section"><a href="#d0e785">8.3. Ternary Operators</a></span></dt><dt><span class="section"><a href="#d0e846">8.4. Operator Precedence</a></span></dt></dl></dd><dt><span class="section"><a href="#nested">9. Nested Types</a></span></dt><dt><span class="section"><a href="#d0e949">10. Member Access and Contained Types</a></span></dt><dt><span class="section"><a href="#parameters">11. Parameterized Types</a></span></dt><dt><span class="section"><a href="#d0e1128">12. Subtypes</a></span></dt><dt><span class="section"><a href="#d0e1149">13. Comments</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e1152">13.1. Standard Comments</a></span></dt><dt><span class="section"><a href="#d0e1168">13.2. Documentation Comments</a></span></dt></dl></dd><dt><span class="section"><a href="#d0e1201">14. Packages and Imports</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e1204">14.1. Type Name Visibility</a></span></dt><dt><span class="section"><a href="#d0e1271">14.2. Packages and Files</a></span></dt></dl></dd><dt><span class="section"><a href="#d0e1290">15. Relational Extensions</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e1293">15.1. Motivation</a></span></dt><dt><span class="section"><a href="#d0e1310">15.2. SQL Tables</a></span></dt><dt><span class="section"><a href="#d0e1376">15.3. SQL Databases</a></span></dt><dt><span class="section"><a href="#d0e1393">15.4. SQL Integers</a></span></dt></dl></dd><dt><span class="bibliography"><a href="#d0e1415">References</a></span></dt></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e90"></a>1.&nbsp;Introduction</h2></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e93"></a>1.1.&nbsp;Motivation</h3></div></div></div><p>There are dozens of languages for modelling abstract datatypes.
+      For some of these, the binary representation of the defined types is
+      implementation dependent and of no concern. Others do provide a binary
+      encoding, but there is usually no way to retrofit an abstract
+      specification to an existing binary format.</p><p>DataScript is a formal language for modelling binary datatypes,
+      bitstreams or file formats. Using a formal language for defining such
+      binary datatypes resolves all ambiguities typically found in textual or
+      tabular specifications.</p><p>In addition, one can automatically generate encoders and decoders
+      for a given binary format from such a formal specification, so that
+      application developers do not have to worry about serialization and can
+      focus on application logic instead.</p><p>The present document describes a DataScript dialect supported by
+      our implementation called <code class="literal">rds</code> (short for Relational
+      DataScript), which is available from SourceForge [<a href="#rds"><span class="abbrev">rds</span></a>]
+      under a BSD License. This Language Overview is more of a User's Manual
+      than a formal language specification.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e109"></a>1.2.&nbsp;History and Background</h3></div></div></div><p>DataScript was designed by Godmar Back [<a href="#Back"><span class="abbrev">Back</span></a>].
+      His reference implementation of a DataScript compiler also includes a
+      Java code generator producing Java classes which are able to read and
+      write a binary stream that complies with a DataScript
+      specification.</p><p><code class="literal">rds</code> and the DataScript dialect defined in this
+      document are a spin-off of the <span class="emphasis"><em>Physical Storage Format
+      Standardization Initiative</em></span> (PSI), a joint effort of about 20
+      partner companies in the automotive industry to standardize a car
+      navigation database format.</p><p>After evaluating different data modelling languages and toolsets,
+      including ASN.1, CSN.1, UML, XML Schema and others, DataScript was
+      selected by the PSI as the closest match to our requirements.</p><p>While Back's reference implementation [<a href="#DataScript"><span class="abbrev">DataScript</span></a>] provided a great start, we found that some
+      language extensions were desirable to better support our specific
+      requirements. For this reason, we branched off our own DataScript Tools
+      or <code class="literal">dstools</code> project from Back's reference
+      implementation.</p><p>As a major addition to the DataScript language, we introduced
+      relational extensions, which permit the definition of hybrid data
+      models, where the high-level access structures are implemented by
+      relational tables and indices, whereas the bulk data are stored in
+      single columns as BLOBs with a format defined in DataScript, hence the
+      name <span class="emphasis"><em>Relational DataScript</em></span>. <code class="literal">rds</code>
+      is currently built on top of the SQLite embedded database [<a href="#SQLite"><span class="abbrev">SQLite</span></a>].</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e142"></a>2.&nbsp;Literals</h2></div></div></div><p>The DataScript syntax for literal values is similar to the Java
+    syntax. There are no character literals, only string literals with the
+    usual escape syntax. Integer literals can use decimal, hexadecimal, octal
+    or binary notation.</p><p>Examples:</p><div class="itemizedlist"><ul type="disc"><li><p>Decimal: <code class="literal">100, 4711, 255</code></p></li><li><p>Hexadecimal: <code class="literal">0xCAFEBABE, 0Xff</code></p></li><li><p>Octal: <code class="literal">044, 0377</code></p></li><li><p>Binary: <code class="literal">111b, 110b, 001B</code></p></li><li><p>String: <code class="literal">"You"</code></p></li></ul></div><p>Hexadecimal digits and the <code class="literal">x</code> prefix as well as
+    the <code class="literal">b</code> suffix for binary types are
+    case-insensitive.</p><p>String literals correspond to zero-terminated UTF-8-encoded strings.
+    Thus, the literal <code class="literal">"You"</code> corresponds to a sequence of 4
+    bytes equal to the binary representation of the integer literal
+    <code class="literal">0x596F7500</code>. Other character encodings (e.g. ISO 8859-1
+    or UTF-16) are not supported.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e191"></a>3.&nbsp;Base Types</h2></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e194"></a>3.1.&nbsp;Integer Base Types</h3></div></div></div><p>DataScript supports the following integer base types</p><div class="itemizedlist"><ul type="disc"><li><p>Unsigned Types: <code class="literal">uint8, uint16, uint32,
+          uint64</code></p></li><li><p>Signed Types: <code class="literal">int8, int16, int32,
+          int64</code></p></li></ul></div><p>These types correspond to unsigned or signed integers represented
+      as sequences of 8, 16, 32 or 64 bits, respectively. Negative values are
+      represented in two's complement, i.e. the hex byte <code class="literal">FF</code>
+      is 255 as <code class="literal">uint8</code> or -1 as
+      <code class="literal">int8</code>.</p><p>The default byte order is big endian. Thus, for multi-byte
+      integers, the most significant byte comes first. Within each byte, the
+      most significant bit comes first.</p><p>Example: The byte stream <code class="literal">02 01</code> (hex)
+      interpreted as <code class="literal">int16</code> has the decimal value 513. As a
+      bit stream, this looks like <code class="literal">0000 0010 0000 0001</code>. Bit
+      0 is <code class="literal">0</code>, bit 15 is <code class="literal">1</code>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e240"></a>3.2.&nbsp;Bit Field Types</h3></div></div></div><p>A bit field type is denoted by <code class="literal">bit:1, bit:2</code>,
+      ... The colon must be followed by a positive integer literal, which
+      indicates the length of the type in bits. The length is not limited. A
+      bit field type corresponds to an unsigned integer of the given length.
+      Thus, <code class="literal">bit:16</code> and <code class="literal">uint16</code> are
+      equivalent.</p><p>Signed bit field types are not supported.</p><p>Variable length bit field types can be specified as
+      <code class="literal">bit&lt;</code><span class="emphasis"><em>expr</em></span><code class="literal">&gt;</code>,
+      where <span class="emphasis"><em>expr</em></span> is an expression of integer type to be
+      evaluated at run-time.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e268"></a>3.3.&nbsp;String Types</h3></div></div></div><p>A string type is denoted by <code class="literal">string</code>. It is
+      represented by a sequence of bytes in UTF-8 encoding, terminated by a
+      zero byte. Thus, the encoded size of a string with
+      <span class="emphasis"><em>n</em></span> characters is at least <span class="emphasis"><em>n</em></span>+1
+      bytes, and it may even be larger if some of the characters have a
+      multibyte UTF-8 encoding.</p><p>Since DataScript models arbitrary bitstreams, the term
+      <span class="emphasis"><em>byte</em></span> should not be taken too literally in this
+      context: A byte in this sense is a group of 8 successive bits, where the
+      offset of the first bit of each group from the enclosing type or the
+      beginning of the stream is not necessarily divisible by 8.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e287"></a>4.&nbsp;Enumeration Types</h2></div></div></div><p>An enumeration type has a base type which is an integer type or a
+    bit field type. The members of an enumeration have a name and a value
+    which may be assigned explicitly or implicitly. A member that does not
+    have an initializer gets assigned the value of its predecessor incremented
+    by 1, or the value 0 if it is the first member.</p><pre class="programlisting">enum bit:3 Color
+{
+    NONE  = 000b,
+    RED   = 010b,
+    BLUE,
+    BLACK = 111b
+};</pre><p>In this example, <code class="literal">BLUE</code> has the value 3. When
+    decoding a member of type <code class="literal">Color</code>, the decoder will read
+    3 bits from the stream and report an error when the integer value of these
+    3 bits is not one of 0, 2, 3 or 7.</p><p>An enumeration type provides its own lexical scope, similar to Java
+    and dissimilar to C++. The member names must be unique within each
+    enumeration type, but may be reused in other contexts with different
+    meanings. Referring to the example, any other enumeration type
+    <code class="literal">Foo</code> may also contain a member named
+    <code class="literal">NONE</code>.</p><p>In expressions outside of the defining type, enumeration members
+    must always be prefixed by the type name and a dot, e.g.
+    <code class="literal">Color.NONE</code>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e315"></a>5.&nbsp;Compound Types</h2></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e318"></a>5.1.&nbsp;Sequence Types</h3></div></div></div><p>A sequence type is the concatenation of its members. There is no
+      padding or alignment between members. Example:</p><pre class="programlisting">MySequence
+{
+    bit:4    a;
+    uint8    b;
+    bit:4    c;
+};</pre><p>This type has a total length of 16 bits or 2 bytes. As a bit
+      stream, bits 0-3 correspond to member <code class="literal">a</code>, bits 4-11
+      represent an unsigned integer <code class="literal">b</code>, followed by member
+      <code class="literal">c</code> in bits 12-15. Note that member
+      <code class="literal">b</code> overlaps a byte boundary, when the entire type is
+      byte aligned. But <code class="literal">MySequence</code> may also be embedded
+      into another type where it may not be byte-aligned.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e342"></a>5.2.&nbsp;Union Types</h3></div></div></div><p>A union type corresponds to exactly one of its members, which are
+      also called branches.</p><pre class="programlisting">union VarCoordXY
+{
+    CoordXY8    coord8  : width == 8;
+    CoordXY16   coord16 : width == 16;
+    CoordXY24   coord24 : width == 24;
+    CoordXY16   coord32 : width == 32;
+}; </pre><p>In this example, the union <code class="literal">VarCoordXY</code> has two
+      branches <code class="literal">coord8</code> and <code class="literal">coord16</code>. The
+      syntax of a member definition is the same as in sequence types. However,
+      each member should be followed by a constraint. This is a boolean
+      expression introduced by a colon. The terms involved in the constraint
+      must be visible in the scope of the current type at compile time and
+      must have been decoded at runtime before entering the branch.</p><p>The decoding semantics of a union type is a trial-and-error
+      method. The decoder tries to decode the first branch. If a constraint
+      fails, it proceeds with the second branch, and so on. If all branches
+      fail, a decoder error is reported for the union type.</p><p>A branch without constraints will never fail, so any following
+      branches will never be matched. This can be used to express a default
+      branch of a union, which should be the last member.</p><p>When all constraints of a union depend on the same member, a
+      choice type is usually more convenient.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e366"></a>5.3.&nbsp;Choice Types</h3></div></div></div><p>A choice type is a shorthand notation for a union where all
+      constraints compare a given member or parameter to one or more constant
+      values.</p><pre class="programlisting">choice VarCoordXY on Coord.width
+{
+    case  8: CoordXY8  coord8;
+    case 16: CoordXY16 coord16;
+    case 24: CoordXY24 coord24;
+    case 32: CoordXY32 coord32;
+};</pre><p>A choice type depends on a <span class="emphasis"><em>selector
+      expression</em></span> following the <code class="literal">on</code> keyword. Each
+      branch of the choice type is preceded by one or more case labels with a
+      literal value. After evaluating the selector expression, the decoder
+      will directly select the branch labelled with a literal value equal to
+      the selector value. This is more efficient than the trial-and-error
+      method applied to union types. Loosely speaking, a union type
+      corresponds to a chain of <code class="literal">if ... else if ... else if ...
+      else</code> statements, whereas a choice type is equivalent to a
+      single <code class="literal">switch</code> statement.</p><p>In the example above, the selector expression refers to a member
+      <code class="literal">width</code> of a type named <code class="literal">Coord</code>
+      containing the current choice type (see <a href="#memberaccess">Section&nbsp;10, &#8220;Member Access and Contained Types&#8221;</a>). Alternatively, the selector may be a
+      parameter of the choice type (see <a href="#parameters" title="11.&nbsp;Parameterized Types">Section&nbsp;11, &#8220;Parameterized Types&#8221;</a>):</p><pre class="programlisting">choice VarCoordXY(uint8 width) on width
+{
+    case  8: CoordXY8  coord8;
+    case 16: CoordXY16 coord16;
+    case 24: CoordXY24 coord24;
+    case 32: CoordXY32 coord32;
+};</pre><p>A given branch of a choice may have more than one case label. In
+      this case, the branch is selected when the selector value is equal to
+      any of the case label values. A choice type may have a default branch
+      which is selected when no case label matches the selector value. The
+      decoder will throw an exception when there is no default branch and the
+      selector does not match any case label. Any branch, including the
+      default branch, may be empty, with a terminating semicolon directly
+      following the label. It is good practice to insert a comment in this
+      case. When the selector expression has an enumeration type, the
+      enumeration type prefix may be omitted from the case label
+      literals.</p><pre class="programlisting">choice AreaAttributes(AreaType type) on type
+{
+    case AreaType.COUNTRY:    // The prefix "AreaType." is optional
+    case STATE:
+    case CITY:
+        RegionAttributes regionAttr;
+
+    case MAP:
+        /* empty */ ;
+
+    case ROAD:
+        RoadAttributes roadAttr;
+
+    default:
+        DefaultAttributes defaultAttr;
+};</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e405"></a>5.4.&nbsp;Constraints</h3></div></div></div><p>A constraint may be specified for any member of a compound type,
+      not just for selecting a branch of a union. In a sequence type, after
+      decoding a member with a constraint, the decoder checks the constraint
+      and reports an error if the constraint is not satisfied.</p><p>There is a shorthand syntax for a constraint that tests a field
+      for equality. <span class="emphasis"><em>Type fieldName <code class="literal">=</code>
+      expr</em></span><code class="literal">;</code> is equivalent to <span class="emphasis"><em>Type
+      fieldName <code class="literal">:</code> fieldName <code class="literal">==</code>
+      expr</em></span><code class="literal">;</code></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e430"></a>5.5.&nbsp;Optional Members</h3></div></div></div><p>A sequence type may have optional members:</p><pre class="programlisting">ItemCount
+{
+    uint8    count8;
+    uint16   count16  if count8 == 0xFF;
+};</pre><p>An optional member has an <code class="literal">if</code> clause with a
+      boolean expression. The member will be decoded only if the expression
+      evaluates to true at run-time.</p><p>Optional members are a more compact and convenient alternative to
+      a union with two branches one of which is empty.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e444"></a>5.6.&nbsp;Functions</h3></div></div></div><p>A compound type may contain functions:</p><pre class="programlisting">ItemCount
+{
+    uint8    count8;
+    uint16   count16  if count8 == 0xFF;
+
+    function uint16 getValue()
+    {
+        return (count8 == 0xFF) ? count16 : count8;
+    }
+};</pre><p>The return type of a function has to be a standard integer or
+      compound type, and the function parameter list must be empty. The
+      function body may contain nothing but a return statement with an
+      expression matching the return type.</p><p>Functions are intended to provide no more than simple expression
+      semantics. There are no plans to add more advanced type conversion or
+      even procedural logic to DataScript. (For complex logic, it would be
+      more sensible to bind native functions to DataScript.)</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e455"></a>6.&nbsp;Array Types</h2></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e458"></a>6.1.&nbsp;Fixed and Variable Length Arrays</h3></div></div></div><p>An array type is like a sequence of members of the same type. The
+      element type may be any other type, except an array type. (Two
+      dimensional arrays can be emulated by wrapping the element type in a
+      sequence type.)</p><p>The length of an array is the number of elements, which may be
+      fixed (i.e. set at compile-time) or variable (set at run-time). The
+      elements of an array have indices ranging from 0 to
+      <span class="emphasis"><em>n</em></span>-1, where n is the array length.</p><p>The notation for array types and elements is similar to C:</p><pre class="programlisting">ArrayExample
+{
+    uint8    header[256];
+    int16    numItems;
+    Element  list[numItems];
+};</pre><p><code class="literal">header</code> is a fixed-length array of 256 bytes;
+      list is an array with <span class="emphasis"><em>n</em></span> elements, where
+      <span class="emphasis"><em>n</em></span> is the value of <code class="literal">numItems</code>.
+      Individual array elements may be referenced in expressions with the
+      usual index notation, e.g. <code class="literal">list[2]</code> is the third
+      element of the <code class="literal">list</code> array.</p><p>Constraints on all elements of an array can be expressed with the
+      <code class="literal">forall</code> operator, see <a href="#forall" title="8.3.2.&nbsp;Quantified Expression">Section&nbsp;8.3.2, &#8220;Quantified Expression&#8221;</a>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e498"></a>6.2.&nbsp;Implicit Length Arrays</h3></div></div></div><p>An array type may have an implicit length indicated by an empty
+      pair of brackets. In this case, the decoder will continue matching
+      instances of the element type until a constraints fail or the end of the
+      stream is reached.</p><pre class="programlisting">ImplicitArray
+{
+    Element    list[];
+};</pre><p>The length of the list array can be referenced as
+      <code class="literal">lengthof list</code>, see <a href="#lengthof" title="8.2.5.&nbsp;lengthof Operator">Section&nbsp;8.2.5, &#8220;lengthof Operator&#8221;</a>.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e512"></a>7.&nbsp;Labels, Offsets and Alignment</h2></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e515"></a>7.1.&nbsp;Labels and Byte Offsets</h3></div></div></div><p>The name of a member of integral type may be used as a label on
+      another member to indicate its byte offset in the enclosing
+      sequence:</p><pre class="programlisting">Tile
+{
+    TileHeader    header;
+    uint32        stringOffset;
+    uint16        numFeatures;
+
+stringOffset:
+    StringTable   stringTable;
+};</pre><p>In this example, the byte offset of member
+      <code class="literal">stringTable</code> from the beginning of the
+      <code class="literal">Tile</code> instance is given by the value of
+      <code class="literal">stringOffset</code>.</p><p>The offset of a label is relative to the enclosing sequence by
+      default. If the offset is relative to some other type containing the
+      current one, this is indicated by a global label, where the type name is
+      used as a prefix, followed by a double colon:</p><pre class="programlisting">Database
+{
+    uint32    numTiles;
+    Tile      tiles[numTiles];
+};
+
+Tile
+{
+    TileHeader    header;
+    uint32        stringOffset;
+    uint16        numFeatures;
+
+Database::stringOffset:
+    StringTable   stringTable;
+};</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e537"></a>7.2.&nbsp;Alignment and Padding</h3></div></div></div><p>Since labels always refer to byte offsets, a given member within a
+      sequence type cannot be labelled if it is not guaranteed to be
+      byte-aligned. To overcome this restriction, an alignment can be
+      specified explicitly:</p><pre class="programlisting">Tile
+{
+    TileHeader    header;
+    uint32        stringOffset;
+    uint16        numBits;
+    bit:1         bits[numBits];
+
+align(8):
+stringOffset:
+    StringTable   stringTable;
+};</pre><p>The align(n) modifier causes the decoder to skip 0..n-1
+      bits so that the bit offset from the beginning of the stream is
+      divisible by n. n may be any integer literal. Alignment modifiers may be
+      used in any sequence type, independent of labels:</p><pre class="programlisting">AlignmentExample
+{
+    bit:11       a;
+
+align(32):
+    uint32       b;
+};</pre><p>The size of the AlignmentExample type is 64 bits; without the
+      alignment modifier, the size would be 43 bits.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e550"></a>8.&nbsp;Expressions</h2></div></div></div><p>The semantics of expression and the precedence rules for operators
+    is the same as in Java, except where stated otherwise. DataScript has a
+    number of special operators <code class="literal">sizeof, lengthof, is</code> and
+    <code class="literal">forall</code> that will be explained in detail below.</p><p>The following Java operators have no counterpart in DataScript:
+    <code class="literal">++, --, &gt;&gt;&gt;, instanceof</code>.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e566"></a>8.1.&nbsp;Binary Operators</h3></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e569"></a>8.1.1.&nbsp;Arithmetic Operators</h4></div></div></div><p>The integer arithmetic operations include <code class="literal">+</code>
+        (addition), <code class="literal">-</code> (subtraction), <code class="literal">*</code>
+        (multiplication), <code class="literal">/</code> (division),
+        <code class="literal">%</code> (modulo). In addition, there are the shift
+        operators <code class="literal">&lt;&lt;</code> and
+        <code class="literal">&gt;&gt;</code>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e595"></a>8.1.2.&nbsp;Relational Operators</h4></div></div></div><p>There are the following relational operators for integer
+        expressions: <code class="literal">==</code> (equal to), <code class="literal">!=</code>
+        (not equal to), <code class="literal">&lt;</code> (less than),
+        <code class="literal">&lt;</code> (less than or equal), <code class="literal">&gt;</code>
+        (greater than), <code class="literal">&gt;=</code> (greater than or
+        equal).</p><p>The equality operators <code class="literal">==</code> and
+        <code class="literal">!=</code> may be applied to any type</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e626"></a>8.1.3.&nbsp;Boolean operators</h4></div></div></div><p>The boolean operators <code class="literal">&amp;&amp;</code> (and) and
+        <code class="literal">||</code> (or) may be applied to boolean
+        expressions.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e637"></a>8.1.4.&nbsp;Bit operators</h4></div></div></div><p>The bit operators <code class="literal">&amp;</code> (bitwise and),
+        <code class="literal">|</code> (bitwise or), <code class="literal">^</code> (bitwise
+        exclusive or) may be applied to integer types.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e651"></a>8.1.5.&nbsp;Assignment operators</h4></div></div></div><p>The assignment operator <code class="literal">=</code> and the combined
+        assignment operators <code class="literal">*=, /=, %=, +=, -=, &lt;&lt;=,
+        &gt;&gt;=, &amp;=, ^=, |=</code> have the usual semantics.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e662"></a>8.1.6.&nbsp;Comma operator</h4></div></div></div><p>The comma operator <code class="literal">,</code> evaluates to the
+        expression on the right hand side.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e670"></a>8.1.7.&nbsp;Postfix operators</h4></div></div></div><p>The postfix operators include <code class="literal">[]</code> (array
+        index), <code class="literal">()</code> (instantiation with argument list or
+        function call), and <code class="literal">.</code> (member access).</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e684"></a>8.2.&nbsp;Unary Operators</h3></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e687"></a>8.2.1.&nbsp;Boolean Negation</h4></div></div></div><p>The negation operator <code class="literal">!</code> is defined for
+        boolean expressions.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e695"></a>8.2.2.&nbsp;Integer operators</h4></div></div></div><p>For integer expressions, there are <code class="literal">+</code> (unary
+        plus), <code class="literal">-</code> (unary minus) and <code class="literal">~</code>
+        (bitwise complement).</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e709"></a>8.2.3.&nbsp;sizeof Operator</h4></div></div></div><p>The <code class="literal">sizeof</code> operator returns the size of a
+        type or an expression in bytes. <code class="literal">sizeof</code> may not be
+        used, when the size in bits is not divisible by 8. When
+        <code class="literal">sizeof</code> is applied to a type name, the size of the
+        type must be fixed and known at compile time. When
+        <code class="literal">sizeof</code> is a applied to a member, it refers to the
+        actual size of the member after decoding.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e726"></a>8.2.4.&nbsp;bitsizeof Operator</h4></div></div></div><p>The <code class="literal">bitsizeof</code> operator returns the size of a
+        type or an expression in bits. When <code class="literal">bitsizeof</code> is
+        applied to a type name, the size of the type must be fixed and known
+        at compile time. When <code class="literal">bitsizeof</code> is a applied to a
+        member, it refers to the actual size of the member after
+        decoding.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="lengthof"></a>8.2.5.&nbsp;lengthof Operator</h4></div></div></div><p>The <code class="literal">lengthof</code> operator may be applied to an
+        array member and returns the actual length (i.e. number of elements of
+        an array.Thus, given <code class="literal">int32 a[5]</code>, the expression
+        <code class="literal">lengthof a</code> evaluates to 5. This is not particularly
+        useful for fixed or variable length arrays, but it is the only way to
+        refer to the length of an implicit length array.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e754"></a>8.2.6.&nbsp;is Operator</h4></div></div></div><p>The <code class="literal">is</code> operator can be applied to two field
+        names, e.g. <code class="literal">x is y</code>. <code class="literal">x</code> must be a
+        member of union type, and <code class="literal">y</code> must be one of the
+        branch names of that union. The expression is true if and only if the
+        decoder has selected branch y for the union.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e771"></a>8.2.7.&nbsp;sum Operator</h4></div></div></div><p>The <code class="literal">sum</code> operator is defined for arrays with
+        integer element type (this includes bit fields).
+        <code class="literal">sum(a)</code> evaluates to the sum of all elements of the
+        array <code class="literal">a</code>.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e785"></a>8.3.&nbsp;Ternary Operators</h3></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e788"></a>8.3.1.&nbsp;Conditional Expression</h4></div></div></div><p>A conditional expression <span class="emphasis"><em>booleanExpr</em></span> ?
+        <span class="emphasis"><em>expr1</em></span> : <span class="emphasis"><em>expr2</em></span> has the value
+        of <span class="emphasis"><em>expr1</em></span> when <span class="emphasis"><em>booleanExpr</em></span> is
+        true. Otherwise, it has the value of
+        <span class="emphasis"><em>expr2</em></span>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="forall"></a>8.3.2.&nbsp;Quantified Expression</h4></div></div></div><p>A quantified expression has the form <code class="literal">forall</code>
+        <span class="emphasis"><em>indexIdentifier</em></span> <code class="literal">in</code>
+        <span class="emphasis"><em>arrayExpr</em></span> <code class="literal">:</code>
+        <span class="emphasis"><em>booleanExpr</em></span>. The quantified expression is true if
+        and only if the <span class="emphasis"><em>booleanExpr</em></span> is true for all
+        indices of the array. This is only useful when the boolean expression
+        after the colon involves the array expression and the index identifier
+        from the left hand side.</p><p>Example: The constraint</p><pre class="programlisting">forall i in a : (i == 0) || (a[i] == a[i-1]+1) </pre><p>means the elements of <code class="literal">a</code> are a sequence of
+        consecutive integers.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e846"></a>8.4.&nbsp;Operator Precedence</h3></div></div></div><p>In the following list, operators are grouped by precedence in
+      ascending order. Operators on the bottom line have the highest
+      precedence and are evaluated first. All operators on the same line have
+      the same precedence and are evaluated left to right, except assignment
+      operators which are evaluated right to left.</p><div class="itemizedlist"><ul type="disc"><li><p>comma</p></li><li><p>assignment</p></li><li><p><code class="literal">forall</code></p></li><li><p><code class="literal">? :</code></p></li><li><p><code class="literal">||</code></p></li><li><p><code class="literal">&amp;&amp;</code></p></li><li><p><code class="literal">|</code></p></li><li><p><code class="literal">^</code></p></li><li><p><code class="literal">&amp;</code></p></li><li><p><code class="literal">== !=</code></p></li><li><p><code class="literal">&lt; &gt; &lt;= &gt;=</code></p></li><li><p><code class="literal">&lt;&lt; &gt;&gt;</code></p></li><li><p><code class="literal">+ -</code></p></li><li><p><code class="literal">* / %</code></p></li><li><p>cast</p></li><li><p>unary <code class="literal">+ - ~ !</code></p></li><li><p><code class="literal">sizeof bitsizeof lengthof sum</code></p></li><li><p><code class="literal">[] () . is</code></p></li></ul></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="nested"></a>9.&nbsp;Nested Types</h2></div></div></div><p>DataScript syntax permits the definition of nested types, however,
+    it is not easy to define the semantics of such types in a consistent way.
+    For the time being, the only supported use is a sequence type definition
+    within a sequence or union field definition, or a union type definition
+    within a sequence field definition, and even this should be avoided in
+    favour of a reference to a type defined at global scope. Example:</p><pre class="programlisting">VarCoord
+{
+    uint8        width;
+    union 
+    {
+        {
+            int16    x;
+            int16    y;
+        } coord16 : width == 16;
+        {
+            int32    x;
+            int32    y;
+        } coord32 : width == 32;
+    } coord;
+};</pre><p>The sequence type <code class="literal">VarCoord</code> contains the member
+    <code class="literal">coord</code> which has a nested union type definition. This
+    union type has two members each of which is a nested sequence type. All
+    nested types in this example are anonymous, but this it not
+    necessary.</p><p>The nested type definitions can be avoided as follows:</p><pre class="programlisting">VarCoord
+{
+    uint8    width;
+    Coords   coords;
+};
+
+union Coords
+{
+    Coord16    coord16 : VarCoord.width == 16;
+    Coord32    coord32 : VarCoord.width == 32;
+};
+
+Coord16
+{
+    int16    x;
+    int16    y;
+};
+
+Coord32
+{
+    int32    x;
+    int32    y;
+};</pre><p>Note that the constraints for the members of the
+    <code class="literal">Coords</code> union refer to the containing type
+    <code class="literal">VarCoord</code>. This is explained in more detail in the
+    following section.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e949"></a>10.&nbsp;Member Access and Contained Types</h2></div></div></div><p>The dot operator can be used to access a member of a compound type:
+    the expression <span class="emphasis"><em>f</em></span>.<span class="emphasis"><em>m</em></span> is valid
+    if</p><div class="itemizedlist"><ul type="disc"><li><p><span class="emphasis"><em>f</em></span> is a field of a compound type
+        <span class="emphasis"><em>C</em></span></p></li><li><p>The type <span class="emphasis"><em>T</em></span> of <span class="emphasis"><em>f</em></span> is a
+        compound type.</p></li><li><p><span class="emphasis"><em>T</em></span> has a member named
+        <span class="emphasis"><em>m</em></span>.</p></li></ul></div><p>The value of the expression <span class="emphasis"><em>f.m</em></span> can be
+    evaluated at run-time only if the member <span class="emphasis"><em>f</em></span> has been
+    evaluated before.</p><p>There is a second use of the dot operator involving a type
+    name:</p><p>At run-time, each compound type <span class="emphasis"><em>C</em></span> (except the
+    root type) is contained in a type <span class="emphasis"><em>P</em></span> which has a
+    member of type <span class="emphasis"><em>C</em></span> which is currently being decoded.
+    Within the scope of <span class="emphasis"><em>C</em></span>, members of the parent type
+    <span class="emphasis"><em>P</em></span> may be referenced using the dot operator
+    <span class="emphasis"><em>P.m</em></span>.</p><p>The containment relation is extended recursively: If
+    <span class="emphasis"><em>C</em></span> is contained in <span class="emphasis"><em>P</em></span> and
+    <span class="emphasis"><em>P</em></span> is contained in <span class="emphasis"><em>Q</em></span>, then
+    <span class="emphasis"><em>Q.m</em></span> is a valid expression in the scope of
+    <span class="emphasis"><em>C</em></span>, denoting the member <span class="emphasis"><em>m</em></span> of the
+    containing type <span class="emphasis"><em>Q</em></span>.</p><p>Example:</p><pre class="programlisting">Header
+{
+    uint32    version;
+    uint16    numItems;
+};
+
+
+Message
+{
+    Header    h;
+    Item      items[h.numItems];
+};
+
+Item
+{
+    uint16    p;
+    uint32    q if Message.h.version &gt;= 10;
+};</pre><p>Within the scope of the <code class="literal">Message</code> type,
+    <code class="literal">header</code> refers to the field of type
+    <code class="literal">Header</code>, and <code class="literal">header.numItems</code> is a
+    member of that type. Within the scope of the <code class="literal">Item</code> type,
+    the names <code class="literal">h</code> or <code class="literal">Header</code> are not
+    defined. But <code class="literal">Item</code> is contained in the Message type, and
+    <code class="literal">h</code> is a member of <code class="literal">Message</code>, so
+    <code class="literal">Message.h</code> is a valid expression of type
+    <code class="literal">Header</code>, and
+    <code class="literal"><code class="literal">Message.h</code>.version</code> references the
+    <code class="literal">version</code> member of the <code class="literal">Header</code>
+    type.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="parameters"></a>11.&nbsp;Parameterized Types</h2></div></div></div><p>The definition of a compound type may be augmented with a parameter
+    list, similar to a parameter list in a Java method declaration. Each item
+    of the parameter list has a type and a name. Within the body of the
+    compound type definition, parameter names may be used as expressions of
+    the corresponding type.</p><p>To use a parameterized type as a field type in another compound
+    type, the parameterized type must be instantiated with an argument list
+    matching the types of the parameter list.</p><p>For instance, the previous example can be rewritten as</p><pre class="programlisting">Header
+{
+    uint32    version;
+    uint16    numItems;
+};
+
+
+Message
+{
+    Header    h;
+    Item(h)   items[h.numItems];
+};
+
+Item(Header header)
+{
+    uint16    p;
+    uint32    q if header.version &gt;= 10;
+};</pre><p>When the element type of an array is parameterized, a special
+    notation can be used to pass different arguments to each element of the
+    array:</p><pre class="programlisting">Database
+{
+    uint16                           numBlocks;
+    BlockHeader                      headers[numBlocks];
+    Block(headers[blocks$index])     blocks[numBlocks];
+};
+
+BlockHeader
+{
+    uint16 numItems;
+    uint32 offset;
+};
+
+Block(BlockHeader header)
+{
+Database::header.offset:
+    Item    items[header.numItems];
+};</pre><p><code class="literal">blocks$index</code> denotes the current index of the
+    <code class="literal">blocks</code> array. The use of this expression in the
+    argument list for the <code class="literal">Block</code> reference indicates that
+    the i-th element of the <code class="literal">blocks</code> array is of type
+    <code class="literal">Block</code> instantiated with the i-th header
+    <code class="literal">headers[i]</code>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e1128"></a>12.&nbsp;Subtypes</h2></div></div></div><p>A subtype definition defines a new name for a given type, optionally
+    in combination with a constraint. When the constraint is omitted, this is
+    rather like a <code class="literal">typedef</code> in C:</p><pre class="programlisting">subtype uint16  BlockIndex;
+
+
+Block
+{
+    BlockIndex    index;
+    BlockData     data;
+};</pre><p>A constraint in the subtype definition is, as usual, a boolean
+    expression introduced by a colon which may contain the keyword
+    <code class="literal">this</code> to refer to the current type:</p><pre class="programlisting">subtype uint16 BlockIndex : 1 &lt;= this &amp;&amp; this &lt; 1024;</pre><p>Subtype constraints will be checked by the decoder for every
+    occurrence of the given subtype in a field definition.</p><p class="remark"><i><span class="remark">Implementation note: Subtypes were introduced in version rds 0.7.
+    Subtype constraints are not yet implemented.</span></i></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e1149"></a>13.&nbsp;Comments</h2></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1152"></a>13.1.&nbsp;Standard Comments</h3></div></div></div><p>DataScript supports the standard comment syntax of Java or C++.
+      Single line comments start with <code class="literal">//</code> and extend to the
+      end of the line. A comments starting with <code class="literal">/*</code> is
+      terminated by the next occurrence of <code class="literal">*/</code>, which may or
+      may not be on the same line.</p><pre class="programlisting">// This is a single-line comment.
+
+
+/* This is an example
+   of a multi-line comment
+   spanning three lines. */</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1168"></a>13.2.&nbsp;Documentation Comments</h3></div></div></div><p>To support inline documentation within a DataScript module,
+      multi-line comments starting with <code class="literal">/**</code> are treated as
+      special documentation comments. The idea and syntax are borrowed from
+      Java(doc). A documentation comment is associated to the following type
+      or field definition. The documentation comment and the corresponding
+      definition may only be separated by whitespace.</p><pre class="programlisting">/**
+ * Traffic flow on links.
+ */
+enum bit:2 Direction
+{
+    /** No traffic flow allowed */
+    NONE,
+    /** Traffic allowed from start to end node. */
+    POSITIVE,
+    /** Traffic allowed from end to start node. */
+    NEGATIVE,
+    /** Traffic allowed in both directions. */
+    BOTH
+};</pre><p>The content of a documentation comment, excluding its delimiters,
+      is parsed line by line. Each line is stripped of leading whitespace, a
+      sequence of asterisks (<code class="literal">*</code>), and more whitespace, if
+      present. After stripping, a comment is composed of one or more
+      paragraphs, followed by zero or more tag blocks. Paragraphs are
+      separated by lines.</p><p>A line starting with whitespace and a keyword preceded by an
+      at-sign (<code class="literal">@</code>) is the beginning of a tag block and also
+      indicates the end of the preceding tag block or comment
+      paragraph.</p><p>The only tag currently supported is <code class="literal">@param</code>,
+      which is used for documenting the arguments of a parameterized type. The
+      documentation comment should contain one <code class="literal">@param</code> block
+      for each argument in the correct order. The <code class="literal">@param</code>
+      tag is followed by the parameter name and the parameter description. The
+      parameter name must be enclosed by whitespace.</p><pre class="programlisting">/**
+ * This type takes two arguments.
+ * @param  arg1   The first argument.
+ * @param  arg2   The second argument.
+ */
+ParamType(Foo arg1, Blah arg2)
+{
+    ...
+};</pre></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e1201"></a>14.&nbsp;Packages and Imports</h2></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1204"></a>14.1.&nbsp;Type Name Visibility</h3></div></div></div><p>Complex DataScript specifications should be split into multiple
+      packages stored in separate source files. Every user-defined type
+      belongs to a unique package. For backward compatibility, there is an
+      unnamed default package used for files without an explicit package
+      declaration. It is strongly recommended to use a package declaration in
+      each DataScript source file.</p><p>A package provides a lexical scope for types. Type names must be
+      unique within a package, but a given type name may be defined in more
+      than one package. If a type named <code class="literal">Coordinate</code> is
+      defined in package <code class="literal">com.acme.foo</code>, the type can be
+      globally identified by its fully qualified name
+      <code class="literal">com.acme.foo.Coordinate</code>, which is obtained by
+      prefixing the type name with the name of the defining package, joined by
+      a dot. Another package <code class="literal">com.acme.foo.bar</code> may also
+      define a type named <code class="literal">Coordinate</code>, having the fully
+      qualified name <code class="literal">com.acme.bar.Coordinate</code>.</p><p>By default, types from other packages are not visible in the
+      current package, unless there are imported explicitly. The package and
+      import syntax and semantics follow the Java example.</p><pre class="programlisting">package map;
+
+import common.geometry.*;
+import common.featuretypes.*;</pre><p>Import declarations only have any effect when there is a reference
+      to a type name not defined in the current package. If package
+      <code class="literal">map</code> defines its own <code class="literal">Coordinate</code>
+      type, any reference to that within package map will be resolved to the
+      local type <code class="literal">map.Coordinate</code>, even when one or more of
+      the imported packages also define a type named
+      <code class="literal">Coordinate</code>.</p><p>On the other hand, if package <code class="literal">map</code> references a
+      <code class="literal">Coordinate</code> type but does not define it, the import
+      declarations are used to resolve that type in one of the imported
+      packages. In that case, the referenced type must be matched by exactly
+      one of the imported packages. It is obviously a semantic error if the
+      type name is defined in none of the packages. It is also an error if the
+      type name is defined in two or more of the imported packages. The order
+      of the import declarations does not matter.</p><p>Individual types can be imported using their fully qualified
+      name:</p><pre class="programlisting"><code class="literal">import common.geometry.Geometry</code>;</pre><p>This single import has precedence over any wildcard import. It
+      prevents an ambiguity with
+      <code class="literal">common.featuretypes.Geometry</code>. However, it would be a
+      semantic error to have another single import of the same type name from
+      a different package.</p><p><em><span class="remark">Implementation note: rds 0.8 supports wildcard imports.
+      Single imports are not yet implemented but will be added in the near
+      future. There are currently no plans to implement references to types by
+      their fully qualified names, as this would cause parser ambiguities with
+      the nested type syntax, see <a href="#nestedtypes">Section&nbsp;9, &#8220;Nested Types&#8221;</a>.</span></em></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1271"></a>14.2.&nbsp;Packages and Files</h3></div></div></div><p>Package and file names are closely related. Each package must be
+      located in a separate file. The above example declares a package
+      <code class="literal">map</code> stored in a source file
+      <code class="literal">map.ds</code>. The import declarations direct the parser to
+      locate and parse source files <code class="literal">common/geometry.ds</code> and
+      <code class="literal">common/featuretypes.ds</code>.</p><p>Imported files may again contain import declarations. Cyclic
+      import relations between packages are supported but should be avoided.
+      The DataScript parser takes care to parse each source file just
+      once.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e1290"></a>15.&nbsp;Relational Extensions</h2></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1293"></a>15.1.&nbsp;Motivation</h3></div></div></div><p>With its basic language features presented in the previous
+      sections, DataScript provides a rich language for modelling binary data
+      streams, which are intended to be parsed sequentially. Direct access to
+      members in the stream is usually not possible, except for labels
+      specifying the offset of a given member. Navigation between semantically
+      related members at different positions in the stream cannot be expressed
+      at the stream level. Member insertions or updates are not
+      supported..</p><p>All in all, the stream model is not an adequate approach for
+      updatable databases in the gigabyte size range with lots of internal
+      cross-references where fast access to individual members is required. In
+      a desktop or server environment, it would be a natural approach to model
+      such a database as a relational database using SQL.</p><p>However, in an embedded environment with limited storage space and
+      processing resources, a full-fledged relational schema is too
+      heavy-weight. To have the best of both worlds, i.e. compact storage on
+      the one hand and direct member access including updates on the other
+      hand, one can adopt a hybrid data model: In this hybrid model, the
+      high-level access structures are strictly relational, but most of the
+      low-level data are stored in binary large objects (BLOBs), where the
+      internal structure of each BLOB is modelled in DataScript.</p><p>For example, we can model a digital map database as a collection
+      of tiles resulting from a rectangular grid where the tiles are numbered
+      row-wise. The database has a rather trivial schema:</p><pre class="programlisting">CREATE TABLE europe (
+  tileNum INT NOT NULL PRIMARY KEY,
+  tile BLOB NOT NULL);</pre><p>Accessing or updating any given tile can simply be delegated to
+      the relational DBMS. Assuming that the tile BLOBs have a reasonable
+      size, each tile can be decoded on the fly to access the individual
+      members within the tile.</p><p>For seamless modelling of this hybrid approach, we decided to add
+      relational extensions to DataScript. Some SQL concepts have been
+      translated to DataScript, others are transparent to DataScript and can
+      be embedded as literal strings to be passed to the SQL backend. Since it
+      is hard to find a natural border between native DataScript and embedded
+      SQL, the relational extensions of DataScript should be regarded as
+      preliminary.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1310"></a>15.2.&nbsp;SQL Tables</h3></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1313"></a>15.2.1.&nbsp;Table Types and Instances</h4></div></div></div><p>An SQL table type is a special case of a compound type, where
+        the members of the type correspond to the columns of a relational
+        table. Members of integer or string type translate to the
+        corresponding SQL column types. Members of compound or array type
+        correspond to BLOB columns. Members of type
+        <code class="literal">uint8[n]</code> correspond to a <code class="literal">CHAR(n)</code>
+        type. In Relational DataScript, we can express the above example as
+        follows:</p><pre class="programlisting">sql_table GeoMap
+{
+  int32   tileId sql "PRIMARY KEY";
+  Tile    tile;
+};
+
+
+GeoMap europe;
+GeoMap america;</pre><p>It is important to note that the <code class="literal">GeoMap</code> is a
+        table <span class="emphasis"><em>type</em></span> and not a table. A table is defined by
+        the instance <code class="literal"><code class="literal">europe</code></code> of type
+        <code class="literal">GeoMap</code>. Table types have no direct equivalent in
+        SQL. They can be used to create tables with identical structure and
+        column names. Each instance of an
+        <code class="literal"><code class="literal">sql_table</code></code> type in DataScript
+        translates to an SQL table where the table name in SQL is equal to the
+        instance name in DataScript. A member definition may include an SQL
+        constraint introduced by the keyword <code class="literal">sql</code>, followed
+        by a literal string which is passed transparently to the SQL
+        engine.</p><p>Thus, the DataScript instance <code class="literal">america</code> gives
+        rise to the following SQL table:</p><pre class="programlisting">CREATE TABLE america (
+  tileNum INT NOT NULL PRIMARY KEY,
+  tile BLOB NOT NULL);</pre><p class="remark"><i><span class="remark">Note: The current definition of sql_tables is not consistent
+        with the abstract data type and value semantics of plain DataScript.
+        Actually, a table instance is itself a composite type, represented by
+        a set of rows, and each row item is an instance of the corresponding
+        column type. To model this more adequately and to avoid embedded SQL
+        for the primary key property, we are planning to change our
+        definitions.</span></i></p><p class="remark"><i><span class="remark">An SQL table is a map container type mapping (primary) keys to
+        values: sql_map&lt;int32, Tile&gt; GeoMap is a container type. An
+        instance of this type is an SQL table. A map entry is realized as a
+        table row, corresponding to a key-value pair. Both key and value may
+        be composed of one or more columns.</span></i></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e1360"></a>15.2.2.&nbsp;Explicit Parameters</h4></div></div></div><p>An <code class="literal">sql_table</code> type differs from a sequence
+        type in that there is no decoder function that automatically reads all
+        members of a table row. The application has to build its own queries
+        an invoke a decoder function on each BLOB column explicitly. In the
+        case where an <code class="literal">sql_table</code> member is an instance of a
+        parameterized type, the application may want to derive the parameter
+        values from the context (e.g. other table columns), which is not
+        available to the DataScript decoder. In this case, the type arguments
+        shall be marked with the keyword <code class="literal">explicit</code> to
+        indicate that these values will be set explicitly be the application.
+        Otherwise, the decoder would complain about not being able to evaluate
+        the type arguments.</p><pre class="programlisting">Tile(uint8 level, uint8 width)
+{
+    ...
+};
+
+
+sql_table TileTable
+{
+    uint32    tileId;
+    uint32    version;
+    Tile(explicit level, explicit width)   tile;
+};</pre></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1376"></a>15.3.&nbsp;SQL Databases</h3></div></div></div><p>Since an SQL table is always contained in an SQL database, we
+      introduce an <code class="literal">sql_database</code> type in DataScript to model
+      databases. <code class="literal">sql_table</code> instances may only be created as
+      members of an <code class="literal">sql_database</code>.</p><pre class="programlisting">sql_table GeoMap
+{
+  // see above
+};
+
+sql_database TheWorld
+{
+  GeoMap europe;
+  GeoMap america;
+};</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1393"></a>15.4.&nbsp;SQL Integers</h3></div></div></div><p>Some SQL engines internally always use an integer key or rowid. If
+      the user-defined primary key is an integer, it can be used as row id. If
+      the primary key is composite, it is mapped internally to an integer
+      rowid. To avoid this indirection which requires additional storage space
+      and increases access times, we introduce SQL integer types. An
+      <code class="literal">sql_integer</code> is a sequence type whose members are of
+      integer base type such that the total size of the
+      <code class="literal">sql_integer</code> type does not exceed 64 bits. Members of
+      an <code class="literal">sql_integer</code> may not be optional.</p><pre class="programlisting">sql_integer TileId
+{
+  uint8  levelNr;
+  int32  tileNr;
+};</pre><p>In this example, the value used as SQL key is <code class="literal">(levelNr
+      &lt;&lt; 32 + (uint32) tileNr)</code>.</p></div></div><div class="bibliography"><div class="titlepage"><div><div><h2 class="title"><a name="d0e1415"></a>References</h2></div></div></div><div class="biblioentry"><a name="Back"></a><p>[<span class="abbrev">Back</span>] <span class="author"><span class="firstname">Godmar</span> <span class="surname">Back</span>. </span><span class="citetitle"><em class="citetitle"><a href="http://www.cs.vt.edu/~gback/papers/gback-datascript-gpce2002.pdf" target="_top">DataScript
+      - a Specification and Scripting Language for Binary
+      Data</a></em>. </span><span class="edition">Proceedings of the ACM Conference on Generative Programming and
+      Component Engineering Proceedings (GPCE 2002), published as LNCS 2487.
+      ACM. Pittsburgh, PA. </span><span class="date">October 2002. </span><span class="pagenums">pp. 66-77. </span></p></div><div class="biblioentry"><a name="DataScript"></a><p>[<span class="abbrev">DataScript</span>] <span class="citetitle"><em class="citetitle"><a href="http://datascript.sourceforge.net" target="_top">DataScript
+      Reference Implementation</a></em>. </span></p></div><div class="biblioentry"><a name="rds"></a><p>[<span class="abbrev">rds</span>] <span class="citetitle"><em class="citetitle"><a href="http://dstools.sourceforge.net" target="_top">Relational
+      DataScript</a></em>. </span></p></div><div class="biblioentry"><a name="SQLite"></a><p>[<span class="abbrev">SQLite</span>] <span class="citetitle"><em class="citetitle"><a href="http://www.sqlite.org" target="_top">SQLite Embedded
+      Database</a></em>. </span></p></div></div></div></body></html>
