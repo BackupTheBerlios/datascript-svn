@@ -1,0 +1,562 @@
+/* BSD License
+ *
+ * Copyright (c) 2009, Harald Wellmann, Harman/Becker Automotive Systems
+ * All rights reserved.
+ * 
+ * This software is derived from previous work
+ * Copyright (c) 2003, Godmar Back.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ * 
+ *     * Redistributions in binary form must reproduce the above
+ *       copyright notice, this list of conditions and the following
+ *       disclaimer in the documentation and/or other materials provided
+ *       with the distribution.
+ * 
+ *     * Neither the name of Harman/Becker Automotive Systems or
+ *       Godmar Back nor the names of their contributors may be used to
+ *       endorse or promote products derived from this software without
+ *       specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+grammar de.berlios.datascript.DataScript with org.eclipse.xtext.common.Terminals
+
+import 'http://www.eclipse.org/emf/2002/Ecore' as ecore
+
+generate dataScript "http://www.berlios.de/datascript/DataScript"
+
+Model :
+    (package = Package)?
+	(imports += Import)*
+	(elements += Element)*
+	;
+	
+Package
+    : "package" name=PackageName ';'
+    ;
+    
+PackageName
+    : ID ('.' ID)*
+    ;    	
+	
+Import 
+    : 'import' importURI=PackagePath '.' '*' ';'
+	;
+	
+PackagePath returns ecore::EString 
+    : ID ('.' ID)*
+    ;	
+	
+	
+Type 
+    : SimpleType
+    | ComplexType
+    ;
+    
+Element 
+    : Constant
+    | ComplexType
+    ;
+        
+        
+Constant
+    : 'const' type=TypeReference name=ID '=' value=Expression ';'
+    ;
+    
+ComplexType
+    : Subtype 
+    | EnumType
+    | CompoundType
+    | SqlDatabaseType
+    | SqlTableType
+    | SqlIntegerType
+    ;
+    
+Subtype
+    : 'subtype' type=TypeReference name=ID (condition=FieldCondition)? ';'
+    ;
+
+
+EnumType
+    : 'enum' type=IntegerType name=ID '{'
+       members += EnumMember
+       (',' members += EnumMember)*
+      '}' ';'
+    ;
+    
+EnumMember
+    : name = ID ('=' value = Expression)? 
+    ;    
+
+	
+SimpleType
+	: IntegerType
+	| StringType
+	;
+	
+IntegerType
+    : name=BuiltInIntegerType
+    | BitFieldType
+    ;	
+	
+BuiltInIntegerType
+    : "int8"
+    | "int16"
+    | "int32"
+    | "int64"
+    | "uint8"
+    | "uint16"
+    | "uint32"
+    | "uint64"
+    ;	
+	
+StringType
+    : "string"
+    ;	
+	
+BitFieldType
+    : (signed ?= 'int' | 'bit')  ( ':' length=IntegerLiteral | '<' length=ShiftExpression '>' )
+    ;	
+
+CompoundType
+    : SequenceType
+    | ChoiceType
+    ;
+    
+SequenceType
+    : (union ?= "union")? 
+       name=ID (parameters = ParameterList)?    
+      '{' 
+      (members += Field)+
+      (functions += Function)* 
+      '}' ';'
+    ;
+    
+Field
+    : (alignment = Alignment)?
+      (label = Label)?
+      type = TypeReference 
+      name = ID 
+      (array = Array)? 
+      (init = FieldInitializer)? 
+      (opt = OptionalClause)? 
+      (condition ?= FieldCondition)? ';'     
+    ;
+    
+Alignment
+    : 'align' '(' value=IntegerLiteral ')' ':' 
+    ;
+    
+Label
+    : expr=Expression ':'
+    ;       
+    
+Array
+    : '[' (length=Expression)? ']'
+    ;
+    
+FieldInitializer returns Expression
+    : '=' Expression
+    ;
+    
+OptionalClause returns Expression
+    : 'if' Expression
+    ;
+    
+FieldCondition returns Expression
+    : ':' Expression
+    ;                
+    
+    
+ChoiceType
+    : 'choice' name=ID (parameters=ParameterList)? 'on' selector=Expression
+      '{'
+       (members += ChoiceMember)+
+       (default = DefaultChoice)?
+       (functions += Function)* 
+      '}' ';'
+    ; 
+
+ChoiceMember
+    : ('case' cases+=Expression ':')+ 
+      (alternative=ChoiceAlternative)? ';'
+    ;    
+
+ChoiceAlternative 
+    : type=TypeReference name=ID (array=Array)?
+    ;
+    
+DefaultChoice
+    :  'default' ':' (ChoiceAlternative)? ';'
+    ;    
+    
+Function
+    : 'function' type=TypeReference name=ID parameters=FunctionParameterList body=FunctionBody 
+    ;
+    
+FunctionParameterList
+    : '(' ')'
+    ;
+    
+FunctionBody
+    : '{' 'return' expr=Expression ';' '}'
+    ;          
+    
+    
+TypeReference
+    : SimpleType
+    | ref=[ComplexType] (args=ArgumentList)?
+    ;
+    
+    
+ParameterList
+    : '('
+      parameters += ParameterDefinition
+      (',' parameters += ParameterDefinition)*
+      ')'
+    ; 
+    
+ParameterDefinition
+    : type=TypeReference name=ID
+    ;    
+
+ArgumentList
+    : '(' arguments += TypeArgument (',' arguments += TypeArgument)* ')'
+    ;
+    
+TypeArgument
+    : 'explicit' explicit=ID
+    |  expr=AssignmentExpression
+    ;        
+
+// -- SQL Definitions ----------------------------
+
+
+SqlDatabaseType
+    : 'sql_database' name=ID '{'
+      (fields+=SqlTableField)+
+      (constraint=SqlConstraint ';')?
+      '}' ';'
+    ;
+
+SqlTableField
+    : table=[SqlTableType] name=ID ';'
+    ;
+
+SqlTableType
+    : 'sql_table' name=ID (parameters=ParameterList)?
+      '{'
+      (fields+=SqlFieldDefinition)+
+      (constraint=SqlConstraint ';')?
+      '}' ';'
+    ;
+
+SqlFieldDefinition
+    : type=TypeReference 
+      name=ID
+      (array=Array)?
+      (condition=FieldCondition)?
+      (constraint=SqlConstraint)?
+      ';'
+    ;
+    
+SqlConstraint
+    : "sql" constraints += STRING (',' constraints += STRING)* 
+    ;    
+
+
+SqlIntegerType
+    : 'sql_integer' name=ID '{'
+       (fields += SqlIntegerFieldDefinition)+ 
+      '}' ';' 
+    ;
+    
+SqlIntegerFieldDefinition
+    : type=IntegerType name=ID (condition=FieldCondition)? ';'
+    ;    
+
+
+       
+
+// -- Expressions -------------------------------------------------
+
+Expression 
+    : operands += AssignmentExpression 
+      ( {Expression.operands += current} 
+      operator = "@" 
+      op = Operator 
+      operands += AssignmentExpression)?
+    ;
+        
+CommaExpression returns Expression 
+    : AssignmentExpression 
+      ( {Expression.operands += current} 
+      operator = "," 
+      operands += AssignmentExpression)?
+    ;
+
+AssignmentExpression returns Expression 
+    : ConditionalExpression 
+      ( {Expression.operands += current} 
+      operator = "=" 
+      operands += ConditionalExpression)*
+    ;
+  
+    
+    
+ConditionalExpression returns Expression
+    : BooleanOrExpression 
+      ( {Expression.operands += current} 
+      operator = "?"
+      operands += BooleanOrExpression ':'
+      operands += BooleanOrExpression )*
+    ;
+    
+BooleanOrExpression returns Expression
+    : BooleanAndExpression 
+      ({Expression.operands += current} 
+      operator = "||" 
+      operands += BooleanAndExpression)* 
+    ;
+    
+BooleanAndExpression returns Expression
+    : BitwiseOrExpression 
+      ({Expression.operands += current} 
+      operator = "&&" 
+      operands += BitwiseOrExpression)*            
+    ;
+    
+BitwiseOrExpression returns Expression
+    : BitwiseXorExpression 
+      ({Expression.operands += current} 
+      operator = "|" 
+      operands += BitwiseXorExpression)*
+    ;
+    
+BitwiseXorExpression returns Expression
+    : BitwiseAndExpression        
+      ({Expression.operands += current} 
+      operator = "^" 
+      operands += BitwiseAndExpression)*
+    ;  
+      
+BitwiseAndExpression returns Expression
+    : EqualityExpression        
+      ({Expression.operands += current} 
+      operator = "&" 
+      operands += EqualityExpression)*
+    ;
+    
+EqualityExpression returns Expression
+    : ComparisonExpression      
+      ({Expression.operands += current} 
+      operator = EqualityOperator 
+      operands += ComparisonExpression)*
+    ;
+    
+EqualityOperator
+    : "=="
+    | "!="
+    ;
+    
+        
+ComparisonExpression returns Expression
+    : ShiftExpression      
+      ({Expression.operands += current} 
+      operator = ComparisonOperator 
+      operands += ShiftExpression)*
+    ;
+    
+ComparisonOperator
+    : "<"
+    | ">"
+    | "<="
+    | ">="
+    ;
+    
+ShiftExpression returns Expression
+    : AdditiveExpression      
+      ({Expression.operands += current} 
+      operator = ShiftOperator 
+      operands += AdditiveExpression)*
+    ;
+      
+    
+ShiftOperator
+    : "<<"
+    | ">>"
+    ;
+    
+
+AdditiveExpression returns Expression 
+    : MultiplicativeExpression 
+      ( {Expression.operands+=current} operator=AdditiveOperator 
+      operands += MultiplicativeExpression)*  
+    ;
+  
+AdditiveOperator 
+    : "+" 
+    | "-"
+    ;
+  
+MultiplicativeExpression returns Expression 
+    : UnaryExpression 
+      ( {Expression.operands+=current} operator=MultiplicativeOperator 
+      operands += UnaryExpression)*
+    ;
+  
+  
+MultiplicativeOperator 
+    : "*" 
+    | "/"
+    | "%"
+    ;
+    
+CastExpression returns Expression
+    : ('(' type=ID ')')? operands+=UnaryExpression
+    ;
+    
+UnaryExpression returns Expression
+    : {Expression} (operator=UnaryOperator)? operands += BuiltInOpExpression
+    ;
+    
+UnaryOperator
+    : '+' 
+    | '-'
+    | '~'
+    | '!'
+    ;      
+
+BuiltInOpExpression returns Expression
+    : (operator=BuiltInOperator)? operands+=PostfixExpression
+    ;
+    
+BuiltInOperator
+    : "sizeof"
+    | "bitsizeof"
+    | "lengthof"
+    | "sum"
+    ;        
+    
+PostfixExpression returns Expression
+    : operands += PrimaryExpression (operands += PostfixOperand)*
+    ;
+    
+    
+PostfixOperand returns Expression
+    :   ArrayOperand 
+    |   DotOperand 
+    |   IndexOperand
+    |   FunctionArgumentList 
+    ;
+
+//PostfixExpression returns Expression
+//   : ArrayExpression
+//   | DotExpression
+//   ;    
+
+
+//PostfixExpression returns Expression
+//    : PrimaryExpression 
+//      (  {Expression.operands += current} 
+//         ( operator='[' operands += Expression ']')?
+//      |  ( operator='.' operands += Expression    )?
+//      )*
+//    ;  
+    
+//ArrayExpression returns Expression
+//    : DotExpression 
+//      ( {Expression.operands += current} operator='[' 
+//      operands += Expression ']')?
+//    ;    
+//
+//DotExpression returns Expression
+//    : PrimaryExpression 
+//      ( {Expression.operands += current} operator='.' 
+//      operands += PrimaryExpression )?
+//    ;    
+
+//DotExpression
+//    : PrimaryExpression 
+//      ( {Expression.operands += current} operator='.' 
+//      operands += DotOperand ']')?
+//    ;    
+//
+
+ArrayOperand returns Expression
+    : '[' Expression ']'
+    ; 
+    
+DotOperand returns Expression
+    : '.' {Expression}ID
+    ; 
+    
+IndexOperand
+    : '$' 'index'
+    ;               
+
+FunctionArgumentList
+    : '(' ')'
+    ;    
+
+    
+PrimaryExpression returns Expression
+   : name=ID
+   | IntegerLiteral
+   | StringLiteral
+   | operator="(" operands += Expression ")"
+   ;  
+    
+
+IntegerLiteral 
+    : value=INT 
+    | value=HEX
+    | value=BINARY
+    ;
+
+StringLiteral 
+    : value=STRING     
+    ;
+
+  
+enum Operator
+    : PLUS = '+' 
+    | MINUS = '-'
+    | MULT = '*' 
+    | DIV = '/'
+    | MOD = '%'
+    ;       
+
+// Override from Xtext: leading caret is not allowed
+terminal ID  		
+    : ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*
+    ;
+
+terminal HEX returns ecore::EInt
+    : '0' ('x'|'X') ('0'..'9'|'A'..'F'|'a'..'f')+
+    ;
+    
+terminal BINARY returns ecore::EInt
+    : ('0'|'1')+ ('b'|'B') 
+    ;
+    
+//terminal DOC
+//    : "/**" -> "*/"
+//    ;
+        

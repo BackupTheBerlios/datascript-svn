@@ -1,0 +1,201 @@
+grammar de.berlios.datascript.DataScript with org.eclipse.xtext.common.Terminals
+
+import 'http://www.eclipse.org/emf/2002/Ecore' as ecore
+
+generate expr "http://www.berlios.de/datascript/expr"
+
+Expression 
+    : operands += CommaExpression 
+      ( {Expression.operands+=current} operator="," op=Operator operands += CommaExpression)*
+    ;
+        
+CommaExpression returns Expression 
+    : AssignmentExpression 
+      ( {Expression.operands+=current} operator="," 
+      operands += AssignmentExpression)*
+    ;
+
+AssignmentExpression returns Expression 
+    : ConditionalExpression 
+      ( {Expression.operands+=current} operator="=" 
+      operands += ConditionalExpression)?
+    ;
+    
+ConditionalExpression returns Expression
+    : BooleanOrExpression 
+      ( {Expression.operands += current} operator = "?"
+      operands += BooleanOrExpression ':'
+      operands += BooleanOrExpression )?
+    ;
+    
+BooleanOrExpression returns Expression
+    : BooleanAndExpression 
+      ({Expression.operands += current} "||" operands+=BooleanAndExpression)? 
+    ;
+    
+BooleanAndExpression returns Expression
+    : BitwiseOrExpression ({Expression.operands += current} "&&" 
+      operands += BitwiseOrExpression)?            
+    ;
+    
+BitwiseOrExpression  returns Expression
+    : BitwiseXorExpression 
+      ({Expression.operands += current} "|" 
+      operands += BitwiseXorExpression)?
+    ;
+    
+BitwiseXorExpression returns Expression
+    : BitwiseAndExpression        
+      ({Expression.operands += current} "^" 
+      operands += BitwiseAndExpression)?
+    ;  
+      
+BitwiseAndExpression returns Expression
+    : EqualityExpression        
+      ({Expression.operands += current} "&" 
+      operands += EqualityExpression)?
+    ;
+    
+EqualityExpression returns Expression
+    : ComparisonExpression      
+      ({Expression.operands += current} operator=EqualityOperator 
+      operands += ComparisonExpression)?
+    ;
+    
+EqualityOperator
+    : "=="
+    | "!="
+    ;
+    
+        
+ComparisonExpression returns Expression
+    : ShiftExpression      
+      ({Expression.operands += current} operator=ComparisonOperator 
+      operands += ShiftExpression)?
+    ;
+    
+ComparisonOperator
+    : "<"
+    | ">"
+    | "<="
+    | ">="
+    ;
+    
+ShiftExpression returns Expression
+    : AdditiveExpression      
+      ({Expression.operands += current} operator=ShiftOperator 
+      operands += AdditiveExpression)?
+    ;
+      
+    
+ShiftOperator
+    : "<<"
+    | ">>"
+    ;
+    
+
+AdditiveExpression returns Expression 
+    : MultiplicativeExpression 
+      ( {Expression.operands+=current} operator=AdditiveOperator 
+      operands += MultiplicativeExpression)*  
+    ;
+  
+AdditiveOperator 
+    : "+" 
+    | "-"
+    ;
+  
+MultiplicativeExpression returns Expression 
+    : CastExpression 
+      ( {Expression.operands+=current} operator=MultiplicativeOperator 
+      operands += CastExpression)*
+    ;
+  
+  
+MultiplicativeOperator 
+    : "*" 
+    | "/"
+    | "%"
+    ;
+    
+CastExpression returns Expression
+    : ('(' type=ID ')')? operands+=UnaryExpression
+    ;
+    
+UnaryExpression returns Expression
+    : {Expression} operator=UnaryOperator operands += BuiltInOpExpression
+    ;
+    
+UnaryOperator
+    : '+' 
+    | '-'
+    | '~'
+    | '!'
+    ;      
+
+BuiltInOpExpression returns Expression
+    : operator=BuiltInOperator operands+=PostfixExpression
+    ;
+    
+BuiltInOperator
+    : "sizeof"
+    | "bitsizeof"
+    | "lengthof"
+    | "sum"
+    ;        
+    
+PostfixExpression returns Expression
+    : operands += PrimaryExpression (operands += PostfixOperand)?
+    ;
+    
+    
+PostfixOperand
+    :   ArrayOperand 
+    |   DotOperand 
+    |   IndexOperand
+    |   FunctionArgumentList 
+    ;
+    
+    
+ArrayOperand
+    : '[' Expression ']'
+    ;    
+
+DotOperand
+    : '.' {Expression}ID
+    ; 
+    
+IndexOperand
+    : '$' 'index'
+    ;               
+
+FunctionArgumentList
+    : '(' ')'
+    ;    
+    
+    
+PrimaryExpression :
+    ID 
+  | IntegerLiteral
+  | StringLiteral
+  | operator="(" operands += Expression ")"
+  ;  
+    
+
+IntegerLiteral 
+    : value=INT 
+    ;
+
+StringLiteral 
+    : value=STRING 
+    ;
+
+  
+enum Operator
+    : PLUS = '+' 
+    | MINUS = '-'
+    | MULT = '*' 
+    | DIV = '/'
+    | MOD = '%'
+    ;       
+

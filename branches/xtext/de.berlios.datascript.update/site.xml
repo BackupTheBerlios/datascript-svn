@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/de.berlios.datascript.xtext.feature_0.35.1.jar" id="de.berlios.datascript.xtext.feature" version="0.35.1"/>
+</site>
