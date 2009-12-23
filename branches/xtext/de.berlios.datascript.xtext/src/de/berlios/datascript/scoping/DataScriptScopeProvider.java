@@ -37,7 +37,25 @@
  */
 package de.berlios.datascript.scoping;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.IScopedElement;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
+import org.eclipse.xtext.scoping.impl.ScopedElement;
+import org.eclipse.xtext.scoping.impl.SimpleScope;
+
+import de.berlios.datascript.dataScript.ChoiceMember;
+import de.berlios.datascript.dataScript.ChoiceType;
+import de.berlios.datascript.dataScript.EnumMember;
+import de.berlios.datascript.dataScript.EnumType;
+import de.berlios.datascript.dataScript.Field;
+import de.berlios.datascript.dataScript.Parameter;
+import de.berlios.datascript.dataScript.SequenceType;
 
 /**
  * This class contains custom scoping description.
@@ -48,5 +66,60 @@ import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
  */
 public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
 {
+    public IScope scope_EnumMember(EnumType enumeration, EClass type)
+    {
+        System.out.println("creating scope for " + enumeration.getName());
+        EList<EnumMember> members = enumeration.getMembers();
+        List<IScopedElement> scopedElems = new ArrayList<IScopedElement>(members.size());
+        for (EnumMember member : members)
+        {
+            scopedElems.add(ScopedElement.create(member.getName(), member));
+        }
+        SimpleScope scope = new SimpleScope(scopedElems);
+        return scope;
+    }
+    
+    public IScope scope_Value(SequenceType compound, EClass type)
+    {
+        System.out.println("creating scope for " + compound.getName());
+        List<Field> members = compound.getMembers();
+        List<IScopedElement> scopedElems = new ArrayList<IScopedElement>(members.size());
+        for (Field member : members)
+        {
+            scopedElems.add(ScopedElement.create(member.getName(), member));
+        }
+        if (compound.getParameters() != null)
+        {
+            for (Parameter parameter : compound.getParameters().getParameters())
+            {
+                scopedElems.add(ScopedElement.create(parameter.getName(), parameter));
+            }
+        }
+        EObject container = compound.eContainer();
+        IScope parentScope = getScope(container, type);
+        SimpleScope scope = new SimpleScope(parentScope, scopedElems);
+        return scope;
+    }
 
+    public IScope scope_Value(ChoiceType choice, EClass type)
+    {
+        System.out.println("creating scope for " + choice.getName());
+        List<ChoiceMember> members = choice.getMembers();
+        List<IScopedElement> scopedElems = new ArrayList<IScopedElement>(members.size());
+        for (ChoiceMember member : members)
+        {
+            scopedElems.add(ScopedElement.create(member.getAlternative().getName(), member));
+        }
+        if (choice.getParameters() != null)
+        {
+            for (Parameter parameter : choice.getParameters().getParameters())
+            {
+                scopedElems.add(ScopedElement.create(parameter.getName(), parameter));
+            }
+        }
+        EObject container = choice.eContainer();
+        IScope parentScope = getScope(container, type);
+        SimpleScope scope = new SimpleScope(parentScope, scopedElems);
+        return scope;
+    }
 }

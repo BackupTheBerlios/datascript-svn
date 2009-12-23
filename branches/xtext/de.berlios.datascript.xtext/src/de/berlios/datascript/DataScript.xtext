@@ -47,6 +47,9 @@ Model :
 	(elements += Element)*
 	;
 	
+/**
+ * Package definition for the current file. Similar to Java.
+ */
 Package
     : "package" name=PackageName ';'
     ;
@@ -54,31 +57,65 @@ Package
 PackageName
     : ID ('.' ID)*
     ;    	
-	
+
+/**
+ * Import of definitions from another resource. Similar to Java.
+ * Importing individual types is currently not supported, an import always imports all
+ * types from the given resource. The wildcard syntax is forward compatible to a 
+ * future implementation of individual imports.
+ */	
 Import 
     : 'import' importURI=PackagePath '.' '*' ';'
 	;
 	
+/**
+ * An 
+ */	
 PackagePath returns ecore::EString 
     : ID ('.' ID)*
     ;	
 	
-	
+/**
+ * Abstract rule.
+ * Every Value has a Type.
+ */	
 Type 
     : SimpleType
     | ComplexType
     ;
-    
+
+/**
+ * An Element is a top-level definition of a Model.
+ */    
 Element 
     : Constant
     | ComplexType
     ;
-        
+
+/**
+ * Abstract rule.
+ * Every Expression has a Value of a given Type. We also regard a type name reference
+ * as an expression of type "Type".
+ * (Analogy: In Java, every object is an instance of type class, and a class literal
+ * Foo.class is an instance of class Class<?>.
+ */
+Value
+    : Element
+    | EnumMember
+    | Field
+    | Parameter
+    | SqlFieldDefinition
+    ;    
+            
         
 Constant
     : 'const' type=TypeReference name=ID '=' value=Expression ';'
     ;
-    
+
+/**
+ * A ComplexType is a type defined by the user with a given name. It can be referenced
+ * in other complex types by its name.
+ */    
 ComplexType
     : Subtype 
     | EnumType
@@ -87,9 +124,14 @@ ComplexType
     | SqlTableType
     | SqlIntegerType
     ;
-    
+
+/**
+ * A Subtype specializes a given base type and assigns a new name to it.
+ * (The specialization is just a rename currently, but it is planned to add things like
+ * range constraints for integer types.
+ */    
 Subtype
-    : 'subtype' type=TypeReference name=ID (condition=FieldCondition)? ';'
+    : 'subtype' type=TypeReference name=ID ';'
     ;
 
 
@@ -134,6 +176,9 @@ BitFieldType
     : (signed ?= 'int' | 'bit')  ( ':' length=IntegerLiteral | '<' length=ShiftExpression '>' )
     ;	
 
+/**
+ * Abstract rule.
+ */
 CompoundType
     : SequenceType
     | ChoiceType
@@ -207,11 +252,7 @@ DefaultChoice
     ;    
     
 Function
-    : 'function' type=TypeReference name=ID parameters=FunctionParameterList body=FunctionBody 
-    ;
-    
-FunctionParameterList
-    : '(' ')'
+    : 'function' type=TypeReference name=ID '(' ')' body=FunctionBody 
     ;
     
 FunctionBody
@@ -227,12 +268,12 @@ TypeReference
     
 ParameterList
     : '('
-      parameters += ParameterDefinition
-      (',' parameters += ParameterDefinition)*
+      parameters += Parameter
+      (',' parameters += Parameter)*
       ')'
     ; 
     
-ParameterDefinition
+Parameter
     : type=TypeReference name=ID
     ;    
 
@@ -296,6 +337,9 @@ SqlIntegerFieldDefinition
 
 // -- Expressions -------------------------------------------------
 
+/**
+ * Abstract rule
+ */
 Expression 
     : operands += AssignmentExpression 
       ( {Expression.operands += current} 
@@ -304,6 +348,9 @@ Expression
       operands += AssignmentExpression)?
     ;
         
+/**
+ * Currently not used, causes ambiguity with ParameterList
+ */        
 CommaExpression returns Expression 
     : AssignmentExpression 
       ( {Expression.operands += current} 
@@ -317,8 +364,6 @@ AssignmentExpression returns Expression
       operator = "=" 
       operands += ConditionalExpression)*
     ;
-  
-    
     
 ConditionalExpression returns Expression
     : BooleanOrExpression 
@@ -428,6 +473,9 @@ MultiplicativeOperator
     | "%"
     ;
     
+/**
+ * Currently not used. Causes ambiguities with parenthesized PrimaryExpression.
+ */    
 CastExpression returns Expression
     : ('(' type=ID ')')? operands+=UnaryExpression
     ;
@@ -466,39 +514,6 @@ PostfixOperand returns Expression
     |   FunctionArgumentList 
     ;
 
-//PostfixExpression returns Expression
-//   : ArrayExpression
-//   | DotExpression
-//   ;    
-
-
-//PostfixExpression returns Expression
-//    : PrimaryExpression 
-//      (  {Expression.operands += current} 
-//         ( operator='[' operands += Expression ']')?
-//      |  ( operator='.' operands += Expression    )?
-//      )*
-//    ;  
-    
-//ArrayExpression returns Expression
-//    : DotExpression 
-//      ( {Expression.operands += current} operator='[' 
-//      operands += Expression ']')?
-//    ;    
-//
-//DotExpression returns Expression
-//    : PrimaryExpression 
-//      ( {Expression.operands += current} operator='.' 
-//      operands += PrimaryExpression )?
-//    ;    
-
-//DotExpression
-//    : PrimaryExpression 
-//      ( {Expression.operands += current} operator='.' 
-//      operands += DotOperand ']')?
-//    ;    
-//
-
 ArrayOperand returns Expression
     : '[' Expression ']'
     ; 
@@ -506,7 +521,10 @@ ArrayOperand returns Expression
 DotOperand returns Expression
     : '.' {Expression}ID
     ; 
-    
+
+/**
+ * TODO: change syntax from myArray$index to indexof(myArray).
+ */    
 IndexOperand
     : '$' 'index'
     ;               
@@ -517,7 +535,7 @@ FunctionArgumentList
 
     
 PrimaryExpression returns Expression
-   : name=ID
+   : ref=[Value]
    | IntegerLiteral
    | StringLiteral
    | operator="(" operands += Expression ")"
@@ -555,7 +573,11 @@ terminal HEX returns ecore::EInt
 terminal BINARY returns ecore::EInt
     : ('0'|'1')+ ('b'|'B') 
     ;
-    
+
+/**
+ * TODO: Enable doc comments as hidden tokens and access them from the model
+ * to generate HTML output à la Javadoc.
+ */    
 //terminal DOC
 //    : "/**" -> "*/"
 //    ;
