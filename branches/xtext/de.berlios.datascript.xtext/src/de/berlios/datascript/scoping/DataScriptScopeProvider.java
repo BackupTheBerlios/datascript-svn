@@ -54,6 +54,7 @@ import de.berlios.datascript.dataScript.ChoiceType;
 import de.berlios.datascript.dataScript.EnumMember;
 import de.berlios.datascript.dataScript.EnumType;
 import de.berlios.datascript.dataScript.Field;
+import de.berlios.datascript.dataScript.Function;
 import de.berlios.datascript.dataScript.Parameter;
 import de.berlios.datascript.dataScript.SequenceType;
 
@@ -95,6 +96,13 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
                 scopedElems.add(ScopedElement.create(parameter.getName(), parameter));
             }
         }
+        if (compound.getFunctions() != null)
+        {
+            for (Function function : compound.getFunctions())
+            {
+                scopedElems.add(ScopedElement.create(function.getName(), function));                
+            }
+        }
         EObject container = compound.eContainer();
         IScope parentScope = getScope(container, type);
         SimpleScope scope = new SimpleScope(parentScope, scopedElems);
@@ -115,6 +123,13 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
             for (Parameter parameter : choice.getParameters().getParameters())
             {
                 scopedElems.add(ScopedElement.create(parameter.getName(), parameter));
+            }
+        }
+        if (choice.getFunctions() != null)
+        {
+            for (Function function : choice.getFunctions())
+            {
+                scopedElems.add(ScopedElement.create(function.getName(), function));                
             }
         }
         EObject container = choice.eContainer();

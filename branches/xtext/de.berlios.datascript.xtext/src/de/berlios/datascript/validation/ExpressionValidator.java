@@ -56,7 +56,7 @@ public class ExpressionValidator
         }
         else if (expr instanceof StringLiteral)
         {
-            expr.setType(BuiltInStringType.STRING);
+            expr.setType(BuiltInTypes.STRING);
         }
         else if (expr.getRef() != null)
         {

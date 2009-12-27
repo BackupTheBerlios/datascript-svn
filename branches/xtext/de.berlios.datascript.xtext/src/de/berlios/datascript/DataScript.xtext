@@ -514,40 +514,19 @@ BuiltInOperator
     : "sizeof"
     | "bitsizeof"
     | "lengthof"
+    | "indexof"
     | "sum"
     ;        
     
 PostfixExpression returns Expression
-    : PrimaryExpression ({Expression.left=current} right = PostfixOperand)*
+    : PrimaryExpression 
+    ({Expression.left=current} 
+          operator='[' right=Expression ']'
+        | operator='.'  right=PrimaryExpression
+        | '(' operator=')' 
+    )*
     ;
     
-    
-PostfixOperand returns Expression
-    :   ArrayOperand 
-    |   DotOperand 
-    |   IndexOperand
-    |   FunctionArgumentList 
-    ;
-
-ArrayOperand returns Expression
-    : '[' Expression ']'
-    ; 
-    
-DotOperand returns Expression
-    : '.' {Expression}ID
-    ; 
-
-/**
- * TODO: change syntax from myArray$index to indexof(myArray).
- */    
-IndexOperand
-    : '$' 'index'
-    ;               
-
-FunctionArgumentList
-    : '(' ')'
-    ;    
-
     
 PrimaryExpression returns Expression
    : ref=[Value]
