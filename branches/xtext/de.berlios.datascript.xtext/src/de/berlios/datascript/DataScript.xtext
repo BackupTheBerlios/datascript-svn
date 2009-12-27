@@ -92,6 +92,16 @@ Element
     | ComplexType
     ;
 
+
+//ValueBase returns Type
+//    : 'bogus' valueType=Type
+//    ;
+
+//AbstractValue
+//    : 'bogus' valueType=Type 
+//    | Value
+//    ;
+    
 /**
  * Abstract rule.
  * Every Expression has a Value of a given Type. We also regard a type name reference
@@ -105,6 +115,7 @@ Value
     | Field
     | Parameter
     | SqlFieldDefinition
+    | '$bogus$' valueType=Type
     ;    
             
         
@@ -153,7 +164,7 @@ SimpleType
 	;
 	
 IntegerType
-    : name=BuiltInIntegerType
+    : builtIn=BuiltInIntegerType
     | BitFieldType
     ;	
 	
@@ -169,11 +180,11 @@ BuiltInIntegerType
     ;	
 	
 StringType
-    : "string"
+    : builtIn="string"
     ;	
 	
 BitFieldType
-    : (signed ?= 'int' | 'bit')  ( ':' length=IntegerLiteral | '<' length=ShiftExpression '>' )
+    : builtIn=('int' | 'bit')  ( ':' length=IntegerLiteral | '<' length=ShiftExpression '>' )
     ;	
 
 /**
@@ -341,78 +352,80 @@ SqlIntegerFieldDefinition
  * Abstract rule
  */
 Expression 
-    : operands += AssignmentExpression 
-      ( {Expression.operands += current} 
+    : AssignmentExpression 
+      ( {Expression.left = current} 
       operator = "@" 
       op = Operator 
-      operands += AssignmentExpression)?
+      right = AssignmentExpression
+      type=[Type]
+      )?
     ;
-        
+    
 /**
  * Currently not used, causes ambiguity with ParameterList
  */        
 CommaExpression returns Expression 
     : AssignmentExpression 
-      ( {Expression.operands += current} 
+      ( {Expression.left = current} 
       operator = "," 
-      operands += AssignmentExpression)?
+      right = AssignmentExpression)?
     ;
 
 AssignmentExpression returns Expression 
     : ConditionalExpression 
-      ( {Expression.operands += current} 
+      ( {Expression.left = current} 
       operator = "=" 
-      operands += ConditionalExpression)*
+      right = ConditionalExpression)*
     ;
     
 ConditionalExpression returns Expression
     : BooleanOrExpression 
-      ( {Expression.operands += current} 
+      ( {Expression.left = current} 
       operator = "?"
-      operands += BooleanOrExpression ':'
-      operands += BooleanOrExpression )*
+      middle = BooleanOrExpression ':'
+      right = BooleanOrExpression )*
     ;
     
 BooleanOrExpression returns Expression
     : BooleanAndExpression 
-      ({Expression.operands += current} 
+      ({Expression.left = current} 
       operator = "||" 
-      operands += BooleanAndExpression)* 
+      right = BooleanAndExpression)* 
     ;
     
 BooleanAndExpression returns Expression
     : BitwiseOrExpression 
-      ({Expression.operands += current} 
+      ({Expression.left = current} 
       operator = "&&" 
-      operands += BitwiseOrExpression)*            
+      right = BitwiseOrExpression)*            
     ;
     
 BitwiseOrExpression returns Expression
     : BitwiseXorExpression 
-      ({Expression.operands += current} 
+      ({Expression.left = current} 
       operator = "|" 
-      operands += BitwiseXorExpression)*
+      right = BitwiseXorExpression)*
     ;
     
 BitwiseXorExpression returns Expression
     : BitwiseAndExpression        
-      ({Expression.operands += current} 
+      ({Expression.left = current} 
       operator = "^" 
-      operands += BitwiseAndExpression)*
+      right = BitwiseAndExpression)*
     ;  
       
 BitwiseAndExpression returns Expression
     : EqualityExpression        
-      ({Expression.operands += current} 
+      ({Expression.left = current} 
       operator = "&" 
-      operands += EqualityExpression)*
+      right = EqualityExpression)*
     ;
     
 EqualityExpression returns Expression
     : ComparisonExpression      
-      ({Expression.operands += current} 
+      ({Expression.left = current} 
       operator = EqualityOperator 
-      operands += ComparisonExpression)*
+      right = ComparisonExpression)*
     ;
     
 EqualityOperator
@@ -423,9 +436,9 @@ EqualityOperator
         
 ComparisonExpression returns Expression
     : ShiftExpression      
-      ({Expression.operands += current} 
+      ({Expression.left = current} 
       operator = ComparisonOperator 
-      operands += ShiftExpression)*
+      right = ShiftExpression)*
     ;
     
 ComparisonOperator
@@ -437,9 +450,9 @@ ComparisonOperator
     
 ShiftExpression returns Expression
     : AdditiveExpression      
-      ({Expression.operands += current} 
+      ({Expression.left = current} 
       operator = ShiftOperator 
-      operands += AdditiveExpression)*
+      right = AdditiveExpression)*
     ;
       
     
@@ -451,8 +464,8 @@ ShiftOperator
 
 AdditiveExpression returns Expression 
     : MultiplicativeExpression 
-      ( {Expression.operands+=current} operator=AdditiveOperator 
-      operands += MultiplicativeExpression)*  
+      ( {Expression.left = current} operator=AdditiveOperator 
+      right = MultiplicativeExpression)*  
     ;
   
 AdditiveOperator 
@@ -462,8 +475,8 @@ AdditiveOperator
   
 MultiplicativeExpression returns Expression 
     : UnaryExpression 
-      ( {Expression.operands+=current} operator=MultiplicativeOperator 
-      operands += UnaryExpression)*
+      ( {Expression.left = current} operator=MultiplicativeOperator 
+      right = UnaryExpression)*
     ;
   
   
@@ -477,11 +490,12 @@ MultiplicativeOperator
  * Currently not used. Causes ambiguities with parenthesized PrimaryExpression.
  */    
 CastExpression returns Expression
-    : ('(' type=ID ')')? operands+=UnaryExpression
+    : ('(' cast=ID ')')? left=UnaryExpression
     ;
     
 UnaryExpression returns Expression
-    : {Expression} (operator=UnaryOperator)? operands += BuiltInOpExpression
+    : operator=UnaryOperator left = BuiltInOpExpression
+    | BuiltInOpExpression
     ;
     
 UnaryOperator
@@ -492,7 +506,8 @@ UnaryOperator
     ;      
 
 BuiltInOpExpression returns Expression
-    : (operator=BuiltInOperator)? operands+=PostfixExpression
+    : operator=BuiltInOperator left = PostfixExpression
+    | PostfixExpression
     ;
     
 BuiltInOperator
@@ -503,7 +518,7 @@ BuiltInOperator
     ;        
     
 PostfixExpression returns Expression
-    : operands += PrimaryExpression (operands += PostfixOperand)*
+    : PrimaryExpression ({Expression.left=current} right = PostfixOperand)*
     ;
     
     
@@ -538,7 +553,7 @@ PrimaryExpression returns Expression
    : ref=[Value]
    | IntegerLiteral
    | StringLiteral
-   | operator="(" operands += Expression ")"
+   | operator="(" left = Expression ")"
    ;  
     
 

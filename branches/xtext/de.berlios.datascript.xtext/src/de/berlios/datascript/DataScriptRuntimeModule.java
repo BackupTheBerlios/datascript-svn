@@ -39,7 +39,10 @@ package de.berlios.datascript;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
 
+import com.google.inject.Binder;
+
 import de.berlios.datascript.conversion.DataScriptValueConverter;
+import de.berlios.datascript.validation.BuiltInTypes;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -53,4 +56,11 @@ public class DataScriptRuntimeModule extends
         return DataScriptValueConverter.class;
     }
 
+    @Override
+    public void configure(Binder binder)
+    {
+        super.configure(binder);
+        binder.requestStaticInjection(BuiltInTypes.class);
+    }
+    
 }

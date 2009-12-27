@@ -41,26 +41,39 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.xtext.validation.Check;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import de.berlios.datascript.dataScript.ArgumentList;
 import de.berlios.datascript.dataScript.ChoiceMember;
 import de.berlios.datascript.dataScript.ChoiceType;
+import de.berlios.datascript.dataScript.ComplexType;
+import de.berlios.datascript.dataScript.CompoundType;
 import de.berlios.datascript.dataScript.DataScriptPackage;
 import de.berlios.datascript.dataScript.Element;
 import de.berlios.datascript.dataScript.EnumMember;
 import de.berlios.datascript.dataScript.EnumType;
+import de.berlios.datascript.dataScript.Expression;
 import de.berlios.datascript.dataScript.Field;
 import de.berlios.datascript.dataScript.Function;
 import de.berlios.datascript.dataScript.Model;
 import de.berlios.datascript.dataScript.Parameter;
 import de.berlios.datascript.dataScript.ParameterList;
 import de.berlios.datascript.dataScript.SequenceType;
+import de.berlios.datascript.dataScript.Type;
+import de.berlios.datascript.dataScript.TypeArgument;
+import de.berlios.datascript.dataScript.TypeReference;
 
 public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
 {
-
+    private static Logger log = LoggerFactory.getLogger(DataScriptJavaValidator.class);
+    
+    private ExpressionValidator exprValidator = new ExpressionValidator(this);
+    
     @Check
     public void checkUniqueElements(Model model)
     {
+        log.info("checking uniqueness of elements in model {}", model.getPackage().getName());
         Set<String> names = new HashSet<String>();
         for (Element member : model.getElements())
         {
@@ -74,6 +87,7 @@ public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
     @Check
     public void checkUniqueAlternatives(ChoiceType type)
     {
+        log.info("checking uniqueness of choice alternatives in {}", type.getName());
         Set<String> names = new HashSet<String>();
         for (ChoiceMember member : type.getMembers())
         {
@@ -98,6 +112,7 @@ public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
     @Check
     public void checkUniqueMembers(SequenceType type)
     {
+        log.info("checking uniqueness of sequence members in {}", type.getName());
         Set<String> names = new HashSet<String>();
         for (Field member : type.getMembers())
         {
@@ -120,6 +135,7 @@ public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
     @Check
     public void checkUniqueMembers(EnumType type)
     {
+        log.info("checking uniqueness of enum members in {}", type.getName());
         Set<String> names = new HashSet<String>();
         for (EnumMember member : type.getMembers())
         {
@@ -133,6 +149,7 @@ public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
     @Check
     public void checkUniqueParameters(ParameterList paramList)
     {
+        log.info("checking uniqueness of parameter names members");
         Set<String> names = new HashSet<String>();
         for (Parameter param : paramList.getParameters())
         {
@@ -141,6 +158,91 @@ public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
                error("Duplicate member " + param.getName(), DataScriptPackage.PARAMETER__NAME);
            }
         }
+    }
+    
+    @Check
+    public void checkExpression(Expression expr)
+    {
+        log.info("checking expression");
+        if (! (expr.eContainer() instanceof Expression))
+        {
+            exprValidator.checkExpression(expr);
+        }
+    }
+    
+    //@Check
+    public void checkArgumentList(Field field)
+    {
+        TypeReference typeRef = field.getType();
+        ArgumentList args = typeRef.getArgs();
+        if (args == null)
+            return;
+        
+        ComplexType referencedType = typeRef.getRef();
+        
+
+        // lookup referenced type
+        Type p = TypeResolver.resolve(referencedType);
+
+        // this must be a compound type
+        if (!(p instanceof CompoundType))
+        {
+            error("'" + referencedType.getName()
+                    + "' is not a parameterized type", field, DataScriptPackage.FIELD__TYPE);
+        }
+
+        // and it must have a parameter list
+        CompoundType compound = (CompoundType) p;
+//        if (compound == null)
+//        {
+//            error("'" + compound.getName()
+//                    + "' has no parameterized types");
+//            return;
+//        }
+        int numParams = compound.getParameters().getParameters().size();
+        if (numParams == 0)
+        {
+            error("'" + compound.getName()
+                    + "' is not a parameterized type", DataScriptPackage.COMPOUND_TYPE__NAME);
+        }
+
+        int numArgs = args.getArguments().size();
+        // Number of arguments and parameters must be equal.
+        // The type reference is also a child of this node, this accounts for
+        // the -1.
+        if (numArgs != numParams)
+        {
+            error("wrong number of parameters", args, DataScriptPackage.ARGUMENT_LIST__ARGUMENTS);
+        }
+
+        // Iterate over arguments
+        int pos = 0;
+        for (TypeArgument arg : args.getArguments())
+        {
+            Expression expr = arg.getExpr();
+            if (arg.getExplicit() == null)
+            {
+                // Get parameter corresponding to current argument
+                Parameter param = compound.getParameters().getParameters().get(pos);
+                // Resolve the type.
+                Type paramType = param.getType().getRef();
+                paramType = TypeResolver.resolve(paramType);
+
+                // Types must be compatible.
+                if (!exprValidator.checkCompatibility(paramType, expr
+                        .getType()))
+                {
+                    error("type mismatch in argument " + (pos + 1), arg, DataScriptPackage.TYPE_ARGUMENT__EXPR);
+                }
+            }
+            pos++;
+        }
+    }
+    
+    //@Check
+    public void checkContainment(CompoundType type)
+    {
+        
     }
     
 }
