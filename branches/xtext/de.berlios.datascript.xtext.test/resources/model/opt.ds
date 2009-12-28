@@ -1,0 +1,19 @@
+package model.opt;
+
+enum bit:1 Bool
+{
+    TRUE,
+    FALSE
+};
+
+Header
+{
+    Bool hasAttr;
+};
+
+Item
+{
+    Header header;
+    uint32 attr if header.hasAttr == Bool.TRUE;
+};
+

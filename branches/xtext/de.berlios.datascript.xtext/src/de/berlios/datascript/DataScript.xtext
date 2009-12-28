@@ -521,9 +521,10 @@ BuiltInOperator
 PostfixExpression returns Expression
     : PrimaryExpression 
     ({Expression.left=current} 
-          operator='[' right=Expression ']'
+        ( operator='[' right=Expression ']'
         | operator='.'  right=PrimaryExpression
-        | '(' operator=')' 
+        | '(' operator=')'
+        ) 
     )*
     ;
     

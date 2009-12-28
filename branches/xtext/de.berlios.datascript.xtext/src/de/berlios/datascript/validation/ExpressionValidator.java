@@ -158,7 +158,7 @@ public class ExpressionValidator
         else if (".".equals(op))
         {
             checkMember(expr);
-            expr.setType(left.getType());
+            expr.setType(right.getType());
         }
         else if ("(".equals(op))
         {
@@ -194,6 +194,10 @@ public class ExpressionValidator
         else if (BuiltInTypes.isString(left.getType()))
         {
             checkString(right);
+        }
+        else if (left.getType() == right.getType())
+        {
+            // this is ok
         }
         else
         {

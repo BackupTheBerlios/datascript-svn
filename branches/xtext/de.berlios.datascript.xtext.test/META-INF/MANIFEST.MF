@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: DataScript Xtext Unit Tests
+Bundle-SymbolicName: de.berlios.datascript.xtext.test
+Bundle-Version: 0.35.0
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: de.berlios.datascript.xtext;bundle-version="1.0.0",
+ org.junit4;bundle-version="4.5.0",
+ com.google.guice;bundle-version="1.0.1",
+ org.eclipse.emf.ecore;bundle-version="2.5.0",
+ org.eclipse.xtext;bundle-version="0.7.2"
