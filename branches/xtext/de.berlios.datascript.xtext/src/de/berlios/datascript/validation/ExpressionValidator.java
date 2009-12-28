@@ -7,15 +7,9 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 
-import de.berlios.datascript.dataScript.ComplexType;
-import de.berlios.datascript.dataScript.Constant;
-import de.berlios.datascript.dataScript.EnumMember;
 import de.berlios.datascript.dataScript.EnumType;
 import de.berlios.datascript.dataScript.Expression;
-import de.berlios.datascript.dataScript.Field;
 import de.berlios.datascript.dataScript.IntegerLiteral;
-import de.berlios.datascript.dataScript.Parameter;
-import de.berlios.datascript.dataScript.SqlFieldDefinition;
 import de.berlios.datascript.dataScript.StringLiteral;
 import de.berlios.datascript.dataScript.Type;
 import de.berlios.datascript.dataScript.Value;
@@ -71,42 +65,8 @@ public class ExpressionValidator
     private void checkIdentifier(Expression expr)
     {
         Value ref = expr.getRef();
-        if (ref instanceof EnumMember)
-        {
-            EnumMember member = (EnumMember) ref;
-            EnumType enumType = (EnumType) member.eContainer();
-            expr.setType(enumType);
-        }
-        else if (ref instanceof Field)
-        {
-            Field field = (Field) ref;
-            Type type = TypeResolver.resolve(field.getType());
-            expr.setType(type);
-        }
-        else if (ref instanceof Parameter)
-        {
-            Parameter parameter = (Parameter) ref;
-            Type type = TypeResolver.resolve(parameter.getType());
-            expr.setType(type);
-        }
-        else if (ref instanceof SqlFieldDefinition)
-        {
-            SqlFieldDefinition field = (SqlFieldDefinition) ref;
-            Type type = TypeResolver.resolve(field.getType());
-            expr.setType(type);
-        }
-        else if (ref instanceof Constant)
-        {
-            Constant constant = (Constant) ref;
-            Type type = TypeResolver.resolve(constant.getType());
-            expr.setType(type);
-        }
-        else if (ref instanceof ComplexType)
-        {
-            ComplexType complex = (ComplexType) ref;
-            Type type = TypeResolver.resolve(complex);
-            expr.setType(type);            
-        }
+        Type type2 = TypeResolver.getType(ref);
+        expr.setType(type2);
     }
 
     private void checkOperatorExpression(Expression expr)

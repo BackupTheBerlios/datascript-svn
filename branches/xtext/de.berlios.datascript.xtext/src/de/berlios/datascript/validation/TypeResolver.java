@@ -3,10 +3,18 @@ package de.berlios.datascript.validation;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.berlios.datascript.dataScript.ComplexType;
+import de.berlios.datascript.dataScript.Constant;
+import de.berlios.datascript.dataScript.EnumMember;
+import de.berlios.datascript.dataScript.EnumType;
+import de.berlios.datascript.dataScript.Field;
+import de.berlios.datascript.dataScript.Parameter;
 import de.berlios.datascript.dataScript.SimpleType;
+import de.berlios.datascript.dataScript.SqlFieldDefinition;
 import de.berlios.datascript.dataScript.Subtype;
 import de.berlios.datascript.dataScript.Type;
 import de.berlios.datascript.dataScript.TypeReference;
+import de.berlios.datascript.dataScript.Value;
 
 public class TypeResolver
 {
@@ -54,6 +62,43 @@ public class TypeResolver
         {
             type = resolve(ref.getRef());
         }
+        return type;
+    }
+    
+    static public Type getType(Value ref)
+    {
+        Type type = null;
+        if (ref instanceof EnumMember)
+        {
+            EnumMember member = (EnumMember) ref;
+            type = (EnumType) member.eContainer();
+        }
+        else if (ref instanceof Field)
+        {
+            Field field = (Field) ref;
+            type = TypeResolver.resolve(field.getType());
+        }
+        else if (ref instanceof Parameter)
+        {
+            Parameter parameter = (Parameter) ref;
+            type = TypeResolver.resolve(parameter.getType());
+        }
+        else if (ref instanceof SqlFieldDefinition)
+        {
+            SqlFieldDefinition field = (SqlFieldDefinition) ref;
+            type = TypeResolver.resolve(field.getType());
+        }
+        else if (ref instanceof Constant)
+        {
+            Constant constant = (Constant) ref;
+            type = TypeResolver.resolve(constant.getType());
+        }
+        else if (ref instanceof ComplexType)
+        {
+            ComplexType complex = (ComplexType) ref;
+            type = TypeResolver.resolve(complex);
+        }
+        
         return type;
     }
 }

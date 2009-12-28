@@ -38,25 +38,37 @@
 package de.berlios.datascript.scoping;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopedElement;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
+import org.eclipse.xtext.scoping.impl.ImportUriUtil;
 import org.eclipse.xtext.scoping.impl.ScopedElement;
 import org.eclipse.xtext.scoping.impl.SimpleScope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.berlios.datascript.dataScript.ChoiceMember;
 import de.berlios.datascript.dataScript.ChoiceType;
+import de.berlios.datascript.dataScript.Element;
 import de.berlios.datascript.dataScript.EnumMember;
 import de.berlios.datascript.dataScript.EnumType;
+import de.berlios.datascript.dataScript.Expression;
 import de.berlios.datascript.dataScript.Field;
 import de.berlios.datascript.dataScript.Function;
+import de.berlios.datascript.dataScript.Import;
+import de.berlios.datascript.dataScript.Model;
 import de.berlios.datascript.dataScript.Parameter;
 import de.berlios.datascript.dataScript.SequenceType;
+import de.berlios.datascript.dataScript.Type;
+import de.berlios.datascript.validation.TypeResolver;
 
 /**
  * This class contains custom scoping description.
@@ -67,22 +79,26 @@ import de.berlios.datascript.dataScript.SequenceType;
  */
 public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
 {
-    public IScope scope_EnumMember(EnumType enumeration, EClass type)
+    private static Logger log = LoggerFactory.getLogger(DataScriptScopeProvider.class);
+    
+    public IScope scope_Value(EnumType enumeration, EClass type)
     {
-        System.out.println("creating scope for " + enumeration.getName());
+        log.info("creating Value scope for " + enumeration.getName());
         EList<EnumMember> members = enumeration.getMembers();
         List<IScopedElement> scopedElems = new ArrayList<IScopedElement>(members.size());
         for (EnumMember member : members)
         {
             scopedElems.add(ScopedElement.create(member.getName(), member));
         }
-        SimpleScope scope = new SimpleScope(scopedElems);
+        EObject container = enumeration.eContainer();
+        IScope parentScope = getScope(container, type);
+        SimpleScope scope = new SimpleScope(parentScope, scopedElems);
         return scope;
     }
     
     public IScope scope_Value(SequenceType compound, EClass type)
     {
-        System.out.println("creating scope for " + compound.getName());
+        log.info("creating scope for " + compound.getName());
         List<Field> members = compound.getMembers();
         List<IScopedElement> scopedElems = new ArrayList<IScopedElement>(members.size());
         for (Field member : members)
@@ -111,7 +127,7 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
 
     public IScope scope_Value(ChoiceType choice, EClass type)
     {
-        System.out.println("creating scope for " + choice.getName());
+        log.info("creating scope for " + choice.getName());
         List<ChoiceMember> members = choice.getMembers();
         List<IScopedElement> scopedElems = new ArrayList<IScopedElement>(members.size());
         for (ChoiceMember member : members)
@@ -136,5 +152,103 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
         IScope parentScope = getScope(container, type);
         SimpleScope scope = new SimpleScope(parentScope, scopedElems);
         return scope;
+    }
+    
+    
+    public IScope scope_Value(Expression expr, EClass type)
+    {
+        IScope scope;
+        if (isRightOfDot(expr))
+        {
+            Expression sibling = getLeftSibling(expr);
+            Type siblingType = TypeResolver.getType(sibling.getRef());
+            scope = getScope(siblingType, type);
+        }
+        else
+        {
+            scope = getScope(getNonExpressionContainer(expr), type);
+            for (IScopedElement elem : scope.getContents())
+            {
+                if (elem.name().equals(type.getName()))
+                {
+                    expr.setType((Type)elem.element());
+                }
+            }
+        }
+        return scope;
+    }
+    
+    private boolean isRightOfDot(Expression expr)
+    {
+        if (expr.eContainer() instanceof Expression)
+        {
+            Expression parent = (Expression) expr.eContainer();
+            if (".".equals(parent.getOperator()) && parent.getRight() == expr)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private Expression getLeftSibling(Expression expr)
+    {
+        Expression left = null;
+        if (expr.eContainer() instanceof Expression)
+        {
+            Expression parent = (Expression) expr.eContainer();
+            left = parent.getLeft();
+        }
+        return left;
+    }
+    
+    private EObject getNonExpressionContainer(Expression expr)
+    {
+        EObject container = expr;
+        while (container instanceof Expression)
+        {
+            container = container.eContainer();
+        }
+        return container;
+    }
+    
+    
+    public IScope scope_Value(Model model, EClass type)
+    {
+        log.info("creating scope for " + model);        
+        
+        Set<String> uniqueImports = new HashSet<String>(10);
+        List<String> orderedImports = new ArrayList<String>(10);        
+        
+        for (Import imported : model.getImports())
+        {
+            String uri = imported.getImportURI();
+            if (uniqueImports.add(uri) && ImportUriUtil.isValid(model, uri));
+            {
+                orderedImports.add(uri);
+            }
+        }
+        
+        IScope scope = IScope.NULLSCOPE;
+        for (int i = orderedImports.size() - 1; i >= 0; i--) 
+        {
+            String uri = orderedImports.get(i);
+            Resource resource = ImportUriUtil.getResource(model.eResource(), uri);
+            Model importedModel = (Model) resource.getContents().get(0);
+            scope = new SimpleScope(scope, scopedElementsForValue(importedModel));
+        }
+
+        scope = new SimpleScope(scope, scopedElementsForValue(model));        
+        return scope;
+    }
+
+    private List<IScopedElement> scopedElementsForValue(Model model)
+    {
+        List<IScopedElement> scopedElems = new ArrayList<IScopedElement>();
+        for (Element element : model.getElements())
+        {
+            scopedElems.add(ScopedElement.create(element.getName(), element));
+        }
+        return scopedElems;
     }
 }

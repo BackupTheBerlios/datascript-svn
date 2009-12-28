@@ -17,3 +17,10 @@ Item
     uint32 attr if header.hasAttr == Bool.TRUE;
 };
 
+enum bit:1 BoolClone
+{
+    TRUE,
+    FALSE
+};
+
+

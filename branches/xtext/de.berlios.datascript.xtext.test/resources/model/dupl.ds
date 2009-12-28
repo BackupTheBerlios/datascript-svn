@@ -1,0 +1,13 @@
+package model.dupl;
+
+One
+{
+    int16 a;
+    int32 b;
+};
+
+Two
+{
+    int32 c;
+    int32 d = 1+a;
+};
