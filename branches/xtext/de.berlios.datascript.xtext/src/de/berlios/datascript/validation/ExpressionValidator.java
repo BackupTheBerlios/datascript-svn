@@ -134,10 +134,30 @@ public class ExpressionValidator
         {
             checkArray(expr);
         }
+        else if ("sum".equals(op))
+        {
+            checkSum(expr);
+        }
         else
         {
             warning("operator '" + expr.getOperator() + "' cannot be validated", expr, null);            
         }        
+    }
+
+    private void checkSum(Expression expr)
+    {
+        Type type = expr.getLeft().getType();
+        if (!(type instanceof ArrayType))
+        {
+            error("'sum' requires array argument", expr, null);
+        }
+        ArrayType array = (ArrayType) type;
+        Type elementType = array.getElementType();
+        if (! BuiltInTypes.isInteger(elementType))
+        {
+            error("'sum' requires array with integer element type", expr, null);            
+        }
+        expr.setType(BuiltInTypes.INTEGER);        
     }
 
     private void checkFunction(Expression expr)
