@@ -45,6 +45,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopedElement;
@@ -93,6 +94,19 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
         EObject container = enumeration.eContainer();
         IScope parentScope = getScope(container, type);
         SimpleScope scope = new SimpleScope(parentScope, scopedElems);
+        return scope;
+    }
+    
+    public IScope scope_Value(ChoiceMember member, EClass type)
+    {
+        ChoiceType choice = (ChoiceType) member.eContainer();
+        Type selectorType = choice.getSelector().getType();
+        Type parentType = choice; 
+        if (selectorType instanceof EnumType)
+        {
+            parentType = selectorType;
+        }
+        IScope scope = getScope(parentType, type);
         return scope;
     }
     
@@ -155,40 +169,27 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
     }
     
     
-    public IScope scope_Value(Expression expr, EClass type)
+    public IScope scope_Expression_ref(Expression expr, EReference ref)
     {
+        log.info("creating scope for ref in PrimaryExpression");
         IScope scope;
-        if (isRightOfDot(expr))
+        Expression parent = getParentExpression(expr);
+        if (isRightOfDot(parent, expr))
         {
             Expression sibling = getLeftSibling(expr);
             Type siblingType = TypeResolver.getType(sibling.getRef());
-            scope = getScope(siblingType, type);
+            scope = getScope(siblingType, ref);
         }
         else
         {
-            scope = getScope(getNonExpressionContainer(expr), type);
-            for (IScopedElement elem : scope.getContents())
-            {
-                if (elem.name().equals(type.getName()))
-                {
-                    expr.setType((Type)elem.element());
-                }
-            }
+            scope = getScope(getNonExpressionContainer(expr), ref);
         }
         return scope;
     }
     
-    private boolean isRightOfDot(Expression expr)
+    private boolean isRightOfDot(Expression parent, Expression expr)
     {
-        if (expr.eContainer() instanceof Expression)
-        {
-            Expression parent = (Expression) expr.eContainer();
-            if (".".equals(parent.getOperator()) && parent.getRight() == expr)
-            {
-                return true;
-            }
-        }
-        return false;
+        return (parent != null && ".".equals(parent.getOperator()) && parent.getRight() == expr);
     }
     
     private Expression getLeftSibling(Expression expr)
@@ -200,6 +201,16 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
             left = parent.getLeft();
         }
         return left;
+    }
+    
+    private Expression getParentExpression(Expression expr)
+    {
+        Expression parent = null;
+        if (expr.eContainer() instanceof Expression)
+        {
+            parent = (Expression) expr.eContainer();
+        }
+        return parent;
     }
     
     private EObject getNonExpressionContainer(Expression expr)

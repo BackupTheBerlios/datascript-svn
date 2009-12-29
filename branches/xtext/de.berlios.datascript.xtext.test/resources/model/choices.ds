@@ -1,0 +1,31 @@
+package model.choices;
+
+enum bit:1 Bool
+{
+    FALSE,
+    TRUE
+};
+
+VarInt
+{
+    Bool isSigned;
+    IntChoice ch;
+};
+
+choice IntChoice on VarInt.isSigned
+{
+    case TRUE:
+        int32 signed;
+        
+    case FALSE:
+        uint32 unsigned;    
+};
+
+choice ParamChoice(Bool isSigned) on isSigned
+{
+    case TRUE:
+        int32 signed;
+        
+    case FALSE:
+        uint32 unsigned;    
+};
