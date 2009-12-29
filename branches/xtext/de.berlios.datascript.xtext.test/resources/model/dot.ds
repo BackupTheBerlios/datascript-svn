@@ -1,0 +1,21 @@
+package model.dot;
+
+One
+{
+    int8 a;
+    int8 b;
+};
+
+Two
+{
+    One one;
+    int16 c;
+    uint32 y = one.c;
+};
+
+Three
+{
+    One one;
+    int16 c;
+    uint32 y = one.a;
+};

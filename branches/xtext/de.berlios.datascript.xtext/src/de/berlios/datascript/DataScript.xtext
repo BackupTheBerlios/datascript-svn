@@ -123,10 +123,10 @@ Value
     : Element
     | EnumMember
     | Field
+    | ChoiceAlternative
     | Function
     | Parameter
     | SqlFieldDefinition
-//    | '$bogus$' valueType=Type
     ;    
             
         

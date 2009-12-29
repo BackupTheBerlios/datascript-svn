@@ -1,0 +1,21 @@
+package model.array;
+
+Array
+{
+    uint32 a[10];
+    uint32 b = a[1]*a[2];
+    uint32 c;
+};
+
+ArrayContainer
+{
+    Array array;
+    //uint32 x = array.a[5];
+};
+
+AnotherContainer
+{
+    ArrayContainer ac;
+    int8 d;
+    uint32 y = ac.d;
+};

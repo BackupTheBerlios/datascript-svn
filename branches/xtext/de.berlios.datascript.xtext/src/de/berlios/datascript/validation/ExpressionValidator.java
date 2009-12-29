@@ -7,9 +7,9 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 
+import de.berlios.datascript.dataScript.ArrayType;
 import de.berlios.datascript.dataScript.EnumType;
 import de.berlios.datascript.dataScript.Expression;
-import de.berlios.datascript.dataScript.Function;
 import de.berlios.datascript.dataScript.FunctionType;
 import de.berlios.datascript.dataScript.IntegerLiteral;
 import de.berlios.datascript.dataScript.StringLiteral;
@@ -130,6 +130,10 @@ public class ExpressionValidator
         {
             checkFunction(expr);
         }
+        else if ("[".equals(op))
+        {
+            checkArray(expr);
+        }
         else
         {
             warning("operator '" + expr.getOperator() + "' cannot be validated", expr, null);            
@@ -145,6 +149,18 @@ public class ExpressionValidator
         }
         FunctionType function = (FunctionType) type;
         Type result = function.getResult();
+        expr.setType(result);
+    }
+
+    private void checkArray(Expression expr)
+    {
+        Type type = expr.getLeft().getType();
+        if (!(type instanceof ArrayType))
+        {
+            error("'[]' can only be applied to arrays", expr, null);
+        }
+        ArrayType array = (ArrayType) type;
+        Type result = array.getElementType();
         expr.setType(result);
     }
 

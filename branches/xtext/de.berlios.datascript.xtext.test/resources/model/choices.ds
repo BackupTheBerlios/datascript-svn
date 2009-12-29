@@ -6,6 +6,7 @@ enum bit:1 Bool
     TRUE
 };
 
+/*
 VarInt
 {
     Bool isSigned;
@@ -21,7 +22,7 @@ choice IntChoice on VarInt.isSigned
         uint32 unsigned;    
 };
 
-choice ParamChoice(Bool isSigned) on isSigned
+choice ParamChoice(Bool foo) on foo
 {
     case TRUE:
         int32 signed;
@@ -29,3 +30,45 @@ choice ParamChoice(Bool isSigned) on isSigned
     case FALSE:
         uint32 unsigned;    
 };
+
+Bogus
+{
+    int32 isSigned;
+};
+
+
+enum int8 AttributeFormat
+{
+    FLAG,
+    BOOL
+
+};
+
+choice  AttributeValueChoice(AttributeFormat format) on format
+{
+    case FLAG:
+       ;
+    case BOOL:
+        uint8 itsBool;
+    default:
+       ;
+ };
+
+*/
+
+choice RoutingAttributeInfo(Bool attrSource) on attrSource
+{
+    case TRUE:
+        uint8       index8;
+
+    case FALSE:
+        uint16      index16;
+
+    function uint16 listIndex()
+    {
+        return index8;
+    }
+
+};
+
+

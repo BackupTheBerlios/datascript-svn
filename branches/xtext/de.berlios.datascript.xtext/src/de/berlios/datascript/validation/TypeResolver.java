@@ -3,6 +3,8 @@ package de.berlios.datascript.validation;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.berlios.datascript.dataScript.Array;
+import de.berlios.datascript.dataScript.ChoiceAlternative;
 import de.berlios.datascript.dataScript.ComplexType;
 import de.berlios.datascript.dataScript.Constant;
 import de.berlios.datascript.dataScript.EnumMember;
@@ -77,27 +79,37 @@ public class TypeResolver
         else if (ref instanceof Field)
         {
             Field field = (Field) ref;
-            type = TypeResolver.resolve(field.getType());
+            type = resolve(field.getType());
+            Array array = field.getArray();
+            if (array != null)
+            {
+                type = ImplicitTypes.createArrayType(type, field);
+            }
+        }
+        else if (ref instanceof ChoiceAlternative)
+        {
+            ChoiceAlternative alternative = (ChoiceAlternative) ref;
+            type = resolve(alternative.getType());
         }
         else if (ref instanceof Parameter)
         {
             Parameter parameter = (Parameter) ref;
-            type = TypeResolver.resolve(parameter.getType());
+            type = resolve(parameter.getType());
         }
         else if (ref instanceof SqlFieldDefinition)
         {
             SqlFieldDefinition field = (SqlFieldDefinition) ref;
-            type = TypeResolver.resolve(field.getType());
+            type = resolve(field.getType());
         }
         else if (ref instanceof Constant)
         {
             Constant constant = (Constant) ref;
-            type = TypeResolver.resolve(constant.getType());
+            type = resolve(constant.getType());
         }
         else if (ref instanceof ComplexType)
         {
             ComplexType complex = (ComplexType) ref;
-            type = TypeResolver.resolve(complex);
+            type = resolve(complex);
         }
         else if (ref instanceof Function)
         {

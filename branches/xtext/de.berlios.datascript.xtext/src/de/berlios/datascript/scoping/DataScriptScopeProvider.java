@@ -56,6 +56,7 @@ import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.berlios.datascript.dataScript.ChoiceAlternative;
 import de.berlios.datascript.dataScript.ChoiceMember;
 import de.berlios.datascript.dataScript.ChoiceType;
 import de.berlios.datascript.dataScript.Element;
@@ -146,7 +147,11 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
         List<IScopedElement> scopedElems = new ArrayList<IScopedElement>(members.size());
         for (ChoiceMember member : members)
         {
-            scopedElems.add(ScopedElement.create(member.getAlternative().getName(), member));
+            ChoiceAlternative alternative = member.getAlternative();
+            if (alternative != null)
+            {
+                scopedElems.add(ScopedElement.create(alternative.getName(), alternative));
+            }
         }
         if (choice.getParameters() != null)
         {
@@ -177,7 +182,7 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
         if (isRightOfDot(parent, expr))
         {
             Expression sibling = getLeftSibling(expr);
-            Type siblingType = TypeResolver.getType(sibling.getRef());
+            Type siblingType = getType(sibling);
             scope = getScope(siblingType, ref);
         }
         else
@@ -187,6 +192,24 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
         return scope;
     }
     
+    private Type getType(Expression expr)
+    {
+        Type type;
+        if (expr.getType() != null)
+        {
+            type = TypeResolver.resolve(expr.getType());
+        }
+        else if (expr.getRef() != null)
+        {
+            type = TypeResolver.getType(expr.getRef());
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
+        return type;
+    }
+
     private boolean isRightOfDot(Expression parent, Expression expr)
     {
         return (parent != null && ".".equals(parent.getOperator()) && parent.getRight() == expr);
