@@ -9,6 +9,8 @@ import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 
 import de.berlios.datascript.dataScript.EnumType;
 import de.berlios.datascript.dataScript.Expression;
+import de.berlios.datascript.dataScript.Function;
+import de.berlios.datascript.dataScript.FunctionType;
 import de.berlios.datascript.dataScript.IntegerLiteral;
 import de.berlios.datascript.dataScript.StringLiteral;
 import de.berlios.datascript.dataScript.Type;
@@ -124,10 +126,26 @@ public class ExpressionValidator
         {
             expr.setType(left.getType());
         }
+        else if (")".equals(op))
+        {
+            checkFunction(expr);
+        }
         else
         {
             warning("operator '" + expr.getOperator() + "' cannot be validated", expr, null);            
         }        
+    }
+
+    private void checkFunction(Expression expr)
+    {
+        Type type = expr.getLeft().getType();
+        if (!(type instanceof FunctionType))
+        {
+            error("'()' can only be applied to functions", expr, null);
+        }
+        FunctionType function = (FunctionType) type;
+        Type result = function.getResult();
+        expr.setType(result);
     }
 
     private void checkMember(Expression expr)

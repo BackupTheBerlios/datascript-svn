@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class ChoiceTest
+public class FunctionTest
 {
     private Resource resource;
     private Model model;
@@ -36,7 +36,7 @@ public class ChoiceTest
         Injector injector = new DataScriptStandaloneSetup().createInjectorAndDoEMFRegistration();
         XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
         resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
-        resource = resourceSet.getResource(URI.createURI("classpath:/model/choices.ds"), true);
+        resource = resourceSet.getResource(URI.createURI("classpath:/model/func.ds"), true);
         model = (Model) resource.getContents().get(0);
         
         diagnostic = Diagnostician.INSTANCE.validate(model);
@@ -50,7 +50,7 @@ public class ChoiceTest
     }
     
     @Test
-    public void choices() throws IOException
+    public void function() throws IOException
     {
     }
 

@@ -1,0 +1,19 @@
+package model.func;
+
+Bla(uint16 metres)
+{
+    uint16   a;
+    uint16   c = 1+centimetres();
+    
+    function uint16 centimetres()
+    {
+        return metres/100;
+    }
+
+};
+
+ParamCall
+{
+    Bla(100)   bla;
+    uint16     cm = bla.centimetres();
+};

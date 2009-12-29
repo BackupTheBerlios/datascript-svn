@@ -8,6 +8,7 @@ import de.berlios.datascript.dataScript.Constant;
 import de.berlios.datascript.dataScript.EnumMember;
 import de.berlios.datascript.dataScript.EnumType;
 import de.berlios.datascript.dataScript.Field;
+import de.berlios.datascript.dataScript.Function;
 import de.berlios.datascript.dataScript.Parameter;
 import de.berlios.datascript.dataScript.SimpleType;
 import de.berlios.datascript.dataScript.SqlFieldDefinition;
@@ -97,6 +98,12 @@ public class TypeResolver
         {
             ComplexType complex = (ComplexType) ref;
             type = TypeResolver.resolve(complex);
+        }
+        else if (ref instanceof Function)
+        {
+            Function function = (Function) ref;
+            Type resultType = resolve(function.getType());
+            type = ImplicitTypes.createFunctionType(resultType);
         }
         
         return type;
