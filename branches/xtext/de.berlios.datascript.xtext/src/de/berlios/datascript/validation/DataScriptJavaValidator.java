@@ -73,7 +73,7 @@ public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
     @Check
     public void checkUniqueElements(Model model)
     {
-        log.info("checking uniqueness of elements in model {}", model.getPackage().getName());
+        log.debug("checking uniqueness of elements in model {}", model.getPackage().getName());
         Set<String> names = new HashSet<String>();
         for (Element member : model.getElements())
         {
@@ -87,7 +87,7 @@ public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
     @Check
     public void checkUniqueAlternatives(ChoiceType type)
     {
-        log.info("checking uniqueness of choice alternatives in {}", type.getName());
+        log.debug("checking uniqueness of choice alternatives in {}", type.getName());
         Set<String> names = new HashSet<String>();
         for (ChoiceMember member : type.getMembers())
         {
@@ -112,7 +112,7 @@ public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
     @Check
     public void checkUniqueMembers(SequenceType type)
     {
-        log.info("checking uniqueness of sequence members in {}", type.getName());
+        log.debug("checking uniqueness of sequence members in {}", type.getName());
         Set<String> names = new HashSet<String>();
         for (Field member : type.getMembers())
         {
@@ -135,7 +135,7 @@ public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
     @Check
     public void checkUniqueMembers(EnumType type)
     {
-        log.info("checking uniqueness of enum members in {}", type.getName());
+        log.debug("checking uniqueness of enum members in {}", type.getName());
         Set<String> names = new HashSet<String>();
         for (EnumMember member : type.getMembers())
         {
@@ -149,7 +149,7 @@ public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
     @Check
     public void checkUniqueParameters(ParameterList paramList)
     {
-        log.info("checking uniqueness of parameter names members");
+        log.debug("checking uniqueness of parameter names members");
         Set<String> names = new HashSet<String>();
         for (Parameter param : paramList.getParameters())
         {
@@ -163,7 +163,7 @@ public class DataScriptJavaValidator extends AbstractDataScriptJavaValidator
     @Check
     public void checkExpression(Expression expr)
     {
-        log.info("checking expression");
+        log.debug("checking expression");
         if (! (expr.eContainer() instanceof Expression))
         {
             exprValidator.checkExpression(expr);

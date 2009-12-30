@@ -85,7 +85,7 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
     
     public IScope scope_Value(EnumType enumeration, EClass type)
     {
-        log.info("creating Value scope for " + enumeration.getName());
+        log.debug("creating Value scope for " + enumeration.getName());
         EList<EnumMember> members = enumeration.getMembers();
         List<IScopedElement> scopedElems = new ArrayList<IScopedElement>(members.size());
         for (EnumMember member : members)
@@ -113,7 +113,7 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
     
     public IScope scope_Value(SequenceType compound, EClass type)
     {
-        log.info("creating scope for " + compound.getName());
+        log.debug("creating scope for " + compound.getName());
         List<Field> members = compound.getMembers();
         List<IScopedElement> scopedElems = new ArrayList<IScopedElement>(members.size());
         for (Field member : members)
@@ -142,7 +142,7 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
 
     public IScope scope_Value(ChoiceType choice, EClass type)
     {
-        log.info("creating scope for " + choice.getName());
+        log.debug("creating scope for " + choice.getName());
         List<ChoiceMember> members = choice.getMembers();
         List<IScopedElement> scopedElems = new ArrayList<IScopedElement>(members.size());
         for (ChoiceMember member : members)
@@ -176,7 +176,7 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
     
     public IScope scope_Expression_ref(Expression expr, EReference ref)
     {
-        log.info("creating scope for ref in PrimaryExpression");
+        log.debug("creating scope for ref in PrimaryExpression");
         IScope scope;
         Expression parent = getParentExpression(expr);
         if (isRightOfDot(parent, expr))
@@ -249,7 +249,7 @@ public class DataScriptScopeProvider extends AbstractDeclarativeScopeProvider
     
     public IScope scope_Value(Model model, EClass type)
     {
-        log.info("creating scope for " + model);        
+        log.debug("creating scope for " + model);        
         
         Set<String> uniqueImports = new HashSet<String>(10);
         List<String> orderedImports = new ArrayList<String>(10);        
