@@ -73,6 +73,14 @@ public class DataScriptLinkingService extends DefaultLinkingService
         if (parent == null)
             return;
         
+        if (parent.getElement() instanceof Expression)
+        {
+            Expression expr = (Expression) parent.getElement();
+            expr.setType(TypeResolver.getType((Value) linked));
+        }
+        
+
+        
         parent = parent.getParent();
         if (parent == null)
             return;
