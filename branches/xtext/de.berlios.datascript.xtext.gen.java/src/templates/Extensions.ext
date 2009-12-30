@@ -1,0 +1,92 @@
+import dataScript;
+
+String rdsVersion() :
+    "rds 0.35.0";
+    
+cached String timeStamp() :
+    "2009-12-31 11:11:00";    
+    
+
+Collection[Model] allUsedModels(Model this) :
+    JAVA de.berlios.datascript.DataScriptExtensions.getAllUsedModels(de.berlios.datascript.dataScript.Model);
+
+List[Element] allElements(Model this) :
+    allUsedModels().elements;
+
+String rootPackageName(Model model) :
+    model.package.name;
+    
+
+String emit(TypeReference type) :
+    JAVA de.berlios.datascript.xtext.gen.java.TypeNameEmitter.emit(de.berlios.datascript.dataScript.TypeReference);
+   
+
+
+String getJavaFileName(ComplexType this) :
+    JAVA de.berlios.datascript.xtext.gen.java.JavaExtensions.getJavaFileName(de.berlios.datascript.dataScript.ComplexType);
+     
+Model model(ComplexType this) :
+    (Model) eContainer;
+
+String rootPackageName(ComplexType this) :
+    this.model().rootPackageName();
+    
+String qualifiedName(ComplexType type) :
+    type.model().package.name + "." + type.name;
+
+boolean hasLabels(CompoundType type) :
+    false;
+                    
+
+
+
+
+List[Integer] values(EnumType type) :
+    JAVA de.berlios.datascript.xtext.gen.java.EnumEmitter.values(de.berlios.datascript.dataScript.EnumType);
+    
+String cast(EnumType this) :
+    "(int)";
+    
+String baseType(EnumType this) :
+     this.type.emit();
+         
+int bitSize(EnumType this):
+    8;
+    
+boolean isByteAligned(EnumType this):
+    true;
+    
+
+
+
+boolean isSimple(Field field) :
+    false;
+    
+String getter(Field field) :
+    "get" + field.name.toFirstUpper();
+            
+String setter(Field field) :
+    "set" + field.name.toFirstUpper();
+            
+String indicator(Field field) :
+    "has" + field.name.toFirstUpper();
+    
+String javaType(Field field) :
+    field.type.emit();
+    
+String elementType(Field field) :
+    "List<" + field.type.emit() + ">";
+    
+String min(Field field):
+    "Long.MIN_VALUE";    
+    
+String max(Field field):
+    "Long.MAX_VALUE";    
+    
+String emit(Expression expr) :
+    JAVA de.berlios.datascript.xtext.gen.java.JavaExtensions.printExpr(de.berlios.datascript.dataScript.Expression);
+   
+boolean isSimple(ChoiceMember member) :
+    false;
+            
+                           

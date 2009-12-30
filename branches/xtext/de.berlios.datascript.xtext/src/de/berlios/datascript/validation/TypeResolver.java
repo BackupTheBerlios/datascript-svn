@@ -44,10 +44,19 @@ public class TypeResolver
         while (true)
         {
             if (type instanceof Subtype)
-                type = ((Subtype) type).getType().getRef();
+                type = resolve(((Subtype) type).getType());
+            else if (type instanceof SimpleType)
+            {
+                if (!BuiltInTypes.isBuiltIn(type))
+                {
+                    SimpleType simple = (SimpleType) type;
+                    type = simpleTypeMap.get(simple.getBuiltIn());
+                }
+                break;
+            }
             else if (type instanceof TypeReference)
                 type = ((TypeReference) type).getRef();
-            else 
+            else
                 break;
         }
         return type;

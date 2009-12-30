@@ -1,0 +1,75 @@
+«IMPORT dataScript»
+«EXTENSION templates::Extensions»
+
+«DEFINE main FOR Model-»
+«FILE package.name.replaceAll("\\.", "/") + "/__Visitor.java"-»
+«EXPAND FileHeader::header-»
+«EXPAND begin-»
+«FOREACH allUsedModels().elements.typeSelect(SequenceType) AS type-»
+«EXPAND node FOR type-»
+«ENDFOREACH»
+«FOREACH allElements().typeSelect(ChoiceType) AS type-»
+«EXPAND node FOR type-»
+«ENDFOREACH»
+«FOREACH allElements().typeSelect(EnumType) AS type-»
+«EXPAND node FOR type-»
+«ENDFOREACH»
+«FOREACH allElements().typeSelect(SqlIntegerType) AS type-»
+«EXPAND node FOR type-»
+«ENDFOREACH»
+«EXPAND end-»
+«ENDFILE»
+«ENDDEFINE»
+
+«DEFINE begin FOR Model-»
+public interface __Visitor
+{
+    CallChain getCallChain();
+    
+    void visitInt8(byte n, Object arg);
+    void visitInt16(short n, Object arg);
+    void visitInt32(int n, Object arg);
+    void visitInt64(long n, Object arg);
+    void visitUInt8(short n, Object arg);
+    void visitUInt16(int n, Object arg);
+    void visitUInt32(long n, Object arg);
+    void visitUInt64(BigInteger n, Object arg);
+
+    void visitBitField(byte n, int length, Object arg);
+    void visitBitField(short n, int length, Object arg);
+    void visitBitField(int n, int length, Object arg);
+    void visitBitField(long n, int length, Object arg);
+    void visitBitField(BigInteger n, int length, Object arg);
+
+    void visitSignedBitField(byte n, int length, Object arg);
+    void visitSignedBitField(short n, int length, Object arg);
+    void visitSignedBitField(int n, int length, Object arg);
+    void visitSignedBitField(long n, int length, Object arg);
+    void visitSignedBitField(BigInteger n, int length, Object arg);
+
+    void visitString(String n, Object arg);
+
+    void visitArray(ObjectArray<?> n, Object arg);
+    void visitArray(ByteArray n, Object arg);
+    void visitArray(ShortArray n, Object arg);
+    void visitArray(IntArray n, Object arg);
+    void visitArray(LongArray n, Object arg);
+    void visitArray(BitFieldArray n, Object arg);
+
+    interface Acceptor 
+    {
+        void accept(«package.name».__Visitor visitor, Object arg);
+    }
+
+«ENDDEFINE»
+
+«DEFINE node FOR ComplexType-»
+    void visit(«qualifiedName()» node, Object arg);
+«ENDDEFINE»
+
+
+«DEFINE end FOR Model»
+}
+
+// END OF FILE
+«ENDDEFINE»

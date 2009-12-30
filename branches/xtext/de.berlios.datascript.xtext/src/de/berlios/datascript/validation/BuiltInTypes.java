@@ -121,4 +121,13 @@ public class BuiltInTypes
     {
         return BOOLEAN == type;
     }
+
+    /**
+     * @param type
+     * @return
+     */
+    public static boolean isBuiltIn(Type type)
+    {
+        return isInteger(type) || isString(type) || isBoolean(type);
+    }
 }

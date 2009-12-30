@@ -1,0 +1,23 @@
+«IMPORT dataScript»
+«IMPORT templates::java»
+
+«EXTENSION templates::Extensions»
+
+«DEFINE main FOR Model-»
+  «EXPAND Visitor::main FOR this»
+  «EXPAND DepthFirstVisitor::main FOR this»
+  «EXPAND SizeOf::main FOR this»
+
+  «FOREACH allElements().typeSelect(EnumType) AS t»
+  «EXPAND Enumeration::main(this) FOR t»
+  «ENDFOREACH-»
+
+  «FOREACH allElements().typeSelect(SequenceType) AS t»
+  «EXPAND Sequence::main(this) FOR t»
+  «ENDFOREACH-»
+
+  «FOREACH allElements().typeSelect(ChoiceType) AS t»
+  «EXPAND Choice::main(this) FOR t»
+  «ENDFOREACH-»
+«ENDDEFINE»
+

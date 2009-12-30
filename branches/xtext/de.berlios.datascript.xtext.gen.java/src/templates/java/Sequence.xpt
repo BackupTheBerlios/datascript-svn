@@ -1,0 +1,370 @@
+«IMPORT dataScript»
+«EXTENSION templates::Extensions»
+
+
+
+
+«DEFINE main(Model root) FOR SequenceType-»
+«FILE this.getJavaFileName()-»
+«EXPAND FileHeader::header FOR model()-»
+«EXPAND begin(root)-»
+«EXPAND equals-»
+«EXPAND throwIfNotEqual-»
+«FOREACH members AS field-»
+  «EXPAND field FOR field»
+«ENDFOREACH-»
+«FOREACH parameters.parameters AS param-»
+  «EXPAND param FOR param»
+«ENDFOREACH-»
+«FOREACH functions AS function-»
+  «EXPAND function FOR function»
+«ENDFOREACH-»
+«EXPAND read-»
+«EXPAND write-»
+«EXPAND end-»
+«ENDFILE»
+«ENDDEFINE»
+
+
+
+«DEFINE begin(Model root) FOR SequenceType»
+public class «name» implements «root.package.name».__Visitor.Acceptor, Writer, SizeOf
+{
+    long __fpos;
+    private CallChain __cc;
+    
+    
+«EXPAND members»
+
+    public void accept(«root.package.name».__Visitor visitor, Object arg)
+    {
+        __cc = visitor.getCallChain();
+        visitor.visit(this, arg);
+    }
+
+
+    public int sizeof() 
+    {
+        return «root.package.name».__SizeOf.sizeof(this);
+    }
+
+
+    public int bitsizeof() 
+    {
+        return «rootPackageName()».__SizeOf.bitsizeof(this);
+    }
+
+«ENDDEFINE»
+
+«DEFINE members FOR SequenceType»
+«FOREACH members AS field-»
+    private «field.javaType()» «field.name»;
+«ENDFOREACH-»
+«ENDDEFINE»
+
+
+«DEFINE equals FOR SequenceType»
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        «name» other = («name») obj;
+  «FOREACH members AS field-»
+        if («field.name» == null)
+        {
+            if (other.«field.name» != null)
+                return false;
+        }
+        else if (!«field.name».equals(other.«field.name»))
+            return false;
+  «ENDFOREACH»        
+        return true;
+    }
+
+«ENDDEFINE»
+
+
+
+
+«DEFINE throwIfNotEqual FOR SequenceType»
+    public void throwIfNotEqual(«name» other)
+    {
+        if (this == other)
+            return;
+        if (other == null)
+            throw new DataScriptError("other == null");
+  «FOREACH members AS field-»
+    «IF field.isSimple()-»
+        EqualityCheck.throwIfNotEqual(«field.name», other.«field.name»);
+    «ELSE-»
+        «field.name».throwIfNotEqual(other.«field.name»);
+    «ENDIF-»
+  «ENDFOREACH-»        
+    }
+
+«ENDDEFINE»
+
+
+
+«DEFINE field FOR Field»
+    public «javaType()» «getter()»()
+    {
+        return «name»;
+    }
+
+
+  «IF array != null-»
+    public void «setter()»(List<«elementType()»> «name»)
+    {
+        this.«name» = new ObjectArray<«elementType()»>(«name»);
+    }
+  «ELSE-»
+    public void «setter()»(«javaType()» «name»)
+    {
+    «IF isSimple()-»
+        // check range
+        if ((«max()»L < «name») || («name» < «min()»L))
+            throw new DataScriptError("«name»: value " + «name» + " out of range [«min()»..«max()»]");
+
+    «ENDIF-»
+        this.«name» = «name»;
+    }
+
+  «ENDIF-»
+
+
+  «IF opt != null-»
+    public boolean «indicator()»()
+    {
+        return «name» != null;
+    }
+
+  «ENDIF-»
+«ENDDEFINE»
+
+
+
+«DEFINE param FOR Parameter»
+«ENDDEFINE»
+
+
+
+«DEFINE function FOR Function»
+«ENDDEFINE»
+
+
+
+«DEFINE read FOR SequenceType»
+    public «name»()
+    {
+    }
+                
+
+    public «name»(String __filename«EXPAND formalParameters-») throws IOException 
+    {
+        FileBitStreamReader __in = new FileBitStreamReader(__filename);
+        __cc = new CallChain();
+        read(__in, __cc«EXPAND actualParameters-»);
+        __in.close();
+    }
+
+
+    public «name»(BitStreamReader __in«EXPAND formalParameters-») throws IOException 
+    {
+        __cc = new CallChain();
+        read(__in, __cc«EXPAND actualParameters-»);
+    }
+
+
+    public «name»(BitStreamReader __in, CallChain __cc«EXPAND formalParameters-») throws IOException 
+    {
+        read(__in, __cc«EXPAND actualParameters-»);
+    }
+
+
+    public void read(BitStreamReader __in, CallChain __cc«EXPAND formalParameters-») throws IOException
+    {
+        this.__cc = __cc;
+  «FOREACH parameters.parameters AS param-»
+        this.«param.name» = «param.name»;
+  «ENDFOREACH-»        
+
+        try
+        {
+            __cc.push("«name»", this);
+            __fpos = __in.getBitPosition();
+            try
+            {
+«FOREACH members AS field-»
+  «IF field.opt != null-»
+                if («field.opt.emit()»)
+                {
+  «ENDIF-»
+  «IF field.alignment != null-»
+                    __in.alignTo(«field.alignment.value.emit()»);
+  «ENDIF-»
+  «IF field.label != null-»
+                    if (__in.getBitPosition() != «field.label.expr.emit()»)
+                    {
+                        throw new DataScriptError("wrong offset for field '«field.name»'");
+                    }
+  «ENDIF-»
+                    «EXPAND readField FOR field-»
+  «IF field.condition != null-»
+                    if (!(«field.condition.emit()»))
+                    {
+                        throw new DataScriptError("constraint violated");
+                    }
+  «ENDIF-»                  
+  «IF field.opt != null-»
+                }
+  «ENDIF-»
+
+«ENDFOREACH-»
+            }
+            catch (DataScriptError __e1)
+            {
+                __in.setBitPosition(__fpos);
+                throw __e1;
+            }
+        }
+        finally
+        {
+            __cc.pop();
+        }
+    }
+«ENDDEFINE»
+
+
+
+«DEFINE readField FOR Field-»
+                    readField(«name»);
+«ENDDEFINE»
+
+
+
+
+
+«DEFINE write FOR SequenceType»
+    // Constructor for «name» 
+    public «name»(
+«FOREACH members AS field SEPARATOR ", "-»
+«field.javaType()» «field.name-»
+«ENDFOREACH-»    
+        )
+    {
+  «FOREACH members AS field-»
+    «IF field.isSimple()-»
+        if ((#{field.maxVal}L < ${field.name}) || (${field.name} < #{field.minVal}L))
+            throw new DataScriptError("Value " + ${field.name} + " of field '${field.name}' exceeds the range of ${field.minVal}..${field.maxVal}");
+    «ENDIF-»
+        this.«field.name» = «field.name»;
+  «ENDFOREACH-»
+    }
+
+
+    public void write(String __filename) throws IOException
+    {
+        FileBitStreamWriter __out = new FileBitStreamWriter(__filename);
+        __cc = new CallChain();
+        write(__out, __cc);
+        __out.close();
+    }
+
+
+    public void write(BitStreamWriter __out) throws IOException
+    {
+        __cc = new CallChain();
+        write(__out, __cc);
+    }
+
+
+    public void write(BitStreamWriter __out, CallChain __cc) throws IOException
+    {
+        this.__cc = __cc;
+  «IF hasLabels()-»
+        «rootPackageName()».__LabelSetter labelSetter = new «rootPackageName()».__LabelSetter();
+        labelSetter.visit(this, null);
+
+  «ENDIF-»
+        try 
+        {
+            __cc.push("«name»", this);
+            __fpos = __out.getBitPosition();
+            try 
+            {
+  «FOREACH members AS field-»
+    «IF field.opt != null-»
+                if («field.opt.emit()»)
+                {
+    «ENDIF-»
+    «IF field.condition != null-»
+                    if (!(«field.condition.emit()»))
+                    {
+                        throw new DataScriptError("constraint violated");
+                    }
+    «ENDIF-»
+    «IF field.alignment != null-»
+                    __out.alignTo(«field.alignment.value.emit()»);
+    «ENDIF-»
+    «IF field.label != null-»
+                    if (__out.getBitPosition() != «field.label.expr.emit()»)
+                    {
+                        throw new DataScriptError("wrong offset for field '«field.name»'");
+                    }
+
+    «ENDIF-»
+                    «EXPAND writeField FOR field»
+    «IF field.opt != null-»
+                }
+    «ENDIF-»
+  «ENDFOREACH-»
+            } 
+            catch (DataScriptError __e1) 
+            {
+                __out.setBitPosition(__fpos);
+                throw __e1;
+            }
+        }
+        finally 
+        { 
+            __cc.pop(); 
+        }
+    }
+
+«ENDDEFINE»
+
+
+«DEFINE writeField FOR Field-»
+                    writeField(«name»);
+«ENDDEFINE»
+
+
+
+«DEFINE formalParameters FOR SequenceType-»
+«IF parameters != null-»
+«FOREACH parameters.parameters AS param-»
+, «param.type.emit()» «param.name-»    
+«ENDFOREACH-»
+«ENDIF-»
+«ENDDEFINE»
+
+«DEFINE actualParameters FOR SequenceType-»
+«IF parameters != null-»
+«FOREACH parameters.parameters AS param-»
+, «param.name-»    
+«ENDFOREACH-»
+«ENDIF-»
+«ENDDEFINE»
+
+
+«DEFINE end FOR SequenceType»
+}
+
+// END OF FILE
+«ENDDEFINE»

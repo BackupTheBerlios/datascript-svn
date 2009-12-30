@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Java
+Bundle-SymbolicName: de.berlios.datascript.xtext.gen.java
+Bundle-Version: 0.35.0
+Bundle-Vendor: DataScript Xtext Java Generator
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: de.berlios.datascript.xtext;bundle-version="1.0.0",
+ org.eclipse.xtext;bundle-version="0.7.2",
+ org.eclipse.xpand;bundle-version="0.7.2",
+ org.eclipse.xtend;bundle-version="0.7.2",
+ org.eclipse.xtend.typesystem.emf;bundle-version="0.7.2",
+ org.eclipse.emf.mwe.core;bundle-version="0.7.2",
+ org.eclipse.emf.mwe.utils;bundle-version="0.7.2",
+ org.eclipse.jface.text;bundle-version="3.5.1",
+ org.eclipse.core.runtime;bundle-version="3.5.0",
+ org.eclipse.jdt.core;bundle-version="3.5.1",
+ de.berlios.datascript.rds.runtime;bundle-version="0.35.0"

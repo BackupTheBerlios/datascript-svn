@@ -1,0 +1,234 @@
+«IMPORT dataScript»
+«EXTENSION templates::Extensions»
+
+«DEFINE main FOR Model-»
+«FILE package.name.replaceAll("\\.", "/") + "/__DepthFirstVisitor.java"-»
+«EXPAND FileHeader::header-»
+«EXPAND begin-»
+«FOREACH allUsedModels().elements.typeSelect(SequenceType) AS sequence-»
+  «EXPAND sequence FOR sequence-»
+«ENDFOREACH-»
+«FOREACH allUsedModels().elements.typeSelect(ChoiceType) AS choice-»
+  «EXPAND choice FOR choice-»
+«ENDFOREACH-»
+«FOREACH allUsedModels().elements.typeSelect(EnumType) AS enumeration-»
+  «EXPAND enumeration FOR enumeration-»
+«ENDFOREACH-»
+«FOREACH allUsedModels().elements.typeSelect(SqlIntegerType) AS sqlInteger-»
+  «EXPAND sqlInteger FOR sqlInteger-»
+«ENDFOREACH-»
+«EXPAND end-»
+«ENDFILE»
+«ENDDEFINE»
+
+
+«DEFINE begin FOR Model»
+public class __DepthFirstVisitor implements «package.name».__Visitor
+{
+    protected CallChain __cc = new CallChain();       
+
+    public CallChain getCallChain()
+    {
+        return __cc;
+    }
+    
+    public void alignto(int n) {};
+    public void visitInt8(byte n, Object arg) {};
+    public void visitInt16(short n, Object arg) {};
+    public void visitInt32(int n, Object arg) {};
+    public void visitInt64(long n, Object arg) {};
+    
+    public void visitUInt8(short n, Object arg) {};
+    public void visitUInt16(int n, Object arg) {};
+    public void visitUInt32(long n, Object arg) {};
+    public void visitUInt64(BigInteger n, Object arg) {};
+    
+    public void visitBitField(byte n, int length, Object arg) {};
+    public void visitBitField(short n, int length, Object arg) {};
+    public void visitBitField(int n, int length, Object arg) {};
+    public void visitBitField(long n, int length, Object arg) {};
+    public void visitBitField(BigInteger n, int length, Object arg) {};
+    
+    public void visitSignedBitField(byte n, int length, Object arg) {};
+    public void visitSignedBitField(short n, int length, Object arg) {};
+    public void visitSignedBitField(int n, int length, Object arg) {};
+    public void visitSignedBitField(long n, int length, Object arg) {};
+    public void visitSignedBitField(BigInteger n, int length, Object arg) {};
+    
+    public void visitString(String n, Object arg) {};
+
+
+    public void visitArray(ObjectArray<?> n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            ((«package.name».__Visitor.Acceptor)(n.elementAt(i))).accept(this, arg);
+        }
+    }
+
+
+    public void visitArray(ByteArray n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitInt8(n.elementAt(i), arg);
+        }
+    }
+
+
+    public void visitArray(UnsignedByteArray n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitUInt8(n.elementAt(i), arg);    
+        }
+    }
+
+
+    public void visitArray(ShortArray n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitInt16(n.elementAt(i), arg);    
+        }
+    }
+
+
+    public void visitArray(UnsignedShortArray n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitUInt16(n.elementAt(i), arg);   
+        }
+    }
+
+
+    public void visitArray(IntArray n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitInt32(n.elementAt(i), arg);    
+        }
+    }
+
+
+    public void visitArray(UnsignedIntArray n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitUInt32(n.elementAt(i), arg);   
+        }
+    }
+
+
+    public void visitArray(LongArray n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitInt64(n.elementAt(i), arg);    
+        }
+    }
+
+
+    public void visitArray(BitFieldArray n, Object arg)
+    {
+        int last = n.length();
+        int numBits = n.getNumBits();
+        for (int i = 0; i < last; i++) 
+        {
+            visitBitField(n.elementAt(i), numBits, arg);   
+        }
+    }
+
+
+    public void visitArray(StringArray n, Object arg)
+    {
+        int last = n.length();
+        for (int i = 0; i < last; i++) 
+        {
+            visitString(n.elementAt(i), arg);   
+        }
+    }
+
+
+«ENDDEFINE»
+
+
+
+«DEFINE sequence FOR SequenceType-»
+    public void visit(«qualifiedName()» node, Object arg)
+    {
+«EXPAND enter-»
+
+        try
+        {
+            __cc.push("«name»", node);
+«FOREACH members AS field-»
+«EXPAND sequenceField FOR field-»
+«ENDFOREACH-»                    
+        }
+        catch (DataScriptError __exc)
+        {
+            __exc.printStackTrace();
+        }
+        finally
+        {
+            __cc.pop();
+        }
+
+«EXPAND leave-»
+    }
+«ENDDEFINE»
+
+
+
+«DEFINE sequenceField FOR Field-»
+«IF opt != null-»
+            if (node.«indicator()»())
+            {
+«ENDIF-»
+«IF alignment != null-»
+                alignto(«alignment.value.emit()»);
+«ENDIF»
+                ${field.visitor};
+«IF opt != null-»
+            }
+«ENDIF-»
+«ENDDEFINE»
+
+
+
+«DEFINE choice FOR ChoiceType-»
+«ENDDEFINE»
+
+«DEFINE enumeration FOR EnumType-»
+    public void visit(«model().package.name».«name» node, Object arg)
+    {
+        // nothing more to visit
+    }
+
+«ENDDEFINE»
+
+«DEFINE sqlInteger FOR SqlIntegerType-»
+«ENDDEFINE»
+
+
+«DEFINE enter FOR ComplexType-»
+«ENDDEFINE»
+
+«DEFINE leave FOR ComplexType-»
+«ENDDEFINE»
+
+«DEFINE end FOR Model»
+}
+
+// END OF FILE
+«ENDDEFINE»

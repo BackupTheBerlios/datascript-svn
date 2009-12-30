@@ -1,0 +1,69 @@
+«IMPORT dataScript»
+«EXTENSION templates::Extensions»
+
+«DEFINE main(Model root) FOR EnumType-»
+«FILE getJavaFileName()-»
+«EXPAND FileHeader::header FOR model()-»
+public enum «name» implements Writer, SizeOf
+{
+«FOREACH members AS m ITERATOR pos-»
+    «m.name»(«cast()»«values().get(pos.counter0)»),
+«ENDFOREACH-»
+    __INVALID(«cast()»-1);
+
+    private «baseType()» value;
+
+
+    «name»(«baseType()» value)
+    {
+        this.value = value;
+    }
+
+
+    public «baseType()» getValue()
+    {
+        return value;
+    }
+
+
+    public static «name» toEnum(«baseType()» v)
+    {
+        switch (v)
+        {
+«FOREACH members AS m ITERATOR pos-»
+            case «values().get(pos.counter0)»:
+                return «m.name»;
+«ENDFOREACH-»
+            default:
+                throw new IllegalArgumentException("unknown «name»: " + v);
+        }
+    }
+
+
+    public void accept(«root.package.name».__Visitor visitor, Object arg)
+    {
+        visitor.visit(this, arg);
+    }
+    
+
+    public int sizeof() 
+    {
+«IF isByteAligned()-»
+        return «bitSize() / 8»;
+«ELSE-»
+        throw new DataScriptError("not byte-aligned");
+«ENDIF-»
+    }
+
+    public int bitsizeof() 
+    {
+        return «bitSize()»;
+    }
+    
+    public void write(BitStreamWriter __out, CallChain __cc) throws IOException
+    {
+        ${writeStmt}
+    }    
+}
+«ENDFILE»
+«ENDDEFINE»
