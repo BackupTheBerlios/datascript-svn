@@ -223,7 +223,7 @@ Field
       (array = Array)? 
       (init = FieldInitializer)? 
       (opt = OptionalClause)? 
-      (condition ?= FieldCondition)? ';'     
+      (condition = FieldCondition)? ';'     
     ;
     
 Alignment
