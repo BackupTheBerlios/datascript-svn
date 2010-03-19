@@ -6,3 +6,4 @@ Bundle-Version: 0.35.0
 Export-Package: datascript.runtime,
  datascript.runtime.array,
  datascript.runtime.io
+Require-Bundle: org.junit4;bundle-version="4.5.0"
