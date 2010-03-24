@@ -84,7 +84,13 @@ public class Parameter
     }
 
 
-    public boolean getIsSimple()
+    public boolean getIsCompoundType()
+    {
+        return type instanceof CompoundType || type instanceof TypeInstantiation;
+    }
+
+
+    public boolean getIsSimpleIntegerType()
     {
         boolean result = false;
         if (type instanceof TypeReference)

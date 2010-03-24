@@ -222,6 +222,7 @@ Optional
 {
     uint8       tag;
     uint16      a;
+    uint64      x;  // UINT64 needs more than 64 bits!
     uint32      b if tag == 99 : b > a;
     ItemA       ia if tag == 98;
     uint16      c;

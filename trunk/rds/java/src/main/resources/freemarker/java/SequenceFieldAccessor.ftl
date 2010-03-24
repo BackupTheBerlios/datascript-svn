@@ -57,7 +57,7 @@
 
     public void ${setterName}(${javaTypeName} ${name})
     {
-<#if equalsCanThrowExceptions && isSimple>
+<#if equalsCanThrowExceptions && isSimpleIntegerType>
         // check range
         if ((#{maxVal}L < ${name}) || (${name} < #{minVal}L))
             throw new DataScriptError("Value " + ${name} + " of field '${name}' exceeds the range of ${minVal}..${maxVal}");

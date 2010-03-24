@@ -47,6 +47,7 @@ import datascript.ast.BitFieldType;
 import datascript.ast.CompoundType;
 import datascript.ast.EnumType;
 import datascript.ast.Field;
+import datascript.ast.IntegerType;
 import datascript.ast.SignedBitFieldType;
 import datascript.ast.StdIntegerType;
 import datascript.ast.TypeInstantiation;
@@ -177,11 +178,17 @@ public abstract class FieldEmitter
 
     public boolean getIsIntegerType()
     {
-        return type instanceof StdIntegerType;
+        return type instanceof IntegerType;
     }
 
 
-    public boolean getIsSimple()
+    public boolean getIsCompoundType()
+    {
+        return type instanceof CompoundType || type instanceof TypeInstantiation;
+    }
+
+
+    public boolean getIsSimpleIntegerType()
     {
         if (field.getOptionalClause() != null)
         {

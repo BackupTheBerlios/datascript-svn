@@ -164,7 +164,7 @@ abstract public class CompoundEmitter extends IntegerTypeEmitter
             return typeName;
         }
 
-        public boolean getIsSimple()
+        public boolean getIsSimpleIntegerType()
         {
             boolean result = false;
             if (type instanceof StdIntegerType)

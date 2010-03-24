@@ -82,7 +82,7 @@ import datascript.ast.Scope;
  */
 public class DataScriptTool implements Parameters
 {
-    private static final String VERSION = "rds 0.34 (16 Sep 2009)";
+    private static final String VERSION = "rds 0.34.1 (24 Mar 2010)";
 
     private ToolContext context;
     private TokenAST rootNode;
