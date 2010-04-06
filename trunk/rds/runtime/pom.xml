@@ -4,12 +4,12 @@
   <groupId>de.berlios.datascript.rds</groupId>
   <artifactId>runtime</artifactId>
   <packaging>bundle</packaging>
-  <version>0.34</version>
+  <version>0.34.1</version>
   <name>Relational DataScript Runtime Library</name>
   <parent>
     <groupId>de.berlios.datascript</groupId>
     <artifactId>rds</artifactId>
-    <version>0.34</version>
+    <version>0.34.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <build>

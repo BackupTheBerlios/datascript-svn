@@ -4,13 +4,13 @@
   <groupId>de.berlios.datascript.rds</groupId>
   <artifactId>core</artifactId>
   <packaging>bundle</packaging>
-  <version>0.34</version>
+  <version>0.34.1</version>
   <name>Relational DataScript Core Library</name>
   <parent>
     <groupId>de.berlios.datascript</groupId>
     <artifactId>rds</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.34</version>
+    <version>0.34.1</version>
   </parent>
   <dependencies>
     <dependency>
